@@ -44,7 +44,6 @@ type UserDetailsUser = {
     tariff?: string | null;
     tariffExpiresAt?: string | number | null;
     planExpiresAt?: string | number | null;
-    lifetimePremium?: boolean | null;
   } | null;
 } & Record<string, unknown>;
 
@@ -89,13 +88,8 @@ export default function UserDetailsDialog({
   const expRaw = mp?.tariffExpiresAt ?? mp?.planExpiresAt ?? null;
   const expMs = expRaw ? new Date(expRaw).getTime() : 0;
   const isActivePaid = rawTariff !== 'BASIC' && !!expMs && expMs > now;
-  const effectiveTariff = mp?.lifetimePremium
-    ? 'PREMIUM'
-    : rawTariff === 'BASIC'
-      ? 'BASIC'
-      : isActivePaid
-        ? rawTariff
-        : 'BASIC';
+  const effectiveTariff =
+    rawTariff === 'BASIC' ? 'BASIC' : isActivePaid ? rawTariff : 'BASIC';
   const tariffUpper = String(effectiveTariff).toUpperCase();
 
   return (

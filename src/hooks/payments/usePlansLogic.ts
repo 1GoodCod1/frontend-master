@@ -72,7 +72,6 @@ export function usePlansLogic() {
     const pendingUpgrade = isRecord(tariff.pendingUpgrade) ? tariff.pendingUpgrade : null;
     const pendingUpgradeTo =
         pendingUpgrade && typeof pendingUpgrade.to === 'string' ? pendingUpgrade.to : undefined;
-    const lifetimePremium = tariff.lifetimePremium === true;
     const cancelAtPeriodEnd = tariff.tariffCancelAtPeriodEnd === true;
 
     const effectivePlan: TariffPlan =
@@ -91,15 +90,22 @@ export function usePlansLogic() {
             toast.error(t('plans.profileNotLoaded'));
             return;
         }
-        // Верифицированные мастера получают тариф бесплатно 1 кликом
+        // Верифицированные мастера получают тариф бесплатно 1 кликом (без оплаты)
         if (isMaster && isVerified) {
             try {
                 await claimFreePlan({ tariffType }).unwrap();
                 toast.success(t('plans.claimFreeSuccess', { plan: tariffType }));
+                myProfile.refetch();
                 myTariff.refetch();
             } catch (e: unknown) {
                 toast.error(toErrorMessage(e) ?? t('plans.claimFreeFailed'));
             }
+            return;
+        }
+        // Неверифицированные мастера — направляем на верификацию (способы оплаты скрыты)
+        if (isMaster && !isVerified) {
+            nav('/dashboard/verification');
+            toast(t('plans.verifyFirstToGetFree'), { icon: 'ℹ️' });
             return;
         }
         nav(`/plans/checkout?plan=${tariffType}`);
@@ -194,7 +200,6 @@ export function usePlansLogic() {
         tariffExpiresAt,
         isExpired,
         pendingUpgrade,
-        lifetimePremium,
         plansToShow,
         isLoading: (isMaster && myProfile.isLoading) || tariffsLoading,
         checkoutLoading: false,

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loadNotifications, loadNotificationSettings, saveNotificationSettings } from './persist';
+import { loadNotifications, loadNotificationSettings, saveNotificationSettings, clearNotificationsStorage } from './persist';
+import { clearAuth } from '@/features/auth/authSlice';
 
 export type SocketEventType =
   | 'new_lead'
@@ -432,6 +433,7 @@ const slice = createSlice({
       state.notifications = [];
       state.unreadLeads = 0;
       state.unreadReviews = 0;
+      clearNotificationsStorage();
     },
 
     clearLastEvent(state) {
@@ -445,6 +447,15 @@ const slice = createSlice({
     clearUnreadReviews(state) {
       state.unreadReviews = 0;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearAuth, (state) => {
+      state.notifications = [];
+      state.unreadLeads = 0;
+      state.unreadReviews = 0;
+      state.recent = { leads: {}, reviews: {} };
+      clearNotificationsStorage();
+    });
   },
 });
 

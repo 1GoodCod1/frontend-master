@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { Sparkles } from 'lucide-react';
 import { TariffPlan } from '@/features/auth/plan';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,6 @@ interface PlansAlertsProps {
   cancelLoading: boolean;
   onConfirmUpgrade: () => void;
   onCancelUpgrade: () => void;
-  lifetimePremium?: boolean;
 }
 
 export const PlansAlerts = ({
@@ -25,7 +23,6 @@ export const PlansAlerts = ({
   cancelLoading,
   onConfirmUpgrade,
   onCancelUpgrade,
-  lifetimePremium = false,
 }: PlansAlertsProps) => {
   const { t } = useTranslation();
 
@@ -33,17 +30,6 @@ export const PlansAlerts = ({
 
   return (
     <div className="flex flex-col gap-4">
-      {lifetimePremium && (
-        <Alert
-          className="rounded-lg border-0 bg-gradient-to-br from-violet-500 to-purple-700 text-white [&>svg]:text-white"
-        >
-          <Sparkles className="h-5 w-5" />
-          <AlertDescription>
-            <span className="font-bold">{t('plans.lifetimePremium')}</span>
-          </AlertDescription>
-        </Alert>
-      )}
-
       {pendingUpgrade && (
         <Alert className="rounded-lg border-[#f5f4eb] dark:border-amber-500/40 bg-amber-50/80 dark:bg-amber-900/20 text-foreground dark:text-slate-100">
           <AlertDescription className="flex flex-col gap-3">

@@ -78,7 +78,8 @@ html {
   -webkit-text-size-adjust: 100%;
   /* Prevent horizontal pull-to-refresh overflow on mobile */
   overscroll-behavior-x: none;
-  overflow-y: auto;
+  /* scroll: always reserve scrollbar space — prevents page shift when Radix dropdown adds overflow:hidden to body */
+  overflow-y: scroll;
   /* Prevent scroll jump when content changes (browser scroll anchoring) */
   overflow-anchor: auto;
 }
@@ -181,6 +182,15 @@ body {
   body {
     print-color-adjust: exact;
   }
+}
+
+/* Radix scroll lock: prevent layout shift when dropdown/select opens.
+   react-remove-scroll adds margin-right to compensate for hidden scrollbar — that causes the shift.
+   We use overflow-y:scroll on html to keep scrollbar, so disable the compensation. */
+body[data-scroll-locked] {
+  --removed-body-scroll-bar-size: 0 !important;
+  margin-right: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* Modal/Dialog — opaque background, no transparency */

@@ -22,7 +22,7 @@ import {
     usePaymentsMyQuery,
 } from '@/features/payments/paymentsApi';
 import { useAppSelector } from '@/app/hooks';
-import { selectPlan } from '@/features/auth/selectors';
+import { selectPlan, selectIsVerified } from '@/features/auth/selectors';
 import { TariffPlan } from '@/features/auth/plan';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { LoadingState } from '@/components/common/States';
@@ -72,6 +72,7 @@ export default function SubscriptionPage() {
     const navigate = useNavigate();
     const locale = getLocaleFromLanguage(i18n.language);
     const plan: TariffPlan = useAppSelector(selectPlan) ?? 'BASIC';
+    const isVerified = useAppSelector(selectIsVerified);
 
     const { data: tariffRaw, isLoading: tariffLoading, refetch: refetchTariff } = useMastersMyTariffQuery();
     const { data: paymentsRaw, isLoading: paymentsLoading } = usePaymentsMyQuery();
@@ -83,7 +84,6 @@ export default function SubscriptionPage() {
     const tariffType: TariffPlan = tariffData?.tariffType ?? plan;
     const tariffExpiresAt = tariffData?.tariffExpiresAt ? new Date(tariffData.tariffExpiresAt) : null;
     const isExpired = tariffData?.isExpired ?? false;
-    const lifetimePremium = tariffData?.lifetimePremium ?? false;
     const pendingUpgrade = tariffData?.pendingUpgrade;
     const cancelAtPeriodEnd = tariffData?.tariffCancelAtPeriodEnd ?? false;
 
@@ -94,9 +94,7 @@ export default function SubscriptionPage() {
         .sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime())
         .slice(0, 5);
 
-    const effectivePlan: TariffPlan = lifetimePremium
-        ? 'PREMIUM'
-        : (!isExpired && tariffType !== 'BASIC' ? tariffType : 'BASIC');
+    const effectivePlan: TariffPlan = !isExpired && tariffType !== 'BASIC' ? tariffType : 'BASIC';
 
     const isActive = !isExpired && effectivePlan !== 'BASIC';
     const colors = PLAN_COLORS[effectivePlan] || PLAN_COLORS.BASIC;
@@ -123,11 +121,19 @@ export default function SubscriptionPage() {
     };
 
     const handleConfirmUpgrade = () => {
+        if (isVerified) {
+            navigate('/plans');
+            return;
+        }
         const planParam = pendingUpgrade?.to ? `&plan=${encodeURIComponent(pendingUpgrade.to)}` : '';
         navigate(`/plans/checkout?pending=1${planParam}`);
     };
 
     const handleUpgrade = () => {
+        if (isVerified) {
+            navigate('/plans');
+            return;
+        }
         navigate('/plans/checkout?plan=PREMIUM');
     };
 
@@ -175,19 +181,13 @@ export default function SubscriptionPage() {
                                 <h2 className={cn('text-2xl font-extrabold', colors.text)}>
                                     {t(`plans.${effectivePlan.toLowerCase()}.name`)}
                                 </h2>
-                                {lifetimePremium && (
-                                    <Badge className="bg-gradient-to-r from-violet-500 to-purple-600 text-white border-0 text-xs px-3">
-                                        <Sparkles className="h-3 w-3 mr-1" />
-                                        {t('subscription.lifetime')}
-                                    </Badge>
-                                )}
-                                {isActive && !lifetimePremium && (
+                                {isActive && (
                                     <Badge variant="default" className="bg-green-500/90 hover:bg-green-600 text-white text-xs px-3">
                                         <CheckCircle className="h-3 w-3 mr-1" />
                                         {t('subscription.active')}
                                     </Badge>
                                 )}
-                                {isExpired && !lifetimePremium && (
+                                {isExpired && (
                                     <Badge variant="destructive" className="text-xs px-3">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
                                         {t('subscription.expired')}
@@ -201,11 +201,7 @@ export default function SubscriptionPage() {
                                 )}
                             </div>
 
-                            {lifetimePremium ? (
-                                <p className="text-sm text-muted-foreground mt-2">
-                                    {t('subscription.lifetimeDesc')}
-                                </p>
-                            ) : isActive && tariffExpiresAt ? (
+                            {isActive && tariffExpiresAt ? (
                                 <p className="text-sm text-muted-foreground mt-2">
                                     <Clock className="h-3.5 w-3.5 inline mr-1 -mt-0.5" />
                                     {t('subscription.expiresAt')}: <strong>{formatDateShort(tariffExpiresAt, locale)}</strong>
@@ -279,7 +275,7 @@ export default function SubscriptionPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upgrade Section */}
-                {!lifetimePremium && effectivePlan !== 'PREMIUM' && !pendingUpgrade && (
+                {effectivePlan !== 'PREMIUM' && !pendingUpgrade && (
                     <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-violet-200/50 dark:border-violet-600/30">
                         <div className="absolute inset-0 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20 pointer-events-none" />
                         <CardHeader className="relative">
@@ -304,14 +300,16 @@ export default function SubscriptionPage() {
                                 <Sparkles className="h-4 w-4" />
                                 {effectivePlan === 'BASIC'
                                     ? t('subscription.viewPlans')
-                                    : t('subscription.upgradeToPremium')}
+                                    : isVerified
+                                        ? t('subscription.getPremiumFree')
+                                        : t('subscription.upgradeToPremium')}
                             </Button>
                         </CardContent>
                     </Card>
                 )}
 
                 {/* Cancel Subscription Section */}
-                {isActive && !lifetimePremium && (
+                {isActive && (
                     <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-foreground">

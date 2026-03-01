@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { useAppSelector } from '@/app/hooks';
-import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
+import { selectIsAuthed, selectRole, selectIsVerified } from '@/features/auth/selectors';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import {
   usePaymentsCreateMiaCheckoutMutation,
@@ -55,6 +55,7 @@ export function usePaymentOptionsPage() {
 
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
+  const isVerified = useAppSelector(selectIsVerified);
   const isMaster = isAuthed && role === 'MASTER';
 
   const planFromQuery = getPlanFromSearchParams(searchParams);
@@ -78,10 +79,20 @@ export function usePaymentOptionsPage() {
       navigate('/plans', { replace: true });
       return;
     }
+    // Верифицированные мастера получают тариф бесплатно — не показываем оплату
+    if (isMaster && isVerified && !isPendingUpgrade) {
+      navigate('/plans', { replace: true });
+      return;
+    }
+    // Неверифицированные мастера — способы оплаты скрыты, направляем на верификацию
+    if (isMaster && !isVerified) {
+      navigate('/dashboard/verification', { replace: true });
+      return;
+    }
     if (!isPendingUpgrade && !planFromQuery) {
       navigate('/plans', { replace: true });
     }
-  }, [isAuthed, isMaster, isPendingUpgrade, planFromQuery, navigate]);
+  }, [isAuthed, isMaster, isVerified, isPendingUpgrade, planFromQuery, navigate]);
 
   const onPayWithMia = async (): Promise<{ qrUrl: string; paymentId: string } | null> => {
     if (isPendingUpgrade) return null;

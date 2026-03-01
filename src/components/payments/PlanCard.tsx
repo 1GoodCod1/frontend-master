@@ -45,11 +45,14 @@ export const PlanCard = ({
       ? t(`plans.${planKey}.price`)
       : plan.price;
   const showFree = isMaster && isVerified && isPaid;
-  const priceText = showFree ? '0 MDL' : regularPrice;
+  const showVerifyToGetFree = isMaster && !isVerified && isPaid;
+  const priceText = showFree ? '0 MDL' : showVerifyToGetFree ? '' : regularPrice;
   const descriptionText =
-    t(`plans.${planKey}.description`) !== `plans.${planKey}.description`
-      ? t(`plans.${planKey}.description`)
-      : plan.description || '';
+    showVerifyToGetFree
+      ? t('plans.verifyToGetFreeDesc')
+      : t(`plans.${planKey}.description`) !== `plans.${planKey}.description`
+        ? t(`plans.${planKey}.description`)
+        : plan.description || '';
   const featuresObj = t(`plans.${planKey}.features`, {
     returnObjects: true,
   }) as Record<string, string> | string;
@@ -113,7 +116,9 @@ export const PlanCard = ({
           {showFree && regularPrice !== '0 MDL' && (
             <p className="text-sm text-muted-foreground line-through">{regularPrice}</p>
           )}
-          <p className={cn(priceClass, isCurrentPlan && 'underline')}>{priceText}</p>
+          {!showVerifyToGetFree && (
+            <p className={cn(priceClass, isCurrentPlan && 'underline')}>{priceText}</p>
+          )}
         </div>
         <p className={descClass}>{descriptionText}</p>
 
@@ -142,7 +147,7 @@ export const PlanCard = ({
               onClick={() => plan.tariffType && onBuy(plan.tariffType)}
             >
               <ArrowUpCircle className="h-4 w-4" />
-              {isVerified ? t('plans.claimFree') : t('plans.upgradeTo')} {t(`plans.${plan.name.toLowerCase()}.name`)}
+              {isVerified ? t('plans.claimFree') : showVerifyToGetFree ? t('plans.verifyToGetFree') : t('plans.upgradeTo')} {t(`plans.${plan.name.toLowerCase()}.name`)}
             </Button>
           ) : isPaid && isMaster ? (
             <Button
@@ -152,7 +157,7 @@ export const PlanCard = ({
               disabled={checkoutLoading || claimLoading}
               onClick={() => plan.tariffType && onBuy(plan.tariffType)}
             >
-              {isVerified ? t('plans.claimFree') : t('plans.buy')} {t(`plans.${plan.name.toLowerCase()}.name`)}
+              {isVerified ? t('plans.claimFree') : showVerifyToGetFree ? t('plans.verifyToGetFree') : t('plans.buy')} {t(`plans.${plan.name.toLowerCase()}.name`)}
             </Button>
           ) : isPaid && !isMaster ? (
             <Button

@@ -28,7 +28,6 @@ export default function PlansPage() {
     effectivePlan,
     isExpired,
     pendingUpgrade,
-    lifetimePremium,
     plansToShow,
     isLoading,
     checkoutLoading,
@@ -137,12 +136,22 @@ export default function PlansPage() {
           </p>
         </div>
 
+        {isMaster && !isVerified && (
+          <div className="rounded-lg border border-amber-500/40 bg-amber-50/80 dark:bg-amber-900/20 p-4 text-center">
+            <p className="text-sm font-medium text-foreground">
+              {t('plans.verifyBanner')}
+            </p>
+            <RouterLink to="/dashboard/verification" className="text-sm font-semibold text-primary hover:underline mt-1 inline-block">
+              {t('plans.goToVerification')}
+            </RouterLink>
+          </div>
+        )}
+
         <PlansAlerts
           isAuthed={isAuthed}
           effectivePlan={effectivePlan}
           isExpired={isExpired}
           pendingUpgrade={pendingUpgradeSafe}
-          lifetimePremium={lifetimePremium}
           confirmLoading={confirmLoading}
           cancelLoading={cancelLoading}
           onConfirmUpgrade={onConfirmPendingUpgrade}

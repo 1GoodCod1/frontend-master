@@ -70,7 +70,7 @@ export default function DashboardPage() {
     };
   }, []);
 
-  type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; lifetimePremium?: boolean; tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' };
+  type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' };
   type AvailabilityData = { availabilityStatus?: 'AVAILABLE' | 'BUSY' | 'OFFLINE'; maxActiveLeads?: number; currentActiveLeads?: number };
   const masterData: MasterProfileData = ((profile.data as { data?: MasterProfileData } | undefined)?.data ?? profile.data ?? {}) as MasterProfileData;
   const isOnline = masterData?.isOnline || false;
@@ -198,10 +198,10 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          {(masterData?.lifetimePremium || masterData?.tariffType === 'PREMIUM') ? (
+          {masterData?.tariffType === 'PREMIUM' ? (
             <Badge variant="outline" className="px-3 py-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 text-sm font-semibold rounded-full shadow-sm flex items-center gap-1.5 transition-all">
               <Rocket className="size-4" />
-              {masterData?.lifetimePremium ? 'PREMIUM ∞' : 'PREMIUM'}
+              PREMIUM
             </Badge>
           ) : (
             <Button asChild variant="outline" className="border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 rounded-full transition-all group">
@@ -439,15 +439,13 @@ export default function DashboardPage() {
           </Card>
 
           {/* Availability Control Card */}
-          {masterData?.lifetimePremium || masterData?.tariffType === 'PREMIUM' ? (
-            <div className="shadow-sm border border-border/50 rounded-xl overflow-hidden">
-              <AvailabilityControl
-                currentStatus={currentStatus}
-                maxActiveLeads={maxActiveLeads}
-                currentActiveLeads={currentActiveLeads}
-                onUpdate={handleUpdateAvailability}
-              />
-            </div>
+          {masterData?.tariffType === 'PREMIUM' ? (
+            <AvailabilityControl
+              currentStatus={currentStatus}
+              maxActiveLeads={maxActiveLeads}
+              currentActiveLeads={currentActiveLeads}
+              onUpdate={handleUpdateAvailability}
+            />
           ) : (
             <Card className="shadow-sm relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent z-0 pointer-events-none"></div>
