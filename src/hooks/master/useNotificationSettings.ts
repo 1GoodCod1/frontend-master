@@ -27,13 +27,14 @@ export function useNotificationSettings() {
   });
 
   useEffect(() => {
-    if (data) {
+    if (!data) return;
+    queueMicrotask(() => {
       setForm({
         telegramChatId: data.telegramChatId ?? null,
         whatsappPhone: data.whatsappPhone ?? null,
       });
-    }
-  }, [data?.telegramChatId, data?.whatsappPhone]);
+    });
+  }, [data]);
 
   const updateForm = (partial: UpdateNotificationSettingsDto) => {
     setForm((prev) => ({ ...prev, ...partial }));

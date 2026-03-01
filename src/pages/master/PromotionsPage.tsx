@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNow } from '@/hooks/useNow';
 import { Tag, Plus, Pencil, Trash2, Flame } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
@@ -59,6 +60,7 @@ function toDateInputValue(iso: string): string {
 export default function PromotionsPage() {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
+  const now = useNow();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(defaultForm);
@@ -79,18 +81,17 @@ export default function PromotionsPage() {
   }, [list]);
 
   const serviceTitles: string[] = useMemo(() => {
-    const a: any = profile;
+    const a = profile as { services?: unknown[]; data?: { services?: unknown[]; data?: { services?: unknown[] } } } | undefined;
     const candidates = [a?.services, a?.data?.services, a?.data?.data?.services];
-    const s = candidates.find(Array.isArray);
+    const s = candidates.find(Array.isArray) as { priceType?: string; title?: string }[] | undefined;
     if (!s) return [];
     return s
-      .filter((item: any) => item?.priceType === 'FIXED' && typeof item?.title === 'string' && item.title.trim())
-      .map((item: any) => item.title.trim());
+      .filter((item) => item?.priceType === 'FIXED' && typeof item?.title === 'string' && item.title.trim())
+      .map((item) => (item.title as string).trim());
   }, [profile]);
 
   /** Услуги, на которые уже действует отдельная акция (конкретная услуга). Акция «на все» не занимает услуги — она только на те, у кого нет своей акции. При редактировании — исключаем текущую акцию. */
   const takenServiceTitles = useMemo(() => {
-    const now = Date.now();
     const set = new Set<string>();
     for (const p of promotions) {
       if (!p.isActive || !p.serviceTitle?.trim()) continue;
@@ -101,11 +102,10 @@ export default function PromotionsPage() {
       set.add(p.serviceTitle.trim());
     }
     return set;
-  }, [promotions, editingId]);
+  }, [promotions, editingId, now]);
 
   /** Есть ли активная акция «на все» (кроме текущей при редактировании). */
   const hasActiveAllServicesPromo = useMemo(() => {
-    const now = Date.now();
     return promotions.some((p) => {
       if (!p.isActive || p.serviceTitle?.trim()) return false;
       const from = new Date(p.validFrom).getTime();
@@ -114,7 +114,7 @@ export default function PromotionsPage() {
       if (editingId && p.id === editingId) return false;
       return true;
     });
-  }, [promotions, editingId]);
+  }, [promotions, editingId, now]);
 
   /** «На все» можно выбрать только если есть хотя бы одна услуга без акции и ещё нет активной акции «на все». */
   const canApplyToAll = useMemo(() => {
@@ -212,7 +212,6 @@ export default function PromotionsPage() {
   };
 
   const statusInfo = (p: PromotionDto) => {
-    const now = Date.now();
     const until = new Date(p.validUntil).getTime();
     if (!p.isActive) return { label: t('promotionsPage.inactive'), type: 'secondary' as const };
     if (until < now) return { label: t('promotionsPage.expired'), type: 'destructive' as const };
@@ -222,7 +221,7 @@ export default function PromotionsPage() {
   };
 
   if (isLoading) return <LoadingState />;
-  if (error) return <ErrorState error={error as Error} onRetry={() => {}} />;
+  if (error) return <ErrorState error={error} onRetry={() => refetchPromotions()} />;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 md:py-8">

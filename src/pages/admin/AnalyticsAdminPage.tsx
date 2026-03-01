@@ -23,7 +23,7 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 export default function AnalyticsAdminPage() {
   const { t } = useTranslation();
   const [timeframe, setTimeframe] = useState<'day' | 'week' | 'month'>('week');
-  const q = useAdminAnalyticsQuery({ timeframe } as any);
+  const q = useAdminAnalyticsQuery({ timeframe });
 
   const analyticsData = (() => {
     const raw = q.data as unknown;
@@ -67,7 +67,7 @@ export default function AnalyticsAdminPage() {
         {q.isLoading ? (
           <LoadingState />
         ) : q.isError ? (
-          <ErrorState error={q.error as any} onRetry={() => q.refetch()} />
+          <ErrorState error={q.error} onRetry={() => q.refetch()} />
         ) : analyticsData ? (
           <div className="flex flex-col gap-6">
             <MetricCards data={analyticsData} />

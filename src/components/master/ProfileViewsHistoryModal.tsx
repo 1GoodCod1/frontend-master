@@ -31,7 +31,9 @@ export function ProfileViewsHistoryModal({
     { skip: !open },
   );
 
-  const items = Array.isArray(data) ? data : (data as any)?.data ?? [];
+  const items: { label: string; views: number }[] = Array.isArray(data)
+    ? (data as { label: string; views: number }[])
+    : ((data as unknown as { data?: { label: string; views: number }[] })?.data ?? []);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -97,7 +99,7 @@ export function ProfileViewsHistoryModal({
           )}
           {!isLoading && !isError && items.length > 0 && (
             <div className="space-y-2">
-              {items.map((item: { label: string; views: number }, idx: number) => (
+              {items.map((item, idx) => (
                 <div
                   key={idx}
                   className={cn(

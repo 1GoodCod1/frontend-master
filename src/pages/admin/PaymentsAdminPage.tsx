@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import type { GridColDef } from '@/types/dataGrid';
+import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminPayments } from '@/hooks/admin/payments/useAdminPayments';
+import { useAdminPayments, type AdminPaymentRow } from '@/hooks/admin/payments/useAdminPayments';
 import StatisticsCards from '@/components/admin/payments/StatisticsCards';
 import PaymentsFilters from '@/components/admin/payments/PaymentsFilters';
 import PaymentsEmptyState from '@/components/admin/payments/PaymentsEmptyState';
@@ -46,21 +46,21 @@ export default function PaymentsAdminPage() {
       headerName: t('admin.payments.master'),
       flex: 1,
       minWidth: 220,
-      renderCell: (params: any) => <MasterCell master={params.row?.master} />,
+      renderCell: (params: GridRenderCellParams) => <MasterCell master={params.row?.master as { user?: { firstName?: string; lastName?: string } } | null} />,
     },
     {
       field: 'tariffType',
       headerName: t('admin.payments.tariff'),
       width: 120,
-      renderCell: (params: any) => <TariffCell payment={params.row} />,
+      renderCell: (params: GridRenderCellParams) => <TariffCell payment={params.row} />,
     },
     {
       field: 'amount',
       headerName: t('admin.payments.amount'),
       width: 140,
       cellClassName: 'amount-cell',
-      renderCell: (params: any) => (
-        <AmountCell amount={params.row?.amount} currency={params.row?.currency} />
+      renderCell: (params: GridRenderCellParams) => (
+        <AmountCell amount={params.row?.amount as string | number} currency={params.row?.currency as string} />
       ),
     },
     {
@@ -68,13 +68,13 @@ export default function PaymentsAdminPage() {
       headerName: t('admin.payments.status'),
       width: 140,
       cellClassName: 'status-cell',
-      renderCell: (params: any) => <StatusCell status={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <StatusCell status={params.value as string} />,
     },
     {
       field: 'createdAt',
       headerName: t('admin.payments.created'),
       width: 180,
-      renderCell: (params: any) => <CreatedAtCell createdAt={params.row?.createdAt} />,
+      renderCell: (params: GridRenderCellParams) => <CreatedAtCell createdAt={params.row?.createdAt as string} />,
       sortable: false,
     },
   ];
@@ -119,10 +119,10 @@ export default function PaymentsAdminPage() {
             }}
             columns={columns}
             dataGridProps={{
-              onRowDoubleClick: (p: any) => setSelectedPayment(p.row),
+              onRowDoubleClick: (row) => setSelectedPayment(row as AdminPaymentRow),
               rowHeight: 80,
               disableRowSelectionOnClick: true,
-              getRowClassName: (params: any) => params.indexRelativeToCurrentPage % 2 === 0 ? 'even-row' : 'odd-row',
+              getRowClassName: (_row: Record<string, unknown>, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row',
               sx: {
                 '& .MuiDataGrid-cell': {
                   display: 'flex',

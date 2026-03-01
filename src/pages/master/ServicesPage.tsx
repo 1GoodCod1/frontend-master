@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
+import type { MasterServiceItem } from '@/types';
 
 type ServiceItem = {
   title: string;
@@ -44,10 +45,10 @@ const defaultService = (): ServiceItem => ({
 
 function normalizeServices(raw: unknown): ServiceItem[] {
   if (!Array.isArray(raw)) return [];
-  return raw.map((item: any) => ({
+  return raw.map((item: Record<string, unknown>) => ({
     title: typeof item?.title === 'string' ? item.title : '',
     priceType: item?.priceType === 'FIXED' ? 'FIXED' : 'NEGOTIABLE',
-    price: item?.priceType === 'FIXED' && item?.price != null ? Number(item.price) : '',
+    price: item?.priceType === 'FIXED' && item?.price != null ? Number(item.price as number) : '',
     currency: item?.currency === 'EUR' || item?.currency === 'USD' ? item.currency : 'MDL',
   }));
 }
@@ -88,7 +89,7 @@ export default function ServicesPage() {
       );
     if (serverChanged) {
       lastSyncedServicesRef.current = servicesList;
-      setList(servicesList);
+      queueMicrotask(() => setList(servicesList));
     }
   }, [servicesList, isAdding, editingIndex]);
 
@@ -159,7 +160,7 @@ export default function ServicesPage() {
 
   const handleSaveAll = async (listOverride?: ServiceItem[]) => {
     const source = listOverride ?? list;
-    const toSend = source
+    const toSend: MasterServiceItem[] = source
       .filter((s) => s.title.trim())
       .map((s) => ({
         title: s.title.trim(),
@@ -168,7 +169,7 @@ export default function ServicesPage() {
         currency: s.priceType === 'FIXED' ? s.currency : undefined,
       }));
     try {
-      const result = await update({ services: toSend } as any).unwrap();
+      const result = await update({ services: toSend }).unwrap();
       toast.success(t('servicesPage.saved'));
       setIsAdding(false);
       setEditingIndex(null);

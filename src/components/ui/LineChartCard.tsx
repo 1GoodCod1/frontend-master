@@ -3,20 +3,21 @@ import { Card, CardContent } from '@/components/ui/card';
 
 type Point = { date: string; value: number };
 
-function toSeries(obj: any): Point[] {
+function toSeries(obj: unknown): Point[] {
   if (Array.isArray(obj)) {
-    return obj.map((item: any) => ({
-      date: item.date || item.name || item.label || '',
-      value: item.value || item.count || item.total || 0,
+    return obj.map((item: Record<string, unknown>) => ({
+      date: String(item.date ?? item.name ?? item.label ?? ''),
+      value: Number(item.value ?? item.count ?? item.total ?? 0),
     }));
   }
-  if (Array.isArray(obj?.series)) return obj.series;
-  if (Array.isArray(obj?.items)) return obj.items;
-  if (Array.isArray(obj?.data)) return obj.data;
+  const o = obj as Record<string, unknown> | null | undefined;
+  if (Array.isArray(o?.series)) return o.series as Point[];
+  if (Array.isArray(o?.items)) return o.items as Point[];
+  if (Array.isArray(o?.data)) return o.data as Point[];
   return [];
 }
 
-export function LineChartCard({ title, data }: { title: string; data: any }) {
+export function LineChartCard({ title, data }: { title: string; data: unknown }) {
   const series = toSeries(data);
 
   if (!title) {

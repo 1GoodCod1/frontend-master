@@ -39,14 +39,14 @@ export default function ProfilePage() {
   if (q.isError) return <ErrorState error={q.error} onRetry={q.refetch} />;
 
   const rawProfile = q.data as unknown;
-  const profileData: any =
+  const profileData: Record<string, unknown> | undefined =
     rawProfile && typeof rawProfile === 'object' && 'data' in rawProfile
-      ? (rawProfile as { data?: unknown }).data
-      : rawProfile;
-  const profileLastEditedAt = profileData?.profileLastEditedAt;
+      ? (rawProfile as { data?: unknown }).data as Record<string, unknown> | undefined
+      : (rawProfile as Record<string, unknown> | undefined);
+  const profileLastEditedAt = profileData?.profileLastEditedAt as string | undefined;
 
   const now = new Date();
-  const lastEditedDate = profileLastEditedAt ? new Date(profileLastEditedAt) : null;
+  const lastEditedDate = profileLastEditedAt && typeof profileLastEditedAt === 'string' ? new Date(profileLastEditedAt) : null;
   const wasEdited = lastEditedDate !== null;
 
   const daysSinceUpdate = lastEditedDate
@@ -63,19 +63,20 @@ export default function ProfilePage() {
   const categories = unwrapList(categoriesQuery.data);
   const cities = unwrapList(citiesQuery.data);
 
-  const categoryOptions = categories.map((cat: any) => ({
-    value: cat.id,
-    label: getTranslatedCategoryName(t, cat) || cat.name || cat.id,
+  const categoryOptions = (categories as Record<string, unknown>[]).map((cat) => ({
+    value: String(cat.id ?? ''),
+    label: getTranslatedCategoryName(t, cat) || String(cat.name ?? cat.id ?? ''),
   }));
 
-  const cityOptions = cities.map((city: any) => ({
-    value: city.id,
-    label: getTranslatedCityName(t, city) || city.name || city.id,
+  const cityOptions = (cities as Record<string, unknown>[]).map((city) => ({
+    value: String(city.id ?? ''),
+    label: getTranslatedCityName(t, city) || String(city.name ?? city.id ?? ''),
   }));
 
+  const profileUser = profileData?.user as { firstName?: string; lastName?: string } | undefined;
   const initial = {
-    firstName: profileData?.user?.firstName || '',
-    lastName: profileData?.user?.lastName || '',
+    firstName: profileUser?.firstName || '',
+    lastName: profileUser?.lastName || '',
     cityId: profileData?.cityId || '',
     categoryId: profileData?.categoryId || '',
     experienceYears: profileData?.experienceYears || '',

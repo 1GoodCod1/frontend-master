@@ -18,7 +18,7 @@ type Row = {
   name?: string;
   slug?: string;
   isActive?: boolean;
-  [k: string]: any;
+  [k: string]: unknown;
 };
 
 export default function CitiesAdminPage() {
@@ -79,8 +79,8 @@ export default function CitiesAdminPage() {
             <ActionsCell
               id={String(id ?? '')}
               name={name}
-              onEdit={() => setEditRow(p.row as any)}
-              onDelete={() => handleDelete(p.row as any)}
+              onEdit={() => setEditRow(p.row as Row)}
+              onDelete={() => handleDelete(p.row as Row)}
             />
           );
         },
@@ -114,7 +114,7 @@ export default function CitiesAdminPage() {
               error={error}
               page={1}
               limit={100}
-              columns={columns as any}
+              columns={columns as import('@/types/dataGrid').GridColDef[]}
               onPageChange={() => {}}
               height={620}
               dataGridProps={{

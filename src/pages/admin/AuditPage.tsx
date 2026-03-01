@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Shield, History, Radio, Download } from 'lucide-react';
-import type { GridColDef } from '@/types/dataGrid';
+import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
-import { useAdminAudit } from '@/hooks/admin/audit/useAdminAudit';
+import { useAdminAudit, type AuditLogRow } from '@/hooks/admin/audit/useAdminAudit';
 import StatisticsCards from '@/components/admin/audit/StatisticsCards';
 import AuditLogDetailsDialog from '@/components/admin/audit/AuditLogDetailsDialog';
 import AuditEmptyState from '@/components/admin/audit/AuditEmptyState';
@@ -56,32 +56,32 @@ export default function AuditPage() {
       field: 'action',
       headerName: t('admin.audit.action'),
       width: 180,
-      renderCell: (params: any) => <ActionCell action={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <ActionCell action={params.value as string} />,
     },
     {
       field: 'entity',
       headerName: t('admin.audit.entity'),
       width: 140,
-      renderCell: (params: any) => <EntityCell entity={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <EntityCell entity={params.value as string} />,
     },
     {
       field: 'actorId',
       headerName: t('admin.audit.actor'),
       flex: 1,
       minWidth: 180,
-      renderCell: (params: any) => <ActorCell actorId={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <ActorCell actorId={params.value as string} />,
     },
     {
       field: 'ip',
       headerName: t('admin.audit.ipAddress'),
       width: 150,
-      renderCell: (params: any) => <IpCell ip={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <IpCell ip={params.value as string} />,
     },
     {
       field: 'createdAt',
       headerName: t('admin.audit.created'),
       width: 180,
-      renderCell: (params: any) => <CreatedAtCell createdAt={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <CreatedAtCell createdAt={params.value as string} />,
       sortable: false,
     },
   ];
@@ -162,9 +162,9 @@ export default function AuditPage() {
                   }}
                   columns={logColumns}
                   dataGridProps={{
-                    onRowDoubleClick: (p: any) => setSelectedLog(p.row),
+                    onRowDoubleClick: (row) => setSelectedLog(row as AuditLogRow),
                     rowHeight: 70,
-                    getRowClassName: (params: any) => params.indexRelativeToCurrentPage % 2 === 0 ? 'even-row' : 'odd-row',
+                    getRowClassName: (_row, index) => index % 2 === 0 ? 'even-row' : 'odd-row',
                   }}
                 />
                 

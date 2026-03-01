@@ -41,13 +41,14 @@ export default function ReviewsPage() {
   const allItems = unwrapList(q.data);
 
   const filteredAndSortedItems = useMemo(() => {
-    let filtered = allItems;
+    const items = allItems as Record<string, unknown>[];
+    let filtered = items;
     if (statusFilter !== 'ALL') {
-      filtered = allItems.filter((r: any) => r.status === statusFilter);
+      filtered = items.filter((r) => r.status === statusFilter);
     }
-    const sorted = [...filtered].sort((a: any, b: any) => {
-      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    const sorted = [...filtered].sort((a, b) => {
+      const dateA = a.createdAt ? new Date(a.createdAt as string).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt as string).getTime() : 0;
       return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
     });
     return sorted;
@@ -104,9 +105,9 @@ export default function ReviewsPage() {
             />
           ) : (
             <div className="flex flex-col gap-4">
-              {filteredAndSortedItems.map((review: any, idx: number) => (
+              {filteredAndSortedItems.map((review, idx) => (
                 <Card
-                  key={review.id}
+                  key={String(review.id ?? idx)}
                   className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/30 dark:backdrop-blur-sm shadow-[0_2px_10px_-3px_rgba(6,81,237,0.06)] hover:shadow-[0_6px_24px_rgb(0,0,0,0.06)] dark:shadow-none dark:hover:bg-white/[0.03] transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards"
                   style={{ animationDelay: `${Math.min(idx * 50, 300)}ms` }}
                 >
@@ -116,29 +117,30 @@ export default function ReviewsPage() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <User className="size-5 text-primary opacity-70 shrink-0" />
                           <span className="font-semibold text-foreground">
-                            {review?.clientName?.trim() ||
-                              (review?.client &&
-                                [review.client.firstName, review.client.lastName].filter(Boolean).join(' ').trim()) ||
-                              t('reviews.client')}
+                            {String(review?.clientName ?? '').trim() ||
+                              (review?.client && typeof review.client === 'object'
+                                ? [String((review.client as Record<string, unknown>).firstName ?? ''), String((review.client as Record<string, unknown>).lastName ?? '')].filter(Boolean).join(' ').trim()
+                                : '') ||
+                              String(t('reviews.client'))}
                           </span>
                           <div className="flex items-center gap-1">
-                            <StarRatingDisplay value={review?.rating ?? 0} size="sm" />
+                            <StarRatingDisplay value={Number(review?.rating ?? 0)} size="sm" />
                             <span className="font-semibold text-amber-600 dark:text-amber-400">
-                              {review?.rating ?? '—'}
+                              {String(review?.rating ?? '—') as unknown as React.ReactNode}
                             </span>
                           </div>
                         </div>
-                        {review?.createdAt && (
+                        {review?.createdAt ? (
                           <div className="flex items-center gap-1 text-muted-foreground text-sm">
                             <Clock className="size-4 opacity-70" />
-                            {formatDateTimeString(review.createdAt, locale)}
+                            {formatDateTimeString(review.createdAt as string, locale)}
                           </div>
-                        )}
+                        ) : null}
                       </div>
-                      <StatusChip kind="review" value={review?.status} />
+                      <StatusChip kind="review" value={String(review?.status ?? '')} />
                     </div>
 
-                    {review?.reviewCriteria?.length > 0 && (
+                    {Array.isArray(review?.reviewCriteria) && (review.reviewCriteria as Record<string, unknown>[]).length > 0 && (
                       <>
                         <div className="my-3 border-t border-slate-100 dark:border-white/[0.08]" />
                         <div>
@@ -146,37 +148,41 @@ export default function ReviewsPage() {
                             {t('reviews.detailedRatings')}
                           </p>
                           <div className="flex flex-wrap gap-2">
-                            {review.reviewCriteria.map((crit: any) => (
-                              <div
-                                key={crit.id}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-white/[0.06] border border-slate-100 dark:border-white/[0.06]"
-                              >
-                                <span className="text-sm font-semibold capitalize">
-                                  {t(`reviews.criteria.${crit.criteria}`)}
-                                </span>
-                                <span className="flex items-center gap-0.5">
-                                  <Star className="size-4 text-amber-500 fill-amber-500" />
-                                  <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
-                                    {crit.rating}
+                            {(review.reviewCriteria as Record<string, unknown>[]).map((crit, critIdx) => {
+                              const ratingStr: string = String(crit.rating ?? '');
+                              const labelStr: string = String(t(`reviews.criteria.${String(crit.criteria ?? '')}`));
+                              return (
+                                <div
+                                  key={String(crit.id ?? critIdx)}
+                                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-white/[0.06] border border-slate-100 dark:border-white/[0.06]"
+                                >
+                                  <span className="text-sm font-semibold capitalize">
+                                    {labelStr}
                                   </span>
-                                </span>
-                              </div>
-                            ))}
+                                  <span className="flex items-center gap-0.5">
+                                    <Star className="size-4 text-amber-500 fill-amber-500" />
+                                    <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
+                                      {ratingStr}
+                                    </span>
+                                  </span>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </>
                     )}
 
-                    {review?.comment && (
+                    {review?.comment ? (
                       <>
                         <div className="my-3 border-t border-slate-100 dark:border-white/[0.08]" />
                         <div className="p-4 rounded-lg bg-slate-50/80 dark:bg-white/[0.04] border border-slate-100 dark:border-white/[0.06]">
                           <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap">
-                            {review.comment}
+                            {String(review.comment)}
                           </p>
                         </div>
                       </>
-                    )}
+                    ) : null}
                   </CardContent>
                 </Card>
               ))}

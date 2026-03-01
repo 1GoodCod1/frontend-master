@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useNow } from '@/hooks/useNow';
 import { Flame, Tag, ArrowRight, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePromotionsActiveQuery } from '@/features/promotions/promotionsApi';
@@ -12,13 +13,14 @@ import type { PromotionDto } from '@/types';
 export function PromotionsSection() {
     const { t } = useTranslation();
     const nav = useNavigate();
+    const now = useNow();
     const { data, isLoading, isError } = usePromotionsActiveQuery({ limit: 6 });
     const promotions = data ?? [];
 
     if (isError || (!isLoading && promotions.length === 0)) return null;
 
     const daysUntil = (dateStr: string) => {
-        const diff = new Date(dateStr).getTime() - Date.now();
+        const diff = new Date(dateStr).getTime() - now;
         return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
     };
 

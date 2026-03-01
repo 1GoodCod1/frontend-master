@@ -5,7 +5,7 @@ import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useAdminReports } from '@/hooks/admin/reports/useAdminReports';
 import StatisticsCards from '@/components/admin/reports/StatisticsCards';
 import ReportsFilters from '@/components/admin/reports/ReportsFilters';
-import ReportCard from '@/components/admin/reports/ReportCard';
+import ReportCard, { type ReportLike } from '@/components/admin/reports/ReportCard';
 import ReportsEmptyState from '@/components/admin/reports/ReportsEmptyState';
 import ReportReviewDialog from '@/components/admin/reports/ReportReviewDialog';
 
@@ -35,7 +35,7 @@ export default function ReportsAdminPage() {
   } = useAdminReports();
 
   if (isLoading) return <CardsSkeleton count={5} />;
-  if (isError) return <ErrorState error={error as any} onRetry={refetch} />;
+  if (isError) return <ErrorState error={error} onRetry={refetch} />;
 
   return (
     <div className="animate-in fade-in duration-200">
@@ -62,8 +62,8 @@ export default function ReportsAdminPage() {
         <ReportsEmptyState statusFilter={statusFilter} />
       ) : (
         <div className="flex flex-col gap-4">
-          {reportsList.map((report: any) => (
-            <ReportCard key={report.id} report={report} onOpenDialog={handleOpenDialog} />
+          {reportsList.map((report, idx) => (
+            <ReportCard key={String(report.id ?? idx)} report={report as ReportLike} onOpenDialog={handleOpenDialog} />
           ))}
         </div>
       )}

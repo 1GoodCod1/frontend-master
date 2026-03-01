@@ -211,7 +211,7 @@ export default function MasterDetailsPage() {
                 error={reviewsQuery.error}
                 onRetry={reviewsQuery.refetch}
                 isClient={isClient}
-                canCreateReview={canCreateReviewQuery.data}
+                canCreateReview={canCreateReviewQuery.data ?? undefined}
                 reviewSubmission={reviewSubmission}
               />
             </div>

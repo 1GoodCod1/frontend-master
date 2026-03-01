@@ -6,7 +6,7 @@ import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminLeads } from '@/hooks/admin/leads/useAdminLeads';
+import { useAdminLeads, type AdminLeadRow } from '@/hooks/admin/leads/useAdminLeads';
 import StatisticsCards from '@/components/admin/leads/StatisticsCards';
 import LeadsFilters from '@/components/admin/leads/LeadsFilters';
 import BulkActions from '@/components/admin/leads/BulkActions';
@@ -61,21 +61,21 @@ export default function LeadsAdminPage() {
       headerName: t('admin.leads.client'),
       flex: 1,
       minWidth: 220,
-      renderCell: (params: any) => <ClientCell lead={params.row} />,
+      renderCell: (params) => <ClientCell lead={params.row as AdminLeadRow} />,
     },
     {
       field: 'master',
       headerName: t('admin.leads.master'),
       width: 200,
-      renderCell: (params: any) => <MasterCell master={params.row?.master} />,
+      renderCell: (params) => <MasterCell master={params.row?.master as { id?: string; slug?: string; user?: { firstName?: string; lastName?: string } } | null} />,
     },
     {
       field: 'status',
       headerName: t('admin.leads.status'),
       width: 140,
       cellClassName: 'status-cell',
-      renderCell: (params: any) => (
-        <StatusCell status={params.value} isPremium={Boolean(params.row?.isPremium)} />
+      renderCell: (params) => (
+        <StatusCell status={params.value as string} isPremium={Boolean(params.row?.isPremium)} />
       ),
     },
     {
@@ -83,15 +83,15 @@ export default function LeadsAdminPage() {
       headerName: t('admin.leads.message'),
       flex: 1,
       minWidth: 200,
-      renderCell: (params: any) => (
-        <MessageCell message={params.row?.message || params.row?.description} />
+      renderCell: (params) => (
+        <MessageCell message={(params.row?.message ?? params.row?.description) as string} />
       ),
     },
     {
       field: 'createdAt',
       headerName: t('admin.leads.created'),
       width: 180,
-      renderCell: (params: any) => <CreatedAtCell createdAt={params?.row?.createdAt} />,
+      renderCell: (params) => <CreatedAtCell createdAt={params.row?.createdAt as string} />,
       sortable: false,
     },
   ];
@@ -149,13 +149,13 @@ export default function LeadsAdminPage() {
             }}
             columns={columns}
             dataGridProps={{
-              onRowClick: (row: any) => setSelectedLead(row),
-              onRowDoubleClick: (row: any) => setSelectedLead(row),
+              onRowClick: (row) => setSelectedLead(row as AdminLeadRow),
+              onRowDoubleClick: (row) => setSelectedLead(row as AdminLeadRow),
               rowHeight: 80,
               disableRowSelectionOnClick: false,
-              getRowClassName: (params: any) => {
-                const isRecentRow = isRecent(params.row?.id);
-                const isEven = params.indexRelativeToCurrentPage % 2 === 0;
+              getRowClassName: (row: Record<string, unknown>, index: number) => {
+                const isRecentRow = isRecent(row?.id);
+                const isEven = index % 2 === 0;
                 return isRecentRow ? 'mm-recent-row' : isEven ? 'even-row' : '';
               },
               sx: {
@@ -221,7 +221,7 @@ export default function LeadsAdminPage() {
               },
               checkboxSelection: true,
               rowSelectionModel: selection,
-              onRowSelectionModelChange: (m: any) => setSelection(m as string[]),
+              onRowSelectionModelChange: (m: (string | number)[]) => setSelection(m as string[]),
             }}
           />
 

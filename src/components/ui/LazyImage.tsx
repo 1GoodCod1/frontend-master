@@ -38,8 +38,10 @@ export function LazyImage({
   const [containerRef, isInView] = useInView('50px', true);
 
   useEffect(() => {
-    setIsLoaded(false);
-    setHasError(false);
+    queueMicrotask(() => {
+      setIsLoaded(false);
+      setHasError(false);
+    });
   }, [src]);
 
   const handleLoad = () => {

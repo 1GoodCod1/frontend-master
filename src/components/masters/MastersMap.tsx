@@ -154,7 +154,7 @@ export function MastersMap({ masters, className }: MastersMapProps) {
         return () => {
             // Don't destroy map on re-renders, just clear markers
         };
-    }, [mastersWithCoords.length, mastersWithCoords.map(m => m.id || m.slug).join(',')]);
+    }, [mastersWithCoords]);
 
     // Cleanup on unmount
     useEffect(() => {

@@ -25,8 +25,19 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
         { skip: !masterId },
     );
 
-    const items = (portfolioQuery.data as any)?.data ?? portfolioQuery.data ?? [];
-    const tags = (tagsQuery.data as any)?.data ?? tagsQuery.data ?? [];
+    type PortfolioItem = { id?: string; title?: string; description?: string; beforeFile?: { path?: string }; afterFile?: { path?: string }; serviceTags?: string[] };
+    const rawPortfolio = portfolioQuery.data as unknown;
+    const items: PortfolioItem[] = (rawPortfolio && typeof rawPortfolio === 'object' && 'data' in rawPortfolio && Array.isArray((rawPortfolio as { data: PortfolioItem[] }).data))
+        ? (rawPortfolio as { data: PortfolioItem[] }).data
+        : Array.isArray(rawPortfolio)
+            ? (rawPortfolio as PortfolioItem[])
+            : [];
+    const rawTags = tagsQuery.data as unknown;
+    const tags: string[] = (rawTags && typeof rawTags === 'object' && 'data' in rawTags && Array.isArray((rawTags as { data: string[] }).data))
+        ? (rawTags as { data: string[] }).data
+        : Array.isArray(rawTags)
+            ? (rawTags as string[])
+            : [];
 
     if (portfolioQuery.isLoading) {
         return (
@@ -75,7 +86,7 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
                         >
                             {t('masterDetails.portfolioAllTags', 'Все')}
                         </button>
-                        {tags.map((tag: string) => (
+                        {tags.map((tag) => (
                             <button
                                 key={tag}
                                 className={`portfolio-filter__btn ${activeTag === tag ? 'portfolio-filter__btn--active' : ''}`}
@@ -89,8 +100,8 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
 
                 {/* Portfolio grid */}
                 <div className="portfolio-grid">
-                    {items.map((item: any) => (
-                        <div key={item.id} className="portfolio-card">
+                    {items.map((item, i) => (
+                        <div key={item.id ?? i} className="portfolio-card">
                             <BeforeAfterSlider
                                 beforeSrc={mediaUrl(item.beforeFile?.path)}
                                 afterSrc={mediaUrl(item.afterFile?.path)}
@@ -98,17 +109,17 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
                                 afterAlt={item.title ? `${item.title} - после` : 'После'}
                                 height={280}
                             />
-                            {(item.title || item.description || item.serviceTags?.length > 0) && (
+                            {(item.title || item.description || (item.serviceTags?.length ?? 0) > 0) && (
                                 <div className="portfolio-card__content">
                                     {item.title && (
-                                        <h4 className="portfolio-card__title">{item.title}</h4>
+                                        <h4 className="portfolio-card__title">{String(item.title)}</h4>
                                     )}
                                     {item.description && (
-                                        <p className="portfolio-card__description">{item.description}</p>
+                                        <p className="portfolio-card__description">{String(item.description)}</p>
                                     )}
-                                    {item.serviceTags?.length > 0 && (
+                                    {(item.serviceTags?.length ?? 0) > 0 && (
                                         <div className="portfolio-card__tags">
-                                            {item.serviceTags.map((tag: string) => (
+                                            {(item.serviceTags ?? []).map((tag) => (
                                                 <span key={tag} className="portfolio-tag">
                                                     <Tag className="h-3 w-3" />
                                                     {tag}

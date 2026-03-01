@@ -36,6 +36,8 @@ import {
 } from '@/components/ui/alert';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { cn } from '@/lib/utils';
+import { toErrorMessage } from '@/utils/errors';
+import type { MasterTariffResponse, PaymentDto } from '@/types';
 
 const PLAN_COLORS: Record<string, { bg: string; border: string; text: string; icon: string }> = {
     BASIC: {
@@ -77,10 +79,10 @@ export default function SubscriptionPage() {
     const [cancelTariffAtPeriodEnd, cancelAtPeriodEndState] = usePaymentsCancelTariffAtPeriodEndMutation();
     const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
 
-    const tariffData = (tariffRaw as any)?.data ?? tariffRaw;
+    const tariffData = (tariffRaw as { data?: MasterTariffResponse } | undefined)?.data ?? (tariffRaw as MasterTariffResponse | undefined);
     const tariffType: TariffPlan = tariffData?.tariffType ?? plan;
     const tariffExpiresAt = tariffData?.tariffExpiresAt ? new Date(tariffData.tariffExpiresAt) : null;
-    const isExpired = tariffData?.isExpired ?? (tariffExpiresAt ? tariffExpiresAt.getTime() <= Date.now() : false);
+    const isExpired = tariffData?.isExpired ?? false;
     const lifetimePremium = tariffData?.lifetimePremium ?? false;
     const pendingUpgrade = tariffData?.pendingUpgrade;
     const cancelAtPeriodEnd = tariffData?.tariffCancelAtPeriodEnd ?? false;
@@ -104,8 +106,8 @@ export default function SubscriptionPage() {
             await cancelPendingUpgrade().unwrap();
             toast.success(t('subscription.upgradeCancelled'));
             refetchTariff();
-        } catch (e: any) {
-            toast.error(e?.data?.message || e?.message || t('plans.cancelFailed'));
+        } catch (e: unknown) {
+            toast.error(toErrorMessage(e) ?? t('plans.cancelFailed'));
         }
     };
 
@@ -115,8 +117,8 @@ export default function SubscriptionPage() {
             toast.success(t('plans.cancelAtPeriodEndSuccess'));
             refetchTariff();
             setCancelConfirmOpen(false);
-        } catch (e: any) {
-            toast.error(e?.data?.message || e?.message || t('plans.cancelFailed'));
+        } catch (e: unknown) {
+            toast.error(toErrorMessage(e) ?? t('plans.cancelFailed'));
         }
     };
 
@@ -408,7 +410,7 @@ export default function SubscriptionPage() {
                             <p className="text-sm text-muted-foreground">{t('subscription.noPayments')}</p>
                         ) : (
                             <div className="space-y-3">
-                                {recentPayments.map((payment: any) => (
+                                {recentPayments.map((payment: PaymentDto) => (
                                     <div
                                         key={payment.id}
                                         className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-white/[0.08] last:border-0"

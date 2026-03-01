@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, X, Hourglass, Wrench, Eye, Loader2 } from 'lucide-react';
 import { useIdeasListQuery, useIdeaUpdateStatusMutation } from '@/features/ideas/ideasApi';
-import { IdeaStatusFilter, IdeaStatus, type Idea } from '@/types/ideas';
+import { IdeaStatusFilter, IdeaStatus, IdeaSortBy, type Idea } from '@/types/ideas';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
@@ -36,7 +36,7 @@ import {
 export default function IdeasAdminPage() {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
-  const [selectedIdea, setSelectedIdea] = useState<any>(null);
+  const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [moderationDialogOpen, setModerationDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<IdeaStatus>(IdeaStatus.APPROVED);
   const [adminNote, setAdminNote] = useState('');
@@ -45,12 +45,12 @@ export default function IdeasAdminPage() {
     page: 1,
     limit: 50,
     status: IdeaStatusFilter.ALL,
-    sortBy: 'CREATED_AT' as any,
+    sortBy: IdeaSortBy.CREATED_AT,
   });
 
   const [updateStatus, { isLoading: isUpdating }] = useIdeaUpdateStatusMutation();
 
-  const handleOpenModeration = (idea: any) => {
+  const handleOpenModeration = (idea: Idea) => {
     setSelectedIdea(idea);
     setNewStatus(idea.status);
     setAdminNote(idea.adminNote || '');
@@ -121,7 +121,7 @@ export default function IdeasAdminPage() {
     }
   };
 
-  const getAuthorName = (idea: any) => {
+  const getAuthorName = (idea: Idea) => {
     if (idea.author?.firstName || idea.author?.lastName) {
       return `${idea.author.firstName || ''} ${idea.author.lastName || ''}`.trim();
     }

@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import type { GridColDef } from '@/types/dataGrid';
+import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminMasters } from '@/hooks/admin/masters/useAdminMasters';
+import { useAdminMasters, type AdminMasterRow } from '@/hooks/admin/masters/useAdminMasters';
 import StatisticsCards from '@/components/admin/masters/StatisticsCards';
 import MastersFilters from '@/components/admin/masters/MastersFilters';
 import MastersEmptyState from '@/components/admin/masters/MastersEmptyState';
@@ -55,39 +55,39 @@ export default function MastersAdminPage() {
       headerName: t('admin.masters.master'),
       flex: 1,
       minWidth: 280,
-      renderCell: (params: any) => <MasterCell master={params.row} />,
+      renderCell: (params: GridRenderCellParams) => <MasterCell master={params.row} />,
     },
     {
       field: 'category',
       headerName: t('admin.masters.category'),
       width: 180,
-      renderCell: (params: any) => (
-        <CategoryCell category={params.row?.category} categoryName={params.row?.categoryName} />
+      renderCell: (params: GridRenderCellParams) => (
+        <CategoryCell category={params.row?.category as { name?: string } | null} categoryName={params.row?.categoryName as string} />
       ),
     },
     {
       field: 'city',
       headerName: t('admin.masters.city'),
       width: 160,
-      renderCell: (params: any) => (
-        <CityCell city={params.row?.city} cityName={params.row?.cityName} />
+      renderCell: (params: GridRenderCellParams) => (
+        <CityCell city={params.row?.city as { name?: string } | null} cityName={params.row?.cityName as string} />
       ),
     },
     {
       field: 'tariff',
       headerName: t('admin.masters.tariff'),
       width: 120,
-      renderCell: (params: any) => <TariffCell master={params.row} />,
+      renderCell: (params: GridRenderCellParams) => <TariffCell master={params.row} />,
     },
     {
       field: 'rating',
       headerName: t('admin.masters.rating'),
       width: 130,
       cellClassName: 'rating-cell',
-      renderCell: (params: any) => (
+      renderCell: (params: GridRenderCellParams) => (
         <RatingCell 
-          rating={params.row?.avgRating || params.row?.rating} 
-          reviewCount={params.row?.reviewCount} 
+          rating={(params.row?.avgRating ?? params.row?.rating) as number} 
+          reviewCount={params.row?.reviewCount as number} 
         />
       ),
     },
@@ -96,22 +96,22 @@ export default function MastersAdminPage() {
       headerName: t('admin.masters.views'),
       width: 110,
       cellClassName: 'views-cell',
-      renderCell: (params: any) => <ViewsCell views={params.row?.views} />,
+      renderCell: (params: GridRenderCellParams) => <ViewsCell views={params.row?.views as number} />,
     },
     {
       field: 'isVerified',
       headerName: t('admin.masters.status'),
       width: 140,
       cellClassName: 'status-cell',
-      renderCell: (params: any) => (
-        <StatusCell isVerified={params.value ?? params.row?.user?.isVerified} />
+      renderCell: (params: GridRenderCellParams) => (
+        <StatusCell isVerified={Boolean(params.value ?? (params.row as { user?: { isVerified?: boolean } })?.user?.isVerified)} />
       ),
     },
     {
       field: 'createdAt',
       headerName: t('admin.masters.created'),
       width: 180,
-      renderCell: (params: any) => <CreatedAtCell createdAt={params.row?.createdAt} />,
+      renderCell: (params: GridRenderCellParams) => <CreatedAtCell createdAt={params.row?.createdAt as string} />,
       sortable: false,
     },
   ];
@@ -159,10 +159,10 @@ export default function MastersAdminPage() {
             }}
             columns={columns}
             dataGridProps={{
-              onRowDoubleClick: (p: any) => setSelectedMaster(p.row),
+              onRowDoubleClick: (row) => setSelectedMaster(row as AdminMasterRow),
               rowHeight: 80,
               disableRowSelectionOnClick: true,
-              getRowClassName: (params: any) => params.indexRelativeToCurrentPage % 2 === 0 ? 'even-row' : 'odd-row',
+              getRowClassName: (_row: Record<string, unknown>, index: number) => index % 2 === 0 ? 'even-row' : 'odd-row',
               sx: {
                 '& .MuiDataGrid-cell': {
                   display: 'flex',

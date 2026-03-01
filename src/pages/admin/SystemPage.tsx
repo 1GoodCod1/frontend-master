@@ -364,7 +364,7 @@ export default function SystemPage() {
 
   const handleCreateBackup = async () => {
     try {
-      await createBackup({} as any).unwrap();
+      await createBackup().unwrap();
       toast.success(t('admin.system.backupCreated'));
       
       // Принудительно обновляем список backup'ов несколько раз
@@ -378,8 +378,12 @@ export default function SystemPage() {
       setTimeout(refetchBackups, 500);
       setTimeout(refetchBackups, 1500);
       setTimeout(refetchBackups, 3000);
-    } catch (e: any) {
-      toast.error(e?.data?.message ?? e?.message ?? t('admin.system.createFailed'));
+    } catch (e: unknown) {
+      const msg = e && typeof e === 'object' && 'data' in e && (e as { data?: { message?: string } }).data?.message;
+      const fallback = e && typeof e === 'object' && 'message' in e && typeof (e as { message?: string }).message === 'string'
+        ? (e as { message: string }).message
+        : t('admin.system.createFailed');
+      toast.error((msg as string) ?? fallback);
     }
   };
 
@@ -412,8 +416,9 @@ export default function SystemPage() {
       document.body.removeChild(a);
       
       toast.success(t('admin.system.backupDownloaded'));
-    } catch (e: any) {
-      toast.error(e?.message ?? t('admin.system.downloadFailed'));
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : (e && typeof e === 'object' && 'message' in e ? String((e as { message?: unknown }).message) : null);
+      toast.error(msg ?? t('admin.system.downloadFailed'));
     }
   };
 
@@ -431,7 +436,7 @@ export default function SystemPage() {
 
   // Показываем ошибку только если нет данных вообще
   if (info.isError && !info.data) {
-    return <ErrorState error={info.error as any} onRetry={info.refetch} />;
+    return <ErrorState error={info.error} onRetry={info.refetch} />;
   }
 
   return (
@@ -570,23 +575,23 @@ export default function SystemPage() {
           {backups.isLoading ? (
             <LoadingState />
           ) : backups.isError ? (
-            <ErrorState error={backups.error as any} onRetry={backups.refetch} />
+            <ErrorState error={backups.error} onRetry={backups.refetch} />
           ) : Array.isArray(backupsList) && backupsList.length > 0 ? (
             <div className="space-y-3">
-              {backupsList.map((backup: any, index: number) => (
+              {backupsList.map((backup: Record<string, unknown>, index: number) => (
                 <div
                   key={index}
                   className="p-4 rounded-lg border bg-card transition-colors hover:bg-muted/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
                 >
                   <div className="flex-1 min-w-0 space-y-0.5">
-                    <p className="font-semibold text-foreground">{backup.filename || `Backup ${index + 1}`}</p>
+                    <p className="font-semibold text-foreground">{String(backup.filename ?? '') || `Backup ${index + 1}`}</p>
                     <p className="text-xs text-muted-foreground">
-                      Created: {backup.created ? formatDateTimeString(backup.created, locale) : backup.modified ? formatDateTimeString(backup.modified, locale) : 'Unknown date'}
+                      Created: {backup.created ? formatDateTimeString(backup.created as string | Date, locale) : backup.modified ? formatDateTimeString(backup.modified as string | Date, locale) : 'Unknown date'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {backup.size && <Badge variant="secondary" className="text-xs">{backup.size}</Badge>}
-                    <ShadcnButton variant="outline" size="sm" onClick={() => handleDownloadBackup(backup.filename)}>
+                    {backup.size != null && <Badge variant="secondary" className="text-xs">{String(backup.size)}</Badge>}
+                    <ShadcnButton variant="outline" size="sm" disabled={typeof backup.filename !== 'string'} onClick={() => typeof backup.filename === 'string' && handleDownloadBackup(backup.filename)}>
                       {t('admin.system.download')}
                     </ShadcnButton>
                   </div>

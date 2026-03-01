@@ -48,10 +48,12 @@ export function MasterChatSettingsDialog(props: Props) {
 
   useEffect(() => {
     if (!open) return;
-    setTab('templates');
-    setDraftReplies(initialReplies);
-    setAutoEnabled(autoresponder?.autoresponderEnabled ?? false);
-    setAutoMessage(autoresponder?.autoresponderMessage ?? '');
+    queueMicrotask(() => {
+      setTab('templates');
+      setDraftReplies(initialReplies);
+      setAutoEnabled(autoresponder?.autoresponderEnabled ?? false);
+      setAutoMessage(autoresponder?.autoresponderMessage ?? '');
+    });
   }, [open, initialReplies, autoresponder?.autoresponderEnabled, autoresponder?.autoresponderMessage]);
 
   const move = (from: number, to: number) => {
@@ -109,7 +111,7 @@ export function MasterChatSettingsDialog(props: Props) {
         </DialogHeader>
 
         <DialogBody>
-          <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
+          <Tabs value={tab} onValueChange={(v) => setTab(v as 'templates' | 'autoresponder')}>
             <TabsList className="w-full">
               <TabsTrigger value="templates" className="flex-1">
                 {t('chat.quickReplies', 'Шаблоны')}

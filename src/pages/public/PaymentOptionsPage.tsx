@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Wallet, Building2, ArrowLeft } from 'lucide-react';
 import { usePaymentOptionsPage } from '@/hooks/payments/usePaymentOptionsPage';
+import { toErrorMessage } from '@/utils/errors';
 import { usePaymentsSimulateMiaSandboxMutation } from '@/features/payments/paymentsApi';
 import { LoadingState } from '@/components/common/States';
 import { PaymentMethodCard } from '@/components/payments/PaymentMethodCard';
@@ -45,8 +46,8 @@ export default function PaymentOptionsPage() {
       toast.success(t('paymentOptions.sandboxSimulateSuccess'));
       setMiaState(null);
       navigate('/plans/checkout/success', { replace: true });
-    } catch (e: any) {
-      toast.error(e?.data?.message || e?.message || t('paymentOptions.sandboxSimulateFailed'));
+    } catch (e: unknown) {
+      toast.error(toErrorMessage(e) ?? t('paymentOptions.sandboxSimulateFailed'));
     }
   };
 

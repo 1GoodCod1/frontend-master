@@ -59,12 +59,10 @@ export function ImageLightboxModal({
     setIndex(nextIndex);
   }, [canGoNext, nextIndex, setIndex]);
 
-  useEffect(() => {
-    if (open) {
-      const i = Math.min(Math.max(0, initialIndex), Math.max(0, total - 1));
-      setIndex(i);
-    }
-  }, [open, initialIndex, total]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (open) {
+    const i = Math.min(Math.max(0, initialIndex), Math.max(0, total - 1));
+    if (i !== index) setIndex(i);
+  }
 
   useEffect(() => {
     if (!open) return;

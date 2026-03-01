@@ -1,19 +1,19 @@
 import { useTranslation } from 'react-i18next';
-import type { GridColDef } from '@/types/dataGrid';
+import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminReviews } from '@/hooks/admin/reviews/useAdminReviews';
+import { useAdminReviews, type AdminReviewRow } from '@/hooks/admin/reviews/useAdminReviews';
 import StatisticsCards from '@/components/admin/reviews/StatisticsCards';
 import ReviewsFilters from '@/components/admin/reviews/ReviewsFilters';
 import BulkActions from '@/components/admin/reviews/BulkActions';
 import ReviewDetailsDialog from '@/components/admin/reviews/ReviewDetailsDialog';
 import ReviewsEmptyState from '@/components/admin/reviews/ReviewsEmptyState';
 import ClientCell from '@/components/admin/reviews/ClientCell';
-import MasterCell from '@/components/admin/reviews/MasterCell';
+import MasterCell, { type ReviewMasterLike } from '@/components/admin/reviews/MasterCell';
 import RatingCell from '@/components/admin/reviews/RatingCell';
 import CommentCell from '@/components/admin/reviews/CommentCell';
 import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
@@ -64,40 +64,40 @@ export default function ReviewsAdminPage() {
       field: 'clientName',
       headerName: t('admin.reviews.client'),
       width: 200,
-      renderCell: (params: any) => <ClientCell review={params.row} />,
+      renderCell: (params: GridRenderCellParams) => <ClientCell review={params.row as import('@/types/reviews').ReviewDto} />,
     },
     {
       field: 'master',
       headerName: t('admin.reviews.master'),
       width: 200,
-      renderCell: (params: any) => <MasterCell master={params.row?.master} />,
+      renderCell: (params: GridRenderCellParams) => <MasterCell master={params.row?.master as ReviewMasterLike | null} />,
     },
     {
       field: 'rating',
       headerName: t('admin.reviews.rating'),
       width: 140,
       cellClassName: 'rating-cell',
-      renderCell: (params: any) => <RatingCell rating={params.row?.rating || 0} />,
+      renderCell: (params: GridRenderCellParams) => <RatingCell rating={Number(params.row?.rating ?? 0)} />,
     },
     {
       field: 'status',
       headerName: t('admin.reviews.status'),
       width: 140,
       cellClassName: 'status-cell',
-      renderCell: (params: any) => <StatusChip kind="review" value={String(params.value ?? '')} />,
+      renderCell: (params: GridRenderCellParams) => <StatusChip kind="review" value={String(params.value ?? '')} />,
     },
     {
       field: 'comment',
       headerName: t('admin.reviews.comment'),
       flex: 1,
       minWidth: 200,
-      renderCell: (params: any) => <CommentCell comment={params.row?.comment} />,
+      renderCell: (params: GridRenderCellParams) => <CommentCell comment={params.row?.comment as string | null | undefined} />,
     },
     {
       field: 'createdAt',
       headerName: t('admin.reviews.created'),
       width: 180,
-      renderCell: (params: any) => <CreatedAtCell createdAt={params?.row?.createdAt} />,
+      renderCell: (params: GridRenderCellParams) => <CreatedAtCell createdAt={params?.row?.createdAt as string | null | undefined} />,
       sortable: false,
     },
   ];
@@ -167,12 +167,12 @@ export default function ReviewsAdminPage() {
             }}
             columns={columns}
             dataGridProps={{
-              onRowDoubleClick: (p: any) => setSelectedReview(p.row),
+              onRowDoubleClick: (row) => setSelectedReview(row as AdminReviewRow),
               rowHeight: 80,
               disableRowSelectionOnClick: false,
-              getRowClassName: (params: any) => {
-                const isRecentRow = isRecent(params.row?.id);
-                const isEven = params.indexRelativeToCurrentPage % 2 === 0;
+              getRowClassName: (row: Record<string, unknown>, index: number) => {
+                const isRecentRow = isRecent(row?.id);
+                const isEven = index % 2 === 0;
                 return isRecentRow ? 'mm-recent-row' : isEven ? 'even-row' : '';
               },
               sx: {
@@ -238,7 +238,7 @@ export default function ReviewsAdminPage() {
               },
               checkboxSelection: true,
               rowSelectionModel: selection,
-              onRowSelectionModelChange: (m: any) => setSelection(m as string[]),
+              onRowSelectionModelChange: (m: (string | number)[]) => setSelection(m as string[]),
             }}
           />
 

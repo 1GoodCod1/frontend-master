@@ -36,6 +36,9 @@ type ChartDataItem = {
   rating: number;
 };
 
+type ConversionData = { viewsToLeads?: number; leadsToBookings?: number; bookingsToReviews?: number };
+type RoiData = { roiPercent?: number; spent?: number; earned?: number };
+
 export default function AnalyticsPage() {
   const { t } = useTranslation();
   const plan = useAppSelector(selectPlan) ?? 'BASIC';
@@ -52,7 +55,7 @@ export default function AnalyticsPage() {
   const accessToken = useAppSelector((state) => state.auth.tokens?.accessToken);
 
   if (isLoading) return <LoadingState label={t('analyticsPage.loading', 'Загрузка аналитики...')} />;
-  if (error) return <ErrorState error={error as Error} onRetry={refetch} />;
+  if (error) return <ErrorState error={error} onRetry={refetch} />;
 
   const data = analytics as Record<string, unknown> | undefined;
   const analyticsData = (data?.data as Record<string, unknown>) || data || {};
@@ -201,21 +204,21 @@ export default function AnalyticsPage() {
               </div>
               <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08] relative">
                 <div className="absolute -left-2 top-1/2 -translate-y-1/2 bg-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white z-10">
-                  {Number((conversion as any).viewsToLeads || 0).toFixed(1)}%
+                  {Number((conversion as ConversionData).viewsToLeads || 0).toFixed(1)}%
                 </div>
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.leads', 'Лиды')}</span>
                 <span className="text-2xl font-black">{readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}</span>
               </div>
               <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08] relative">
                 <div className="absolute -left-2 top-1/2 -translate-y-1/2 bg-amber-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white z-10">
-                  {Number((conversion as any).leadsToBookings || 0).toFixed(1)}%
+                  {Number((conversion as ConversionData).leadsToBookings || 0).toFixed(1)}%
                 </div>
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.bookings', 'Записи')}</span>
                 <span className="text-2xl font-black">{Number(analyticsData.bookingsCount ?? 0)}</span>
               </div>
               <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08] relative">
                 <div className="absolute -left-2 top-1/2 -translate-y-1/2 bg-emerald-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white z-10">
-                  {Number((conversion as any).bookingsToReviews || 0).toFixed(1)}%
+                  {Number((conversion as ConversionData).bookingsToReviews || 0).toFixed(1)}%
                 </div>
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.reviews', 'Отзывы')}</span>
                 <span className="text-2xl font-black">{readNumber(summary, ['totalReviews', 'reviewsCount', 'reviews'])}</span>
@@ -243,22 +246,22 @@ export default function AnalyticsPage() {
                     <span className="text-sm text-muted-foreground">{t('analyticsPage.roiPayback', 'Окупаемость')}:</span>
                     <span className={cn(
                       "text-2xl font-black",
-                      (analyticsData.roi as any).roiPercent > 0 ? "text-emerald-600" : "text-amber-500"
+                      ((analyticsData.roi as RoiData)?.roiPercent ?? 0) > 0 ? "text-emerald-600" : "text-amber-500"
                     )}>
-                      {(analyticsData.roi as any).roiPercent}%
+                      {(analyticsData.roi as RoiData)?.roiPercent ?? 0}%
                     </span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-1.5">
-                    <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (analyticsData.roi as any).roiPercent))}%` }} />
+                    <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (analyticsData.roi as RoiData)?.roiPercent ?? 0))}%` }} />
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
                       <p className="text-muted-foreground mb-1">{t('analyticsPage.roiSpent', 'Потрачено')}</p>
-                      <p className="font-bold">{(analyticsData.roi as any).spent} MDL</p>
+                      <p className="font-bold">{(analyticsData.roi as RoiData).spent} MDL</p>
                     </div>
                     <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
                       <p className="text-muted-foreground mb-1">{t('analyticsPage.roiEarned', 'Заработано')}</p>
-                      <p className="font-bold">{(analyticsData.roi as any).earned} MDL</p>
+                      <p className="font-bold">{(analyticsData.roi as RoiData).earned} MDL</p>
                     </div>
                   </div>
                 </div>

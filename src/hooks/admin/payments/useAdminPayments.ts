@@ -3,7 +3,7 @@ import { useAdminPaymentsQuery } from '@/features/admin/adminApi';
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
 
-type AdminPaymentRow = {
+export type AdminPaymentRow = {
   id: string;
   status?: string | null;
   amount?: string | number | null;
@@ -43,8 +43,10 @@ export function useAdminPayments() {
   const cursor = typeof cursorForPage === 'string' && cursorForPage ? cursorForPage : undefined;
 
   useEffect(() => {
-    setPage(1);
-    setPageCursors({ 1: undefined });
+    queueMicrotask(() => {
+      setPage(1);
+      setPageCursors({ 1: undefined });
+    });
   }, [limit, status]);
 
   const q = useAdminPaymentsQuery({ 
@@ -55,14 +57,15 @@ export function useAdminPayments() {
   });
 
   const responseData = unwrapEnvelope(q.data);
-  const allPayments: AdminPaymentRow[] =
-    isRecord(responseData) && Array.isArray(responseData.items)
-      ? (responseData.items.filter(isRecord) as AdminPaymentRow[])
-      : isRecord(responseData) && Array.isArray(responseData.payments)
-        ? (responseData.payments.filter(isRecord) as AdminPaymentRow[])
-        : Array.isArray(responseData)
-          ? (responseData.filter(isRecord) as AdminPaymentRow[])
-          : [];
+  const allPayments: AdminPaymentRow[] = useMemo(() => {
+    if (isRecord(responseData) && Array.isArray(responseData.items)) {
+      return responseData.items.filter(isRecord) as AdminPaymentRow[];
+    }
+    if (isRecord(responseData) && Array.isArray(responseData.payments)) {
+      return responseData.payments.filter(isRecord) as AdminPaymentRow[];
+    }
+    return Array.isArray(responseData) ? (responseData.filter(isRecord) as AdminPaymentRow[]) : [];
+  }, [responseData]);
   
   const totalPayments = allPayments.length;
   const paidPayments = allPayments.filter((p) => p.status === 'PAID' || p.status === 'COMPLETED').length;
@@ -88,7 +91,9 @@ export function useAdminPayments() {
     const meta = isRecord(responseData) ? (responseData.pagination ?? responseData.meta) : undefined;
     const next = isRecord(meta) && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
     if (!next) return;
-    setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }));
+    queueMicrotask(() =>
+      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }))
+    );
   }, [page, responseData]);
 
   const exportToCSV = () => {

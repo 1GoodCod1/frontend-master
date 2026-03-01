@@ -6,6 +6,7 @@ import { RecentlyViewed } from '@/components/home/recommendations/RecentlyViewed
 import { RecommendedMasters } from '@/components/home/recommendations/RecommendedMasters';
 import { useClientDashboard } from '@/hooks/client/dashboard/useClientDashboard';
 import { useIsDark } from '@/hooks/useIsDark';
+import { useNow } from '@/hooks/useNow';
 import DashboardMetricCard from '@/components/client/dashboard/DashboardMetricCard';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -114,8 +115,8 @@ export default function ClientDashboardPage() {
     [bookingsList],
   );
 
+  const now = useNow();
   const upcomingBookings = useMemo(() => {
-    const now = Date.now();
     const horizon = now + 48 * 60 * 60 * 1000;
     type BookingWithWhen = ClientBooking & { _when: number };
     return (bookingsList || [])
@@ -126,7 +127,7 @@ export default function ClientDashboardPage() {
       .filter((b): b is BookingWithWhen => Boolean(b))
       .filter((b) => b._when > now && b._when < horizon)
       .slice(0, 3);
-  }, [bookingsList]);
+  }, [bookingsList, now]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 space-y-10">

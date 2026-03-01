@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { GridColDef } from '@/types/dataGrid';
+import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -18,11 +18,11 @@ import ActionsCell from '@/components/admin/users/ActionsCell';
 
 export default function UsersPage() {
   const { t } = useTranslation();
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<Record<string, unknown> | null>(null);
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
     action: 'verify' | 'ban' | null;
-    user: any;
+    user: Record<string, unknown> | null;
   }>({
     open: false,
     action: null,
@@ -54,7 +54,7 @@ export default function UsersPage() {
     exportToCSV,
   } = useAdminUsers();
 
-  const handleOpenConfirmDialog = (action: 'verify' | 'ban', user: any) => {
+  const handleOpenConfirmDialog = (action: 'verify' | 'ban', user: Record<string, unknown>) => {
     setConfirmDialog({
       open: true,
       action,
@@ -74,10 +74,11 @@ export default function UsersPage() {
     const { action, user } = confirmDialog;
     if (!action || !user) return;
 
+    const u = user as { id: string; isVerified?: boolean; isBanned?: boolean };
     if (action === 'verify') {
-      await handleVerify(user.id, user.isVerified);
+      await handleVerify(u.id, Boolean(u.isVerified));
     } else if (action === 'ban') {
-      await handleBan(user.id, user.isBanned);
+      await handleBan(u.id, Boolean(u.isBanned));
     }
     handleCloseConfirmDialog();
   };
@@ -88,21 +89,21 @@ export default function UsersPage() {
       headerName: t('admin.users.user'),
       flex: 1,
       minWidth: 250,
-      renderCell: (params: any) => <UserCell user={params.row} />,
+      renderCell: (params: GridRenderCellParams) => <UserCell user={params.row} />,
     },
     {
       field: 'role',
       headerName: t('admin.users.role'),
       width: 140,
       cellClassName: 'role-cell',
-      renderCell: (params: any) => <RoleCell role={params.value} />,
+      renderCell: (params: GridRenderCellParams) => <RoleCell role={params.value as string} />,
     },
     {
       field: 'isVerified',
       headerName: t('admin.users.status'),
       width: 160,
       cellClassName: 'status-cell',
-      renderCell: (params: any) => (
+      renderCell: (params: GridRenderCellParams) => (
         <StatusCell isVerified={Boolean(params.value)} isBanned={Boolean(params.row.isBanned)} />
       ),
     },
@@ -110,7 +111,7 @@ export default function UsersPage() {
       field: 'createdAt',
       headerName: t('admin.users.created'),
       width: 180,
-      renderCell: (params: any) => <CreatedAtCell createdAt={params?.row?.createdAt} />,
+      renderCell: (params: GridRenderCellParams) => <CreatedAtCell createdAt={params?.row?.createdAt as string | null | undefined} />,
       sortable: false,
     },
     {
@@ -118,11 +119,11 @@ export default function UsersPage() {
       headerName: t('admin.users.actions'),
       width: 140,
       sortable: false,
-      renderCell: (params: any) => (
+      renderCell: (params: GridRenderCellParams) => (
         <ActionsCell
-          user={params.row}
-          onVerify={(user) => handleOpenConfirmDialog('verify', user)}
-          onBan={(user) => handleOpenConfirmDialog('ban', user)}
+          user={params.row as { id: string; isVerified?: boolean; isBanned?: boolean }}
+          onVerify={(u) => handleOpenConfirmDialog('verify', u)}
+          onBan={(u) => handleOpenConfirmDialog('ban', u)}
         />
       ),
     },
@@ -171,7 +172,7 @@ export default function UsersPage() {
             }}
             columns={columns}
             dataGridProps={{
-              onRowDoubleClick: (row) => setSelected(row),
+              onRowDoubleClick: (row: Record<string, unknown>) => setSelected(row),
               rowHeight: 80,
               getRowClassName: (_row, index) => (index % 2 === 0 ? 'even-row bg-muted/20' : 'odd-row'),
             }}
@@ -183,11 +184,11 @@ export default function UsersPage() {
           user={selected}
           onClose={() => setSelected(null)}
           onVerify={() => {
-            handleOpenConfirmDialog('verify', selected);
+            if (selected) handleOpenConfirmDialog('verify', selected);
             setSelected(null);
           }}
           onBan={() => {
-            handleOpenConfirmDialog('ban', selected);
+            if (selected) handleOpenConfirmDialog('ban', selected);
             setSelected(null);
           }}
         />

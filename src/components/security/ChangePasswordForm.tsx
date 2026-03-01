@@ -55,12 +55,13 @@ export const ChangePasswordForm: React.FC = () => {
           resetForm();
           if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
           successTimeoutRef.current = setTimeout(() => setSuccess(false), 5000);
-        } catch (error: any) {
-          toast.error(
-            error?.data?.message || 
-            error?.message || 
-            t('security.passwordChangeError')
-          );
+        } catch (error: unknown) {
+          const msg = error && typeof error === 'object' && 'data' in error
+            ? (error as { data?: { message?: string } }).data?.message
+            : error && typeof error === 'object' && 'message' in error
+              ? (error as { message?: string }).message
+              : undefined;
+          toast.error(msg || t('security.passwordChangeError'));
         } finally {
           setSubmitting(false);
         }

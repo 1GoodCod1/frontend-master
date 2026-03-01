@@ -21,7 +21,7 @@ type Row = {
   icon?: string;
   isActive?: boolean;
   sortOrder?: number;
-  [k: string]: any;
+  [k: string]: unknown;
 };
 
 export default function CategoriesAdminPage() {
@@ -83,8 +83,8 @@ export default function CategoriesAdminPage() {
             <ActionsCell
               id={String(id ?? '')}
               name={name}
-              onEdit={() => setEditRow(p.row as any)}
-              onDelete={() => handleDelete(p.row as any)}
+              onEdit={() => setEditRow(p.row as Row)}
+              onDelete={() => handleDelete(p.row as Row)}
             />
           );
         },
@@ -118,7 +118,7 @@ export default function CategoriesAdminPage() {
               error={error}
               page={1}
               limit={100}
-              columns={columns as any}
+              columns={columns as import('@/types/dataGrid').GridColDef[]}
               onPageChange={() => {}}
               height={620}
               dataGridProps={{
@@ -148,7 +148,7 @@ export default function CategoriesAdminPage() {
             description: editRow?.description ?? '',
             icon: editRow?.icon ?? '',
             isActive: Boolean(editRow?.isActive),
-            sortOrder: (editRow?.sortOrder ?? 0) as any,
+            sortOrder: editRow?.sortOrder ?? 0,
           }}
           onClose={() => setEditRow(null)}
           onSubmit={handleUpdate}

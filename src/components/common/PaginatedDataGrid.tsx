@@ -44,7 +44,7 @@ function firstArrayInObject(obj: unknown): unknown[] | undefined {
   return undefined;
 }
 
-export function extractPaged(data: unknown, fallbackPage = 1, fallbackLimit = 20): Extracted {
+function extractPaged(data: unknown, fallbackPage = 1, fallbackLimit = 20): Extracted {
   if (Array.isArray(data)) {
     const rows = data.filter(isRecord);
     return { rows, total: rows.length, page: fallbackPage, limit: fallbackLimit };
@@ -73,7 +73,7 @@ function inferId(row: Record<string, unknown>, index: number): string | number {
     : index;
 }
 
-export function inferColumns(rows: Record<string, unknown>[], preferred: string[] = []): GridColDef[] {
+function inferColumns(rows: Record<string, unknown>[], preferred: string[] = []): GridColDef[] {
   const sample = rows?.[0];
   if (!sample) return [];
   const keys = Object.keys(sample);

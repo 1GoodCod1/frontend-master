@@ -17,6 +17,7 @@ import { getRoleGradient, getRoleColor, formatRole } from '@/utils/user';
 import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { useIsDark } from '@/hooks/useIsDark';
+import { useNow } from '@/hooks/useNow';
 
 type UserDetailsUser = {
   role?: string | null;
@@ -65,6 +66,7 @@ export default function UserDetailsDialog({
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
   const isDark = useIsDark();
+  const now = useNow();
 
   if (!user) return null;
   const role = (user.role ?? 'USER') as string;
@@ -86,7 +88,7 @@ export default function UserDetailsDialog({
   const rawTariff = (mp?.effectiveTariffType ?? mp?.tariffType ?? mp?.tariff ?? 'BASIC') as string;
   const expRaw = mp?.tariffExpiresAt ?? mp?.planExpiresAt ?? null;
   const expMs = expRaw ? new Date(expRaw).getTime() : 0;
-  const isActivePaid = rawTariff !== 'BASIC' && !!expMs && expMs > Date.now();
+  const isActivePaid = rawTariff !== 'BASIC' && !!expMs && expMs > now;
   const effectiveTariff = mp?.lifetimePremium
     ? 'PREMIUM'
     : rawTariff === 'BASIC'

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   hasConsent,
@@ -12,11 +12,7 @@ import { cn } from '@/lib/utils';
 
 export function CookieConsentBanner() {
   const { t, i18n } = useTranslation();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(!hasConsent());
-  }, []);
+  const [visible, setVisible] = useState(() => !hasConsent());
 
   const handleChoice = (choice: CookieConsentChoice) => {
     setCookieConsent(choice);

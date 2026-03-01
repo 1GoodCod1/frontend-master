@@ -106,19 +106,13 @@ export function MasterRoute() {
   });
 
   useEffect(() => {
-    if (restoring) {
-      setShowLoading(true);
+    if (!(isAuthed && !role && isLoadingMe)) {
+      queueMicrotask(() => setShowLoading(false));
       return;
     }
-    if (isAuthed && !role && isLoadingMe) {
-      const timer = setTimeout(() => {
-        setShowLoading(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    } else {
-      setShowLoading(false);
-    }
-  }, [restoring, isAuthed, role, isLoadingMe]);
+    const timer = setTimeout(() => setShowLoading(true), 300);
+    return () => clearTimeout(timer);
+  }, [isAuthed, role, isLoadingMe]);
 
   if (restoring || (isAuthed && !role && showLoading)) {
     return <LoadingState label="Restoring session..." fullScreen />;
@@ -149,19 +143,13 @@ export function AdminRoute() {
   });
 
   useEffect(() => {
-    if (restoring) {
-      setShowLoading(true);
+    if (!(isAuthed && !role && isLoadingMe)) {
+      queueMicrotask(() => setShowLoading(false));
       return;
     }
-    if (isAuthed && !role && isLoadingMe) {
-      const timer = setTimeout(() => {
-        setShowLoading(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    } else {
-      setShowLoading(false);
-    }
-  }, [restoring, isAuthed, role, isLoadingMe]);
+    const timer = setTimeout(() => setShowLoading(true), 300);
+    return () => clearTimeout(timer);
+  }, [isAuthed, role, isLoadingMe]);
 
   if (restoring || (isAuthed && !role && showLoading)) {
     return <LoadingState label="Restoring session..." fullScreen />;

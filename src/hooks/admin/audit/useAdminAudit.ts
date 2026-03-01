@@ -3,7 +3,7 @@ import { useAuditLogsQuery, useAuditStatsQuery, useAuditStreamQuery } from '@/fe
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
 
-type AuditLogRow = {
+export type AuditLogRow = {
   id?: string;
   action?: string | null;
   entity?: string | null;
@@ -35,14 +35,15 @@ export function useAdminAudit() {
   const stream = useAuditStreamQuery({ limit: streamLimit }, { pollingInterval: 5000 });
 
   const responseData = unwrapEnvelope(logs.data);
-  const allLogs: AuditLogRow[] =
-    isRecord(responseData) && Array.isArray(responseData.items)
-      ? (responseData.items.filter(isRecord) as AuditLogRow[])
-      : isRecord(responseData) && Array.isArray(responseData.logs)
-        ? (responseData.logs.filter(isRecord) as AuditLogRow[])
-        : Array.isArray(responseData)
-          ? (responseData.filter(isRecord) as AuditLogRow[])
-          : [];
+  const allLogs: AuditLogRow[] = useMemo(() => {
+    if (isRecord(responseData) && Array.isArray(responseData.items)) {
+      return responseData.items.filter(isRecord) as AuditLogRow[];
+    }
+    if (isRecord(responseData) && Array.isArray(responseData.logs)) {
+      return responseData.logs.filter(isRecord) as AuditLogRow[];
+    }
+    return Array.isArray(responseData) ? (responseData.filter(isRecord) as AuditLogRow[]) : [];
+  }, [responseData]);
   const totalLogs = allLogs.length;
 
   const logsData = useMemo(

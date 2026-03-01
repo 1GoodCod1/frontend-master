@@ -34,11 +34,12 @@ export function ScheduleSettingsCard() {
     const [hasChanges, setHasChanges] = useState(false);
 
     useEffect(() => {
-        if (data) {
+        if (!data) return;
+        queueMicrotask(() => {
             setWorkStart(data.workStartHour ?? 9);
             setWorkEnd(data.workEndHour ?? 18);
             setSlotDuration(data.slotDurationMinutes ?? 60);
-        }
+        });
     }, [data]);
 
     const handleSave = async () => {

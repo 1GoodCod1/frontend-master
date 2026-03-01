@@ -3,7 +3,7 @@ import { useAdminMastersQuery, useAdminUpdateMasterMutation } from '@/features/a
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
 
-type AdminMasterRow = {
+export type AdminMasterRow = {
   id: string;
   createdAt?: string | null;
   phone?: string | null;
@@ -74,8 +74,10 @@ export function useAdminMasters() {
   const cursor = typeof cursorForPage === 'string' && cursorForPage ? cursorForPage : undefined;
 
   useEffect(() => {
-    setPage(1);
-    setPageCursors({ 1: undefined });
+    queueMicrotask(() => {
+      setPage(1);
+      setPageCursors({ 1: undefined });
+    });
   }, [limit, verified, featured, qText]);
 
   const q = useAdminMastersQuery({
@@ -89,14 +91,15 @@ export function useAdminMasters() {
   const [update, updState] = useAdminUpdateMasterMutation();
 
   const responseData = unwrapEnvelope(q.data);
-  const allMasters: AdminMasterRow[] =
-    isRecord(responseData) && Array.isArray(responseData.items)
-      ? (responseData.items.filter(isRecord) as AdminMasterRow[])
-      : isRecord(responseData) && Array.isArray(responseData.masters)
-        ? (responseData.masters.filter(isRecord) as AdminMasterRow[])
-        : Array.isArray(responseData)
-          ? (responseData.filter(isRecord) as AdminMasterRow[])
-          : [];
+  const allMasters: AdminMasterRow[] = useMemo(() => {
+    if (isRecord(responseData) && Array.isArray(responseData.items)) {
+      return responseData.items.filter(isRecord) as AdminMasterRow[];
+    }
+    if (isRecord(responseData) && Array.isArray(responseData.masters)) {
+      return responseData.masters.filter(isRecord) as AdminMasterRow[];
+    }
+    return Array.isArray(responseData) ? (responseData.filter(isRecord) as AdminMasterRow[]) : [];
+  }, [responseData]);
   
   const totalMasters = allMasters.length;
   const verifiedMasters = allMasters.filter((m) => m.user?.isVerified || m.isVerified).length;
@@ -121,7 +124,9 @@ export function useAdminMasters() {
     const meta = isRecord(responseData) ? (responseData.pagination ?? responseData.meta) : undefined;
     const next = isRecord(meta) && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
     if (!next) return;
-    setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }));
+    queueMicrotask(() =>
+      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }))
+    );
   }, [page, responseData]);
 
   const exportToCSV = () => {

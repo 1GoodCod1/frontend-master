@@ -58,13 +58,15 @@ export const BookingCalendarWidget = ({
         { skip: !selectedDate || !masterId },
     );
 
-    const slots = useMemo(() => {
-        const data = (slotsQuery.data as any)?.data ?? slotsQuery.data;
+    type SlotItem = { start: string; end: string; available?: boolean };
+    const slots = useMemo((): SlotItem[] => {
+        const raw = slotsQuery.data as { data?: { slots?: SlotItem[] } } | undefined;
+        const data = raw?.data ?? (slotsQuery.data as { slots?: SlotItem[] } | undefined);
         return data?.slots ?? [];
     }, [slotsQuery.data]);
 
     const availableSlots = useMemo(
-        () => slots.filter((s: any) => s.available),
+        () => slots.filter((s) => s.available === true),
         [slots],
     );
 
@@ -216,8 +218,8 @@ export const BookingCalendarWidget = ({
                             </p>
                         ) : (
                             <div className="slots-grid">
-                                {availableSlots.map((slot: any, idx: number) => {
-                                    const time = new Date(slot.start).toLocaleTimeString('ru-RU', {
+                                {availableSlots.map((slot, idx) => {
+                                    const time = new Date(slot.start || 0).toLocaleTimeString('ru-RU', {
                                         hour: '2-digit',
                                         minute: '2-digit',
                                     });

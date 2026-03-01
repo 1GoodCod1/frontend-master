@@ -40,7 +40,7 @@ export function useMasterFavorites(masterId: string | undefined, isClient: boole
 
     useEffect(() => {
         if (favoriteCheck.data?.isFavorite !== undefined) {
-            setLocalFavoriteState(null);
+            queueMicrotask(() => setLocalFavoriteState(null));
         }
     }, [favoriteCheck.data?.isFavorite]);
 

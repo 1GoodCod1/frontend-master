@@ -7,11 +7,13 @@ import { ErrorState } from '@/components/common/States';
 import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
 import { mediaUrl } from '@/utils/media';
 
+type PhotoItem = { id?: string; path?: string; url?: string; filename?: string };
+
 interface MasterDetailsGalleryProps {
-  photos: any[];
+  photos: PhotoItem[];
   isLoading: boolean;
   isError: boolean;
-  error: any;
+  error: unknown;
   onRetry: () => void;
 }
 
@@ -59,7 +61,7 @@ export const MasterDetailsGallery = ({
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
-            {photos.map((f: any, index: number) => {
+            {photos.map((f: PhotoItem, index: number) => {
               const src = mediaUrl(f.path ?? f.url);
               return (
                 <Card

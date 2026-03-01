@@ -10,7 +10,7 @@ import { REVIEW_STATUS_OPTIONS, type ReviewStatus } from '@/types/reviews';
 export const STATUS_OPTIONS = REVIEW_STATUS_OPTIONS;
 export type StatusOption = ReviewStatus;
 
-type AdminReviewRow = {
+export type AdminReviewRow = {
   id: string;
   status?: string | null;
   clientName?: string | null;

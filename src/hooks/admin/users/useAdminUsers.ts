@@ -52,8 +52,10 @@ export function useAdminUsers() {
   const cursor = typeof cursorForPage === 'string' && cursorForPage ? cursorForPage : undefined;
 
   useEffect(() => {
-    setPage(1);
-    setPageCursors({ 1: undefined });
+    queueMicrotask(() => {
+      setPage(1);
+      setPageCursors({ 1: undefined });
+    });
   }, [limit, role, verified, banned, qText]);
 
   const q = useAdminUsersQuery(
@@ -87,7 +89,9 @@ export function useAdminUsers() {
     const next =
       pagination && typeof pagination.nextCursor === 'string' ? pagination.nextCursor : undefined;
     if (!next) return;
-    setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }));
+    queueMicrotask(() =>
+      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }))
+    );
   }, [page, pagination]);
 
   const usersData:

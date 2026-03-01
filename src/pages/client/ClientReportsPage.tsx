@@ -28,14 +28,22 @@ function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
 }
 
+type MasterForReport = { id: string; user?: { firstName?: string; lastName?: string }; category?: Record<string, unknown> };
+type ReportItem = {
+  id: string;
+  status?: string;
+  createdAt?: string;
+  reason?: string;
+  description?: string;
+  notes?: string;
+  master?: { user?: { firstName?: string; lastName?: string } };
+};
+
 export default function ClientReportsPage() {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedMaster, setSelectedMaster] = useState<{
-    id: string;
-    user?: { firstName?: string; lastName?: string };
-  } | null>(null);
+  const [selectedMaster, setSelectedMaster] = useState<MasterForReport | null>(null);
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
 
@@ -49,9 +57,16 @@ export default function ClientReportsPage() {
     if (isRecord(raw) && Array.isArray(raw.data)) return raw.data;
     return [];
   })();
-  const leadsList = (leads.data ?? []) as any[];
+  const leadsList = (() => {
+    const raw = (leads as { data?: unknown }).data;
+    if (Array.isArray(raw)) return raw as Record<string, unknown>[];
+    if (raw && typeof raw === 'object' && 'data' in raw && Array.isArray((raw as { data: unknown[] }).data)) {
+      return (raw as { data: Record<string, unknown>[] }).data;
+    }
+    return [];
+  })();
 
-  const handleOpenDialog = (master: { id: string; user?: { firstName?: string; lastName?: string } }) => {
+  const handleOpenDialog = (master: MasterForReport) => {
     setSelectedMaster(master);
     setOpenDialog(true);
     setReason('');
@@ -67,7 +82,7 @@ export default function ClientReportsPage() {
       const lead = leadsList.find((l) => l.masterId === selectedMaster.id);
       await createReport({
         masterId: selectedMaster.id,
-        leadId: lead?.id,
+        leadId: lead?.id as string | undefined,
         reason,
         description,
       }).unwrap();
@@ -82,16 +97,16 @@ export default function ClientReportsPage() {
     }
   };
 
-  const mastersFromLeads = leadsList
-    .map((lead: any) => lead.master)
+  const mastersFromLeads: MasterForReport[] = leadsList
+    .map((lead) => lead.master as MasterForReport | undefined)
     .filter(
-      (master: any, index: number, self: any[]) =>
-        master &&
+      (master, index, self) =>
+        master && typeof master.id === 'string' &&
         self.findIndex((m) => m && m.id === master.id) === index
-    );
+    ) as MasterForReport[];
 
   if (reports.isLoading || leads.isLoading) return <CardsSkeleton count={5} />;
-  if (reports.isError) return <ErrorState error={reports.error as Error} onRetry={reports.refetch} />;
+  if (reports.isError) return <ErrorState error={reports.error} onRetry={reports.refetch} />;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:py-8">
@@ -115,7 +130,7 @@ export default function ClientReportsPage() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {mastersFromLeads.map((master: any) => (
+            {mastersFromLeads.map((master) => (
               <Button
                 key={master.id}
                 variant="outline"
@@ -152,7 +167,7 @@ export default function ClientReportsPage() {
         </Card>
       ) : (
         <div className="flex flex-col gap-4">
-          {(reportsList as any[]).map((report) => (
+          {(reportsList as ReportItem[]).map((report) => (
             <Card key={report.id} className="border-border dark:border-white/[0.08] bg-card/50">
               <CardContent className="p-6">
                 <div className="flex flex-col gap-4">
@@ -166,15 +181,15 @@ export default function ClientReportsPage() {
                           {report.master?.user?.firstName} {report.master?.user?.lastName}
                         </h4>
                         <p className="text-xs text-muted-foreground">
-                          {formatDateTimeString(report.createdAt, locale)}
+                          {formatDateTimeString(report.createdAt ?? null, locale)}
                         </p>
                       </div>
                     </div>
                     <span
                       className="rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm"
-                      style={{ backgroundColor: getStatusColor(report.status) }}
+                      style={{ backgroundColor: getStatusColor(report.status ?? 'PENDING') }}
                     >
-                      {t(`reports.status.${report.status}`)}
+                      {t(`reports.status.${report.status ?? 'PENDING'}`)}
                     </span>
                   </div>
 

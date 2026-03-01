@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { mediaUrl } from '@/utils/media';
 
-type ReviewMasterLike = {
+export type ReviewMasterLike = {
   avatarUrl?: string | null;
   avatarFile?: { path?: string | null } | null;
   user?: { firstName?: string | null; lastName?: string | null } | null;

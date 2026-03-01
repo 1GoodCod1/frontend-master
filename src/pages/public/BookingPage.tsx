@@ -18,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { toErrorMessage } from '@/utils/errors';
 
 interface SlotData {
   start?: string;
@@ -47,21 +48,23 @@ export default function BookingPage() {
   const [clientName, setClientName] = useState('');
   const [notes, setNotes] = useState('');
 
-  const master = useMastersByIdQuery({ id: slugOrId } as any, { skip: !slugOrId });
+  const master = useMastersByIdQuery({ id: slugOrId }, { skip: !slugOrId });
   const [createBooking, createState] = useBookingsCreateMutation();
 
+  type MasterDataShape = { id?: string; data?: { id?: string; user?: { firstName?: string; lastName?: string } }; user?: { firstName?: string; lastName?: string } };
+  const masterData = master.data as MasterDataShape | null | undefined;
+  const masterId = masterData?.data?.id ?? masterData?.id ?? '';
+
   const availableSlots = useBookingsAvailableSlotsQuery(
-    { masterId: (master.data as any)?.data?.id ?? (master.data as any)?.id ?? '', date: selectedDate },
+    { masterId, date: selectedDate },
     { skip: !master.data || !selectedDate }
   );
 
-  if (!slugOrId) return <ErrorState error={{ message: 'Invalid master identifier' } as any} onRetry={() => { }} />;
+  if (!slugOrId) return <ErrorState error={{ message: 'Invalid master identifier' }} onRetry={() => { }} />;
   if (master.isLoading) return <DetailSkeleton />;
-  if (master.isError) return <ErrorState error={master.error as any} onRetry={master.refetch} />;
+  if (master.isError) return <ErrorState error={master.error} onRetry={master.refetch} />;
 
-  const root: any = master.data;
-  const m: any = root?.data ?? root;
-  const masterId = m?.id;
+  const m = masterData?.data ?? masterData ?? null;
 
   const slots: SlotData[] = availableSlots.data?.slots ?? [];
 
@@ -93,8 +96,8 @@ export default function BookingPage() {
 
       toast.success(t('bookings.created'));
       navigate(`/masters/${slug}`);
-    } catch (error: any) {
-      toast.error(error?.data?.message || error?.message || t('bookings.createFailed'));
+    } catch (error: unknown) {
+      toast.error(toErrorMessage(error) ?? t('bookings.createFailed'));
     }
   };
 

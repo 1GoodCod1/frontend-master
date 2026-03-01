@@ -25,11 +25,9 @@ export default function ChatPage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (conversationId && conversationId !== selectedConversation) {
-      setSelectedConversation(conversationId);
-    }
-  }, [conversationId]);
+  if (conversationId && conversationId !== selectedConversation) {
+    setSelectedConversation(conversationId);
+  }
 
   const handleSelectConversation = (id: string) => {
     setSelectedConversation(id);

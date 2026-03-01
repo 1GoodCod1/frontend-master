@@ -153,10 +153,12 @@ export default function MastersPage() {
   const isInitialMount = useRef(true);
 
   // Синхронизация локальных значений слайдеров с query (ввод в поля, сброс фильтров)
-  useEffect(() => {
-    setPriceMinLocal((prev) => (query.minPrice !== prev ? query.minPrice : prev));
-    setPriceMaxLocal((prev) => (query.maxPrice !== prev ? query.maxPrice : prev));
-  }, [query.minPrice, query.maxPrice]);
+  const [prevPrice, setPrevPrice] = useState({ min: query.minPrice, max: query.maxPrice });
+  if (query.minPrice !== prevPrice.min || query.maxPrice !== prevPrice.max) {
+    setPrevPrice({ min: query.minPrice, max: query.maxPrice });
+    setPriceMinLocal(query.minPrice);
+    setPriceMaxLocal(query.maxPrice);
+  }
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -384,7 +386,7 @@ export default function MastersPage() {
           </p>
           {filters.isError ? (
             <ErrorState
-              error={filters.error as any}
+              error={filters.error}
               onRetry={filters.refetch}
             />
           ) : (
@@ -431,7 +433,7 @@ export default function MastersPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">{t('common.all')}</SelectItem>
-                      {categories.map((c: any) => (
+                      {categories.map((c: MastersFilterItem) => (
                         <SelectItem
                           key={c.id ?? c.slug ?? c.name}
                           value={getCategoryValue(c)}
@@ -462,7 +464,7 @@ export default function MastersPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">{t('common.all')}</SelectItem>
-                      {cities.map((c: any) => (
+                      {cities.map((c: MastersFilterItem) => (
                         <SelectItem
                           key={c.id ?? c.slug ?? c.name}
                           value={getCityValue(c)}
@@ -760,7 +762,7 @@ export default function MastersPage() {
           <MapSkeleton />
         )
       ) : list.isError ? (
-        <ErrorState error={list.error as any} onRetry={list.refetch} />
+        <ErrorState error={list.error} onRetry={list.refetch} />
       ) : items.length ? (
         <>
           <div className="mb-4 rounded-lg bg-amber-100/80 dark:bg-amber-900/15 px-4 py-2 flex items-center justify-between">
@@ -788,11 +790,11 @@ export default function MastersPage() {
                   useWindowScroll
                   totalCount={items.length}
                   components={{
-                    List: VirtualizedGridList as any,
-                    Item: VirtualizedGridItem as any,
+                    List: VirtualizedGridList,
+                    Item: VirtualizedGridItem,
                   }}
                   itemContent={(idx) => {
-                    const m: any = items[idx];
+                    const m: PublicMaster = items[idx];
                     return (
                       <ScrollReveal delay={idx * 0.03} duration={0.4}>
                         <MasterCard

@@ -14,7 +14,7 @@ import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
 import { getStatusColor, getStatusBgColor } from '@/utils/reports';
 import { useIsDark } from '@/hooks/useIsDark';
 
-type ReportLike = {
+export type ReportLike = {
   id: string;
   status?: string | null;
   createdAt?: string | null;

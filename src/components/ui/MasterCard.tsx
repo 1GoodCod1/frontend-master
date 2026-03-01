@@ -24,6 +24,7 @@ import { LazyImage } from '@/components/ui/LazyImage';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { mastersApi } from '@/features/masters/mastersApi';
 import { useAppDispatch } from '@/app/hooks';
+import { useNow } from '@/hooks/useNow';
 import { cn } from '@/lib/utils';
 import type { PublicMaster } from '@/types';
 
@@ -97,6 +98,7 @@ export const MasterCard = React.memo(function MasterCard({
   const { t } = useTranslation();
   const nav = useNavigate();
   const dispatch = useAppDispatch();
+  const now = useNow();
   const masterId = master.slug ?? master.id;
 
   const handleMouseEnter = () => {
@@ -132,7 +134,7 @@ export const MasterCard = React.memo(function MasterCard({
       ? new Date(expRaw).getTime()
       : 0;
   const isActivePaid =
-    rawTariff !== 'BASIC' && !!expMs && expMs > Date.now();
+    rawTariff !== 'BASIC' && !!expMs && expMs > now;
   const effectiveTariff: TariffType =
     rawTariff === 'BASIC' ? 'BASIC' : isActivePaid ? rawTariff : 'BASIC';
 

@@ -50,7 +50,7 @@ function ClientProfilePage() {
         </div>
         <div className="md:col-span-7 lg:col-span-8">
           <AccountInfoSection
-            user={user as any}
+            user={user ?? null}
             phoneVerified={phoneVerified}
             onPhoneVerified={handlePhoneVerified}
             onPhoneAlreadyVerified={handlePhoneAlreadyVerified}

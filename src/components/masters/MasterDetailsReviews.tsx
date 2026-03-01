@@ -11,16 +11,30 @@ import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
 import { mediaUrl } from '@/utils/media';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { cn } from '@/lib/utils';
+import type { ReviewCanCreateResponse } from '@/types/reviews';
+
+type ReviewFile = { id?: string; file?: { path?: string; url?: string } };
+
+type ReviewSubmissionState = {
+  reviewRating: number;
+  setReviewRating: (v: number) => void;
+  reviewComment: string;
+  setReviewComment: (v: string) => void;
+  reviewPhotos: File[];
+  setReviewPhotos: React.Dispatch<React.SetStateAction<File[]>>;
+  handleCreateReview: () => Promise<void>;
+  isLoading: boolean;
+};
 
 interface MasterDetailsReviewsProps {
-  reviews: any[];
+  reviews: Record<string, unknown>[];
   isLoading: boolean;
   isError: boolean;
-  error: any;
+  error: unknown;
   onRetry: () => void;
   isClient: boolean;
-  canCreateReview: any;
-  reviewSubmission: any;
+  canCreateReview?: ReviewCanCreateResponse | undefined;
+  reviewSubmission: ReviewSubmissionState;
 }
 
 export const MasterDetailsReviews = ({
@@ -39,9 +53,9 @@ export const MasterDetailsReviews = ({
   const [lightboxImages, setLightboxImages] = useState<string[]>([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
-  const openReviewPhotos = (reviewFiles: any[], index: number) => {
+  const openReviewPhotos = (reviewFiles: ReviewFile[], index: number) => {
     const urls = reviewFiles
-      .map((rf: any) => mediaUrl(rf.file?.path ?? rf.file?.url))
+      .map((rf) => mediaUrl(rf.file?.path ?? rf.file?.url))
       .filter(Boolean);
     if (urls.length > 0) {
       setLightboxImages(urls);
@@ -77,7 +91,7 @@ export const MasterDetailsReviews = ({
       <CardContent className="space-y-4">
         {isClient && canCreateReview && (
           <>
-            {canCreateReview.canCreate && (
+            {canCreateReview.canCreate === true && (
               <div className="rounded-xl border border-[#f5f4eb] dark:border-amber-500/25 bg-amber-100/70 dark:bg-amber-900/15 p-4 space-y-4">
                 <p className="font-bold text-sm">{t('reviews.leaveReview')}</p>
                 <div className="flex gap-0.5 items-center">
@@ -118,7 +132,7 @@ export const MasterDetailsReviews = ({
                           const list = Array.from(e.target.files ?? []);
                           const left = 5 - reviewPhotos.length;
                           if (left <= 0) return;
-                          setReviewPhotos((p: any) => [...p, ...list.slice(0, left)]);
+                          setReviewPhotos((p) => [...p, ...list.slice(0, left)]);
                           e.target.value = '';
                         }}
                       />
@@ -126,7 +140,7 @@ export const MasterDetailsReviews = ({
                   </Button>
                   {reviewPhotos.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
-                      {reviewPhotos.map((f: any, i: number) => (
+                      {reviewPhotos.map((f: File, i: number) => (
                         <div
                           key={i}
                           className="relative w-12 h-12 rounded-lg overflow-hidden border border-border"
@@ -139,7 +153,7 @@ export const MasterDetailsReviews = ({
                           <button
                             type="button"
                             className="absolute top-0 right-0 w-5 h-5 bg-black/50 text-white rounded-bl flex items-center justify-center hover:bg-black/70"
-                            onClick={() => setReviewPhotos((p: any[]) => p.filter((_, j) => j !== i))}
+                            onClick={() => setReviewPhotos((p) => p.filter((_, j) => j !== i))}
                           >
                             <Trash2 className="h-3 w-3" />
                           </button>
@@ -153,12 +167,12 @@ export const MasterDetailsReviews = ({
                 </Button>
               </div>
             )}
-            {canCreateReview.alreadyReviewed && (
+            {canCreateReview.alreadyReviewed === true && (
               <Alert className="border-[#f5f4eb] dark:border-amber-500/25 bg-amber-50/80 dark:bg-amber-900/10">
                 <AlertDescription>{t('reviews.alreadyReviewed')}</AlertDescription>
               </Alert>
             )}
-            {canCreateReview.noClosedLead && (
+            {canCreateReview.noClosedLead === true && (
               <Alert className="border-[#f5f4eb] dark:border-amber-500/25 bg-amber-50/80 dark:bg-amber-900/10">
                 <AlertDescription>{t('reviews.needClosedLead')}</AlertDescription>
               </Alert>
@@ -174,59 +188,60 @@ export const MasterDetailsReviews = ({
           <p className="text-muted-foreground">{t('reviews.noReviewsYet')}</p>
         ) : (
           <div className="space-y-4">
-            {reviews.map((review: any) => (
+            {reviews.map((review, idx) => (
               <Card
-                key={review.id}
+                key={String(review.id ?? review._id ?? idx)}
                 className="border border-[#f5f4eb] dark:border-white/[0.08] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 cursor-pointer"
               >
                 <CardContent className="p-4 space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-foreground">
-                        {review.clientName?.trim() ||
-                          (review.client &&
-                            [review.client.firstName, review.client.lastName]
-                              .filter(Boolean)
-                              .join(' ')
-                              .trim()) ||
+                        {(typeof review.clientName === 'string' ? review.clientName : '').trim() ||
+                          (review.client && typeof review.client === 'object'
+                            ? [String((review.client as Record<string, unknown>).firstName ?? ''), String((review.client as Record<string, unknown>).lastName ?? '')]
+                                .filter(Boolean)
+                                .join(' ')
+                                .trim()
+                            : '') ||
                           t('reviews.client')}
                       </span>
                       <Badge variant="secondary" className="gap-1 text-amber-600 dark:text-amber-400 bg-amber-500/10 border-0">
                         <Star className="h-3 w-3 fill-current" />
-                        {review.rating}
+                        {String(review.rating ?? '')}
                       </Badge>
                     </div>
-                    {review.createdAt && (
+                    {review.createdAt != null && (
                       <span className="text-xs text-muted-foreground">
-                        {formatDateShort(review.createdAt, locale)}
+                        {formatDateShort(review.createdAt as string | Date, locale)}
                       </span>
                     )}
                   </div>
 
-                  {review.reviewCriteria?.length > 0 && (
+                  {Array.isArray(review.reviewCriteria) && review.reviewCriteria.length > 0 && (
                     <div className="flex flex-wrap gap-1">
-                      {review.reviewCriteria.map((crit: any) => (
-                        <Badge key={crit.id} variant="outline" className="text-xs font-normal">
-                          {t(`reviews.criteria.${crit.criteria}`, crit.criteria)}: {crit.rating}
+                      {(review.reviewCriteria as Record<string, unknown>[]).map((crit, ci) => (
+                        <Badge key={String(crit.id ?? ci)} variant="outline" className="text-xs font-normal">
+                          {String(t(`reviews.criteria.${String(crit.criteria ?? '')}`, String(crit.criteria ?? '')))}: {String(crit.rating ?? '')}
                         </Badge>
                       ))}
                     </div>
                   )}
 
-                  {review.comment && (
-                    <p className="text-sm whitespace-pre-wrap text-foreground">{review.comment}</p>
+                  {review.comment != null && String(review.comment) !== '' && (
+                    <p className="text-sm whitespace-pre-wrap text-foreground">{String(review.comment)}</p>
                   )}
 
-                  {review.reviewFiles?.length > 0 && (
+                  {Array.isArray(review.reviewFiles) && review.reviewFiles.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                      {review.reviewFiles.map((rf: any, idx: number) => {
+                      {(review.reviewFiles as ReviewFile[]).map((rf, rfIdx) => {
                         const src = mediaUrl(rf.file?.path ?? rf.file?.url);
                         return (
                           <button
-                            key={rf.id}
+                            key={rf.id ?? rfIdx}
                             type="button"
                             className="rounded-lg overflow-hidden border border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 active:scale-[0.98] transition-colors text-left cursor-pointer touch-manipulation"
-                            onClick={() => openReviewPhotos(review.reviewFiles, idx)}
+                            onClick={() => openReviewPhotos(review.reviewFiles as ReviewFile[], rfIdx)}
                           >
                             <img
                               src={src}
