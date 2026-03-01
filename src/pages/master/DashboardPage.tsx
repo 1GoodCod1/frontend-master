@@ -70,10 +70,12 @@ export default function DashboardPage() {
     };
   }, []);
 
-  const masterData = (profile.data as any)?.data || profile.data || {};
+  type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; lifetimePremium?: boolean; tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' };
+  type AvailabilityData = { availabilityStatus?: 'AVAILABLE' | 'BUSY' | 'OFFLINE'; maxActiveLeads?: number; currentActiveLeads?: number };
+  const masterData: MasterProfileData = ((profile.data as { data?: MasterProfileData } | undefined)?.data ?? profile.data ?? {}) as MasterProfileData;
   const isOnline = masterData?.isOnline || false;
 
-  const availabilityData = (availability.data as any)?.data || availability.data || {};
+  const availabilityData: AvailabilityData = ((availability.data as { data?: AvailabilityData } | undefined)?.data ?? availability.data ?? {}) as AvailabilityData;
   const currentStatus = availabilityData?.availabilityStatus || 'AVAILABLE';
   const maxActiveLeads = availabilityData?.maxActiveLeads || 5;
   const currentActiveLeads = availabilityData?.currentActiveLeads || 0;
@@ -102,8 +104,10 @@ export default function DashboardPage() {
   if (stats.isError) return <ErrorState error={stats.error} onRetry={stats.refetch} />;
   if (leadsStats.isError) return <ErrorState error={leadsStats.error} onRetry={leadsStats.refetch} />;
 
-  const statsData = (stats.data as any)?.data || stats.data || {};
-  const leadsStatsData = (leadsStats.data as any)?.data || leadsStats.data || {};
+  type StatsDataShape = { leadsToday?: number; viewsToday?: number; viewsThisWeek?: number; viewsThisMonth?: number };
+  type LeadsStatsDataShape = { total?: number; byStatus?: { newLeads?: number; inProgress?: number; closed?: number; spam?: number } };
+  const statsData: StatsDataShape = ((stats.data as { data?: StatsDataShape } | undefined)?.data ?? stats.data ?? {}) as StatsDataShape;
+  const leadsStatsData: LeadsStatsDataShape = ((leadsStats.data as { data?: LeadsStatsDataShape } | undefined)?.data ?? leadsStats.data ?? {}) as LeadsStatsDataShape;
 
   const {
     leadsToday = 0,
@@ -124,7 +128,7 @@ export default function DashboardPage() {
     spam = 0,
   } = byStatus;
 
-  const analyticsResponse = analytics.data as any;
+  const analyticsResponse = analytics.data as { data?: unknown } | undefined;
   const rawChartData = extractItems(analyticsResponse?.data ?? analyticsResponse);
 
   const toLocalDayKey = (value: unknown): string => {

@@ -19,9 +19,7 @@ import ActiveCell from '@/components/admin/tariffs/ActiveCell';
 import ActionsCell from '@/components/admin/tariffs/ActionsCell';
 import type { Tariff, UpdateTariffDto } from '@/features/tariffs/tariffsApi';
 
-type Row = Tariff & {
-  [k: string]: any;
-};
+type Row = Tariff & Record<string, unknown>;
 
 export default function TariffAdminPage() {
   const { t } = useTranslation();
@@ -91,10 +89,10 @@ export default function TariffAdminPage() {
           return (
             <ActionsCell
               id={String(id)}
-              name={String((p.row as any)?.name ?? id)}
+              name={String(p.row?.name ?? id)}
               onEdit={(row) => setEditRow(row as Row)}
               onDelete={handleDelete}
-              row={p.row as any}
+              row={p.row}
             />
           );
         },
@@ -146,7 +144,7 @@ export default function TariffAdminPage() {
               error={q.error}
               page={1}
               limit={100}
-              columns={columns as any}
+              columns={columns as GridColDef[]}
               onPageChange={() => { }}
               height={620}
               dataGridProps={{
@@ -191,7 +189,7 @@ export default function TariffAdminPage() {
               ? editRow.features
               : (typeof editRow?.features === 'string' ? JSON.parse(editRow.features) : []),
             isActive: Boolean(editRow?.isActive),
-            sortOrder: (editRow?.sortOrder ?? 0) as any,
+            sortOrder: Number(editRow?.sortOrder ?? 0),
           }}
           onClose={() => setEditRow(null)}
           onSubmit={async (values) => {

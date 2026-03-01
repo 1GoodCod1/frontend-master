@@ -56,7 +56,8 @@ export function useClientProfile() {
 
   const photoItems = Array.isArray(photos.data?.items) ? photos.data.items : [];
 
-  const avatarFile = avatarFileFromUser || (photoItems.find((p: any) => p.id === avatarFileId) as any);
+  type PhotoItem = { id?: string; path?: string };
+  const avatarFile = avatarFileFromUser ?? (photoItems.find((p: PhotoItem) => p.id === avatarFileId) ?? null);
   const avatarPath = typeof avatarFile?.path === 'string' ? avatarFile.path : undefined;
   const avatarUrl = avatarPath ? mediaUrl(avatarPath) : null;
 
@@ -92,8 +93,8 @@ export function useClientProfile() {
       const oldPhotos = [...photoItems];
 
       // 2. Upload NEW file
-      const uploadResult = await upload({ file }).unwrap() as any;
-      const newFileId = uploadResult?.id || uploadResult?.data?.id;
+      const uploadResult = (await upload({ file }).unwrap()) as { id?: string; data?: { id?: string } };
+      const newFileId = uploadResult?.id ?? uploadResult?.data?.id;
 
       if (!newFileId) {
         throw new Error('Failed to get ID from upload result');
@@ -110,7 +111,7 @@ export function useClientProfile() {
 
       // 5. CLEANUP OLD PHOTOS (only if they are NOT the new one)
       // We remove the old avatar and any other leftover photos to keep it strictly 1-photo system
-      const filesToRemove = oldPhotos.map((p: any) => p.id).filter(id => id && id !== newFileId);
+      const filesToRemove = oldPhotos.map((p: PhotoItem) => p.id).filter((id): id is string => Boolean(id) && id !== newFileId);
       if (oldFileId && !filesToRemove.includes(oldFileId) && oldFileId !== newFileId) {
         filesToRemove.push(oldFileId);
       }

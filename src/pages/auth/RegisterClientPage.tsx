@@ -5,6 +5,8 @@ import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useAuthRegisterMutation } from '@/features/auth/authApi';
+import type { RegisterDto } from '@/types';
+import { toErrorMessage } from '@/utils/errors';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { FormCard } from '@/components/ui/FormCard';
@@ -76,15 +78,11 @@ export default function RegisterClientPage() {
         validationSchema={schema}
         onSubmit={async (values) => {
           try {
-            await register(values as any).unwrap();
+            await register(values as RegisterDto).unwrap();
             toast.success(t('auth.register.accountCreated'));
             nav('/client-dashboard');
-          } catch (e: any) {
-            toast.error(
-              e?.data?.message ||
-                e?.message ||
-                t('auth.register.registrationFailed')
-            );
+          } catch (e: unknown) {
+            toast.error(toErrorMessage(e) ?? t('auth.register.registrationFailed'));
           }
         }}
       >
