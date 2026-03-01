@@ -11,8 +11,11 @@ import {
   Save,
   X,
 } from 'lucide-react';
+import { useAppSelector } from '@/app/hooks';
+import { selectIsVerified } from '@/features/auth/selectors';
 import { useMastersMyProfileQuery, useMastersUpdateMyProfileMutation } from '@/features/masters/mastersApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
+import { VerificationGate } from '@/components/common/VerificationGate';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -55,7 +58,10 @@ function normalizeServices(raw: unknown): ServiceItem[] {
 
 export default function ServicesPage() {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch } = useMastersMyProfileQuery();
+  const isVerified = useAppSelector(selectIsVerified);
+  const { data, isLoading, error, refetch } = useMastersMyProfileQuery(undefined, {
+    skip: !isVerified,
+  });
   const [update, { isLoading: saving }] = useMastersUpdateMyProfileMutation();
 
   const profileData = useMemo(() => {
@@ -197,6 +203,7 @@ export default function ServicesPage() {
   if (error) return <ErrorState error={error as Error} onRetry={refetch} />;
 
   return (
+    <VerificationGate isVerified={isVerified}>
     <div className="mx-auto max-w-4xl px-4 py-6 md:py-8">
       <PageHeader
         title={t('servicesPage.title')}
@@ -463,5 +470,6 @@ export default function ServicesPage() {
         />
       )}
     </div>
+    </VerificationGate>
   );
 }

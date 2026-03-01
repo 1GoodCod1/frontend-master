@@ -70,7 +70,7 @@ export const MasterDetailsHeader = ({
               />
             </Button>
           )}
-          {!isOwnProfile && (
+          {isClient && !isOwnProfile && (
             <Button asChild className="font-semibold shadow-[0_2px_12px_rgba(13,148,136,0.35)] transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(13,148,136,0.45)]">
               <a href="#lead-form" data-master-slug={slug}>
                 <CalendarDays className="h-4 w-4" />

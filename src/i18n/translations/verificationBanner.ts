@@ -7,6 +7,10 @@ export const verificationBanner = {
       messageClient:
         'Verify your phone to add photos to your gallery and unlock all features.',
       verifyNow: 'Verify now',
+      servicesPromotionsBlocked:
+        'Verify your profile to add and display services and promotions. After verification, your services and prices will be visible to clients.',
+      servicesPromotionsBlockedPublic:
+        'This master has not verified their profile yet. Services and promotions will be available after verification.',
     },
   },
   ru: {
@@ -17,6 +21,10 @@ export const verificationBanner = {
       messageClient:
         'Верифицируйте телефон, чтобы добавлять фото в галерею и разблокировать все функции.',
       verifyNow: 'Верифицировать',
+      servicesPromotionsBlocked:
+        'Верифицируйте профиль, чтобы добавлять и отображать услуги и акции. После верификации ваши услуги и цены будут видны клиентам.',
+      servicesPromotionsBlockedPublic:
+        'Этот мастер ещё не прошёл верификацию. Услуги и акции будут доступны после верификации.',
     },
   },
   ro: {
@@ -27,6 +35,10 @@ export const verificationBanner = {
       messageClient:
         'Verifică-ți telefonul pentru a adăuga fotografii în galerie și a debloca toate funcțiile.',
       verifyNow: 'Verifică acum',
+      servicesPromotionsBlocked:
+        'Verifică-ți profilul pentru a adăuga și afișa servicii și promoții. După verificare, serviciile și prețurile vor fi vizibile clienților.',
+      servicesPromotionsBlockedPublic:
+        'Acest master nu și-a verificat încă profilul. Serviciile și promoțiile vor fi disponibile după verificare.',
     },
   },
 };

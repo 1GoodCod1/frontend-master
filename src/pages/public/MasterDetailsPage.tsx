@@ -23,6 +23,10 @@ import { MasterDetailsLeadForm } from '@/components/masters/MasterDetailsLeadFor
 import { SimilarMasters } from '@/components/home/recommendations/SimilarMasters';
 import { PortfolioSection } from '@/components/portfolio/PortfolioSection';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
+import { Link as RouterLink } from 'react-router-dom';
+import { ShieldCheck } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 function getCurrentUserMasterId(me: unknown): string | undefined {
   if (!me || typeof me !== 'object') return undefined;
@@ -170,7 +174,7 @@ export default function MasterDetailsPage() {
 
       <div className="container max-w-7xl mx-auto px-4 py-4 sm:py-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
-          <div className={`space-y-6 ${isOwnProfile ? 'md:col-span-12' : 'md:col-span-7'}`}>
+          <div className={`space-y-6 ${isOwnProfile || !m?.user?.isVerified ? 'md:col-span-12' : 'md:col-span-7'}`}>
             <MasterDetailsInfo
               description={description}
               isVerified={Boolean(m?.user?.isVerified)}
@@ -180,12 +184,33 @@ export default function MasterDetailsPage() {
               experienceYears={experienceYears}
             />
 
-            {services && services.length > 0 && (
+            {m?.user?.isVerified && services && services.length > 0 ? (
               <MasterDetailsServices
                 services={services}
                 promotions={promotions}
               />
-            )}
+            ) : !m?.user?.isVerified ? (
+              <Alert className="rounded-xl border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10">
+                <ShieldCheck className="size-5 text-amber-600 dark:text-amber-500" />
+                <AlertTitle className="font-bold text-foreground">
+                  {t('verificationBanner.title')}
+                </AlertTitle>
+                <AlertDescription className="mt-1 flex flex-wrap items-center gap-3">
+                  <span className="flex-1">
+                    {isOwnProfile
+                      ? t('verificationBanner.servicesPromotionsBlocked')
+                      : t('verificationBanner.servicesPromotionsBlockedPublic')}
+                  </span>
+                  {isOwnProfile && (
+                    <Button asChild size="sm" className="shrink-0 bg-amber-600 font-semibold hover:bg-amber-700">
+                      <RouterLink to="/dashboard/verification">
+                        {t('verificationBanner.verifyNow')}
+                      </RouterLink>
+                    </Button>
+                  )}
+                </AlertDescription>
+              </Alert>
+            ) : null}
 
             <MasterDetailsGallery
               photos={photos}
@@ -217,7 +242,7 @@ export default function MasterDetailsPage() {
             </div>
           </div>
 
-          {!isOwnProfile && (
+          {!isOwnProfile && m?.user?.isVerified && (
             <div id="lead-form" className="md:col-span-5">
               <div className="md:sticky md:top-24 space-y-6">
                 <MasterDetailsLeadForm

@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useNow } from '@/hooks/useNow';
 import { Tag, Plus, Pencil, Trash2, Flame } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useAppSelector } from '@/app/hooks';
+import { selectIsVerified } from '@/features/auth/selectors';
 import {
   usePromotionsMyQuery,
   usePromotionsCreateMutation,
@@ -10,6 +12,7 @@ import {
   usePromotionsDeleteMutation,
 } from '@/features/promotions/promotionsApi';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
+import { VerificationGate } from '@/components/common/VerificationGate';
 import type { PromotionDto } from '@/types';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -60,14 +63,19 @@ function toDateInputValue(iso: string): string {
 export default function PromotionsPage() {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
+  const isVerified = useAppSelector(selectIsVerified);
   const now = useNow();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(defaultForm);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: list, isLoading, error, refetch: refetchPromotions } = usePromotionsMyQuery();
-  const { data: profile } = useMastersMyProfileQuery();
+  const { data: list, isLoading, error, refetch: refetchPromotions } = usePromotionsMyQuery(undefined, {
+    skip: !isVerified,
+  });
+  const { data: profile } = useMastersMyProfileQuery(undefined, {
+    skip: !isVerified,
+  });
   const [create, { isLoading: createLoading }] = usePromotionsCreateMutation();
   const [update, { isLoading: updateLoading }] = usePromotionsUpdateMutation();
   const [remove, { isLoading: deleteLoading }] = usePromotionsDeleteMutation();
@@ -224,6 +232,7 @@ export default function PromotionsPage() {
   if (error) return <ErrorState error={error} onRetry={() => refetchPromotions()} />;
 
   return (
+    <VerificationGate isVerified={isVerified}>
     <div className="mx-auto max-w-5xl px-4 py-6 md:py-8">
       <PageHeader
         title={t('promotionsPage.title')}
@@ -430,5 +439,6 @@ export default function PromotionsPage() {
         />
       )}
     </div>
+    </VerificationGate>
   );
 }

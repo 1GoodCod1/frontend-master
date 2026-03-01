@@ -213,7 +213,7 @@ export const MasterProfileHero = ({
                   </Button>
                 )}
 
-                {!isOwnProfile && !hasActiveLead && !isClient && (
+                {isClient && !isOwnProfile && !hasActiveLead && isVerified && (
                   <Button asChild size="lg" className="w-full sm:w-auto min-h-[48px] gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500">
                     <a href="#lead-form">
                       <Send className="h-4 w-4" />
