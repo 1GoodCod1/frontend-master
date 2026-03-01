@@ -27,6 +27,7 @@ export const plans = {
         browseMasters: 'Browse Masters',
       },
       registerToBuy: 'Register as Master',
+      registerToGetFreeDesc: 'Register as a master to get this plan free for 30 days',
       pendingUpgradeTitle: 'Pending Upgrade',
       pendingUpgradeMessage:
         'You have a pending upgrade to {{tariff}}. Please confirm within {{hours}} hours.',
@@ -124,6 +125,7 @@ export const plans = {
       lifetimePremium:
         'У вас PREMIUM-аккаунт навсегда! 🎉',
       registerToBuy: 'Зарегистрироваться как мастер',
+      registerToGetFreeDesc: 'Зарегистрируйтесь как мастер, чтобы получить этот план бесплатно на 30 дней',
       pendingUpgradeTitle: 'Ожидает обновления',
       pendingUpgradeMessage:
         'У вас ожидает обновление до {{tariff}}. Подтвердите в течение {{hours}} ч.',
@@ -219,6 +221,7 @@ export const plans = {
         browseMasters: 'Explorează meșteri',
       },
       registerToBuy: 'Înregistrează-te ca Master',
+      registerToGetFreeDesc: 'Înregistrează-te ca master pentru a obține acest plan gratuit 30 zile',
       pendingUpgradeTitle: 'Actualizare în Așteptare',
       pendingUpgradeMessage:
         'Aveți o actualizare în așteptare la {{tariff}}. Vă rugăm să confirmați în {{hours}} ore.',

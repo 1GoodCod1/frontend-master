@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { CheckCircle, ArrowUpCircle } from 'lucide-react';
+import { CheckCircle, ArrowUpCircle, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -46,20 +46,21 @@ export const PlanCard = ({
       : plan.price;
   const showFree = isMaster && isVerified && isPaid;
   const showVerifyToGetFree = isMaster && !isVerified && isPaid;
-  const priceText = showFree ? '0 MDL' : showVerifyToGetFree ? '' : regularPrice;
+  const showRegisterToGetFree = !isAuthed && isPaid;
+  // Everyone sees "0 MDL" for paid plans — masters and public visitors alike
+  const showZeroPrice = (showFree || showVerifyToGetFree || showRegisterToGetFree) && isPaid;
+  const priceText = showZeroPrice ? '0 MDL' : regularPrice;
   const descriptionText =
-    showVerifyToGetFree
-      ? t('plans.verifyToGetFreeDesc')
-      : t(`plans.${planKey}.description`) !== `plans.${planKey}.description`
-        ? t(`plans.${planKey}.description`)
-        : plan.description || '';
+    t(`plans.${planKey}.description`) !== `plans.${planKey}.description`
+      ? t(`plans.${planKey}.description`)
+      : plan.description || '';
   const featuresObj = t(`plans.${planKey}.features`, {
     returnObjects: true,
   }) as Record<string, string> | string;
   const features =
     typeof featuresObj === 'object' &&
-    featuresObj !== null &&
-    !Array.isArray(featuresObj)
+      featuresObj !== null &&
+      !Array.isArray(featuresObj)
       ? Object.values(featuresObj)
       : plan.features && plan.features.length > 0
         ? plan.features
@@ -69,14 +70,14 @@ export const PlanCard = ({
   const planName = plan.name?.toUpperCase() || '';
 
   const planAccent: Record<string, { text: string; iconBg: string }> = {
-    BASIC:   { text: 'text-primary',                             iconBg: 'bg-primary/10' },
-    VIP:     { text: 'text-amber-500 dark:text-amber-400',       iconBg: 'bg-amber-500/10' },
-    PREMIUM: { text: 'text-violet-500 dark:text-violet-400',     iconBg: 'bg-violet-500/10' },
+    BASIC: { text: 'text-primary', iconBg: 'bg-primary/10' },
+    VIP: { text: 'text-amber-500 dark:text-amber-400', iconBg: 'bg-amber-500/10' },
+    PREMIUM: { text: 'text-violet-500 dark:text-violet-400', iconBg: 'bg-violet-500/10' },
   };
   const accent = planAccent[planName] ?? { text: 'text-foreground', iconBg: 'bg-muted' };
 
   const cardClassName = cn(
-    'relative h-full rounded-2xl p-6 transition-all',
+    'relative h-full flex flex-col rounded-2xl p-6 transition-all overflow-hidden',
     isCurrentPlan && 'border-2 border-primary shadow-md shadow-primary/10',
     isPopular && 'border-2 border-primary/50 shadow-md shadow-primary/10',
     !isCurrentPlan && !isPopular && 'border border-border'
@@ -100,7 +101,7 @@ export const PlanCard = ({
         </Badge>
       )}
 
-      <CardContent className="flex flex-col gap-4 p-0">
+      <CardContent className="flex flex-col gap-4 p-0 flex-1 min-w-0">
         <div className="flex flex-row items-center gap-3">
           {plan.icon && (
             <span className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-lg', accent.iconBg, accent.text)}>
@@ -113,13 +114,17 @@ export const PlanCard = ({
         </div>
 
         <div className="flex flex-col gap-0.5">
-          {showFree && regularPrice !== '0 MDL' && (
+          {showZeroPrice && regularPrice !== '0 MDL' && (
             <p className="text-sm text-muted-foreground line-through">{regularPrice}</p>
           )}
-          {!showVerifyToGetFree && (
-            <p className={cn(priceClass, isCurrentPlan && 'underline')}>{priceText}</p>
-          )}
+          <p className={cn(priceClass, isCurrentPlan && 'underline')}>{priceText}</p>
         </div>
+
+        {showRegisterToGetFree && (
+          <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+            {t('plans.registerToGetFreeDesc')}
+          </p>
+        )}
         <p className={descClass}>{descriptionText}</p>
 
         <Separator />
@@ -133,43 +138,55 @@ export const PlanCard = ({
           ))}
         </ul>
 
-        <div className="mt-2">
+        <div className="mt-auto pt-4">
           {isCurrentPlan ? (
-            <Button variant="outline" disabled className="w-full">
+            <Button variant="outline" disabled className="w-full whitespace-normal h-auto py-2.5">
               {t('plans.currentPlan')}
+            </Button>
+          ) : showVerifyToGetFree ? (
+            <Button
+              asChild
+              variant="default"
+              size="lg"
+              className="w-full font-semibold transition-all hover:-translate-y-0.5 whitespace-normal h-auto py-2.5 leading-snug text-center"
+            >
+              <RouterLink to="/dashboard/verification">
+                <ShieldCheck className="h-4 w-4 shrink-0" />
+                <span>{t('plans.claimFree')} {t(`plans.${plan.name.toLowerCase()}.name`)}</span>
+              </RouterLink>
             </Button>
           ) : isUpgradeOption && isPaid && isMaster ? (
             <Button
               variant="default"
               size="lg"
-              className="w-full font-semibold transition-all hover:-translate-y-0.5"
+              className="w-full font-semibold transition-all hover:-translate-y-0.5 whitespace-normal h-auto py-2.5 leading-snug text-center"
               disabled={checkoutLoading || claimLoading}
               onClick={() => plan.tariffType && onBuy(plan.tariffType)}
             >
-              <ArrowUpCircle className="h-4 w-4" />
-              {isVerified ? t('plans.claimFree') : showVerifyToGetFree ? t('plans.verifyToGetFree') : t('plans.upgradeTo')} {t(`plans.${plan.name.toLowerCase()}.name`)}
+              <ArrowUpCircle className="h-4 w-4 shrink-0" />
+              <span>{t('plans.claimFree')} {t(`plans.${plan.name.toLowerCase()}.name`)}</span>
             </Button>
           ) : isPaid && isMaster ? (
             <Button
               variant={plan.highlight ? 'default' : 'outline'}
               size="lg"
-              className="w-full font-semibold transition-all hover:-translate-y-0.5"
+              className="w-full font-semibold transition-all hover:-translate-y-0.5 whitespace-normal h-auto py-2.5 leading-snug text-center"
               disabled={checkoutLoading || claimLoading}
               onClick={() => plan.tariffType && onBuy(plan.tariffType)}
             >
-              {isVerified ? t('plans.claimFree') : showVerifyToGetFree ? t('plans.verifyToGetFree') : t('plans.buy')} {t(`plans.${plan.name.toLowerCase()}.name`)}
+              <span>{t('plans.claimFree')} {t(`plans.${plan.name.toLowerCase()}.name`)}</span>
             </Button>
           ) : isPaid && !isMaster ? (
             <Button
               asChild
               variant={plan.highlight ? 'default' : 'outline'}
               size="lg"
-              className="w-full font-semibold transition-all hover:-translate-y-0.5"
+              className="w-full font-semibold transition-all hover:-translate-y-0.5 whitespace-normal h-auto py-2.5 leading-snug text-center"
             >
               <RouterLink to="/register">{t('plans.registerToBuy')}</RouterLink>
             </Button>
           ) : (
-            <Button variant="outline" disabled className="w-full">
+            <Button variant="outline" disabled className="w-full whitespace-normal h-auto py-2.5">
               {t('plans.free')}
             </Button>
           )}
