@@ -1,0 +1,211 @@
+import { useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useMastersMyProfileQuery, useMastersMyTariffQuery, useMastersClaimFreePlanMutation } from '@/features/masters/mastersApi';
+import {
+    usePaymentsCancelPendingUpgradeMutation,
+    usePaymentsCancelTariffAtPeriodEndMutation,
+} from '@/features/payments/paymentsApi';
+import { useAppSelector } from '@/app/hooks';
+import { selectIsAuthed, selectRole, selectIsVerified } from '@/features/auth/selectors';
+import { PaidTariff, TariffPlan, effectivePlanFromMasterProfile } from '@/features/auth/plan';
+import { useGetActiveTariffsQuery } from '@/features/tariffs/tariffsApi';
+import { plans, type PlanUI } from '@/types/plans';
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+    return typeof v === 'object' && v !== null;
+}
+
+function unwrapEnvelope(raw: unknown): unknown {
+    return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
+}
+
+function toErrorMessage(e: unknown): string | undefined {
+    if (!isRecord(e)) return undefined;
+    const data = isRecord(e.data) ? e.data : undefined;
+    return (
+        (typeof data?.message === 'string' ? data.message : undefined) ??
+        (typeof e.message === 'string' ? e.message : undefined)
+    );
+}
+
+function pickMasterId(raw: unknown): string | null {
+    const u = unwrapEnvelope(raw);
+    if (!isRecord(u)) return null;
+    if (typeof u.id === 'string') return u.id;
+    if (isRecord(u.master) && typeof u.master.id === 'string') return u.master.id;
+    return null;
+}
+
+export function usePlansLogic() {
+    const { t } = useTranslation();
+    const nav = useNavigate();
+    const isAuthed = useAppSelector(selectIsAuthed);
+    const role = useAppSelector(selectRole);
+    const isVerified = useAppSelector(selectIsVerified);
+
+    const [cancelPendingUpgrade, cancelState] = usePaymentsCancelPendingUpgradeMutation();
+    const [cancelTariffAtPeriodEnd, cancelAtPeriodEndState] =
+        usePaymentsCancelTariffAtPeriodEndMutation();
+    const [claimFreePlan, claimState] = useMastersClaimFreePlanMutation();
+
+    const isClient = isAuthed && role === 'CLIENT';
+    const isMaster = isAuthed && role === 'MASTER';
+
+    const myProfile = useMastersMyProfileQuery(undefined, { skip: !isMaster });
+    const myTariff = useMastersMyTariffQuery(undefined, { skip: !isMaster });
+    const { data: tariffsData, isLoading: tariffsLoading } = useGetActiveTariffsQuery();
+
+    const myMasterId = pickMasterId(myProfile.data);
+
+    const rawTariff = unwrapEnvelope(myTariff.data);
+    const tariff = isRecord(rawTariff) ? rawTariff : {};
+    const tariffExpiresAt =
+        typeof tariff.tariffExpiresAt === 'string' || typeof tariff.tariffExpiresAt === 'number'
+            ? new Date(tariff.tariffExpiresAt)
+            : null;
+    const isExpired =
+        typeof tariff.isExpired === 'boolean'
+            ? tariff.isExpired
+            : false;
+    const pendingUpgrade = isRecord(tariff.pendingUpgrade) ? tariff.pendingUpgrade : null;
+    const pendingUpgradeTo =
+        pendingUpgrade && typeof pendingUpgrade.to === 'string' ? pendingUpgrade.to : undefined;
+    const lifetimePremium = tariff.lifetimePremium === true;
+    const cancelAtPeriodEnd = tariff.tariffCancelAtPeriodEnd === true;
+
+    const effectivePlan: TariffPlan =
+        isAuthed && myProfile.data
+            ? effectivePlanFromMasterProfile(unwrapEnvelope(myProfile.data))
+            : 'BASIC';
+
+
+
+    const onBuy = async (tariffType: PaidTariff) => {
+        if (!isAuthed) {
+            nav('/register');
+            return;
+        }
+        if (!myMasterId) {
+            toast.error(t('plans.profileNotLoaded'));
+            return;
+        }
+        // Верифицированные мастера получают тариф бесплатно 1 кликом
+        if (isMaster && isVerified) {
+            try {
+                await claimFreePlan({ tariffType }).unwrap();
+                toast.success(t('plans.claimFreeSuccess', { plan: tariffType }));
+                myTariff.refetch();
+            } catch (e: unknown) {
+                toast.error(toErrorMessage(e) ?? t('plans.claimFreeFailed'));
+            }
+            return;
+        }
+        nav(`/plans/checkout?plan=${tariffType}`);
+    };
+
+    const onConfirmPendingUpgrade = () => {
+        const plan = pendingUpgradeTo ? `&plan=${encodeURIComponent(pendingUpgradeTo)}` : '';
+        nav(`/plans/checkout?pending=1${plan}`);
+    };
+
+    const onCancelPendingUpgrade = async () => {
+        try {
+            await cancelPendingUpgrade().unwrap();
+            toast.success(t('plans.upgradeCancelled'));
+            myTariff.refetch();
+        } catch (e: unknown) {
+            toast.error(toErrorMessage(e) ?? t('plans.cancelFailed'));
+        }
+    };
+
+    const onCancelTariffAtPeriodEnd = async () => {
+        try {
+            await cancelTariffAtPeriodEnd().unwrap();
+            toast.success(t('plans.cancelAtPeriodEndSuccess'));
+            myTariff.refetch();
+        } catch (e: unknown) {
+            toast.error(toErrorMessage(e) ?? t('plans.cancelFailed'));
+        }
+    };
+
+    const dbPlans = useMemo((): PlanUI[] => {
+        const payload = unwrapEnvelope(tariffsData);
+        const tariffsArray = Array.isArray(payload) ? payload : [];
+        if (!tariffsArray || tariffsArray.length === 0) return [...plans];
+
+        const tariffPlans: PlanUI[] = tariffsArray
+            .map((t): PlanUI | null => {
+                if (!isRecord(t)) return null;
+                const type = t.type;
+                if (type !== 'BASIC' && type !== 'VIP' && type !== 'PREMIUM') return null;
+
+                const staticPlan = plans.find((p) => p.name === type);
+                const features = Array.isArray(t.features) ? t.features.filter((x) => typeof x === 'string') : [];
+            return {
+                name: type,
+                price: typeof t.price === 'string' ? t.price : staticPlan?.price ?? '',
+                description: typeof t.description === 'string' ? t.description : (staticPlan?.description ?? ''),
+                features,
+                highlight: type === 'VIP',
+                tariffType: type === 'BASIC' ? null : (type as PaidTariff),
+                icon: staticPlan?.icon || null,
+            };
+            })
+            .filter((x): x is PlanUI => Boolean(x));
+
+        const hasBasic = tariffPlans.some((p) => p.name === 'BASIC');
+        if (!hasBasic) {
+            const basicPlan = plans.find((p) => p.name === 'BASIC') || {
+                name: 'BASIC' as const,
+                price: '0 MDL',
+                description: 'Start and receive first leads',
+                features: ['Public profile', 'Up to 5 photos', 'Receive leads', 'Reviews'],
+                highlight: false,
+                tariffType: null,
+                icon: null,
+            };
+            tariffPlans.push(basicPlan);
+        }
+
+        return tariffPlans.sort((a, b) => {
+            const order: Record<string, number> = { BASIC: 0, VIP: 1, PREMIUM: 2 };
+            return (order[a.name] || 0) - (order[b.name] || 0);
+        });
+    }, [tariffsData]);
+
+    const plansToShow = isMaster
+        ? dbPlans.filter((p) => {
+            if (p.name === effectivePlan) return true;
+            if (effectivePlan === 'BASIC' && (p.name === 'VIP' || p.name === 'PREMIUM')) return true;
+            // VIP masters always see PREMIUM upgrade option
+            if (effectivePlan === 'VIP' && p.name === 'PREMIUM') return true;
+            return false;
+        })
+        : dbPlans;
+
+    return {
+        isAuthed,
+        isClient,
+        isMaster,
+        isVerified,
+        effectivePlan,
+        tariffExpiresAt,
+        isExpired,
+        pendingUpgrade,
+        lifetimePremium,
+        plansToShow,
+        isLoading: (isMaster && myProfile.isLoading) || tariffsLoading,
+        checkoutLoading: false,
+        claimLoading: claimState.isLoading,
+        confirmLoading: false,
+        cancelLoading: cancelState.isLoading,
+        cancelAtPeriodEnd,
+        cancelAtPeriodEndLoading: cancelAtPeriodEndState.isLoading,
+        onCancelTariffAtPeriodEnd,
+        onBuy,
+        onConfirmPendingUpgrade,
+        onCancelPendingUpgrade,
+    };
+}

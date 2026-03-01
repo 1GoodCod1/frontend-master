@@ -1,0 +1,127 @@
+import { Link as RouterLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useAppSelector } from '@/app/hooks';
+import { selectIsAuthed } from '@/features/auth/selectors';
+import { useState } from 'react';
+import { Mail } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+export function Footer() {
+  const { t } = useTranslation();
+  const isAuthed = useAppSelector(selectIsAuthed);
+  const [email, setEmail] = useState('');
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    toast.success(t('footer.newsletterSuccess'));
+    setEmail('');
+  };
+
+  const linkClass =
+    'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
+
+  return (
+    <footer className="mt-auto w-full border-t border-border dark:border-white/[0.08] bg-card">
+      {/* Newsletter */}
+      <div className="border-b border-border dark:border-white/[0.08] bg-primary/5 px-4 py-5 sm:py-6 dark:bg-primary/10">
+        <div className="mx-auto max-w-6xl">
+          <form
+            onSubmit={handleNewsletterSubmit}
+            className="mx-auto flex max-w-[560px] flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="mb-1 font-bold text-foreground">
+                {t('footer.newsletterTitle')}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {t('footer.newsletterDescription')}
+              </p>
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[320px] sm:flex-row">
+              <div className="relative flex-1">
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder={t('footer.newsletterPlaceholder')}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-9 pl-9"
+                />
+              </div>
+              <Button type="submit" className="min-w-[120px] min-h-[44px] font-semibold bg-cta text-cta-foreground hover:bg-cta/90 dark:bg-cta dark:text-cta-foreground dark:hover:bg-cta/90">
+                {t('footer.newsletterButton')}
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Main footer */}
+      <div className="px-4 py-8 md:px-6 md:py-10 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-12 gap-8 justify-between gap-y-8">
+            <div className="col-span-12 md:col-span-4">
+              <h3 className="mb-2 text-lg font-extrabold tracking-tight">
+                {t('appName')}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {t('footer.aboutDescription')}
+              </p>
+            </div>
+
+            <div className="col-span-6 sm:col-span-4 md:col-span-2">
+              <h4 className="mb-2 text-sm font-bold tracking-wide">
+                {t('footer.quickLinks')}
+              </h4>
+              <nav className="flex flex-col gap-1 sm:gap-2">
+                <RouterLink to="/masters" className={linkClass}>
+                  {t('footer.masters')}
+                </RouterLink>
+                <RouterLink to="/plans" className={linkClass}>
+                  {t('footer.plans')}
+                </RouterLink>
+                <RouterLink to="/how-it-works" className={linkClass}>
+                  {t('footer.howItWorks')}
+                </RouterLink>
+                <RouterLink to="/faq" className={linkClass}>
+                  {t('footer.faq')}
+                </RouterLink>
+                {!isAuthed && (
+                  <RouterLink to="/login" className={linkClass}>
+                    {t('nav.login')}
+                  </RouterLink>
+                )}
+              </nav>
+            </div>
+
+            <div className="col-span-6 sm:col-span-4 md:col-span-2">
+              <h4 className="mb-2 text-sm font-bold tracking-wide">
+                {t('footer.support')}
+              </h4>
+              <nav className="flex flex-col gap-1 sm:gap-2">
+                <RouterLink to="/contact" className={linkClass}>
+                  {t('footer.contact')}
+                </RouterLink>
+                <RouterLink to="/privacy" className={linkClass}>
+                  {t('footer.privacy')}
+                </RouterLink>
+                <RouterLink to="/terms" className={linkClass}>
+                  {t('footer.terms')}
+                </RouterLink>
+              </nav>
+            </div>
+          </div>
+
+          <div className="mt-10 border-t border-border dark:border-white/[0.08] pt-6 text-center md:text-left">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} {t('appName')}. {t('footer.copyright')}
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

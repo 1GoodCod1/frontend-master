@@ -1,0 +1,91 @@
+export const LEAD_STATUS_OPTIONS = ['NEW', 'IN_PROGRESS', 'CLOSED', 'SPAM'] as const;
+export type LeadStatus = (typeof LEAD_STATUS_OPTIONS)[number];
+export type LeadFilterStatus = LeadStatus | 'ALL';
+
+export type LeadDto = {
+  id: string;
+  status?: LeadStatus | string | null;
+  createdAt?: string | null;
+  message?: string | null;
+  clientName?: string | null;
+  clientPhone?: string | null;
+  masterId?: string | null;
+  master?: {
+    id?: string;
+    slug?: string | null;
+    avatarUrl?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    user?: {
+      firstName?: string | null;
+      lastName?: string | null;
+      phone?: string | null;
+      email?: string | null;
+    } | null;
+    category?: { name?: string | null } | null;
+  } | null;
+  files?: Array<{ id?: string; path?: string | null }> | null;
+  isPremium?: boolean | null;
+} & Record<string, unknown>;
+
+export type ActiveLeadToMasterResponse = LeadDto | null;
+
+export type LeadStatsResponse = {
+  total: number;
+  byStatus: { newLeads: number; inProgress: number; closed: number; spam: number };
+};
+
+export interface LeadCardProps {
+  lead: LeadDto;
+  onOpenReviewModal: (lead: LeadDto) => void;
+  reviewsSubmittedMasterIds: Set<string>;
+}
+
+export interface LeadDetailsDialogProps {
+  open: boolean;
+  onClose: () => void;
+  leadId: string | null;
+  onStatusChange?: () => void;
+}
+
+export interface LeadsStatusFilterProps {
+  value: LeadFilterStatus;
+  onChange: (value: LeadFilterStatus) => void;
+}
+
+export interface LeaveReviewButtonProps {
+  lead: unknown;
+}
+
+export interface ReviewModalProps {
+  open: boolean;
+  onClose: () => void;
+  lead: unknown | null;
+  onSuccess?: () => void;
+}
+
+export interface LeadsEmptyStateProps {
+  onReset?: () => void;
+}
+
+export interface LeadsFiltersProps {
+  status: string;
+  setStatus: (s: string) => void;
+  dateFrom: string;
+  setDateFrom: (s: string) => void;
+  dateTo: string;
+  setDateTo: (s: string) => void;
+}
+
+export interface BulkActionsLeadsProps {
+  selection: string[];
+  onBulkStatus: (status: LeadStatus) => void;
+  onClearSelection: () => void;
+}
+
+export interface StatisticsCardsLeadsProps {
+  total: number;
+  newCount: number;
+  inProgressCount: number;
+  closedCount: number;
+  premiumCount?: number;
+}

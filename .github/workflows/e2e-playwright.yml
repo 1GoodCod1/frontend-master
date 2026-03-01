@@ -1,0 +1,27 @@
+name: E2E Playwright
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '25'
+  CI: 'true'
+
+jobs:
+  playwright-ui:
+    name: Playwright UI Critical Flow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - run: npm run e2e:ui
+        env:
+          FRONTEND_BASE_URL: ${{ secrets.STAGING_FRONTEND_URL || 'http://localhost:3000' }}

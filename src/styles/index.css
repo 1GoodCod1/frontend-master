@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+/* Tailwind v4: class-based dark mode (responds to .dark on <html>) */
+@custom-variant dark (&&:where(.dark, .dark *));
+
+/* ========== Design system: shadcn + professional light / warm dark ========== */
+:root {
+  /* Light: neutral cool gray (professional SaaS-style) */
+  --background: 220 14% 97%;
+  --foreground: 220 18% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 18% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 18% 14%;
+  --primary: 174 58% 39%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 93%;
+  --secondary-foreground: 220 18% 14%;
+  --muted: 220 14% 93%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 220 14% 93%;
+  --accent-foreground: 220 18% 14%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 174 58% 39%;
+  --cta: 25 95% 53%;
+  --cta-foreground: 0 0% 100%;
+  --radius: 0.75rem;
+  /* Home page: solid modern background (light) */
+  --home-bg: 220 18% 98%;
+  /* Overlay backdrop */
+  --select-backdrop: hsla(40, 15%, 20%, 0.12);
+}
+
+/* Dark mode: #14120b base — deep warm black, subtle borders */
+html[data-theme="dark"],
+.dark {
+  --background: 47 29% 6%;
+  --foreground: 47 10% 92%;
+  --card: 47 22% 9%;
+  --card-foreground: 47 10% 92%;
+  --popover: 47 22% 9%;
+  --popover-foreground: 47 10% 92%;
+  --primary: 174 72% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 47 18% 12%;
+  --secondary-foreground: 47 10% 92%;
+  --muted: 47 18% 12%;
+  --muted-foreground: 47 12% 60%;
+  --accent: 47 18% 12%;
+  --accent-foreground: 47 10% 92%;
+  --destructive: 0 63% 55%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 47 15% 10%;
+  --input: 47 15% 10%;
+  --ring: 174 72% 45%;
+  --cta: 38 92% 50%;
+  --cta-foreground: 0 0% 100%;
+  /* Home page: solid modern background (dark) */
+  --home-bg: 220 14% 7%;
+  /* Overlay backdrop */
+  --select-backdrop: rgba(0, 0, 0, 0.5);
+}
+
+/* Home page — solid modern background (no gradient) */
+.bg-home-gradient {
+  background-color: hsl(var(--home-bg));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  /* Prevent horizontal pull-to-refresh overflow on mobile */
+  overscroll-behavior-x: none;
+  overflow-y: auto;
+  /* Prevent scroll jump when content changes (browser scroll anchoring) */
+  overflow-anchor: auto;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  /* Prevent horizontal scroll on any device */
+  overflow-x: hidden;
+  /* Avoid smooth scroll interfering with programmatic updates */
+  scroll-behavior: auto;
+}
+
+body {
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.3s ease, color 0.2s ease;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  background-color: hsl(var(--background));
+  transition: background-color 0.3s ease;
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  overflow-x: hidden;
+  overflow-anchor: auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Safe area utility for modals/dialogs on notched devices */
+.safe-area-inset {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Mobile: tap targets and safe area */
+@media (max-width: 1023px) {
+
+  button:not(.no-tap-target),
+  a[role="button"],
+  [role="button"]:not(.no-tap-target) {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .dark button:not(.no-tap-target),
+  .dark a[role="button"],
+  .dark [role="button"]:not(.no-tap-target) {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+body {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@media print {
+  body {
+    print-color-adjust: exact;
+  }
+}
+
+/* Modal/Dialog — opaque background, no transparency */
+[role="dialog"] {
+  background-color: hsl(var(--card)) !important;
+  color: hsl(var(--foreground));
+}
+
+/* Select dropdown — opaque background, no transparency */
+.select-dropdown-content {
+  background-color: hsl(var(--popover)) !important;
+}
+
+/* Select dropdown backdrop — hide content behind when open */
+.select-dropdown-content[data-state="open"]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--select-backdrop);
+}
+
+/* Override browser autofill — match input style (auto-switches via CSS vars) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px hsl(var(--card)) inset !important;
+  box-shadow: 0 0 0 30px hsl(var(--card)) inset !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground));
+}

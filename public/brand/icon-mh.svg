@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="master-hub">
+  <rect width="64" height="64" rx="16" fill="#020617"/>
+  <text x="50%" y="54%"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-size="36"
+        font-weight="600"
+        fill="#F8FAFC"
+        font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+    mh
+  </text>
+</svg>

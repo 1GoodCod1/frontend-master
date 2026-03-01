@@ -1,0 +1,109 @@
+export const REVIEW_STATUS_OPTIONS = ['PENDING', 'VISIBLE', 'HIDDEN', 'REPORTED'] as const;
+export type ReviewStatus = (typeof REVIEW_STATUS_OPTIONS)[number];
+export type ReviewFilterStatus = ReviewStatus | 'ALL';
+
+export type ReviewCriteriaDto = {
+  id: string;
+  criteria: string;
+  rating: number;
+  createdAt: string;
+};
+
+export type ReviewFileDto = {
+  id: string;
+  file: {
+    id: string;
+    path: string;
+    mimetype: string;
+    filename: string;
+  };
+};
+
+export type ReviewReplyDto = {
+  id: string;
+  reviewId: string;
+  masterId: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ReviewVoteDto = {
+  id: string;
+  reviewId: string;
+  userId: string;
+  createdAt: string;
+};
+
+export type ReviewDto = {
+  id: string;
+  masterId: string;
+  clientPhone: string;
+  clientName?: string | null;
+  clientId?: string | null;
+  rating: number;
+  comment?: string | null;
+  status: ReviewStatus;
+  moderatedBy?: string | null;
+  moderatedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+
+  master?: {
+    user?: { firstName?: string | null; lastName?: string | null } | null;
+  } | null;
+  client?: { firstName?: string | null; lastName?: string | null } | null;
+
+  reviewCriteria?: ReviewCriteriaDto[];
+  reviewFiles?: ReviewFileDto[];
+  replies?: ReviewReplyDto[];
+  votes?: ReviewVoteDto[];
+  _count?: { votes: number };
+};
+
+export type ReviewCanCreateResponse = {
+  canCreate: boolean;
+  alreadyReviewed?: boolean;
+  noClosedLead?: boolean;
+};
+
+export type ReviewStatsResponse = {
+  total: number;
+  byStatus: { visible: number; pending: number; hidden: number; reported: number };
+  ratingDistribution: Record<number, number>;
+};
+
+export type ReviewReplyResponse = ReviewReplyDto;
+export type ReviewDeleteReplyResponse = { deleted: true };
+
+export type ReviewVoteHelpfulResponse = ReviewVoteDto & { votesCount: number };
+export type ReviewRemoveVoteResponse = { deleted: true; votesCount: number };
+
+export interface ReviewsSectionProps {
+  masterId: string;
+  canCreate?: boolean;
+}
+
+export interface ReviewDetailsDialogProps {
+  open: boolean;
+  onClose: () => void;
+  reviewId: string | null;
+  onStatusChange?: () => void;
+}
+
+export interface ReviewsEmptyStateProps {
+  onReset?: () => void;
+}
+
+export interface ReviewsFiltersProps {
+  status: string;
+  setStatus: (s: string) => void;
+}
+
+export interface StatisticsCardsReviewsProps {
+  total: number;
+  pending: number;
+  visible: number;
+  hidden: number;
+  reported: number;
+}
