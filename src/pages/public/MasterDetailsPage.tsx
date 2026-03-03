@@ -236,6 +236,7 @@ export default function MasterDetailsPage() {
                 error={reviewsQuery.error}
                 onRetry={reviewsQuery.refetch}
                 isClient={isClient}
+                isMaster={role === 'MASTER' && isOwnProfile}
                 canCreateReview={canCreateReviewQuery.data ?? undefined}
                 reviewSubmission={reviewSubmission}
               />

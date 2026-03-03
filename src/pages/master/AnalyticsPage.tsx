@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { useAnalyticsMyQuery } from '@/features/analytics/analyticsApi';
+import { useAnalyticsMyQuery } from '../../../../analytics/analyticsApi';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectPlan } from '@/features/auth/selectors';
@@ -112,40 +112,40 @@ export default function AnalyticsPage() {
     <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
       <div className="mb-8">
         <PageHeader
-        title={t('analyticsPage.title', 'Аналитика')}
-        subtitle={
-          isPremium
-            ? t('analyticsPage.subtitleBoost', 'Расширенная аналитика и прогнозы')
-            : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')
-        }
-        actions={
-          <div className="flex flex-wrap items-center gap-2">
-            {isPremium && (
-              <Badge variant="secondary" className="gap-1 font-semibold">
-                <BarChart3 className="size-3.5" />
-                {t('analyticsPage.premiumBadge', 'PREMIUM - Расширенная аналитика')}
-              </Badge>
-            )}
-            {isPremium && masterId && (
-              <Button
-                size="sm"
-                className="gap-1.5 border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
-                onClick={async () => {
-                  try {
-                    await exportService.exportAnalyticsPDF(masterId, accessToken ?? undefined);
-                    toast.success(t('export.analyticsPDFSuccess'));
-                  } catch (err: unknown) {
-                    const msg = err instanceof Error ? err.message : t('export.exportFailed');
-                    toast.error(msg);
-                  }
-                }}
-              >
-                <Download className="size-4" />
-                {t('export.exportPDF')}
-              </Button>
-            )}
-          </div>
-        }
+          title={t('analyticsPage.title', 'Аналитика')}
+          subtitle={
+            isPremium
+              ? t('analyticsPage.subtitleBoost', 'Расширенная аналитика и прогнозы')
+              : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')
+          }
+          actions={
+            <div className="flex flex-wrap items-center gap-2">
+              {isPremium && (
+                <Badge variant="secondary" className="gap-1 font-semibold">
+                  <BarChart3 className="size-3.5" />
+                  {t('analyticsPage.premiumBadge', 'PREMIUM - Расширенная аналитика')}
+                </Badge>
+              )}
+              {isPremium && masterId && (
+                <Button
+                  size="sm"
+                  className="gap-1.5 border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
+                  onClick={async () => {
+                    try {
+                      await exportService.exportAnalyticsPDF(masterId, accessToken ?? undefined);
+                      toast.success(t('export.analyticsPDFSuccess'));
+                    } catch (err: unknown) {
+                      const msg = err instanceof Error ? err.message : t('export.exportFailed');
+                      toast.error(msg);
+                    }
+                  }}
+                >
+                  <Download className="size-4" />
+                  {t('export.exportPDF')}
+                </Button>
+              )}
+            </div>
+          }
         />
       </div>
 
@@ -231,68 +231,68 @@ export default function AnalyticsPage() {
       {/* ROI & Insights (Premium) */}
       {isPremium &&
         (Boolean(analyticsData.roi) || Boolean(analyticsData.insights)) && (
-        <div className="grid gap-6 md:grid-cols-3 mb-6">
-          {analyticsData.roi != null && (
-            <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-emerald-200/50 dark:border-emerald-600/30 md:col-span-1">
-              <div className="border-b border-slate-100 dark:border-white/[0.08] bg-emerald-500/10 dark:bg-emerald-500/20 px-6 py-4">
-                <h3 className="font-bold flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
-                  <DollarSign className="size-4" />
-                  {t('analyticsPage.roiTitle', 'ROI / Эффективность')}
-                </h3>
-              </div>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-end">
-                    <span className="text-sm text-muted-foreground">{t('analyticsPage.roiPayback', 'Окупаемость')}:</span>
-                    <span className={cn(
-                      "text-2xl font-black",
-                      ((analyticsData.roi as RoiData)?.roiPercent ?? 0) > 0 ? "text-emerald-600" : "text-amber-500"
-                    )}>
-                      {(analyticsData.roi as RoiData)?.roiPercent ?? 0}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-1.5">
-                    <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (analyticsData.roi as RoiData)?.roiPercent ?? 0))}%` }} />
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
-                      <p className="text-muted-foreground mb-1">{t('analyticsPage.roiSpent', 'Потрачено')}</p>
-                      <p className="font-bold">{(analyticsData.roi as RoiData).spent} MDL</p>
-                    </div>
-                    <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
-                      <p className="text-muted-foreground mb-1">{t('analyticsPage.roiEarned', 'Заработано')}</p>
-                      <p className="font-bold">{(analyticsData.roi as RoiData).earned} MDL</p>
-                    </div>
-                  </div>
+          <div className="grid gap-6 md:grid-cols-3 mb-6">
+            {analyticsData.roi != null && (
+              <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-emerald-200/50 dark:border-emerald-600/30 md:col-span-1">
+                <div className="border-b border-slate-100 dark:border-white/[0.08] bg-emerald-500/10 dark:bg-emerald-500/20 px-6 py-4">
+                  <h3 className="font-bold flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+                    <DollarSign className="size-4" />
+                    {t('analyticsPage.roiTitle', 'ROI / Эффективность')}
+                  </h3>
                 </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {Array.isArray(analyticsData.insights) && (
-            <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-blue-200/50 dark:border-blue-600/30 md:col-span-2">
-              <div className="border-b border-slate-100 dark:border-white/[0.08] bg-blue-500/10 dark:bg-blue-500/20 px-6 py-4">
-                <h3 className="font-bold flex items-center gap-2 text-blue-700 dark:text-blue-400">
-                  <TrendingUp className="size-4" />
-                  {t('analyticsPage.insightsTitle', 'Персональные инсайты')}
-                </h3>
-              </div>
-              <CardContent className="p-6">
-                <ul className="space-y-3">
-                  {(analyticsData.insights as string[]).map((insight, idx) => (
-                    <li key={idx} className="text-sm flex gap-3 items-start">
-                      <div className="size-5 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-blue-600 dark:text-blue-400 font-black text-[10px]">{idx + 1}</span>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-end">
+                      <span className="text-sm text-muted-foreground">{t('analyticsPage.roiPayback', 'Окупаемость')}:</span>
+                      <span className={cn(
+                        "text-2xl font-black",
+                        ((analyticsData.roi as RoiData)?.roiPercent ?? 0) > 0 ? "text-emerald-600" : "text-amber-500"
+                      )}>
+                        {(analyticsData.roi as RoiData)?.roiPercent ?? 0}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-1.5">
+                      <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (analyticsData.roi as RoiData)?.roiPercent ?? 0))}%` }} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
+                        <p className="text-muted-foreground mb-1">{t('analyticsPage.roiSpent', 'Потрачено')}</p>
+                        <p className="font-bold">{(analyticsData.roi as RoiData).spent} MDL</p>
                       </div>
-                      <p className="leading-relaxed">{insight}</p>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      )}
+                      <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
+                        <p className="text-muted-foreground mb-1">{t('analyticsPage.roiEarned', 'Заработано')}</p>
+                        <p className="font-bold">{(analyticsData.roi as RoiData).earned} MDL</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {Array.isArray(analyticsData.insights) && (
+              <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-blue-200/50 dark:border-blue-600/30 md:col-span-2">
+                <div className="border-b border-slate-100 dark:border-white/[0.08] bg-blue-500/10 dark:bg-blue-500/20 px-6 py-4">
+                  <h3 className="font-bold flex items-center gap-2 text-blue-700 dark:text-blue-400">
+                    <TrendingUp className="size-4" />
+                    {t('analyticsPage.insightsTitle', 'Персональные инсайты')}
+                  </h3>
+                </div>
+                <CardContent className="p-6">
+                  <ul className="space-y-3">
+                    {(analyticsData.insights as string[]).map((insight, idx) => (
+                      <li key={idx} className="text-sm flex gap-3 items-start">
+                        <div className="size-5 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                          <span className="text-blue-600 dark:text-blue-400 font-black text-[10px]">{idx + 1}</span>
+                        </div>
+                        <p className="leading-relaxed">{insight}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
 
       {/* Comparison (Premium) */}
       {isPremium && Boolean(comparison) && (

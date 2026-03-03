@@ -18,7 +18,14 @@ export const store = configureStore({
     ui: uiReducer,
     chat: chatReducer,
   },
-  middleware: (getDefault) => getDefault({ serializableCheck: false }).concat(api.middleware),
+  middleware: (getDefault) =>
+    getDefault({
+      // Only suppress serializability warnings for RTK Query cache (Dates inside raw API responses)
+      serializableCheck: {
+        ignoredPaths: [api.reducerPath],
+        ignoredActionPaths: ['meta.arg', 'payload.timestamp', 'payload.headers'],
+      },
+    }).concat(api.middleware),
 });
 
 setupListeners(store.dispatch);
