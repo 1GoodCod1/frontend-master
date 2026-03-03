@@ -38,6 +38,8 @@ export type PublicMaster = {
   rating?: number | null;
   avgRating?: number | null;
   totalReviews?: number | null;
+  leadsCount?: number | null;
+  responseRate?: number | null;
 
   isOnline?: boolean | null;
   lastActivityAt?: string | null;
@@ -62,6 +64,7 @@ export type PublicMaster = {
   latitude?: number | null;
   longitude?: number | null;
   vip?: boolean | null;
+  createdAt?: string | null;
 };
 
 export type ApiEnvelope<T> =

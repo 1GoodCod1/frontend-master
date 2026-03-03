@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsVerified } from '@/features/auth/selectors';
-import { useMastersMyProfileQuery, useMastersUpdateMyProfileMutation } from '@/features/masters/mastersApi';
+import { useMastersMyProfileQuery, useMastersUpdateServicesMutation } from '@/features/masters/mastersApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { VerificationGate } from '@/components/common/VerificationGate';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -62,7 +62,7 @@ export default function ServicesPage() {
   const { data, isLoading, error, refetch } = useMastersMyProfileQuery(undefined, {
     skip: !isVerified,
   });
-  const [update, { isLoading: saving }] = useMastersUpdateMyProfileMutation();
+  const [updateServices, { isLoading: saving }] = useMastersUpdateServicesMutation();
 
   const profileData = useMemo(() => {
     const raw = data as unknown;
@@ -175,11 +175,11 @@ export default function ServicesPage() {
         currency: s.priceType === 'FIXED' ? s.currency : undefined,
       }));
     try {
-      const result = await update({ services: toSend }).unwrap();
+      const result = await updateServices({ services: toSend }).unwrap();
       toast.success(t('servicesPage.saved'));
       setIsAdding(false);
       setEditingIndex(null);
-      const updated = (result as { services?: unknown })?.services ?? (result as { data?: { services?: unknown } })?.data?.services;
+      const updated = (result as { services?: unknown })?.services;
       if (updated !== undefined) setList(normalizeServices(updated));
       await refetch();
     } catch (e: unknown) {

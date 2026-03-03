@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { User } from 'lucide-react';
+import { Shield, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+
+type ServiceItem = { title?: string };
 
 interface MasterDetailsInfoProps {
   description: string;
@@ -13,6 +15,9 @@ interface MasterDetailsInfoProps {
   phone?: string;
   email?: string;
   experienceYears?: number;
+  masterId?: string;
+  services?: ServiceItem[];
+  onNavigateToServices?: () => void;
 }
 
 export const MasterDetailsInfo = ({
@@ -23,34 +28,41 @@ export const MasterDetailsInfo = ({
   showContactInfo = false,
   phone,
   email,
-  experienceYears,
+  experienceYears: _experienceYears,
+  masterId: _masterId,
+  services,
+  onNavigateToServices,
 }: MasterDetailsInfoProps) => {
   const { t } = useTranslation();
 
   return (
-    <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
-            <User className="h-5 w-5" />
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+            <Shield className="h-5 w-5" />
           </div>
-          <div>
-            <CardTitle>{t('masterDetails.about')}</CardTitle>
-            <CardDescription>{t('masterDetails.aboutSubtitle')}</CardDescription>
+          <div className="flex-1">
+            <CardTitle className="text-gray-900 dark:text-gray-100 font-semibold">{t('masterDetails.profileDetails', 'Profile details')}</CardTitle>
+            <CardDescription className="text-gray-500 dark:text-gray-400 text-sm">{t('masterDetails.verifiedInfo', 'Verified information')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Blue info box — Figma: light blue bg, blue border, dark blue text */}
+        <div className="flex items-start gap-3 p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+          <span className="text-blue-600 dark:text-blue-400 text-lg">ℹ️</span>
+          <p className="text-blue-800 dark:text-blue-300 text-sm">
+            {t('masterDetails.contactAfterLead')}
+          </p>
+        </div>
+
         <div className="flex flex-wrap gap-2">
-          {isVerified ? (
-            <Badge className="bg-amber-600 text-white dark:bg-amber-500 font-semibold">
-              {t('masters.verified')}
-            </Badge>
-          ) : (
+          {!isVerified && (
             <Badge variant="secondary">{t('masters.notVerified')}</Badge>
           )}
           {tariff && (
-            <Badge variant="outline" className="border-[#e8e6dd] dark:border-amber-500/40 text-amber-700 dark:text-amber-400 font-medium">
+            <Badge variant="outline" className="border-gray-200 dark:border-amber-500/40 text-amber-700 dark:text-amber-400 font-medium">
               {t('masterDetails.tariffLabel', { name: tariff })}
             </Badge>
           )}
@@ -61,49 +73,62 @@ export const MasterDetailsInfo = ({
           )}
         </div>
 
-        <p className="text-muted-foreground leading-relaxed">
-          {description || t('masterDetails.noDescription')}
-        </p>
-
-        {!showContactInfo && (
-          <p className="text-sm text-muted-foreground italic">
-            {t('masterDetails.contactAfterLead')}
+        <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-4">
+          <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 font-medium">
+            {t('masterDetails.descriptionLabel')}
           </p>
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+            {description || t('masterDetails.noDescription')}
+          </p>
+        </div>
+
+        {Array.isArray(services) && services.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {t('masterDetails.servicesOffered')}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {services
+                .filter((s) => s && typeof s.title === 'string' && s.title.trim())
+                .map((s, idx) => (
+                  <Badge
+                    key={`${s.title}-${idx}`}
+                    variant="secondary"
+                    className="rounded-lg px-3 py-1.5 font-normal bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 border-0"
+                  >
+                    {s.title!.trim()}
+                  </Badge>
+                ))}
+            </div>
+            {onNavigateToServices && (
+              <button
+                type="button"
+                onClick={onNavigateToServices}
+                className="inline-flex items-center gap-1 text-sm font-medium text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:underline"
+              >
+                {t('masterDetails.moreAboutServices')}
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         )}
 
         {showContactInfo && (
           <>
             <Separator />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              <div className="rounded-lg border border-[#f5f4eb] dark:border-amber-500/20 bg-amber-100/70 dark:bg-amber-900/15 p-3">
+              <div className="rounded-lg border border-gray-200 dark:border-amber-500/20 bg-amber-50/70 dark:bg-amber-900/15 p-3">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">
                   {t('masterDetails.phone')}
                 </p>
                 <p className="font-semibold text-amber-700 dark:text-amber-400">{phone ?? '—'}</p>
               </div>
-              <div className="rounded-lg border border-[#f5f4eb] dark:border-amber-500/20 bg-amber-100/70 dark:bg-amber-900/15 p-3">
+              <div className="rounded-lg border border-gray-200 dark:border-amber-500/20 bg-amber-50/70 dark:bg-amber-900/15 p-3">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">
                   {t('masterDetails.email')}
                 </p>
                 <p className="font-semibold text-amber-700 dark:text-amber-400">{email ?? '—'}</p>
               </div>
-            </div>
-          </>
-        )}
-
-        {experienceYears !== undefined && experienceYears !== null && (
-          <>
-            <Separator />
-            <div className="rounded-lg border border-[#f5f4eb] dark:border-amber-500/20 bg-amber-100/70 dark:bg-amber-900/15 p-3 max-w-xs">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">
-                {t('masterDetails.experience')}
-              </p>
-              <p className="font-semibold text-amber-700 dark:text-amber-400">
-                {experienceYears}{' '}
-                {experienceYears === 1
-                  ? t('masterDetails.experienceYear')
-                  : t('masterDetails.experienceYears')}
-              </p>
             </div>
           </>
         )}

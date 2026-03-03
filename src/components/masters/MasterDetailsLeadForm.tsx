@@ -120,21 +120,21 @@ export const MasterDetailsLeadForm = ({
       const conversation = await createConversation({ leadId: activeLead.id }).unwrap();
       navigate(`/client-dashboard/chat/${conversation.id}`);
     } catch (error: unknown) {
-      toast.error(toErrorMessage(error) ?? 'Не удалось открыть чат');
+      toast.error(toErrorMessage(error) ?? t('masterDetails.chatOpenError', 'Failed to open chat'));
     }
   };
 
   if (activeLead && !submittedLeadId) {
     return (
-      <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] relative overflow-hidden shadow-xl shadow-amber-900/20 dark:shadow-none">
+      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-500/80" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
             <Clock className="h-10 w-10" />
           </div>
-          <h3 className="text-lg font-bold tracking-tight mb-2">У вас есть активная заявка</h3>
+          <h3 className="text-lg font-bold tracking-tight mb-2">{t('masterDetails.activeLeadTitle', 'You have an active request')}</h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-            Вы уже отправили заявку этому мастеру. Дождитесь её завершения, прежде чем отправлять новую.
+            {t('masterDetails.activeLeadDesc', 'You have already sent a request to this master. Wait for it to complete before sending a new one.')}
           </p>
           <div className="space-y-3">
             <Button size="lg" className="w-full gap-2 font-semibold bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500" onClick={handleOpenActiveChat} disabled={isCreatingChat}>
@@ -143,10 +143,10 @@ export const MasterDetailsLeadForm = ({
               ) : (
                 <MessageCircle className="h-4 w-4" />
               )}
-              Перейти в чат с мастером
+              {t('masterDetails.goToChat', 'Go to chat with master')}
             </Button>
             <Button variant="outline" size="lg" className="w-full font-semibold border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 hover:bg-amber-50/80 dark:hover:bg-amber-500/10" onClick={() => navigate('/client-dashboard/leads')}>
-              Мои заявки
+              {t('clientDashboard.myLeads', 'My leads')}
             </Button>
           </div>
         </CardContent>
@@ -156,7 +156,7 @@ export const MasterDetailsLeadForm = ({
 
   if (submittedLeadId) {
     return (
-      <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] relative overflow-hidden shadow-xl shadow-amber-900/20 dark:shadow-none">
+      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-500/80" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mx-auto mb-4">
@@ -194,17 +194,26 @@ export const MasterDetailsLeadForm = ({
 
   if (!isAuthed || role !== 'CLIENT') {
     return (
-      <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] relative overflow-hidden shadow-xl shadow-amber-900/20 dark:shadow-none">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-500/80" />
-        <CardContent className="p-6 text-center">
-          <div className="w-16 h-16 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
-            <Heart className="h-9 w-9" />
+      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
+        <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-5 text-center">
+          <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-3 border-2 border-white/30">
+            <Heart className="h-7 w-7 text-white fill-white" />
           </div>
-          <h3 className="text-lg font-bold tracking-tight mb-2">{t('masterDetails.becomeClientTitle')}</h3>
-          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{t('masterDetails.becomeClientDesc')}</p>
+          <h3 className="font-bold text-white text-lg">{t('masterDetails.orderThisMaster', 'Order this master')}</h3>
+          <p className="text-amber-100 text-sm mt-1">{t('masterDetails.becomeClientDesc')}</p>
+        </div>
+        <CardContent className="p-5 space-y-3 bg-white dark:bg-[hsl(47,22%,9%)]">
           <Button size="lg" className="w-full gap-2 font-semibold bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500" onClick={() => navigate('/register')}>
-            {t('masterDetails.registerAsClient')}
             <Send className="h-4 w-4" />
+            {t('masterDetails.registerAsClient')}
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full border border-gray-200 dark:border-white/20 bg-white text-gray-800 dark:bg-[hsl(47,22%,9%)] dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10"
+            onClick={() => navigate('/login')}
+          >
+            {t('masterDetails.alreadyHaveAccount', 'I already have an account — Login')}
           </Button>
         </CardContent>
       </Card>
@@ -212,7 +221,7 @@ export const MasterDetailsLeadForm = ({
   }
 
   return (
-    <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] relative overflow-hidden shadow-xl shadow-amber-900/20 dark:shadow-none">
+    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-500/80" />
       <CardContent className="p-5 space-y-4">
         <div>
@@ -255,15 +264,15 @@ export const MasterDetailsLeadForm = ({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             disabled={!isMasterAvailable}
-            rows={3}
-            className="rounded-xl resize-none"
+            rows={6}
+            className="rounded-xl min-h-[120px] resize-y"
           />
         </div>
 
         <Button variant="outline" size="sm" className="w-full gap-2 border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40" disabled={!isMasterAvailable} asChild>
           <label>
             <Paperclip className="h-4 w-4" />
-            Attach files (max 10)
+            {t('masterDetails.attachFiles', 'Attach files (max 10)')}
             <input
               type="file"
               multiple
@@ -272,11 +281,11 @@ export const MasterDetailsLeadForm = ({
                 const list = Array.from(e.target.files ?? []);
                 const remaining = 10 - attach.length;
                 if (remaining <= 0) {
-                  toast.error('Maximum 10 files allowed');
+                  toast.error(t('masterDetails.maxFilesError', 'Maximum 10 files allowed'));
                   return;
                 }
                 if (list.length > remaining) {
-                  toast(`Only ${remaining} more file(s) can be added.`, { icon: '⚠️', duration: 4000 });
+                  toast(t('masterDetails.filesLimitWarning', { count: remaining }), { icon: '⚠️', duration: 4000 });
                 }
                 setAttach([...attach, ...list.slice(0, remaining)]);
                 e.target.value = '';
@@ -292,7 +301,7 @@ export const MasterDetailsLeadForm = ({
               {attach.map((file, index) => (
                 <li
                   key={index}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-[#f5f4eb] dark:border-white/10 bg-card px-3 py-2"
+                  className="flex items-center justify-between gap-2 rounded-lg border border-[#f5f4eb] dark:border-white/10 bg-white dark:bg-white/5 px-3 py-2"
                 >
                   <span className="text-sm font-medium truncate">{file.name}</span>
                   <span className="text-xs text-muted-foreground shrink-0">{(file.size / 1024).toFixed(1)} KB</span>

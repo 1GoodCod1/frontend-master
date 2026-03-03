@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -23,10 +23,12 @@ import { MasterDetailsLeadForm } from '@/components/masters/MasterDetailsLeadFor
 import { SimilarMasters } from '@/components/home/recommendations/SimilarMasters';
 import { PortfolioSection } from '@/components/portfolio/PortfolioSection';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
-import { Link as RouterLink } from 'react-router-dom';
-import { ShieldCheck } from 'lucide-react';
+import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
+import { ShieldCheck, MapPin, Briefcase, Clock, Calendar, ChevronRight } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+type TabId = 'about' | 'services' | 'gallery' | 'reviews';
 
 function getCurrentUserMasterId(me: unknown): string | undefined {
   if (!me || typeof me !== 'object') return undefined;
@@ -42,11 +44,13 @@ function getCurrentUserMasterId(me: unknown): string | undefined {
 }
 
 export default function MasterDetailsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = getLocaleFromLanguage(i18n.language);
   const { slug } = useParams<{ slug: string }>();
   const slugOrId = slug ?? '';
   const [searchParams, setSearchParams] = useSearchParams();
   const reviewsSectionRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<TabId>('about');
 
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
@@ -55,7 +59,7 @@ export default function MasterDetailsPage() {
 
   const masterQuery = useMastersByIdQuery(
     { id: slugOrId },
-    { skip: !slugOrId, refetchOnFocus: true }
+    { skip: !slugOrId, refetchOnFocus: true, refetchOnMountOrArgChange: 30 }
   );
   const galleryQuery = useMastersPhotosByIdQuery(
     { id: slugOrId, limit: 15 },
@@ -110,6 +114,7 @@ export default function MasterDetailsPage() {
     if (searchParams.get('review') !== '1' || !masterId) return;
     if (isClient && canCreateReviewQuery.isLoading) return;
     const timer = setTimeout(() => {
+      setActiveTab('reviews');
       reviewsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const next = new URLSearchParams(searchParams);
       next.delete('review');
@@ -143,6 +148,19 @@ export default function MasterDetailsPage() {
   const tariff = typeof m?.tariff === 'string' ? m.tariff : undefined;
   const isVip = m?.vip === true;
   const experienceYears = typeof m?.experienceYears === 'number' ? m.experienceYears : undefined;
+  const reviewsCount = m?.totalReviews ?? reviewsQuery.data?.length ?? 0;
+  const completedProjects = m?.leadsCount ?? 0;
+  const responseRate =
+    typeof m?.responseRate === 'number' ? m.responseRate : 100;
+
+  const tabLabels: Record<TabId, string> = {
+    about: `📋 ${t('masterDetails.about')}`,
+    services: `📋 ${t('masterDetails.servicesTab', 'Services')}`,
+    gallery: `📸 ${t('masterDetails.gallery')}`,
+    reviews: `💬 ${t('masterDetails.reviews')}`,
+  };
+
+  const cardCls = 'bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300';
 
   return (
     <motion.div
@@ -170,82 +188,115 @@ export default function MasterDetailsPage() {
         isMasterAvailable={isMasterAvailable}
         currentActiveLeads={currentActiveLeads}
         maxActiveLeads={maxActiveLeads}
+        experienceYears={experienceYears}
+        reviewsCount={reviewsCount}
+        completedProjects={completedProjects}
+        responseRate={responseRate}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 py-4 sm:py-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
-          <div className={`space-y-6 ${isOwnProfile || !m?.user?.isVerified ? 'md:col-span-12' : 'md:col-span-7'}`}>
-            <MasterDetailsInfo
-              description={description}
-              isVerified={Boolean(m?.user?.isVerified)}
-              tariff={tariff}
-              isVip={isVip}
-              showContactInfo={false}
-              experienceYears={experienceYears}
-            />
-
-            {m?.user?.isVerified && services && services.length > 0 ? (
-              <MasterDetailsServices
-                services={services}
-                promotions={promotions}
-              />
-            ) : !m?.user?.isVerified ? (
-              <Alert className="rounded-xl border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10">
-                <ShieldCheck className="size-5 text-amber-600 dark:text-amber-500" />
-                <AlertTitle className="font-bold text-foreground">
-                  {t('verificationBanner.title')}
-                </AlertTitle>
-                <AlertDescription className="mt-1 flex flex-wrap items-center gap-3">
-                  <span className="flex-1">
-                    {isOwnProfile
-                      ? t('verificationBanner.servicesPromotionsBlocked')
-                      : t('verificationBanner.servicesPromotionsBlockedPublic')}
-                  </span>
-                  {isOwnProfile && (
-                    <Button asChild size="sm" className="shrink-0 bg-amber-600 font-semibold hover:bg-amber-700">
-                      <RouterLink to="/dashboard/verification">
-                        {t('verificationBanner.verifyNow')}
-                      </RouterLink>
-                    </Button>
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 bg-[#F8F8F8] dark:bg-[hsl(47,29%,6%)]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left column — tabs + content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Tabs — Figma: active orange+white, inactive white+light grey border+dark grey text */}
+            <div className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-1.5 flex gap-1 flex-wrap shadow-sm">
+              {(['about', 'services', 'gallery', 'reviews'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={cn(
+                    'flex-1 min-w-[100px] py-2.5 rounded-xl text-sm font-medium transition-all',
+                    activeTab === tab
+                      ? 'bg-amber-500 text-white shadow-sm dark:bg-amber-600'
+                      : 'bg-transparent text-gray-700 dark:text-gray-400 border border-transparent hover:bg-gray-50 dark:hover:bg-white/5'
                   )}
-                </AlertDescription>
-              </Alert>
-            ) : null}
-
-            <MasterDetailsGallery
-              photos={photos}
-              isLoading={galleryQuery.isLoading}
-              isError={galleryQuery.isError}
-              error={galleryQuery.error}
-              onRetry={galleryQuery.refetch}
-            />
-
-            {masterId && (
-              <PortfolioSection masterId={masterId} />
-            )}
-
-            {masterId && (
-              <SimilarMasters masterId={masterId} limit={4} />
-            )}
-
-            <div ref={reviewsSectionRef}>
-              <MasterDetailsReviews
-                reviews={reviewsQuery.data ?? []}
-                isLoading={reviewsQuery.isLoading}
-                isError={reviewsQuery.isError}
-                error={reviewsQuery.error}
-                onRetry={reviewsQuery.refetch}
-                isClient={isClient}
-                isMaster={role === 'MASTER' && isOwnProfile}
-                canCreateReview={canCreateReviewQuery.data ?? undefined}
-                reviewSubmission={reviewSubmission}
-              />
+                >
+                  {tabLabels[tab]}
+                </button>
+              ))}
             </div>
+
+            {/* ABOUT tab */}
+            {activeTab === 'about' && (
+              <div className="space-y-4">
+                <MasterDetailsInfo
+                  description={description}
+                  isVerified={Boolean(m?.user?.isVerified)}
+                  tariff={tariff}
+                  isVip={isVip}
+                  showContactInfo={false}
+                  experienceYears={experienceYears}
+                  masterId={masterId}
+                  services={m?.user?.isVerified ? services : undefined}
+                  onNavigateToServices={() => setActiveTab('services')}
+                />
+
+                {masterId && <PortfolioSection masterId={masterId} />}
+              </div>
+            )}
+
+            {/* SERVICES tab */}
+            {activeTab === 'services' && (
+              <div className="space-y-4">
+                {services && services.length > 0 ? (
+                  <MasterDetailsServices
+                    services={services}
+                    promotions={promotions}
+                  />
+                ) : !m?.user?.isVerified ? (
+                  <Alert className="rounded-xl border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10">
+                    <ShieldCheck className="size-5 text-amber-600 dark:text-amber-500" />
+                    <AlertTitle className="font-bold text-foreground">
+                      {t('verificationBanner.title')}
+                    </AlertTitle>
+                    <AlertDescription className="mt-1">
+                      {isOwnProfile
+                        ? t('verificationBanner.servicesPromotionsBlocked')
+                        : t('verificationBanner.servicesPromotionsBlockedPublic')}
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <div className={cn(cardCls, 'p-6')}>
+                    <p className="text-muted-foreground">{t('masterDetails.noServices')}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* GALLERY tab */}
+            {activeTab === 'gallery' && (
+              <MasterDetailsGallery
+                photos={photos}
+                isLoading={galleryQuery.isLoading}
+                isError={galleryQuery.isError}
+                error={galleryQuery.error}
+                onRetry={galleryQuery.refetch}
+              />
+            )}
+
+            {/* REVIEWS tab */}
+            {activeTab === 'reviews' && (
+              <div ref={reviewsSectionRef}>
+                <MasterDetailsReviews
+                  reviews={reviewsQuery.data ?? []}
+                  isLoading={reviewsQuery.isLoading}
+                  isError={reviewsQuery.isError}
+                  error={reviewsQuery.error}
+                  onRetry={reviewsQuery.refetch}
+                  isClient={isClient}
+                  isMaster={role === 'MASTER' && isOwnProfile}
+                  canCreateReview={canCreateReviewQuery.data ?? undefined}
+                  reviewSubmission={reviewSubmission}
+                />
+              </div>
+            )}
           </div>
 
-          {!isOwnProfile && m?.user?.isVerified && (
-            <div id="lead-form" className="md:col-span-5">
-              <div className="md:sticky md:top-24 space-y-6">
+          {/* Right sidebar */}
+          <div className="space-y-4">
+            {/* Lead form / CTA */}
+            {!isOwnProfile && m?.user?.isVerified && (
+              <div id="lead-form" className="lg:sticky lg:top-24">
                 <MasterDetailsLeadForm
                   isAuthed={isAuthed}
                   role={role}
@@ -256,8 +307,42 @@ export default function MasterDetailsPage() {
                   availabilityStatus={availabilityStatus}
                 />
               </div>
+            )}
+
+            {/* Quick Info — Figma: white card, light grey border, dark grey text */}
+            <div className={cn(cardCls, 'p-5')}>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <ChevronRight size={14} className="text-amber-600 dark:text-amber-400" />
+                </span>
+                {t('masterDetails.quickInfo', 'Quick info')}
+              </h3>
+              <div className="space-y-3">
+                {[
+                  { icon: MapPin, label: t('masterDetails.quickInfoLocation', 'Location'), value: m?.city ? getTranslatedCityName(t, m.city) : '—' },
+                  { icon: Briefcase, label: t('masterDetails.quickInfoCategory', 'Category'), value: m?.category ? getTranslatedCategoryName(t, m.category) : '—' },
+                  { icon: Clock, label: t('masterDetails.experience'), value: experienceYears != null ? `${experienceYears} ${experienceYears === 1 ? t('masterDetails.experienceYear') : t('masterDetails.experienceYears')}` : '—' },
+                  { icon: Calendar, label: t('masterDetails.quickInfoRegistered', 'Registered'), value: m?.createdAt ? formatDateShort(m.createdAt, locale) : '—' },
+                  { icon: ShieldCheck, label: t('masterDetails.quickInfoStatus', 'Status'), value: m?.user?.isVerified ? t('masters.verified') : t('masters.notVerified') },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-white/10 last:border-0">
+                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                      <item.icon size={15} />
+                      <span className="text-sm">{item.label}</span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{item.value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+
+            {/* Similar masters */}
+            {masterId && (
+              <div className={cn(cardCls, 'p-5')}>
+                <SimilarMasters masterId={masterId} limit={4} variant="sidebar" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

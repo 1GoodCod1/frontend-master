@@ -178,6 +178,13 @@ export const mastersApi = api.injectEndpoints({
       query: (body) => ({ url: '/masters/profile/me', method: 'PUT', data: body }),
       invalidatesTags: ['Master', 'Masters'],
     }),
+    mastersUpdateServices: build.mutation<
+      { services?: unknown[] },
+      { services: Array<{ title: string; priceType: string; price?: number; currency?: string }> }
+    >({
+      query: (body) => ({ url: '/masters/profile/me/services', method: 'PATCH', data: body }),
+      invalidatesTags: ['Master', 'Masters'],
+    }),
     mastersMyTariff: build.query<MasterTariffResponse, void>({
       query: () => ({ url: '/masters/tariff/me', method: 'GET' }),
       providesTags: ['Master'],
@@ -277,6 +284,7 @@ export const {
   useMastersByIdQuery,
   useMastersMyProfileQuery,
   useMastersUpdateMyProfileMutation,
+  useMastersUpdateServicesMutation,
   useMastersMyTariffQuery,
   useMastersMyStatsQuery,
   useMastersViewsHistoryQuery,

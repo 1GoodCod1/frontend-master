@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Images } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LazyImage } from '@/components/ui/LazyImage';
 import { ErrorState } from '@/components/common/States';
 import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
@@ -36,17 +36,16 @@ export const MasterDetailsGallery = ({
   };
 
   return (
-    <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
             <Images className="h-5 w-5" />
           </div>
-          <div>
-            <CardTitle>{t('masterDetails.gallery')}</CardTitle>
-            <CardDescription>
-              {t('masterDetails.gallerySubtitle', { count: photos.length })}
-            </CardDescription>
+          <div className="flex-1">
+            <CardTitle className="text-gray-900 dark:text-gray-100 font-semibold">
+              {t('masterDetails.gallery')}
+            </CardTitle>
           </div>
         </div>
       </CardHeader>

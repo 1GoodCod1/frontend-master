@@ -41,7 +41,7 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
 
     if (portfolioQuery.isLoading) {
         return (
-            <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none animate-pulse">
+            <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none animate-pulse">
                 <CardHeader>
                     <div className="h-6 bg-amber-100 dark:bg-amber-900/20 rounded w-40" />
                 </CardHeader>
@@ -59,7 +59,7 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
     if (!items.length) return null;
 
     return (
-        <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+        <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
             <CardHeader>
                 <div className="flex items-center gap-2">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">

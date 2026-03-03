@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListChecks, Banknote, HandCoins, Flame } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MasterServiceItem } from '@/components/masters/MasterServicesModal';
 
 export type PromotionInfo = {
@@ -51,37 +52,37 @@ export function MasterDetailsServices({ services, promotions }: MasterDetailsSer
   if (items.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border-2 border-amber-200/60 dark:border-white/[0.08] bg-card shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-br from-amber-500/10 via-transparent to-orange-500/10 dark:from-amber-500/15 dark:to-orange-500/15 border-b border-border px-5 sm:px-6 pt-5 pb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500/15 dark:bg-amber-500/25 text-amber-600 dark:text-amber-400">
+    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
             <ListChecks className="h-5 w-5" />
           </div>
-          <h2 className="text-lg font-bold tracking-tight text-foreground">
-            {t('masterDetails.servicesAndPrices')}
-          </h2>
+          <div className="flex-1">
+            <CardTitle className="text-gray-900 dark:text-gray-100 font-semibold">
+              {t('masterDetails.servicesAndPrices')}
+            </CardTitle>
+          </div>
         </div>
-      </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {items.map((s, idx) => {
+          const isFixed = s.priceType === 'FIXED';
+          const promotion = promotions.length > 0 ? getPromotionForService(s.title, promotions) : null;
+          const hasPromo = isFixed && promotion !== null;
+          const priceInfo = formatPrice(s);
+          const originalPrice = isFixed && priceInfo ? priceInfo.value : null;
+          const withDiscount =
+            hasPromo && originalPrice !== null && promotion
+              ? discountedPrice(originalPrice, promotion.discount)
+              : null;
+          const currency = priceInfo?.currency ?? s.currency ?? 'MDL';
 
-      <div className="p-4 sm:p-5">
-        <div className="space-y-2.5">
-          {items.map((s, idx) => {
-            const isFixed = s.priceType === 'FIXED';
-            const promotion = promotions.length > 0 ? getPromotionForService(s.title, promotions) : null;
-            const hasPromo = isFixed && promotion !== null;
-            const priceInfo = formatPrice(s);
-            const originalPrice = isFixed && priceInfo ? priceInfo.value : null;
-            const withDiscount =
-              hasPromo && originalPrice !== null && promotion
-                ? discountedPrice(originalPrice, promotion.discount)
-                : null;
-            const currency = priceInfo?.currency ?? s.currency ?? 'MDL';
-
-            return (
-              <div
-                key={`${s.title}-${idx}`}
-                className="group flex flex-wrap items-center gap-3 rounded-xl border border-border bg-background p-3.5 sm:p-4 transition-colors hover:border-amber-500/50 hover:bg-amber-50/50 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/5"
-              >
+          return (
+            <div
+              key={`${s.title}-${idx}`}
+              className="group flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-3.5 sm:p-4 transition-colors hover:border-amber-500/40 hover:bg-amber-50/30 dark:hover:bg-white/10"
+            >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted/60 dark:bg-muted/40 text-muted-foreground group-hover:bg-amber-500/10 group-hover:text-amber-600 dark:group-hover:bg-amber-500/20 dark:group-hover:text-amber-400 transition-colors">
                   {isFixed ? <Banknote className="h-4.5 w-4.5" /> : <HandCoins className="h-4.5 w-4.5" />}
                 </div>
@@ -124,8 +125,7 @@ export function MasterDetailsServices({ services, promotions }: MasterDetailsSer
               </div>
             );
           })}
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

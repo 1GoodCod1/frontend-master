@@ -56,7 +56,9 @@ export const reviewsApi = api.injectEndpoints({
       query: ({ masterId, status }) => ({ url: `/reviews/master/${masterId}`, method: 'GET', params: status ? { status } : {} }),
       transformResponse: (raw: unknown): ReviewDto[] => {
         const inner = unwrapEnvelope<unknown>(raw);
-        return Array.isArray(inner) ? (inner as ReviewDto[]) : [];
+        if (Array.isArray(inner)) return inner as ReviewDto[];
+        const paginated = isRecord(inner) && 'items' in inner ? (inner as { items?: unknown[] }).items : undefined;
+        return Array.isArray(paginated) ? (paginated as ReviewDto[]) : [];
       },
       providesTags: (_r, _e, a) => [{ type: 'Reviews', id: a.masterId }],
     }),

@@ -3,6 +3,13 @@ import type { FileDto } from '@/types';
 
 export type UploadManyResponse = { items: FileDto[] };
 
+function unwrapEnvelope(raw: unknown): unknown {
+  if (raw && typeof raw === 'object' && 'data' in (raw as Record<string, unknown>)) {
+    return (raw as { data: unknown }).data;
+  }
+  return raw;
+}
+
 export const filesApi = api.injectEndpoints({
   endpoints: (build) => ({
     filesUpload: build.mutation<FileDto, { file: File }>({
@@ -33,6 +40,12 @@ export const filesApi = api.injectEndpoints({
           method: 'POST',
           data: fd,
         };
+      },
+      transformResponse: (raw: unknown): UploadManyResponse => {
+        const inner = unwrapEnvelope(raw);
+        const obj = inner && typeof inner === 'object' ? (inner as Record<string, unknown>) : {};
+        const items = Array.isArray(obj.items) ? obj.items : [];
+        return { items: items as FileDto[] };
       },
       invalidatesTags: ['Files'],
     }),

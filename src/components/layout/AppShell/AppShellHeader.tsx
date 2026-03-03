@@ -45,9 +45,8 @@ export function AppShellHeader({
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25 }}
       className={cn(
-        'sticky top-0 z-40 w-full bg-background/85 backdrop-blur-xl',
-        'border-b border-border/60 dark:border-transparent dark:shadow-none',
-        'shadow-[0_1px_0_hsl(var(--border)/0.5)]'
+        'fixed top-0 left-0 right-0 z-40 w-full bg-background/85 backdrop-blur-xl',
+        'shadow-[0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.25)]'
       )}
     >
       <div className={cn('flex h-14 min-w-0 items-center gap-2 px-4 sm:px-4 md:px-6', isNavCentered && 'relative')}>

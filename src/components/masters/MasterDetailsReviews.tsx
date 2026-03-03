@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Star, MessageSquare, Paperclip, Trash2, CornerDownRight } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -170,7 +170,7 @@ export const MasterDetailsReviews = ({
 
   const openReviewPhotos = (reviewFiles: ReviewFile[], index: number) => {
     const urls = reviewFiles
-      .map((rf) => mediaUrl(rf.file?.path ?? rf.file?.url))
+      .map((rf) => mediaUrl(rf.file?.path ?? rf.file?.url ?? (rf as { path?: string }).path))
       .filter(Boolean);
     if (urls.length > 0) {
       setLightboxImages(urls);
@@ -190,16 +190,36 @@ export const MasterDetailsReviews = ({
     isLoading: isSubmitting,
   } = reviewSubmission;
 
+  const { avgRating, totalCount, distribution } = useMemo(() => {
+    const arr = Array.isArray(reviews) ? reviews : [];
+    const counts = [0, 0, 0, 0, 0];
+    let sum = 0;
+    for (const r of arr) {
+      const rating = typeof r.rating === 'number' ? Math.round(r.rating) : 0;
+      if (rating >= 1 && rating <= 5) {
+        counts[5 - rating]++;
+        sum += rating;
+      }
+    }
+    const total = arr.length;
+    return {
+      avgRating: total > 0 ? Math.round((sum / total) * 10) / 10 : 0,
+      totalCount: total,
+      distribution: counts.reverse(),
+    };
+  }, [reviews]);
+
   return (
-    <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
             <MessageSquare className="h-5 w-5" />
           </div>
-          <div>
-            <CardTitle>{t('masterDetails.reviews')}</CardTitle>
-            <CardDescription>{t('masterDetails.reviewsSubtitle')}</CardDescription>
+          <div className="flex-1">
+            <CardTitle className="text-gray-900 dark:text-gray-100 font-semibold">
+              {t('masterDetails.reviews')}
+            </CardTitle>
           </div>
         </div>
       </CardHeader>
@@ -299,26 +319,86 @@ export const MasterDetailsReviews = ({
           <p className="text-muted-foreground">{t('common.loading')}</p>
         ) : isError ? (
           <ErrorState error={error} onRetry={onRetry} />
-        ) : !reviews.length ? (
-          <p className="text-muted-foreground">{t('reviews.noReviewsYet')}</p>
         ) : (
           <div className="space-y-4">
-            {reviews.map((review, idx) => {
-              const reviewId = String(review.id ?? review._id ?? idx);
-              const reply = review.replies &&
-                Array.isArray(review.replies) &&
-                review.replies.length > 0
-                ? (review.replies[0] as ReviewReply)
-                : (review.reply as ReviewReply | null | undefined) ?? null;
+            {/* Rating summary + distribution — always visible by default */}
+            <div className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5">
+              <div className="flex flex-col items-center justify-center shrink-0 px-6 py-3 rounded-xl bg-amber-500/15 dark:bg-amber-500/20">
+                <span className="text-2xl font-bold text-amber-700 dark:text-amber-400">{avgRating.toFixed(1)}</span>
+                <div className="flex gap-0.5 mt-1">
+                  {[1, 2, 3, 4, 5].map((v) => {
+                    const r = avgRating;
+                    const isFull = r >= v;
+                    const isHalf = r >= v - 0.5 && r < v;
+                    const isEmpty = !isFull && !isHalf;
+                    return (
+                      <div key={v} className="relative shrink-0">
+                        {isEmpty && (
+                          <Star className="h-4 w-4 text-gray-300 dark:text-gray-600 fill-transparent" />
+                        )}
+                        {isFull && (
+                          <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                        )}
+                        {isHalf && (
+                          <>
+                            <Star className="h-4 w-4 text-gray-300 dark:text-gray-600 fill-transparent" />
+                            <div className="absolute inset-0 w-1/2 overflow-hidden">
+                              <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                <span className="text-xs text-muted-foreground mt-1">
+                  (<span className="font-semibold text-amber-700 dark:text-amber-400">{totalCount}</span>{' '}
+                  {t('masterDetails.reviewsCountLabel', 'reviews')})
+                </span>
+              </div>
+              <div className="flex-1 min-w-0 space-y-2">
+                {[5, 4, 3, 2, 1].map((stars) => {
+                  const count = distribution[stars - 1];
+                  const pct = totalCount > 0 ? (count / totalCount) * 100 : 0;
+                  return (
+                    <div key={stars} className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 w-16 shrink-0">
+                        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                        <span className="text-sm font-medium">{stars}</span>
+                      </div>
+                      <div className="flex-1 h-2 rounded-full bg-gray-200 dark:bg-white/10 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-amber-500 transition-all duration-300"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      <span className="text-sm text-muted-foreground w-6 text-right">{count}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-              return (
-                <Card
-                  key={reviewId}
-                  className="border border-[#f5f4eb] dark:border-white/[0.08] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-[#e8e6dd] dark:hover:border-amber-500/40"
-                >
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+            {!reviews.length ? (
+              <p className="text-muted-foreground">{t('reviews.noReviewsYet')}</p>
+            ) : (
+              <>
+                {reviews.map((review, idx) => {
+                const reviewId = String(review.id ?? review._id ?? idx);
+                const reply = review.replies &&
+                  Array.isArray(review.replies) &&
+                  review.replies.length > 0
+                  ? (review.replies[0] as ReviewReply)
+                  : (review.reply as ReviewReply | null | undefined) ?? null;
+
+                return (
+                  <Card
+                    key={reviewId}
+                    className="border border-[#f5f4eb] dark:border-white/[0.08] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-[#e8e6dd] dark:hover:border-amber-500/40"
+                  >
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
                         <span className="font-semibold text-foreground">
                           {(typeof review.clientName === 'string' ? review.clientName : '').trim() ||
                             (review.client && typeof review.client === 'object'
@@ -329,10 +409,35 @@ export const MasterDetailsReviews = ({
                               : '') ||
                             t('reviews.client')}
                         </span>
-                        <Badge variant="secondary" className="gap-1 text-amber-600 dark:text-amber-400 bg-amber-500/10 border-0">
-                          <Star className="h-3 w-3 fill-current" />
-                          {String(review.rating ?? '')}
-                        </Badge>
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((v) => {
+                            const r = Number(review.rating ?? 0);
+                            const isFull = r >= v;
+                            const isHalf = r >= v - 0.5 && r < v;
+                            const isEmpty = !isFull && !isHalf;
+                            return (
+                              <div key={v} className="relative shrink-0">
+                                {isEmpty && (
+                                  <Star className="h-3.5 w-3.5 text-gray-300 dark:text-gray-600 fill-transparent" />
+                                )}
+                                {isFull && (
+                                  <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                                )}
+                                {isHalf && (
+                                  <>
+                                    <Star className="h-3.5 w-3.5 text-gray-300 dark:text-gray-600 fill-transparent" />
+                                    <div className="absolute inset-0 w-1/2 overflow-hidden">
+                                      <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            );
+                          })}
+                          <span className="text-xs font-medium text-muted-foreground ml-0.5">
+                            {String(review.rating ?? '')}
+                          </span>
+                        </div>
                       </div>
                       {review.createdAt != null && (
                         <span className="text-xs text-muted-foreground">
@@ -356,27 +461,35 @@ export const MasterDetailsReviews = ({
                       <p className="text-sm whitespace-pre-wrap text-foreground">{String(review.comment)}</p>
                     )}
 
-                    {Array.isArray(review.reviewFiles) && review.reviewFiles.length > 0 && (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                        {(review.reviewFiles as ReviewFile[]).map((rf, rfIdx) => {
-                          const src = mediaUrl(rf.file?.path ?? rf.file?.url);
-                          return (
+                    {Array.isArray(review.reviewFiles) && review.reviewFiles.length > 0 && (() => {
+                      const filesWithSrc = (review.reviewFiles as ReviewFile[])
+                        .map((rf, idx) => {
+                          const pathOrUrl = rf.file?.path ?? rf.file?.url ?? (rf as { path?: string }).path;
+                          const src = mediaUrl(pathOrUrl);
+                          return { rf, idx, src };
+                        })
+                        .filter((x) => x.src);
+                      if (filesWithSrc.length === 0) return null;
+                      return (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                          {filesWithSrc.map(({ rf, idx, src }) => (
                             <button
-                              key={rf.id ?? rfIdx}
+                              key={rf.id ?? idx}
                               type="button"
                               className="rounded-lg overflow-hidden border border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 active:scale-[0.98] transition-colors text-left cursor-pointer touch-manipulation"
-                              onClick={() => openReviewPhotos(review.reviewFiles as ReviewFile[], rfIdx)}
+                              onClick={() => openReviewPhotos(review.reviewFiles as ReviewFile[], idx)}
                             >
                               <img
                                 src={src}
                                 alt="Review"
                                 className="w-full h-20 sm:h-24 object-cover"
+                                loading="lazy"
                               />
                             </button>
-                          );
-                        })}
-                      </div>
-                    )}
+                          ))}
+                        </div>
+                      );
+                    })()}
 
                     {/* Master reply: show form to master, show text to everyone else */}
                     {isMaster ? (
@@ -390,7 +503,9 @@ export const MasterDetailsReviews = ({
                   </CardContent>
                 </Card>
               );
-            })}
+                })}
+              </>
+            )}
           </div>
         )}
       </CardContent>
