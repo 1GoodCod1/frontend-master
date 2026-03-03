@@ -5,10 +5,10 @@ import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
+import { AuthLayout } from '@/components/auth/AuthLayout';
 import LoginHeader from '@/components/auth/login/LoginHeader';
 import LoginForm from '@/components/auth/login/LoginForm';
 import { useLoginForm, type LoginFormValues } from '@/hooks/auth/login/useLoginForm';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
@@ -35,67 +35,55 @@ export default function LoginPage() {
 
   if (restoring) {
     return (
-      <div className="min-h-screen bg-background py-8 md:py-12">
-        <div className="container max-w-md mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="border-border shadow-sm">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold text-foreground mb-1">
-                  {t('auth.login.title')}
-                </h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {t('auth.login.restoring')}
-                </p>
-                <Button disabled className="w-full" size="lg">
-                  ...
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
+      <AuthLayout view="login">
+        <div className="flex flex-1 flex-col justify-center px-8 py-12 md:px-11 md:py-12">
+          <div className="mx-auto w-full max-w-[360px]">
+            <h2 className="mb-1 text-xl font-semibold text-foreground">
+              {t('auth.login.title')}
+            </h2>
+            <p className="mb-4 text-sm text-muted-foreground">
+              {t('auth.login.restoring')}
+            </p>
+            <Button disabled className="auth-primary-btn w-full py-3.5">
+              ...
+            </Button>
+          </div>
         </div>
-      </div>
+      </AuthLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-8 md:py-12">
-      <div className="container max-w-md mx-auto px-4">
+    <AuthLayout view="login">
+      <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="mx-auto w-full max-w-[360px]"
         >
-          <Card className="border-border dark:border-white/[0.08] shadow-sm overflow-hidden">
-            <CardContent className="p-6 md:p-8">
-              <LoginHeader />
-
-              <Formik<LoginFormValues>
-                initialValues={form.initialValues}
-                validationSchema={form.validationSchema}
-                onSubmit={form.onSubmit}
-                enableReinitialize
+          <LoginHeader />
+          <Formik<LoginFormValues>
+            initialValues={form.initialValues}
+            validationSchema={form.validationSchema}
+            onSubmit={form.onSubmit}
+            enableReinitialize
+          >
+            {({ handleSubmit }) => (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }}
+                method="post"
+                noValidate
               >
-                {({ handleSubmit }) => (
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }}
-                    method="post"
-                    noValidate
-                  >
-                    <LoginForm isSubmitting={form.isSubmitting} />
-                  </form>
-                )}
-              </Formik>
-            </CardContent>
-          </Card>
+                <LoginForm isSubmitting={form.isSubmitting} />
+              </form>
+            )}
+          </Formik>
         </motion.div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

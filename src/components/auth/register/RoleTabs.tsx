@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { UserPlus, Briefcase } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { User, Briefcase } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface RoleTabsProps {
   value: number;
@@ -9,32 +9,40 @@ interface RoleTabsProps {
 
 export default function RoleTabs({ value, onChange }: RoleTabsProps) {
   const { t } = useTranslation();
-  const valueStr = value === 0 ? '0' : '1';
 
   return (
-    <div className="mb-6 overflow-hidden rounded-xl border-2 border-amber-400/90 dark:border-white/[0.08] bg-amber-100/90 dark:bg-white/[0.03] shadow-lg shadow-amber-900/10 dark:shadow-none ring-2 ring-amber-200/50 dark:ring-transparent">
-      <Tabs
-        value={valueStr}
-        onValueChange={(v) => onChange(v === '0' ? 'CLIENT' : 'MASTER')}
-        className="w-full"
+    <div
+      className={cn(
+        'mb-5 flex rounded-xl p-1',
+        'bg-[#efefef] dark:bg-[#1a1a1a]'
+      )}
+    >
+      <button
+        type="button"
+        onClick={() => onChange('CLIENT')}
+        className={cn(
+          'flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-0 py-2.5 text-[0.82rem] font-medium transition-all',
+          value === 0
+            ? 'bg-white text-[#f97316] font-bold shadow-[0_1px_6px_rgba(0,0,0,0.15)] dark:bg-[#252525] dark:text-[#f97316]'
+            : 'bg-transparent text-[#999999] dark:text-[#555555]'
+        )}
       >
-        <TabsList className="h-auto w-full justify-stretch rounded-none border-0 bg-transparent p-1">
-          <TabsTrigger
-            value="0"
-            className="flex-1 gap-2 py-5 text-base font-semibold text-muted-foreground cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-amber-200/70 dark:hover:bg-white/5 data-[state=active]:bg-white data-[state=active]:text-amber-700 data-[state=active]:dark:bg-card data-[state=active]:dark:text-amber-600 data-[state=active]:shadow-md data-[state=active]:rounded-lg"
-          >
-            <UserPlus className="h-5 w-5 transition-colors duration-500" />
-            {t('auth.registerClient.title')}
-          </TabsTrigger>
-          <TabsTrigger
-            value="1"
-            className="flex-1 gap-2 py-5 text-base font-semibold text-muted-foreground cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:bg-amber-200/70 dark:hover:bg-white/5 data-[state=active]:bg-white data-[state=active]:text-amber-700 data-[state=active]:dark:bg-card data-[state=active]:dark:text-amber-600 data-[state=active]:shadow-md data-[state=active]:rounded-lg"
-          >
-            <Briefcase className="h-5 w-5 transition-colors duration-500" />
-            {t('auth.register.masterTitle')}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+        <User size={13} />
+        {t('auth.registerClient.title')}
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange('MASTER')}
+        className={cn(
+          'flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-0 py-2.5 text-[0.82rem] font-medium transition-all',
+          value === 1
+            ? 'bg-white text-[#f97316] font-bold shadow-[0_1px_6px_rgba(0,0,0,0.15)] dark:bg-[#252525] dark:text-[#f97316]'
+            : 'bg-transparent text-[#999999] dark:text-[#555555]'
+        )}
+      >
+        <Briefcase size={13} />
+        {t('auth.register.masterTitle')}
+      </button>
     </div>
   );
 }

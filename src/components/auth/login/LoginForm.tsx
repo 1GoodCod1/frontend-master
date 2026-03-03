@@ -1,7 +1,8 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FormikTextField } from '@/components/ui/FormikTextField';
-import { Button } from '@/components/ui/button';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { AuthFormField } from '@/components/auth/AuthFormField';
 
 interface LoginFormProps {
   isSubmitting: boolean;
@@ -9,45 +10,56 @@ interface LoginFormProps {
 
 export default function LoginForm({ isSubmitting }: LoginFormProps) {
   const { t } = useTranslation();
+  const [showPass, setShowPass] = useState(false);
 
   return (
-    <div className="flex flex-col gap-5">
-      <FormikTextField
+    <div className="flex flex-col gap-4">
+      <AuthFormField
         name="email"
         label={t('auth.login.email')}
+        type="email"
+        placeholder="example@mail.com"
         autoComplete="email"
-        fullWidth
+        icon={<Mail size={15} />}
       />
-      <FormikTextField
+      <AuthFormField
         name="password"
         label={t('auth.login.password')}
-        type="password"
+        type={showPass ? 'text' : 'password'}
+        placeholder="••••••••"
         autoComplete="current-password"
-        fullWidth
+        icon={<Lock size={15} />}
+        endAdornment={
+          <button
+            type="button"
+            onClick={() => setShowPass(!showPass)}
+            aria-label={showPass ? 'Hide password' : 'Show password'}
+          >
+            {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+          </button>
+        }
       />
-      <div className="mb-1 text-right">
-        <RouterLink
-          to="/forgot-password"
-          className="text-sm font-semibold text-amber-700 dark:text-amber-600 underline underline-offset-2 decoration-amber-600/60 hover:decoration-amber-600 dark:decoration-amber-600/60 dark:hover:decoration-amber-500 transition-colors"
-        >
+      <div className="-mt-1 flex justify-end">
+        <RouterLink to="/forgot-password" className="auth-link">
           {t('auth.login.forgotPassword')}
         </RouterLink>
       </div>
-      <Button
+      <button
         type="submit"
-        size="lg"
         disabled={isSubmitting}
-        className="w-full py-6 text-base font-semibold rounded-lg shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
+        className="auth-primary-btn"
       >
         {isSubmitting ? '...' : t('auth.login.title')}
-      </Button>
-      <div className="mt-6 border-t border-border dark:border-white/[0.08] pt-6 text-center">
-        <p className="mb-2 text-sm text-muted-foreground">
+        <ArrowRight size={15} />
+      </button>
+
+      <div className="auth-divider text-center">
+        <p className="mb-3 text-[0.82rem] text-[#6b6b6b] dark:text-[#7a7a7a]">
           {t('auth.login.noAccount')}
         </p>
         <RouterLink
           to="/register"
-          className="inline-flex items-center justify-center rounded-lg h-11 px-5 py-2 text-sm font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
+          className="auth-outline-btn inline-flex"
         >
           {t('nav.register')}
         </RouterLink>

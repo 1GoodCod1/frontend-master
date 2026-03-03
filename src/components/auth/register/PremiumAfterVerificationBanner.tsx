@@ -1,45 +1,57 @@
 import { useTranslation } from 'react-i18next';
 import { Gift } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function PremiumAfterVerificationBanner() {
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-xl border border-amber-300/60 dark:border-amber-500/20 bg-gradient-to-br from-amber-50 to-amber-100/90 dark:from-amber-900/20 dark:to-amber-900/15 p-5 shadow-lg shadow-amber-900/5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-200/90 dark:bg-amber-800/40">
-          <Gift className="h-5 w-5 text-amber-800 dark:text-amber-500" strokeWidth={2} />
-        </div>
-        <div className="min-w-0 flex-1 text-foreground">
-          <h3 className="mb-3 text-base font-semibold">
+    <div
+      className={cn(
+        'rounded-xl border p-4',
+        'bg-gradient-to-br from-[#fff5eb] to-[#ffe8cc] dark:from-[#1f1008] dark:to-[#2a1500]',
+        'border-[#ffd0a0] dark:border-[#3d1f00]'
+      )}
+    >
+      <div className="flex gap-3">
+        <Gift
+          size={17}
+          className="mt-0.5 shrink-0 text-[#f97316]"
+          strokeWidth={2}
+        />
+        <div>
+          <p
+            className={cn(
+              'mb-1.5 text-[0.78rem] font-bold',
+              'text-[#7a3800] dark:text-[#f0a060]'
+            )}
+          >
             {t('auth.premiumSteps.title')}
-          </h3>
-          <ol className="mb-3 space-y-2">
-            <li className="flex items-start gap-2">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-300 dark:bg-amber-700/40 text-foreground text-xs font-bold">
-                1
+          </p>
+          {[
+            t('auth.premiumSteps.step1'),
+            t('auth.premiumSteps.step2'),
+            t('auth.premiumSteps.step3'),
+          ].map((s, i) => (
+            <div key={i} className="mb-1 flex items-start gap-2">
+              <span
+                className={cn(
+                  'mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-extrabold text-white',
+                  'bg-[#f97316]'
+                )}
+              >
+                {i + 1}
               </span>
-              <span className="text-sm font-medium">
-                {t('auth.premiumSteps.step1')}
+              <span
+                className={cn(
+                  'text-[0.75rem] leading-relaxed',
+                  'text-[#9a4c00] dark:text-[#cc7a30]'
+                )}
+              >
+                {s}
               </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-300 dark:bg-amber-700/40 text-foreground text-xs font-bold">
-                2
-              </span>
-              <span className="text-sm font-medium">
-                {t('auth.premiumSteps.step2')}
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-300 dark:bg-amber-700/40 text-foreground text-xs font-bold">
-                3
-              </span>
-              <span className="text-sm font-medium">
-                {t('auth.premiumSteps.step3')}
-              </span>
-            </li>
-          </ol>
+            </div>
+          ))}
         </div>
       </div>
     </div>

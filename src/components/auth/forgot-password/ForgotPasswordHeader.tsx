@@ -1,20 +1,19 @@
 import { useTranslation } from 'react-i18next';
-import { KeyRound } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
 
 export default function ForgotPasswordHeader() {
   const { t } = useTranslation();
 
   return (
-    <div className="mb-8 text-center">
-      <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-100/80 dark:bg-amber-800/30 shadow-md transition-all hover:scale-105 hover:shadow-lg">
-        <KeyRound className="h-8 w-8 text-amber-700 dark:text-amber-600" strokeWidth={2} />
-      </div>
-      <h1 className="mb-2 text-2xl font-semibold text-foreground md:text-3xl">
-        {t('auth.forgotPassword.title')}
-      </h1>
-      <p className="text-muted-foreground">
-        {t('auth.forgotPassword.subtitle')}
-      </p>
+    <div className="mb-8">
+      <Link to="/login" className="auth-back-link">
+        <ChevronLeft size={14} />
+        {t('auth.login.backToLogin')}
+      </Link>
+      <p className="auth-section-label">{t('auth.forgotPassword.sectionLabel')}</p>
+      <h1 className="auth-heading">{t('auth.forgotPassword.heading')}</h1>
+      <p className="auth-subheading">{t('auth.forgotPassword.sub')}</p>
     </div>
   );
 }

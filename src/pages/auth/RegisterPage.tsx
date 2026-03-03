@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { Formik } from 'formik';
+import { AuthLayout } from '@/components/auth/AuthLayout';
 import RegisterHeader from '../../components/auth/register/RegisterHeader';
 import RoleTabs from '../../components/auth/register/RoleTabs';
 import RegisterForm from '../../components/auth/register/RegisterForm';
 import PremiumAfterVerificationBanner from '../../components/auth/register/PremiumAfterVerificationBanner';
 import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '../../hooks/auth/register/useRegistrationForm';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 export default function RegisterPage() {
@@ -34,15 +34,11 @@ export default function RegisterPage() {
 
   if (restoring) {
     return (
-      <div className="min-h-screen bg-background py-12 md:py-16">
-        <div className="container max-w-md mx-auto px-4">
-          <Card className="border-amber-200/50 dark:border-white/[0.08] shadow-xl shadow-amber-900/5">
-            <CardContent className="p-8">
-              <p className="text-muted-foreground">{t('auth.register.restoring')}</p>
-            </CardContent>
-          </Card>
+      <AuthLayout view="register">
+        <div className="flex flex-1 flex-col justify-center px-8 py-12 md:px-11">
+          <p className="mx-auto max-w-[360px] text-muted-foreground">{t('auth.register.restoring')}</p>
         </div>
-      </div>
+      </AuthLayout>
     );
   }
 
@@ -51,68 +47,59 @@ export default function RegisterPage() {
   const isClient = selectedRole === 'CLIENT';
 
   return (
-    <div className="min-h-screen bg-background py-8 md:py-12">
-      <div className={cn('container mx-auto px-4', isClient ? 'max-w-md' : 'max-w-4xl')}>
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className={cn(
-            'flex flex-col gap-6',
-            !isClient && 'lg:flex-row lg:items-start lg:gap-8'
-          )}
-        >
-          <Card className={cn('border border-amber-200/50 dark:border-white/[0.08] shadow-xl shadow-amber-900/5 overflow-hidden', !isClient && 'flex-1 min-w-0')}>
-            <CardContent className="p-6 md:p-8">
-              <RegisterHeader />
-
-              <RoleTabs
-                value={selectedRole === 'CLIENT' ? 0 : 1}
-                onChange={setSelectedRole}
-              />
-
-              <AnimatePresence mode="wait">
-                <Formik<RegisterFormValues>
-                  key={`${selectedRole}-${i18n.language}`}
-                  initialValues={form.initialValues}
-                  validationSchema={form.validationSchema}
-                  onSubmit={form.onSubmit}
-                  enableReinitialize
-                >
-                  {({ handleSubmit }) => (
-                    <motion.form
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSubmit(e);
-                      }}
-                      method="post"
-                      noValidate
-                    >
-                      <RegisterForm
-                        isClient={isClient}
-                        isSubmitting={form.isSubmitting}
-                        optionsLoading={form.optionsLoading}
-                        cities={form.cities}
-                        categories={form.categories}
-                      />
-                    </motion.form>
-                  )}
-                </Formik>
-              </AnimatePresence>
-            </CardContent>
-          </Card>
-
-          {!isClient && (
-            <aside className="lg:w-80 shrink-0 space-y-6">
+    <AuthLayout view="register">
+      <div className="flex flex-1 flex-col overflow-y-auto">
+        <div className="mx-auto w-full max-w-[420px] px-6 py-10 md:max-w-[440px] md:px-11 md:py-11">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col gap-4"
+          >
+            <RegisterHeader />
+            <RoleTabs
+              value={selectedRole === 'CLIENT' ? 0 : 1}
+              onChange={setSelectedRole}
+            />
+            {!isClient && (
               <PremiumAfterVerificationBanner />
-            </aside>
-          )}
-        </motion.div>
+            )}
+            <AnimatePresence mode="wait">
+              <Formik<RegisterFormValues>
+                key={`${selectedRole}-${i18n.language}`}
+                initialValues={form.initialValues}
+                validationSchema={form.validationSchema}
+                onSubmit={form.onSubmit}
+                enableReinitialize
+              >
+                {({ handleSubmit }) => (
+                  <motion.form
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }}
+                    method="post"
+                    noValidate
+                    className="flex flex-col gap-3.5"
+                  >
+                    <RegisterForm
+                      isClient={isClient}
+                      isSubmitting={form.isSubmitting}
+                      optionsLoading={form.optionsLoading}
+                      cities={form.cities}
+                      categories={form.categories}
+                    />
+                  </motion.form>
+                )}
+              </Formik>
+            </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

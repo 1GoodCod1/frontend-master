@@ -1,41 +1,37 @@
 import { motion } from 'framer-motion';
 import { Formik } from 'formik';
+import { AuthLayout } from '@/components/auth/AuthLayout';
 import ForgotPasswordHeader from '@/components/auth/forgot-password/ForgotPasswordHeader';
 import ForgotPasswordForm from '@/components/auth/forgot-password/ForgotPasswordForm';
 import { useForgotPasswordForm, type ForgotPasswordFormValues } from '@/hooks/auth/forgot-password/useForgotPasswordForm';
-import { Card, CardContent } from '@/components/ui/card';
 
 export default function ForgotPasswordPage() {
   const form = useForgotPasswordForm();
 
   return (
-    <div className="min-h-screen bg-background py-8 md:py-12">
-      <div className="container max-w-md mx-auto px-4">
+    <AuthLayout view="forgot">
+      <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="mx-auto w-full max-w-[360px]"
         >
-          <Card className="border-border dark:border-border shadow-sm overflow-hidden">
-            <CardContent className="p-6 md:p-8">
-              <ForgotPasswordHeader />
-
-              <Formik<ForgotPasswordFormValues>
-                initialValues={form.initialValues}
-                validationSchema={form.validationSchema}
-                onSubmit={form.onSubmit}
-                enableReinitialize
-              >
-                {({ handleSubmit }) => (
-                  <form onSubmit={handleSubmit}>
-                    <ForgotPasswordForm isSubmitting={form.isSubmitting} />
-                  </form>
-                )}
-              </Formik>
-            </CardContent>
-          </Card>
+          <ForgotPasswordHeader />
+          <Formik<ForgotPasswordFormValues>
+            initialValues={form.initialValues}
+            validationSchema={form.validationSchema}
+            onSubmit={form.onSubmit}
+            enableReinitialize
+          >
+            {({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <ForgotPasswordForm isSubmitting={form.isSubmitting} />
+              </form>
+            )}
+          </Formik>
         </motion.div>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
