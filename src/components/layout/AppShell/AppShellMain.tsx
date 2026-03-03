@@ -17,6 +17,7 @@ export function AppShellMain({
   const { pathname } = useLocation();
   const isMasterDetailsPage = /^\/masters\/[^/]+$/.test(pathname);
   const fullWidth = isDashboardOrAdmin || isHomePage || isMasterDetailsPage;
+  const isAuthPage = /^\/(login|register|forgot-password|reset-password)$/.test(pathname);
 
   return (
     <>
@@ -28,7 +29,7 @@ export function AppShellMain({
           transition={{ duration: 0.2 }}
           className={cn(
             'flex min-h-[calc(100vh-3.5rem)] min-w-0 flex-col overflow-x-hidden bg-background transition-colors',
-            fullWidth ? 'pt-14' : 'pt-20 md:pt-24 pb-6 md:pb-8'
+            fullWidth ? 'pt-14' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-20 md:pt-24 pb-6 md:pb-8'
           )}
         >
           {fullWidth ? (
