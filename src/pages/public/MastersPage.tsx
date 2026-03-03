@@ -209,7 +209,14 @@ export default function MastersPage() {
 
   const categories = filters.data?.categories ?? [];
   const cities = filters.data?.cities ?? [];
-  const priceRange = filters.data?.priceRange ?? { min: 0, max: 5000 };
+  const filtersPriceRange = filters.data?.priceRange;
+  // Min always from 0; ensure min < max so sliders are never stuck
+  const priceRange = useMemo(() => {
+    const raw = filtersPriceRange ?? { min: 0, max: 5000 };
+    const { min, max } = raw;
+    const effectiveMax = min >= max ? Math.max(5000, max + 500) : max;
+    return { min: 0, max: effectiveMax };
+  }, [filtersPriceRange]);
   const priceMinClamp = (v: number) =>
     Math.max(priceRange.min, Math.min(v, priceRange.max));
   const priceMaxClamp = (v: number) =>
@@ -675,15 +682,13 @@ export default function MastersPage() {
                                 min={priceRange.min}
                                 max={clampedMaxPrice}
                                 value={clampedMinPrice}
-                                onChange={(e) =>
-                                  setQuery((s) => ({
-                                    ...s,
-                                    page: 1,
-                                    minPrice: priceMinClamp(
-                                      Math.min(Number(e.target.value), s.maxPrice)
-                                    ),
-                                  }))
-                                }
+                                onChange={(e) => {
+                                  const num = Number(e.target.value);
+                                  if (!Number.isFinite(num)) return;
+                                  const v = priceMinClamp(Math.min(num, query.maxPrice));
+                                  setPriceMinLocal(v);
+                                  setQuery((s) => ({ ...s, page: 1, minPrice: v }));
+                                }}
                                 className="h-8 w-20 text-sm border-[#f5f4eb] dark:border-white/10 bg-background shrink-0"
                               />
                             </div>
@@ -724,15 +729,13 @@ export default function MastersPage() {
                                 min={clampedMinPrice}
                                 max={priceRange.max}
                                 value={clampedMaxPrice}
-                                onChange={(e) =>
-                                  setQuery((s) => ({
-                                    ...s,
-                                    page: 1,
-                                    maxPrice: priceMaxClamp(
-                                      Math.max(Number(e.target.value), s.minPrice)
-                                    ),
-                                  }))
-                                }
+                                onChange={(e) => {
+                                  const num = Number(e.target.value);
+                                  if (!Number.isFinite(num)) return;
+                                  const v = priceMaxClamp(Math.max(num, query.minPrice));
+                                  setPriceMaxLocal(v);
+                                  setQuery((s) => ({ ...s, page: 1, maxPrice: v }));
+                                }}
                                 className="h-8 w-20 text-sm border-[#f5f4eb] dark:border-white/10 bg-background shrink-0"
                               />
                             </div>
