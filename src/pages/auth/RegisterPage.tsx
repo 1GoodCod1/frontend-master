@@ -11,7 +11,6 @@ import RoleTabs from '../../components/auth/register/RoleTabs';
 import RegisterForm from '../../components/auth/register/RegisterForm';
 import PremiumAfterVerificationBanner from '../../components/auth/register/PremiumAfterVerificationBanner';
 import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '../../hooks/auth/register/useRegistrationForm';
-import { cn } from '@/lib/utils';
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
