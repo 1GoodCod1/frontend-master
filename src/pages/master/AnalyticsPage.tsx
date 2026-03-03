@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { useAnalyticsMyQuery } from '../../../../analytics/analyticsApi';
+import { useAnalyticsMyQuery } from '@/features/analytics/analyticsApi';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectPlan } from '@/features/auth/selectors';

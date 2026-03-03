@@ -36,7 +36,7 @@ export function NotificationMenu() {
           variant="ghost"
           size="icon"
           aria-label="notifications"
-          className="relative"
+          className="relative transition-transform duration-200 ease-out hover:scale-110 active:scale-95"
         >
           <Bell className="h-5 w-5" />
           {unread > 0 && (

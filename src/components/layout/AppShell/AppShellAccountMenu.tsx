@@ -29,7 +29,7 @@ export function AppShellAccountMenu({ onLogout }: Props) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-muted-foreground hover:text-destructive"
+              className="h-9 w-9 text-muted-foreground hover:text-destructive transition-transform duration-200 ease-out hover:scale-110 hover:rotate-[-4deg] active:scale-95 active:rotate-0"
               aria-label={t('common.logout')}
             >
               <LogOut className="h-4 w-4 shrink-0" strokeWidth={2} />

@@ -204,6 +204,11 @@ body[data-scroll-locked] {
   background-color: hsl(var(--popover)) !important;
 }
 
+/* Settings/Language dropdown — opaque background, no transparency */
+.dropdown-content-opaque {
+  background-color: hsl(var(--popover)) !important;
+}
+
 /* Select dropdown backdrop — hide content behind when open */
 .select-dropdown-content[data-state="open"]::before {
   content: '';

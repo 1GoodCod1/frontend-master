@@ -77,21 +77,21 @@ export function AppShellHeader({
                 variant="ghost"
                 className={cn(
                   navLinkBaseClass,
-                  'border-t-[3px] border-transparent text-foreground hover:bg-accent hover:text-accent-foreground',
+                  'border-t-[3px] border-transparent text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200',
                   'dark:text-amber-400 dark:hover:text-amber-300 dark:font-semibold'
                 )}
                 asChild
               >
-                <RouterLink to="/login">
+                <RouterLink to="/login" className="transition-colors duration-200">
                   <LogIn className="shrink-0" strokeWidth={2} />
                   {t('nav.login')}
                 </RouterLink>
               </Button>
               <Button
-                className="rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all gap-2 bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300 dark:shadow-[0_0_20px_rgba(251,191,36,0.25)]"
+                className="rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 gap-2 bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300 dark:shadow-[0_0_20px_rgba(251,191,36,0.25)]"
                 asChild
               >
-                <RouterLink to="/register">
+                <RouterLink to="/register" className="transition-colors duration-200">
                   <UserPlus className="shrink-0" strokeWidth={2} />
                   {t('nav.register')}
                 </RouterLink>
@@ -115,7 +115,7 @@ export function AppShellHeader({
           <Button
             variant="ghost"
             size="icon"
-            className="h-10 w-10"
+            className="h-10 w-10 transition-transform duration-200 hover:scale-110 active:scale-95"
             onClick={onOpenMobileNav}
             aria-label={t('nav.settings')}
           >

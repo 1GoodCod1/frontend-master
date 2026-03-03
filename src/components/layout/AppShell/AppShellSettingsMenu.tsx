@@ -29,7 +29,7 @@ export function AppShellSettingsMenu({
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9">
+            <Button variant="ghost" size="icon" className="h-9 w-9 transition-transform duration-200 ease-out hover:scale-110 active:scale-95">
               <Settings className="h-4 w-4 shrink-0" strokeWidth={2} />
             </Button>
           </DropdownMenuTrigger>
@@ -38,7 +38,7 @@ export function AppShellSettingsMenu({
       </Tooltip>
       <DropdownMenuContent
         align="end"
-        className="w-52 border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 shadow-[0_8px_20px_-14px_hsl(var(--foreground)/0.35)]"
+        className="dropdown-content-opaque w-52 border-0 dark:border dark:border-border shadow-lg dark:shadow-xl dark:shadow-black/50"
       >
         <DropdownMenuItem onClick={onToggleColorMode}>
           {colorMode === 'dark' ? (
