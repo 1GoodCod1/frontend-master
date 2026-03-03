@@ -7,13 +7,9 @@ WORKDIR /app
 ARG VITE_API_URL=http://localhost:4000
 ARG VITE_WS_URL=ws://localhost:4000
 ARG VITE_ENV=production
-# Required: must match backend ID_ENCRYPTION_SECRET (default for CI only)
-ARG VITE_ID_ENCRYPTION_SECRET=cfd40de5886cbb0acb9955f4c0a940f4943b259e5c5e8268fd2b129608380453
-
 ENV VITE_API_URL=$VITE_API_URL \
     VITE_WS_URL=$VITE_WS_URL \
-    VITE_ENV=$VITE_ENV \
-    VITE_ID_ENCRYPTION_SECRET=$VITE_ID_ENCRYPTION_SECRET
+    VITE_ENV=$VITE_ENV
 
 # Copy dependency files for better layer caching
 COPY package*.json ./

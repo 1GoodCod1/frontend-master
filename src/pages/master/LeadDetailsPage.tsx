@@ -24,7 +24,6 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
 import { mediaUrl } from '@/utils/media';
-import { decodeId } from '@/utils/id-encoder';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -45,15 +44,10 @@ export default function LeadDetailsPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const encodedId = id ?? '';
-  const decodedId = decodeId(encodedId);
-  const leadId = decodedId || encodedId;
+  const leadId = id ?? '';
 
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(leadId);
-  const isValidId = isUuid || decodedId !== null;
-
-  const q = useLeadsByIdQuery({ id: leadId }, { skip: !isValidId });
-  const { data: existingConversation } = useGetConversationByLeadIdQuery(leadId, { skip: !isValidId });
+  const q = useLeadsByIdQuery({ id: leadId }, { skip: !leadId });
+  const { data: existingConversation } = useGetConversationByLeadIdQuery(leadId, { skip: !leadId });
   const [createConversation, { isLoading: isCreatingChat }] = useCreateConversationMutation();
   const [updateStatus, { isLoading: isUpdatingStatus }] = useLeadsUpdateStatusMutation();
 
@@ -85,7 +79,7 @@ export default function LeadDetailsPage() {
     }
   };
 
-  if (!leadId || !isValidId) {
+  if (!leadId) {
     return <ErrorState error={{ message: t('leads.invalidLeadId') } as Error} onRetry={() => { }} />;
   }
   if (q.isLoading) return <LoadingState label={t('leads.loadingLead')} />;

@@ -77,7 +77,8 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
             };
 
             const result = await createLead(payload).unwrap();
-            setSubmittedLeadId(result?.id || null);
+            const lead = result as { encodedId?: string; id?: string };
+            setSubmittedLeadId(lead?.encodedId ?? lead?.id ?? null);
             toast.success('Lead sent');
 
             setAttach([]);

@@ -8,7 +8,6 @@ import { Separator } from '@/components/ui/separator';
 import { useIsDark } from '@/hooks/useIsDark';
 import { formatDateShort, formatTimeOnly, getLocaleFromLanguage } from '@/utils/date';
 import type { LeadCardProps } from '@/types/leads';
-import { encodeId } from '@/utils/id-encoder';
 import { getLeadStatusColor, getLeadStatusBgColor } from '@/utils/statusColors';
 import LeaveReviewButton from './LeaveReviewButton';
 import { cn } from '@/lib/utils';
@@ -28,8 +27,9 @@ const LeadCard = React.memo(function LeadCard({
   const statusBgColor = getLeadStatusBgColor(status, isDark);
   const masterSlugOrId =
     lead.master?.slug ||
-    (lead.master?.id ? encodeId(String(lead.master.id)) : '') ||
-    (lead.masterId ? encodeId(String(lead.masterId)) : '');
+    (lead.master as { encodedId?: string })?.encodedId ||
+    (lead.master?.id ? String(lead.master.id) : '') ||
+    (lead.masterId ? String(lead.masterId) : '');
 
   return (
     <Card className="overflow-hidden border-border dark:border-white/[0.08] bg-card transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/50">

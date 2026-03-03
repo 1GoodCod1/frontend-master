@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Virtuoso } from 'react-virtuoso';
-import { encodeId } from '@/utils/id-encoder';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { clearUnreadLeads, RECENT_TTL } from '@/features/socket/socketSlice';
 import { leadsApi, useLeadsMyListQuery, useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
@@ -16,7 +15,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
-import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus } from '@/types/leads';
+import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus, type LeadDto } from '@/types/leads';
 import { LeadStatusProgress } from '@/components/leads/LeadStatusProgress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -271,7 +270,7 @@ export default function LeadsPage() {
                           <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                             <Button
                               size="sm"
-                              onClick={() => nav(`/dashboard/leads/${encodeId(String(lead.id))}`)}
+                              onClick={() => nav(`/dashboard/leads/${(lead as LeadDto).encodedId ?? lead.id}`)}
                               className="h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
                             >
                               <ExternalLink className="size-3.5" />
