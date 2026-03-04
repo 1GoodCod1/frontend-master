@@ -81,7 +81,7 @@ function MapSkeleton() {
 const VirtualizedGridList = (props: ComponentProps<'div'>) => (
   <div
     {...props}
-    className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
   />
 );
 
@@ -756,7 +756,7 @@ export default function MastersPage() {
       {/* Results */}
       {list.isLoading ? (
         viewMode === 'list' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 12 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}

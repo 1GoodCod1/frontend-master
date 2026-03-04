@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
@@ -41,6 +41,8 @@ export interface RegisterFormValues {
 export function useRegistrationForm(selectedRole: RegisterRole) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect');
 
   const [register, registerState] = useAuthRegisterMutation();
   const { data: optionsData, isLoading: optionsLoading } = useAuthRegistrationOptionsQuery();
@@ -109,7 +111,7 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
       toast.success(t('Account created successfully'));
 
       if (values.role === 'CLIENT') {
-        navigate('/client-dashboard', { replace: true });
+        navigate(redirectTo && redirectTo.startsWith('/') ? redirectTo : '/client-dashboard', { replace: true });
       } else {
         navigate('/dashboard', { replace: true });
       }

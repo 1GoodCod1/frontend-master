@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,50 +9,50 @@ import {
   Sparkles,
   Crown,
 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
 import { mediaUrl } from '@/utils/media';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { LazyImage } from '@/components/ui/LazyImage';
-import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { mastersApi } from '@/features/masters/mastersApi';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { useNow } from '@/hooks/useNow';
 import { cn } from '@/lib/utils';
 import type { PublicMaster } from '@/types';
 
-function StarRating({ value }: { value: number }) {
+function StarRating({ value, compact }: { value: number; compact?: boolean }) {
   const fullStars = Math.floor(value);
   const decimal = value % 1;
+  const sizeClass = compact ? 'h-3 w-3' : 'h-3.5 w-3.5';
+  const gapClass = compact ? 'gap-0' : 'gap-0.5';
 
   return (
-    <span className="inline-flex items-center gap-0.5">
+    <span className={cn('inline-flex items-center', gapClass)}>
       {[0, 1, 2, 3, 4].map((i) => {
         if (i < fullStars) {
           return (
             <Star
               key={i}
-              className="h-3.5 w-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400"
+              className={cn(sizeClass, 'fill-[#FFC107] text-[#FFC107] dark:fill-amber-400 dark:text-amber-400')}
             />
           );
         }
         if (i === fullStars && decimal > 0) {
           const pct = decimal * 100;
           return (
-            <span key={i} className="relative inline-block h-3.5 w-3.5">
-              <Star className="absolute inset-0 h-3.5 w-3.5 text-muted-foreground/30 dark:text-muted-foreground/40" />
+            <span key={i} className={cn('relative inline-block', sizeClass)}>
+              <Star className={cn('absolute inset-0', sizeClass, 'text-muted-foreground/30 dark:text-muted-foreground/40')} />
               <span
                 className="absolute inset-0 overflow-hidden"
                 style={{ width: `${pct}%` }}
               >
-                <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500 dark:fill-amber-400 dark:text-amber-400" />
+                <Star className={cn(sizeClass, 'fill-[#FFC107] text-[#FFC107] dark:fill-amber-400 dark:text-amber-400')} />
               </span>
             </span>
           );
@@ -60,7 +60,7 @@ function StarRating({ value }: { value: number }) {
         return (
           <Star
             key={i}
-            className="h-3.5 w-3.5 text-muted-foreground/30 dark:text-muted-foreground/40"
+            className={cn(sizeClass, 'text-muted-foreground/30 dark:text-muted-foreground/40')}
           />
         );
       })}
@@ -89,9 +89,9 @@ type MasterCardProps = {
 
 export const MasterCard = React.memo(function MasterCard({
   master,
-  compact = false,
+  compact: _compact = false,
   onlyAvatar = false,
-  reasons,
+  reasons: _reasons,
   sectionBadge,
   promotionDiscount: promotionDiscountProp,
 }: MasterCardProps) {
@@ -99,6 +99,8 @@ export const MasterCard = React.memo(function MasterCard({
   const nav = useNavigate();
   const dispatch = useAppDispatch();
   const now = useNow();
+  const isAuthed = useAppSelector(selectIsAuthed);
+  const role = useAppSelector(selectRole);
   const masterId = master.slug ?? master.id;
 
   const handleMouseEnter = () => {
@@ -109,13 +111,14 @@ export const MasterCard = React.memo(function MasterCard({
     }
   };
 
-  const firstName =
-    master?.user?.firstName ||
-    master?.displayName?.split(' ')[0] ||
-    master?.name?.split(' ')[0] ||
+  const displayName =
+    master?.displayName ||
+    `${master?.user?.firstName || ''} ${master?.user?.lastName || ''}`.trim() ||
+    master?.name ||
     t('common.masterCard.masterNameFallback');
   const city = getTranslatedCityName(t, master?.city) || master?.city?.name;
   const rating = master?.rating ?? master?.avgRating;
+  const totalReviews = master?.totalReviews ?? 0;
   const categoryName = getTranslatedCategoryName(t, master?.category) || master?.category?.name;
 
   const avatarSrc = mediaUrl(
@@ -150,207 +153,213 @@ export const MasterCard = React.memo(function MasterCard({
         ? activePromotion.discount
         : null;
 
-  const badgeStyles = {
-    popular: 'bg-amber-600 text-white dark:bg-amber-500',
-    new: 'bg-primary text-primary-foreground',
-    vip: 'bg-violet-600 text-white dark:bg-violet-500',
-    premium: 'bg-amber-500 text-amber-950 dark:bg-amber-400 dark:text-amber-950',
-  };
+  const serviceTags = useMemo(() => {
+    const svc = master.services ?? [];
+    return svc.slice(0, 2).map((s) => s.title || '').filter(Boolean);
+  }, [master.services]);
 
   const badgeTooltipClass =
     'rounded-md px-2 py-1 text-xs bg-[hsl(var(--popover))] text-popover-foreground border-0 shadow-sm dark:shadow-black/40';
 
-  const cornerIconBox = (
-    icon: React.ReactNode,
-    bgClass: string,
-    title: string
-  ) => (
-    <TooltipProvider key={title}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span
-            className={cn(
-              'flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-              bgClass
-            )}
-          >
-            {icon}
-          </span>
-        </TooltipTrigger>
-        <TooltipContent side="left" className={badgeTooltipClass}>
-          {title}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    nav(`/masters/${master.slug ?? master.id}`);
+  };
 
-  return (
-    <Card
-      className={cn(
-        'h-full overflow-hidden border-0 bg-card shadow-lg shadow-amber-900/10 dark:bg-white/[0.06] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-900/15 dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.45)] cursor-pointer',
-        compact && 'min-h-[239px]'
-      )}
-    >
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      nav(`/masters/${master.slug ?? master.id}`);
+    }
+  };
+
+  if (onlyAvatar) {
+    return (
       <div
         role="button"
         tabIndex={0}
-        onClick={() => nav(`/masters/${master.slug ?? master.id}`)}
-        onMouseEnter={handleMouseEnter}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            nav(`/masters/${master.slug ?? master.id}`);
-          }
-        }}
-        className="relative flex h-full flex-col p-5 text-left outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        className="relative flex h-20 w-20 shrink-0 cursor-pointer"
       >
-        {/* Corner badges */}
-        <div className="absolute right-2 top-2 z-10 flex flex-col items-end gap-1.5">
-          {activePromotionDiscount !== null &&
-            cornerIconBox(
-              <div className="flex items-center gap-1 px-1">
-                <Flame className="h-4 w-4 fill-white" />
-                <span className="text-xs font-bold">-{activePromotionDiscount}%</span>
-              </div>,
-              'bg-rose-500 text-white w-auto px-2 min-w-[3.5rem]',
-              t('home.promotionBadge', 'Акция!')
-            )}
-          {sectionBadge === 'popular' &&
-            cornerIconBox(
-              <Flame className="h-5 w-5" />,
-              badgeStyles.popular,
-              t('common.masterCard.popularTooltip')
-            )}
-          {sectionBadge === 'new' &&
-            cornerIconBox(
-              <Sparkles className="h-5 w-5" />,
-              badgeStyles.new,
-              t('common.masterCard.newTooltip')
-            )}
-          {isVip &&
-            cornerIconBox(
-              <Star className="h-5 w-5" />,
-              badgeStyles.vip,
-              t('common.masterCard.vipTooltip')
-            )}
-          {isPremium &&
-            cornerIconBox(
-              <Crown className="h-5 w-5" />,
-              badgeStyles.premium,
-              t('common.masterCard.premiumTooltip')
-            )}
+        <div className="relative h-20 w-20 overflow-hidden rounded-full border-[3px] border-white shadow-md dark:border-white/20">
+          {avatarSrc ? (
+            <LazyImage
+              src={avatarSrc}
+              alt={displayName}
+              objectFit="cover"
+              skeletonHeight={80}
+              skeletonWidth={80}
+              className="h-full w-full"
+              style={{ borderRadius: '50%' }}
+            />
+          ) : (
+            <AvatarPlaceholder role="master" height={80} variant={placeholderVariant} />
+          )}
         </div>
+      </div>
+    );
+  }
 
-        {/* Avatar with online ring */}
-        <div className="relative z-[1] mb-2 flex justify-center">
-          <OnlineStatusBadge
-            isOnline={master?.isOnline === true}
-            lastActivityAt={master?.lastActivityAt}
-            variant="ring"
-          >
-            <div
-              className={cn(
-                'flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-[3px] border-white shadow-md dark:border-white/20 dark:shadow-black/50'
-              )}
-            >
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        'group relative flex w-full flex-col overflow-hidden rounded-[14px] bg-white shadow-md shadow-slate-200/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/30 cursor-pointer',
+        'dark:bg-[#1e1c17] dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_4px_16px_-2px_rgba(0,0,0,0.25)]',
+      )}
+    >
+      {/* Top accent bar */}
+      <div className="h-1.5 w-full shrink-0 bg-[#FFC107] dark:bg-amber-500" />
+
+      <div className="flex flex-col p-4 pb-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50">
+        {/* Top row: Avatar + Name + Badges */}
+        <div className="flex items-start gap-3">
+          {/* Avatar with online indicator */}
+          <div className="relative shrink-0">
+            <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-white shadow-md dark:border-white/20">
               {avatarSrc ? (
                 <LazyImage
                   src={avatarSrc}
-                  alt={firstName}
+                  alt={displayName}
                   objectFit="cover"
-                  skeletonHeight={80}
-                  skeletonWidth={80}
-                  className="h-full w-full shrink-0"
+                  skeletonHeight={64}
+                  skeletonWidth={64}
+                  className="h-full w-full"
                   style={{ borderRadius: '50%' }}
                 />
               ) : (
-                <div className="h-full w-full">
-                  <AvatarPlaceholder
-                    role="master"
-                    height={80}
-                    variant={placeholderVariant}
-                  />
-                </div>
+                <AvatarPlaceholder role="master" height={64} variant={placeholderVariant} />
               )}
             </div>
-          </OnlineStatusBadge>
-        </div>
+            {master?.isOnline === true && (
+              <span
+                className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500 dark:border-[#1e1c17]"
+                title={t('masters.availableNow')}
+              />
+            )}
+          </div>
 
-        {onlyAvatar ? null : (
-          <CardContent className="flex flex-1 flex-col items-center p-0">
-            <div
-              className={cn(
-                'flex w-full flex-col items-center',
-                compact ? 'gap-1' : 'gap-2'
+          {/* Name + profession */}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="font-bold text-foreground text-base leading-tight truncate">
+                {displayName}
+              </span>
+              {isVerified && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="flex shrink-0">
+                        <ShieldCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent className={badgeTooltipClass}>
+                      {t('masters.verified')}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
-            >
-              <div className="flex flex-wrap items-center justify-center gap-1">
-                <span
-                  className={cn(
-                    'font-semibold text-foreground',
-                    compact ? 'text-base' : 'text-lg leading-tight'
-                  )}
-                >
-                  {firstName}
+            </div>
+            {categoryName && (
+              <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+                {categoryName}
+              </p>
+            )}
+            {/* Rating — directly under category */}
+            {typeof rating === 'number' && (
+              <div className="mt-1 flex items-center gap-1">
+                <StarRating value={rating} compact />
+                <span className="text-xs font-medium text-foreground">
+                  {rating.toFixed(1)}
                 </span>
-                {isVerified && (
-                  <span title={t('masters.verified')}>
-                    <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
+                {totalReviews > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    ({totalReviews})
                   </span>
                 )}
               </div>
+            )}
+          </div>
 
-              {categoryName && (
-                <p className="text-sm font-normal text-violet-600 dark:text-violet-400">
-                  {categoryName}
-                </p>
-              )}
+          {/* Corner badges */}
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            {activePromotionDiscount !== null && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#F8D7DA] px-2 py-0.5 text-xs font-bold text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
+                <Flame className="h-3.5 w-3.5" />
+                -{activePromotionDiscount}%
+              </span>
+            )}
+            {sectionBadge === 'popular' && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-amber-500">
+                <Flame className="h-3.5 w-3.5" />
+                {t('common.masterCard.popular')}
+              </span>
+            )}
+            {sectionBadge === 'new' && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
+                <Sparkles className="h-3.5 w-3.5" />
+                {t('common.masterCard.new')}
+              </span>
+            )}
+            {isPremium && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF3CD] px-2 py-0.5 text-xs font-semibold text-amber-900 dark:bg-amber-900/50 dark:text-amber-200">
+                <Crown className="h-3.5 w-3.5" />
+                {t('common.masterCard.premium')}
+              </span>
+            )}
+            {isVip && !isPremium && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-violet-500">
+                <Star className="h-3.5 w-3.5" />
+                {t('common.masterCard.vip')}
+              </span>
+            )}
+          </div>
+        </div>
 
-              {typeof rating === 'number' && (
-                <div className="mt-1 flex items-center gap-1.5">
-                  <StarRating value={rating} />
-                  <span className="text-sm font-normal text-foreground">
-                    {rating.toFixed(1)}
-                  </span>
-                </div>
-              )}
-
-              {city && (
-                <div className="mt-1 flex items-center gap-1.5 text-amber-600 dark:text-amber-400">
-                  <MapPin className="h-4 w-4 shrink-0" />
-                  <span className="text-sm">{city}</span>
-                </div>
-              )}
-
-              {!compact && master?.description && (
-                <p className="mt-2 line-clamp-3 text-center text-sm leading-relaxed text-muted-foreground">
-                  {String(master.description).slice(0, 120)}...
-                </p>
-              )}
-
-              {compact && reasons && reasons.length > 0 && (
-                <div className="mt-2 flex flex-wrap justify-center gap-1">
-                  {reasons.slice(0, 2).map((reasonKey: string, idx: number) => {
-                    const label = /^[a-z_]+$/.test(reasonKey)
-                      ? t(`home.recommendationReasons.${reasonKey}`)
-                      : reasonKey;
-                    return (
-                      <Badge
-                        key={idx}
-                        variant="default"
-                        className="h-6 gap-1 px-1.5 text-[0.7rem]"
-                      >
-                        <Star className="h-3.5 w-3.5" />
-                        {label}
-                      </Badge>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </CardContent>
+        {/* Service tags — only first 2 services */}
+        {serviceTags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {serviceTags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         )}
+
+        {/* Bottom bar: Location left, Contact right — separated by line. Button hidden for masters. */}
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 dark:border-white/10 pt-2">
+          {city && (
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 shrink-0" />
+              <span>{city}</span>
+            </div>
+          )}
+          {role !== 'MASTER' && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isAuthed && role === 'CLIENT') {
+                  nav(`/masters/${master.slug ?? master.id}`);
+                } else {
+                  nav(`/register?redirect=${encodeURIComponent(`/masters/${master.slug ?? master.id}`)}`);
+                }
+              }}
+              className="ml-auto shrink-0 rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors shadow-sm bg-[#343A40] text-white hover:bg-[#2a2e33] dark:bg-amber-500 dark:text-amber-950 dark:hover:bg-amber-400 dark:shadow-none"
+            >
+              {t('common.masterCard.contact')}
+            </button>
+          )}
+        </div>
       </div>
-    </Card>
+    </div>
   );
 });
