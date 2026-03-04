@@ -34,27 +34,27 @@
   --select-backdrop: hsla(40, 15%, 20%, 0.12);
 }
 
-/* Dark mode: #14120b base — deep warm black, subtle borders */
+/* Dark mode: Redesign Master Cabinet — warm near-black #171510, cards #1e1c17 */
 html[data-theme="dark"],
 .dark {
-  --background: 47 29% 6%;
+  --background: 40 15% 8%;
   --foreground: 47 10% 92%;
-  --card: 47 22% 9%;
+  --card: 40 12% 11%;
   --card-foreground: 47 10% 92%;
-  --popover: 47 22% 9%;
+  --popover: 40 12% 11%;
   --popover-foreground: 47 10% 92%;
   --primary: 174 72% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 47 18% 12%;
+  --secondary: 40 10% 14%;
   --secondary-foreground: 47 10% 92%;
-  --muted: 47 18% 12%;
+  --muted: 40 10% 14%;
   --muted-foreground: 47 12% 60%;
-  --accent: 47 18% 12%;
+  --accent: 40 10% 14%;
   --accent-foreground: 47 10% 92%;
   --destructive: 0 63% 55%;
   --destructive-foreground: 0 0% 98%;
-  --border: 47 15% 10%;
-  --input: 47 15% 10%;
+  --border: 40 8% 16%;
+  --input: 40 10% 14%;
   --ring: 174 72% 45%;
   --cta: 38 92% 50%;
   --cta-foreground: 0 0% 100%;

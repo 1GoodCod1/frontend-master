@@ -21,8 +21,8 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   return (
     <Card
       className={cn(
-        'relative overflow-hidden transition-all duration-250 border-slate-200 dark:border-white/[0.08] hover:border-amber-500/20 hover:shadow-[0_4px_20px_hsl(var(--primary)/0.06)]',
-        icon && 'border-l-4 border-l-amber-500/50',
+        'relative overflow-hidden transition-all duration-250 border-slate-200 dark:border-[#2c2a24] hover:border-violet-500/30 hover:shadow-[0_4px_20px_rgba(139,92,246,0.08)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]',
+        icon && 'border-l-4 border-l-violet-500/50',
         className
       )}
       {...rest}
@@ -31,7 +31,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
         <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
           <div className="flex items-start gap-3">
             {icon && (
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-amber-500/15 text-amber-600 dark:text-amber-400">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400">
                 {icon}
               </span>
             )}

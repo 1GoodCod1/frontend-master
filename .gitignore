@@ -43,8 +43,8 @@ package-lock.json
 /build
 
 # Testing
-/coverage
-/test-results
+coverage/
+test-results/
 
 # System Files
 Thumbs.db

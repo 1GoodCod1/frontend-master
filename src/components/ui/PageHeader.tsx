@@ -39,9 +39,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, crumbs,
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className={cn('text-2xl font-bold tracking-tight md:text-3xl')}>{title}</h1>
+          <h1 className={cn('text-2xl font-bold tracking-tight md:text-3xl text-slate-900 dark:text-slate-100')}>{title}</h1>
           {subtitle && (
-            <p className="mt-1 text-base text-muted-foreground">{subtitle}</p>
+            <p className="mt-1 text-base text-slate-500 dark:text-slate-400">{subtitle}</p>
           )}
         </div>
         {actions && <div className="flex flex-shrink-0 items-center gap-2">{actions}</div>}
