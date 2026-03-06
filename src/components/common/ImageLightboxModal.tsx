@@ -63,7 +63,7 @@ export function ImageLightboxModal({
   useEffect(() => {
     if (open && !prevOpenRef.current && total > 0) {
       const i = Math.min(Math.max(0, initialIndex), Math.max(0, total - 1));
-      setIndex(i); // Sync when modal opens — eslint-disable below if needed
+      queueMicrotask(() => setIndex(i));
     }
     prevOpenRef.current = open;
   }, [open, initialIndex, total, setIndex]);
