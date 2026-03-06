@@ -24,6 +24,7 @@ import { usePromotionsActiveQuery } from '@/features/promotions/promotionsApi';
 import { useRecommendationsTrackMutation } from '@/features/recommendations/recommendationsApi';
 import { ErrorState } from '@/components/common/States';
 import { MasterCard } from '@/components/ui/MasterCard';
+import { SearchInputWithHistory } from '@/components/search/SearchInputWithHistory';
 import { EmptyState } from '@/components/ui/EmptyState';
 import type { MastersFilterItem, PublicMaster } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -106,8 +107,8 @@ export default function MastersPage() {
   const urlQ = searchParams.get('q');
   const urlSortBy = searchParams.get('sortBy') as SortBy | null;
   const urlSortOrder = searchParams.get('sortOrder') as SortOrder | null;
-  const urlCategoryId = searchParams.get('categoryId');
-  const urlCityId = searchParams.get('cityId');
+  const urlCategoryId = searchParams.get('category') ?? searchParams.get('categoryId');
+  const urlCityId = searchParams.get('city') ?? searchParams.get('cityId');
   const urlAvailable = searchParams.get('availableNow');
   const urlHasPromotion = searchParams.get('hasPromotion');
   const urlMinPrice = searchParams.get('minPrice');
@@ -171,8 +172,8 @@ export default function MastersPage() {
       params.set('sortBy', query.sortBy);
       params.set('sortOrder', query.sortOrder);
     }
-    if (query.categoryValue) params.set('categoryId', query.categoryValue);
-    if (query.cityValue) params.set('cityId', query.cityValue);
+    if (query.categoryValue) params.set('category', query.categoryValue);
+    if (query.cityValue) params.set('city', query.cityValue);
     if (query.availableNow) params.set('availableNow', 'true');
     if (query.hasPromotion) params.set('hasPromotion', 'true');
     if (query.minPrice > 0) params.set('minPrice', String(query.minPrice));
@@ -403,22 +404,19 @@ export default function MastersPage() {
                 {/* Search */}
                 <div className="lg:col-span-2 space-y-2">
                   <Label htmlFor="masters-search">{t('masters.search')}</Label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-                    <Input
-                      id="masters-search"
-                      placeholder={t('masters.searchPlaceholder')}
-                      value={query.q}
-                      onChange={(e) =>
-                        setQuery((s) => ({
-                          ...s,
-                          page: 1,
-                          q: e.target.value,
-                        }))
-                      }
-                      className="pl-9 border-[#f5f4eb] dark:border-white/10 bg-secondary/80 focus-visible:border-[#e8e6dd] dark:focus-visible:border-white/20"
-                    />
-                  </div>
+                  <SearchInputWithHistory
+                    id="masters-search"
+                    value={query.q}
+                    onChange={(v) =>
+                      setQuery((s) => ({
+                        ...s,
+                        page: 1,
+                        q: v,
+                      }))
+                    }
+                    placeholder={t('masters.searchPlaceholder')}
+                    variant="default"
+                  />
                 </div>
 
                 {/* Category */}

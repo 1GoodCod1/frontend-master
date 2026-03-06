@@ -2,6 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Menu, LogIn, UserPlus } from 'lucide-react';
+import { RemoveScroll } from 'react-remove-scroll';
 import { NotificationMenu } from '@/components/common/NotificationMenu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -46,6 +47,7 @@ export function AppShellHeader({
       transition={{ duration: 0.25 }}
       className={cn(
         'fixed top-0 left-0 right-0 z-40 w-full bg-background/85 backdrop-blur-xl',
+        RemoveScroll.classNames.fullWidth,
         'shadow-[0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.25)]'
       )}
     >

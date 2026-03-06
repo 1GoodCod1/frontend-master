@@ -3,19 +3,36 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Mail, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+
+const NEWSLETTER_SUBSCRIBED_KEY = 'newsletter_subscribed';
 
 export function Footer() {
   const { t } = useTranslation();
   const isAuthed = useAppSelector(selectIsAuthed);
   const [email, setEmail] = useState('');
+  const [subscribedFromStorage] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
+    try {
+      localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, '1');
+    } catch {
+      // ignore
+    }
+    setShowSuccess(true);
     toast.success(t('footer.newsletterSuccess'));
     setEmail('');
   };
@@ -24,49 +41,69 @@ export function Footer() {
     'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
 
   return (
-    <footer className="mt-auto w-full border-t border-border dark:border-white/[0.08] bg-card">
-      {/* Newsletter */}
-      <div className="border-b border-border dark:border-white/[0.08] bg-primary/5 px-4 py-5 sm:py-6 dark:bg-primary/10">
-        <div className="mx-auto max-w-6xl">
-          <form
-            onSubmit={handleNewsletterSubmit}
-            className="mx-auto flex max-w-[560px] flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center"
-          >
-            <div className="min-w-0 flex-1">
-              <p className="mb-1 font-bold text-foreground">
-                {t('footer.newsletterTitle')}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {t('footer.newsletterDescription')}
-              </p>
-            </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[320px] sm:flex-row">
-              <div className="relative flex-1">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="email"
-                  placeholder={t('footer.newsletterPlaceholder')}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-9 pl-9"
-                />
+    <footer className="mt-auto w-full border-t border-amber-500/15 dark:border-amber-500/10 bg-[#faf8f0] dark:bg-black">
+      {/* Newsletter — hidden after subscribe on F5 */}
+      {!subscribedFromStorage && (
+        <div className="border-b border-amber-500/15 dark:border-amber-500/10 bg-amber-500/5 px-4 py-5 sm:py-6 dark:bg-amber-500/10">
+          <div className="mx-auto max-w-6xl">
+            {showSuccess ? (
+              <div className="mx-auto flex max-w-[560px] items-center gap-3 text-foreground">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta/20 text-cta">
+                  <Check className="h-5 w-5" />
+                </div>
+                <p className="font-semibold">{t('footer.newsletterSuccess')}</p>
               </div>
-              <Button type="submit" className="min-w-[120px] min-h-[44px] font-semibold bg-cta text-cta-foreground hover:bg-cta/90 dark:bg-cta dark:text-cta-foreground dark:hover:bg-cta/90">
-                {t('footer.newsletterButton')}
-              </Button>
-            </div>
-          </form>
+            ) : (
+              <form
+                onSubmit={handleNewsletterSubmit}
+                className="mx-auto flex max-w-[560px] flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="mb-1 font-bold text-foreground">
+                    {t('footer.newsletterTitle')}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('footer.newsletterDescription')}
+                  </p>
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-2 sm:min-w-[320px] sm:flex-row">
+                  <div className="relative flex-1">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      type="email"
+                      placeholder={t('footer.newsletterPlaceholder')}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-9 pl-9"
+                    />
+                  </div>
+                  <Button type="submit" className="min-w-[120px] min-h-[44px] font-semibold bg-cta text-cta-foreground hover:bg-cta/90 dark:bg-cta dark:text-cta-foreground dark:hover:bg-cta/90">
+                    {t('footer.newsletterButton')}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Main footer */}
       <div className="px-4 py-8 md:px-6 md:py-10 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-12 gap-8 justify-between gap-y-8">
             <div className="col-span-12 md:col-span-4">
-              <h3 className="mb-2 text-lg font-extrabold tracking-tight">
-                {t('appName')}
-              </h3>
+              <div className="mb-2 flex items-center gap-2">
+                <img
+                  src="/brand/favicon.svg"
+                  alt=""
+                  className="h-8 w-8"
+                  width={32}
+                  height={32}
+                />
+                <h3 className="text-lg font-extrabold tracking-tight">
+                  {t('appName')}
+                </h3>
+              </div>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {t('footer.aboutDescription')}
               </p>
@@ -115,7 +152,7 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="mt-10 border-t border-border dark:border-white/[0.08] pt-6 text-center md:text-left">
+          <div className="mt-10 border-t border-amber-500/15 dark:border-amber-500/10 pt-6 text-center md:text-left">
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} {t('appName')}. {t('footer.copyright')}
             </p>

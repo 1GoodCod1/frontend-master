@@ -1,5 +1,5 @@
 export const app = {
-  en: { appName: 'MoldMasters' as const },
-  ru: { appName: 'MoldMasters' as const },
-  ro: { appName: 'MoldMasters' as const },
+  en: { appName: 'Master Hub' as const },
+  ru: { appName: 'Master Hub' as const },
+  ro: { appName: 'Master Hub' as const },
 };

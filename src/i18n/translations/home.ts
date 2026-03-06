@@ -1,12 +1,12 @@
 export const home = {
   en: {
     home: {
-      title: 'MoldMasters',
+      title: 'Master Hub',
       heroStatus: 'Over 500+ verified masters active now',
       heroStatusWithCount: 'Over {{count}}+ verified masters active now',
       heroTitleLine1: 'Connect with the best',
       heroTitleLine2Masters: 'masters',
-      heroTitleLine2From: 'from Moldova',
+      heroTitleLine2From: 'from ',
       subtitle:
         'Marketplace of verified specialists. Fast search, leads, reviews, and promotions.',
       searchPlaceholder: 'Search masters by service or specialty...',
@@ -23,6 +23,17 @@ export const home = {
       popularSubtitle: 'Trending this week',
       newMasters: 'New masters',
       newSubtitle: 'Recently joined',
+      popularCategoriesHero: 'Popular categories',
+      heroPlatformBadge: 'Platform #1 in Moldova',
+      heroSpecialistsAvailable: 'Specialists available',
+      heroViewAllMasters: 'View all available masters',
+      heroVerified100: '100% Verified',
+      heroVerifiedDesc: 'Identity confirmed',
+      heroResponseTime: '~15 min',
+      heroResponseDesc: 'Average response time',
+      heroTrustBadge1: 'Verified & Certified',
+      heroTrustBadge2: 'Fast Response',
+      heroTrustBadge3: 'Real Reviews',
       popularCategories: {
         title: 'Categories',
         subtitle: 'Find a specialist in the category you need',
@@ -94,12 +105,12 @@ export const home = {
   },
   ru: {
     home: {
-      title: 'MoldMasters',
+      title: 'Master Hub',
       heroStatus: 'Более 500+ проверенных мастеров активны сейчас',
       heroStatusWithCount: 'Более {{count}}+ проверенных мастеров активны сейчас',
       heroTitleLine1: 'Свяжитесь с лучшими',
       heroTitleLine2Masters: 'мастерами',
-      heroTitleLine2From: 'из Молдовы',
+      heroTitleLine2From: 'из ',
       subtitle:
         'Маркетплейс проверенных специалистов. Быстрый поиск, лиды, отзывы и продвижение.',
       searchPlaceholder: 'Поиск мастеров по услуге или специальности...',
@@ -117,6 +128,17 @@ export const home = {
       newMasters: 'Новые мастера',
       newSubtitle: 'Недавно присоединились',
       tip: 'Совет: Используйте фильтры по категории/городу и сортировку по рейтингу/просмотрам для лучшего результата.',
+      popularCategoriesHero: 'Популярные категории',
+      heroPlatformBadge: 'Платформа №1 в Молдове',
+      heroSpecialistsAvailable: 'Специалисты доступны',
+      heroViewAllMasters: 'Смотреть всех доступных мастеров',
+      heroVerified100: '100% Проверено',
+      heroVerifiedDesc: 'Идентичность подтверждена',
+      heroResponseTime: '~15 мин',
+      heroResponseDesc: 'Среднее время ответа',
+      heroTrustBadge1: 'Проверенные и сертифицированные',
+      heroTrustBadge2: 'Быстрый ответ',
+      heroTrustBadge3: 'Реальные отзывы',
       popularCategories: {
         title: 'Категории',
         subtitle: 'Найдите специалиста в нужной вам категории',
@@ -187,12 +209,12 @@ export const home = {
   },
   ro: {
     home: {
-      title: 'MoldMasters',
+      title: 'Master Hub',
       heroStatus: 'Peste 500+ mesteri verificați activi acum',
       heroStatusWithCount: 'Peste {{count}}+ mesteri verificați activi acum',
       heroTitleLine1: 'Conectează-te cu cei mai buni',
       heroTitleLine2Masters: 'mesteri',
-      heroTitleLine2From: 'din Moldova',
+      heroTitleLine2From: 'din ',
       subtitle:
         'Piața specialiștilor verificați: Căutare rapidă, lead-uri, recenzii autentice și promoții exclusive pentru proiectul tău.',
       searchPlaceholder: 'Caută mesteri după serviciu sau specialitate...',
@@ -209,6 +231,17 @@ export const home = {
       popularSubtitle: 'Tendințe săptămâna aceasta',
       newMasters: 'Meșteri noi',
       newSubtitle: 'Alăturați recent',
+      popularCategoriesHero: 'Categorii populare',
+      heroPlatformBadge: 'Platforma #1 din Moldova',
+      heroSpecialistsAvailable: 'Specialiști disponibili',
+      heroViewAllMasters: 'Vezi toți mesterii disponibili',
+      heroVerified100: '100% Verificați',
+      heroVerifiedDesc: 'Identitate confirmată',
+      heroResponseTime: '~15 min',
+      heroResponseDesc: 'Timp răspuns mediu',
+      heroTrustBadge1: 'Verificați & Certificați',
+      heroTrustBadge2: 'Răspuns Rapid',
+      heroTrustBadge3: 'Recenzii Reale',
       popularCategories: {
         title: 'Categorii',
         subtitle: 'Găsește un specialist în categoria potrivită',

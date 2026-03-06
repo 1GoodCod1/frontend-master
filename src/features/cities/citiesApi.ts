@@ -33,6 +33,7 @@ export const citiesApi = api.injectEndpoints({
       query: (params) => ({ url: '/cities', method: 'GET', params: params ?? {} }),
       transformResponse: (raw: unknown) => unwrapArray<CityDto>(raw),
       providesTags: ['Cities'],
+      keepUnusedDataFor: 7200, // 2h - cities rarely change
     }),
     citiesCreate: build.mutation<CityDto, CreateCityDto>({
       query: (body) => ({ url: '/cities', method: 'POST', data: body }),
@@ -41,6 +42,7 @@ export const citiesApi = api.injectEndpoints({
     citiesById: build.query<CityWithStatsDto, { id: string }>({
       query: ({ id }) => ({ url: `/cities/${id}`, method: 'GET' }),
       transformResponse: (raw: unknown) => unwrapObject<CityWithStatsDto>(raw),
+      keepUnusedDataFor: 7200, // 2h - cities rarely change
     }),
     citiesUpdate: build.mutation<CityDto, { id: string; body: UpdateCityDto }>({
       query: ({ id, body }) => ({ url: `/cities/${id}`, method: 'PUT', data: body }),

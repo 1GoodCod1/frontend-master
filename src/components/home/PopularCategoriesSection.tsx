@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesApi';
+import { useUserCity } from '@/hooks/useUserCity';
 import { cn } from '@/lib/utils';
 import type { CategoryDto } from '@/types';
 import {
@@ -79,7 +80,7 @@ const INITIAL_VISIBLE = 12;
 
 function CategoryCardSkeleton() {
     return (
-        <div className="rounded-2xl border-0 bg-card shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.35)] p-5 flex flex-col items-center justify-center gap-3">
+        <div className="rounded-2xl border-0 bg-card shadow-md shadow-black/5 dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] p-5 flex flex-col items-center justify-center gap-3">
             <Skeleton className="h-14 w-14 rounded-2xl" />
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-3 w-16" />
@@ -90,6 +91,7 @@ function CategoryCardSkeleton() {
 export const PopularCategoriesSection = () => {
     const { t, i18n } = useTranslation();
     const { data, isLoading } = useCategoriesWithCountsQuery();
+    const { citySlug } = useUserCity();
     const [expanded, setExpanded] = useState(false);
 
     const categories = (data ?? []) as CategoryDto[];
@@ -150,12 +152,12 @@ export const PopularCategoriesSection = () => {
                             className="h-full"
                         >
                             <RouterLink
-                                to={`/masters?categoryId=${cat.id}`}
+                                to={`/masters?category=${cat.slug}${citySlug ? `&city=${citySlug}` : ''}`}
                                 className={cn(
                                     'group flex flex-col items-center justify-center gap-2 sm:gap-3 rounded-2xl p-4 sm:p-5 h-full border-0',
-                                    'bg-card shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.35)]',
+                                    'bg-card shadow-md shadow-black/5 dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
                                     'hover:-translate-y-1 hover:shadow-lg',
-                                    'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.45)]',
+                                    'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
                                     'hover:shadow-xl hover:shadow-amber-900/15',
                                     'transition-all duration-300 cursor-pointer'
                                 )}

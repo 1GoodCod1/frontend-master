@@ -159,6 +159,17 @@ export const mastersApi = api.injectEndpoints({
       void
     >({
       query: () => ({ url: '/masters/landing-stats', method: 'GET' }),
+      transformResponse: (raw: unknown) => {
+        const unwrapped = unwrapEnvelope(raw as ApiEnvelope<unknown>);
+        const r = isObject(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        return {
+          verifiedMastersCount: toNumber(r.verifiedMastersCount, 0),
+          verifiedOnlineMastersCount: toNumber(r.verifiedOnlineMastersCount, 0),
+          completedProjectsCount: toNumber(r.completedProjectsCount, 0),
+          averageRating: toNumber(r.averageRating, 4.9),
+          support24_7: true as const,
+        };
+      },
       providesTags: ['Masters'],
     }),
     mastersById: build.query<PublicMaster | null, { id: string }>({

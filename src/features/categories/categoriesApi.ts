@@ -31,6 +31,7 @@ export const categoriesApi = api.injectEndpoints({
       query: (params) => ({ url: '/categories', method: 'GET', params: params ?? {} }),
       transformResponse: (raw: unknown) => unwrapArray<CategoryDto>(raw),
       providesTags: ['Categories'],
+      keepUnusedDataFor: 3600, // 1h - categories rarely change
     }),
     categoriesCreate: build.mutation<CategoryDto, CreateCategoryDto>({
       query: (body) => ({ url: '/categories', method: 'POST', data: body }),
@@ -39,6 +40,7 @@ export const categoriesApi = api.injectEndpoints({
     categoriesById: build.query<CategoryWithStatsDto, { id: string }>({
       query: ({ id }) => ({ url: `/categories/${id}`, method: 'GET' }),
       transformResponse: (raw: ApiEnvelope<CategoryWithStatsDto> | CategoryWithStatsDto) => unwrapObject(raw),
+      keepUnusedDataFor: 3600, // 1h - categories rarely change
     }),
     categoriesUpdate: build.mutation<CategoryDto, { id: string; body: UpdateCategoryDto }>({
       query: ({ id, body }) => ({ url: `/categories/${id}`, method: 'PUT', data: body }),
@@ -81,6 +83,7 @@ export const categoriesApi = api.injectEndpoints({
       query: () => ({ url: '/categories', method: 'GET', params: { isActive: true } }),
       transformResponse: (raw: unknown) => unwrapArray<CategoryDto>(raw),
       providesTags: ['Categories'],
+      keepUnusedDataFor: 3600, // 1h - categories rarely change
     }),
     categoriesStats: build.query<CategoryOverviewStatDto[], void>({
       query: () => ({ url: '/categories/stats/overview', method: 'GET' }),

@@ -59,10 +59,14 @@ export function ImageLightboxModal({
     setIndex(nextIndex);
   }, [canGoNext, nextIndex, setIndex]);
 
-  if (open) {
-    const i = Math.min(Math.max(0, initialIndex), Math.max(0, total - 1));
-    if (i !== index) setIndex(i);
-  }
+  const prevOpenRef = useRef(false);
+  useEffect(() => {
+    if (open && !prevOpenRef.current && total > 0) {
+      const i = Math.min(Math.max(0, initialIndex), Math.max(0, total - 1));
+      setIndex(i); // Sync when modal opens — eslint-disable below if needed
+    }
+    prevOpenRef.current = open;
+  }, [open, initialIndex, total, setIndex]);
 
   useEffect(() => {
     if (!open) return;
@@ -115,10 +119,11 @@ export function ImageLightboxModal({
           onEscapeKeyDown={() => onOpenChange(false)}
         >
           {/* Close button */}
+
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex size-11 sm:size-12 items-center justify-center rounded-full bg-white/10 text-white/90 backdrop-blur-sm transition-all hover:bg-white/20 active:bg-white/25 touch-manipulation focus:outline-none focus:ring-2 focus:ring-white/50 [@supports(padding:env(safe-area-inset-top))]:top-[max(0.75rem,env(safe-area-inset-top))] [@supports(padding:env(safe-area-inset-right))]:right-[max(1rem,env(safe-area-inset-right))]"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex size-11 sm:size-12 items-center justify-center rounded-full bg-black/60 text-white border border-white/30 backdrop-blur-md transition-all hover:bg-black/70 active:bg-black/80 touch-manipulation focus:outline-none focus:ring-2 focus:ring-white/50 [@supports(padding:env(safe-area-inset-top))]:top-[max(0.75rem,env(safe-area-inset-top))] [@supports(padding:env(safe-area-inset-right))]:right-[max(1rem,env(safe-area-inset-right))]"
             aria-label="Close"
           >
             <X className="size-5 sm:size-6" />
@@ -132,7 +137,7 @@ export function ImageLightboxModal({
                 e.stopPropagation();
                 goPrev();
               }}
-              className="absolute left-2 sm:left-4 z-20 flex size-11 sm:size-12 md:size-14 items-center justify-center rounded-full bg-white/10 text-white/90 backdrop-blur-sm transition-all hover:bg-white/20 active:bg-white/25 touch-manipulation focus:outline-none focus:ring-2 focus:ring-white/50 [@supports(padding:env(safe-area-inset-left))]:left-[max(0.5rem,env(safe-area-inset-left))]"
+              className="absolute left-2 sm:left-4 z-20 flex size-11 sm:size-12 md:size-14 items-center justify-center rounded-full bg-black/60 text-white border border-white/30 backdrop-blur-md transition-all hover:bg-black/70 active:bg-black/80 touch-manipulation focus:outline-none focus:ring-2 focus:ring-white/50 [@supports(padding:env(safe-area-inset-left))]:left-[max(0.5rem,env(safe-area-inset-left))]"
               aria-label="Previous image"
             >
               <ChevronLeft className="size-6 sm:size-7 md:size-8" />
@@ -170,7 +175,7 @@ export function ImageLightboxModal({
                 e.stopPropagation();
                 goNext();
               }}
-              className="absolute right-2 sm:right-4 z-20 flex size-11 sm:size-12 md:size-14 items-center justify-center rounded-full bg-white/10 text-white/90 backdrop-blur-sm transition-all hover:bg-white/20 active:bg-white/25 touch-manipulation focus:outline-none focus:ring-2 focus:ring-white/50 [@supports(padding:env(safe-area-inset-right))]:right-[max(0.5rem,env(safe-area-inset-right))]"
+              className="absolute right-2 sm:right-4 z-20 flex size-11 sm:size-12 md:size-14 items-center justify-center rounded-full bg-black/60 text-white border border-white/30 backdrop-blur-md transition-all hover:bg-black/70 active:bg-black/80 touch-manipulation focus:outline-none focus:ring-2 focus:ring-white/50 [@supports(padding:env(safe-area-inset-right))]:right-[max(0.5rem,env(safe-area-inset-right))]"
               aria-label="Next image"
             >
               <ChevronRight className="size-6 sm:size-7 md:size-8" />
@@ -179,7 +184,7 @@ export function ImageLightboxModal({
 
           {/* Counter */}
           {total > 1 && (
-            <div className="absolute bottom-4 sm:bottom-6 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white/90 backdrop-blur-sm [@supports(padding:env(safe-area-inset-bottom))]:bottom-[max(1rem,env(safe-area-inset-bottom))]">
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/70 text-white border border-white/30 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium backdrop-blur-md [@supports(padding:env(safe-area-inset-bottom))]:bottom-[max(1rem,env(safe-area-inset-bottom))]">
               {index + 1} / {total}
             </div>
           )}

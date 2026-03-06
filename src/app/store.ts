@@ -1,18 +1,41 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { api } from '@/services/api';
 import { env } from '@/services/env';
 import { persistRefreshToken } from '@/features/auth/persist';
 import { saveNotifications } from '@/features/socket/persist';
+import {
+  persistApiCacheTransform,
+  API_CACHE_PERSIST_VERSION,
+} from '@/app/persistApiCache';
 import authReducer from '@/features/auth/authSlice';
 import socketReducer from '@/features/socket/socketSlice';
 import uiReducer from '@/features/ui/uiSlice';
 import chatReducer from '@/features/chat/chatSlice';
 
+const apiPersistConfig = {
+  key: 'api',
+  storage,
+  version: API_CACHE_PERSIST_VERSION,
+  transforms: [persistApiCacheTransform],
+};
+
+const persistedApiReducer = persistReducer(apiPersistConfig, api.reducer);
 
 export const store = configureStore({
   reducer: {
-    [api.reducerPath]: api.reducer,
+    [api.reducerPath]: persistedApiReducer,
     auth: authReducer,
     socket: socketReducer,
     ui: uiReducer,
@@ -20,13 +43,15 @@ export const store = configureStore({
   },
   middleware: (getDefault) =>
     getDefault({
-      // Only suppress serializability warnings for RTK Query cache (Dates inside raw API responses)
       serializableCheck: {
         ignoredPaths: [api.reducerPath],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         ignoredActionPaths: ['meta.arg', 'payload.timestamp', 'payload.headers'],
       },
     }).concat(api.middleware),
 });
+
+export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
 

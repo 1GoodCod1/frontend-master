@@ -16,7 +16,10 @@ export function AppShellMain({
 }: Props) {
   const { pathname } = useLocation();
   const isMasterDetailsPage = /^\/masters\/[^/]+$/.test(pathname);
-  const fullWidth = isDashboardOrAdmin || isHomePage || isMasterDetailsPage;
+  const isMastersListPage = pathname === '/masters';
+  const isPlansPage = pathname === '/plans' || pathname.startsWith('/plans/');
+  const isOtherPublicPage = ['/faq', '/how-it-works', '/contact', '/privacy', '/terms', '/ideas'].includes(pathname);
+  const fullWidth = isDashboardOrAdmin || isHomePage || isMasterDetailsPage || isMastersListPage || isPlansPage || isOtherPublicPage;
   const isAuthPage = /^\/(login|register|forgot-password|reset-password)$/.test(pathname);
 
   return (

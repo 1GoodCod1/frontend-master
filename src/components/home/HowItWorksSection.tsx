@@ -73,9 +73,9 @@ export const HowItWorksSection = () => {
             className={cn(
               'relative flex flex-col items-center text-center px-5 py-6 rounded-xl border-0',
               'bg-card shadow-md shadow-black/5',
-              'dark:bg-white/[0.06] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.35)]',
+              'dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
               'transition-all duration-250 hover:shadow-lg',
-              'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.45)]',
+              'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
               'hover:-translate-y-0.5'
             )}
           >

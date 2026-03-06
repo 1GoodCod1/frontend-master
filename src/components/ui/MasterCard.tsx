@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next';
 import {
   Star,
   MapPin,
-  ShieldCheck,
+  BadgeCheck,
   Flame,
   Sparkles,
   Crown,
+  TrendingDown,
+  Phone,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -26,48 +28,6 @@ import { useNow } from '@/hooks/useNow';
 import { cn } from '@/lib/utils';
 import type { PublicMaster } from '@/types';
 
-function StarRating({ value, compact }: { value: number; compact?: boolean }) {
-  const fullStars = Math.floor(value);
-  const decimal = value % 1;
-  const sizeClass = compact ? 'h-3 w-3' : 'h-3.5 w-3.5';
-  const gapClass = compact ? 'gap-0' : 'gap-0.5';
-
-  return (
-    <span className={cn('inline-flex items-center', gapClass)}>
-      {[0, 1, 2, 3, 4].map((i) => {
-        if (i < fullStars) {
-          return (
-            <Star
-              key={i}
-              className={cn(sizeClass, 'fill-[#FFC107] text-[#FFC107] dark:fill-amber-400 dark:text-amber-400')}
-            />
-          );
-        }
-        if (i === fullStars && decimal > 0) {
-          const pct = decimal * 100;
-          return (
-            <span key={i} className={cn('relative inline-block', sizeClass)}>
-              <Star className={cn('absolute inset-0', sizeClass, 'text-muted-foreground/30 dark:text-muted-foreground/40')} />
-              <span
-                className="absolute inset-0 overflow-hidden"
-                style={{ width: `${pct}%` }}
-              >
-                <Star className={cn(sizeClass, 'fill-[#FFC107] text-[#FFC107] dark:fill-amber-400 dark:text-amber-400')} />
-              </span>
-            </span>
-          );
-        }
-        return (
-          <Star
-            key={i}
-            className={cn(sizeClass, 'text-muted-foreground/30 dark:text-muted-foreground/40')}
-          />
-        );
-      })}
-    </span>
-  );
-}
-
 type TariffType = 'BASIC' | 'VIP' | 'PREMIUM';
 
 function normalizeTariffType(v: unknown): TariffType {
@@ -83,7 +43,6 @@ type MasterCardProps = {
   onlyAvatar?: boolean;
   reasons?: string[];
   sectionBadge?: 'popular' | 'new';
-  /** Override: discount % for promotion badge (e.g. from home page active promotions) */
   promotionDiscount?: number;
 };
 
@@ -209,53 +168,90 @@ export const MasterCard = React.memo(function MasterCard({
       onMouseEnter={handleMouseEnter}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group relative flex w-full flex-col overflow-hidden rounded-[14px] bg-white shadow-md shadow-slate-200/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/30 cursor-pointer',
-        'dark:bg-[#1e1c17] dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_4px_16px_-2px_rgba(0,0,0,0.25)]',
+        'group relative w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer',
+        'bg-card shadow-md shadow-black/5 dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
+        'hover:-translate-y-1 hover:shadow-lg hover:shadow-xl hover:shadow-amber-900/15',
+        'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
+        'outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50',
       )}
     >
-      {/* Top accent bar */}
-      <div className="h-1.5 w-full shrink-0 bg-[#FFC107] dark:bg-amber-500" />
+      {/* Cover image area */}
+      <div className="relative h-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-amber-400 to-yellow-300 dark:from-orange-700 dark:via-amber-800 dark:to-orange-950" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.25),transparent_70%)] dark:bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.08),transparent_70%)]" />
 
-      <div className="flex flex-col p-4 pb-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50">
-        {/* Top row: Avatar + Name + Badges */}
-        <div className="flex items-start gap-3">
-          {/* Avatar with online indicator */}
-          <div className="relative shrink-0">
-            <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-white shadow-md dark:border-white/20">
-              {avatarSrc ? (
-                <LazyImage
-                  src={avatarSrc}
-                  alt={displayName}
-                  objectFit="cover"
-                  skeletonHeight={64}
-                  skeletonWidth={64}
-                  className="h-full w-full"
-                  style={{ borderRadius: '50%' }}
-                />
-              ) : (
-                <AvatarPlaceholder role="master" height={64} variant={placeholderVariant} />
-              )}
-            </div>
-            {master?.isOnline === true && (
-              <span
-                className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500 dark:border-[#1e1c17]"
-                title={t('masters.availableNow')}
+        {/* Floating badges top-right */}
+        <div className="absolute top-2 right-2 flex items-center gap-1">
+          {activePromotionDiscount !== null && (
+            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-red-500 dark:text-red-400 text-[10px]">
+              <TrendingDown className="w-2.5 h-2.5" />
+              {activePromotionDiscount}%
+            </span>
+          )}
+          {sectionBadge === 'popular' && (
+            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-orange-600 dark:text-orange-400 text-[10px]">
+              <Flame className="w-2.5 h-2.5" />
+              {t('common.masterCard.popular')}
+            </span>
+          )}
+          {sectionBadge === 'new' && (
+            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-primary dark:text-primary-foreground text-[10px]">
+              <Sparkles className="w-2.5 h-2.5" />
+              {t('common.masterCard.new')}
+            </span>
+          )}
+        </div>
+
+        {(isPremium || isVip) && (
+          <div className="absolute top-2 left-2 inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-amber-600 dark:text-amber-400 text-[10px]">
+            <Crown className="w-2.5 h-2.5" />
+            {isPremium ? t('common.masterCard.premium') : t('common.masterCard.vip')}
+          </div>
+        )}
+      </div>
+
+      {/* Avatar overlapping cover */}
+      <div className="relative px-3.5 -mt-8">
+        <div className="relative inline-block">
+          <div className="w-14 h-14 rounded-xl overflow-hidden border-[2.5px] border-white dark:border-[#1e1e1e] shadow-lg">
+            {avatarSrc ? (
+              <LazyImage
+                src={avatarSrc}
+                alt={displayName}
+                objectFit="cover"
+                skeletonHeight={56}
+                skeletonWidth={56}
+                className="h-full w-full"
+                style={{ borderRadius: '0.75rem' }}
               />
+            ) : (
+              <AvatarPlaceholder role="master" height={56} variant={placeholderVariant} />
             )}
           </div>
+          {master?.isOnline === true && (
+            <div
+              className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white dark:border-[#1e1e1e]"
+              title={t('masters.availableNow')}
+            />
+          )}
+        </div>
+      </div>
 
-          {/* Name + profession */}
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="font-bold text-foreground text-base leading-tight truncate">
+      {/* Body */}
+      <div className="px-3.5 pt-2 pb-3.5">
+        {/* Name + category */}
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-1.5">
+              <h3 className="text-gray-900 dark:text-white truncate text-[14px]">
                 {displayName}
-              </span>
+              </h3>
               {isVerified && (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="flex shrink-0">
-                        <ShieldCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        <BadgeCheck className="w-4 h-4 text-blue-500 shrink-0" />
                       </span>
                     </TooltipTrigger>
                     <TooltipContent className={badgeTooltipClass}>
@@ -266,81 +262,48 @@ export const MasterCard = React.memo(function MasterCard({
               )}
             </div>
             {categoryName && (
-              <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+              <p className="text-gray-400 dark:text-gray-500 mt-0.5 text-[12px]">
                 {categoryName}
               </p>
             )}
-            {/* Rating — directly under category */}
-            {typeof rating === 'number' && (
-              <div className="mt-1 flex items-center gap-1">
-                <StarRating value={rating} compact />
-                <span className="text-xs font-medium text-foreground">
-                  {rating.toFixed(1)}
-                </span>
-                {totalReviews > 0 && (
-                  <span className="text-xs text-muted-foreground">
-                    ({totalReviews})
-                  </span>
-                )}
-              </div>
-            )}
           </div>
 
-          {/* Corner badges */}
-          <div className="flex shrink-0 flex-col items-end gap-1.5">
-            {activePromotionDiscount !== null && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#F8D7DA] px-2 py-0.5 text-xs font-bold text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
-                <Flame className="h-3.5 w-3.5" />
-                -{activePromotionDiscount}%
+          {/* Rating pill */}
+          {typeof rating === 'number' && (
+            <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/30 shrink-0">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span className="text-amber-700 dark:text-amber-400 text-[12px]">
+                {rating.toFixed(1)}
               </span>
-            )}
-            {sectionBadge === 'popular' && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-amber-500">
-                <Flame className="h-3.5 w-3.5" />
-                {t('common.masterCard.popular')}
-              </span>
-            )}
-            {sectionBadge === 'new' && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
-                <Sparkles className="h-3.5 w-3.5" />
-                {t('common.masterCard.new')}
-              </span>
-            )}
-            {isPremium && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF3CD] px-2 py-0.5 text-xs font-semibold text-amber-900 dark:bg-amber-900/50 dark:text-amber-200">
-                <Crown className="h-3.5 w-3.5" />
-                {t('common.masterCard.premium')}
-              </span>
-            )}
-            {isVip && !isPremium && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-violet-500">
-                <Star className="h-3.5 w-3.5" />
-                {t('common.masterCard.vip')}
-              </span>
-            )}
-          </div>
+              {totalReviews > 0 && (
+                <span className="text-amber-400 dark:text-amber-600 text-[10px]">
+                  ({totalReviews})
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Service tags — only first 2 services */}
+        {/* Tags */}
         {serviceTags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1 mt-3">
             {serviceTags.map((tag, idx) => (
               <span
                 key={idx}
-                className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-white/10 dark:text-slate-300"
+                className="px-2 py-0.5 rounded-full bg-gray-50 dark:bg-white/[0.04] text-gray-500 dark:text-gray-400 border border-gray-100 dark:border-white/[0.06] text-[11px]"
               >
-                {tag}
+                #{tag}
               </span>
             ))}
           </div>
         )}
 
-        {/* Bottom bar: Location left, Contact right — separated by line. Button hidden for masters. */}
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 dark:border-white/10 pt-2">
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-white/[0.06]">
           {city && (
-            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 shrink-0" />
-              <span>{city}</span>
+            <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500">
+              <MapPin className="w-3 h-3" />
+              <span className="text-[12px]">{city}</span>
             </div>
           )}
           {role !== 'MASTER' && (
@@ -353,8 +316,9 @@ export const MasterCard = React.memo(function MasterCard({
                   nav(`/register?redirect=${encodeURIComponent(`/masters/${master.slug ?? master.id}`)}`);
                 }
               }}
-              className="ml-auto shrink-0 rounded-lg px-4 py-1.5 text-xs font-semibold transition-colors shadow-sm bg-[#343A40] text-white hover:bg-[#2a2e33] dark:bg-amber-500 dark:text-amber-950 dark:hover:bg-amber-400 dark:shadow-none"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-orange-500 text-white hover:bg-gray-800 dark:hover:bg-orange-400 transition-all duration-200 active:scale-[0.97] text-[12px] ml-auto"
             >
+              <Phone className="w-3 h-3" />
               {t('common.masterCard.contact')}
             </button>
           )}

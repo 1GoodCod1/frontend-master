@@ -1,11 +1,9 @@
 @import "tailwindcss";
 
-/* Tailwind v4: class-based dark mode (responds to .dark on <html>) */
 @custom-variant dark (&&:where(.dark, .dark *));
 
 /* ========== Design system: shadcn + professional light / warm dark ========== */
 :root {
-  /* Light: neutral cool gray (professional SaaS-style) */
   --background: 220 14% 97%;
   --foreground: 220 18% 14%;
   --card: 0 0% 100%;
@@ -28,43 +26,37 @@
   --cta: 25 95% 53%;
   --cta-foreground: 0 0% 100%;
   --radius: 0.75rem;
-  /* Home page: solid modern background (light) */
   --home-bg: 220 18% 98%;
-  /* Overlay backdrop */
   --select-backdrop: hsla(40, 15%, 20%, 0.12);
 }
 
-/* Dark mode: Redesign Master Cabinet — warm near-black #171510, cards #1e1c17 */
 html[data-theme="dark"],
 .dark {
-  --background: 40 15% 8%;
-  --foreground: 47 10% 92%;
-  --card: 40 12% 11%;
-  --card-foreground: 47 10% 92%;
-  --popover: 40 12% 11%;
-  --popover-foreground: 47 10% 92%;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 98%;
   --primary: 174 72% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 40 10% 14%;
-  --secondary-foreground: 47 10% 92%;
-  --muted: 40 10% 14%;
-  --muted-foreground: 47 12% 60%;
-  --accent: 40 10% 14%;
-  --accent-foreground: 47 10% 92%;
+  --secondary: 0 0% 6%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 6%;
+  --muted-foreground: 0 0% 55%;
+  --accent: 0 0% 6%;
+  --accent-foreground: 0 0% 98%;
   --destructive: 0 63% 55%;
   --destructive-foreground: 0 0% 98%;
-  --border: 40 8% 16%;
-  --input: 40 10% 14%;
+  --border: 0 0% 12%;
+  --input: 0 0% 6%;
   --ring: 174 72% 45%;
   --cta: 38 92% 50%;
   --cta-foreground: 0 0% 100%;
-  /* Home page: solid modern background (dark) */
-  --home-bg: 220 14% 7%;
-  /* Overlay backdrop */
-  --select-backdrop: rgba(0, 0, 0, 0.5);
+  --home-bg: 0 0% 0%;
+  --select-backdrop: rgba(0, 0, 0, 0.8);
 }
 
-/* Home page — solid modern background (no gradient) */
 .bg-home-gradient {
   background-color: hsl(var(--home-bg));
 }
@@ -76,11 +68,8 @@ html[data-theme="dark"],
 html {
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
-  /* Prevent horizontal pull-to-refresh overflow on mobile */
   overscroll-behavior-x: none;
-  /* scroll: always reserve scrollbar space — prevents page shift when Radix dropdown adds overflow:hidden to body */
-  overflow-y: scroll;
-  /* Prevent scroll jump when content changes (browser scroll anchoring) */
+  overflow-y: scroll; /* скроллбар всегда виден — нет сдвига при открытии Select */
   overflow-anchor: auto;
 }
 
@@ -89,9 +78,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  /* Prevent horizontal scroll on any device */
   overflow-x: hidden;
-  /* Avoid smooth scroll interfering with programmatic updates */
   scroll-behavior: auto;
 }
 
@@ -128,12 +115,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: transparent;
   border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--muted-foreground) / 0.15);
 }
 
 .text-center {
@@ -148,7 +135,6 @@ body {
   text-align: right;
 }
 
-/* Safe area utility for modals/dialogs on notched devices */
 .safe-area-inset {
   padding-left: env(safe-area-inset-left, 0);
   padding-right: env(safe-area-inset-right, 0);
@@ -156,7 +142,6 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* Mobile: tap targets and safe area */
 @media (max-width: 1023px) {
 
   button:not(.no-tap-target),
@@ -184,32 +169,19 @@ body {
   }
 }
 
-/* Radix scroll lock: prevent layout shift when dropdown/select opens.
-   react-remove-scroll adds margin-right to compensate for hidden scrollbar — that causes the shift.
-   We use overflow-y:scroll on html to keep scrollbar, so disable the compensation. */
-body[data-scroll-locked] {
-  --removed-body-scroll-bar-size: 0 !important;
-  margin-right: 0 !important;
-  padding-right: 0 !important;
-}
-
-/* Modal/Dialog — opaque background, no transparency */
 [role="dialog"] {
   background-color: hsl(var(--card)) !important;
   color: hsl(var(--foreground));
 }
 
-/* Select dropdown — opaque background, no transparency */
 .select-dropdown-content {
   background-color: hsl(var(--popover)) !important;
 }
 
-/* Settings/Language dropdown — opaque background, no transparency */
 .dropdown-content-opaque {
   background-color: hsl(var(--popover)) !important;
 }
 
-/* Select dropdown backdrop — hide content behind when open */
 .select-dropdown-content[data-state="open"]::before {
   content: '';
   position: fixed;
@@ -218,7 +190,6 @@ body[data-scroll-locked] {
   background: var(--select-backdrop);
 }
 
-/* Override browser autofill — match input style (auto-switches via CSS vars) */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -229,7 +200,6 @@ input:-webkit-autofill:active {
   caret-color: hsl(var(--foreground));
 }
 
-/* Auth forms — Figma redesign: orange gradient primary, outline secondary */
 .auth-primary-btn {
   display: flex;
   align-items: center;
@@ -275,7 +245,7 @@ input:-webkit-autofill:active {
 .dark .auth-outline-btn:hover {
   background: #1a1a1a;
 }
-/* Auth input — Figma: uppercase label, rounded input, orange focus */
+
 .auth-input-wrapper .auth-label {
   font-size: 0.7rem;
   letter-spacing: 0.09em;
