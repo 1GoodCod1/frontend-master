@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+Allow: /masters
+Allow: /masters/*
+Allow: /plans
+Allow: /faq
+Allow: /how-it-works
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+
+Disallow: /dashboard
+Disallow: /client-dashboard
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+
+Sitemap: https://moldmasters.md/sitemap.xml

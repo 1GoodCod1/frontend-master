@@ -24,6 +24,7 @@ export function useReviewModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [master, setMaster] = useState<ReviewModalMaster>(null);
   const [rating, setRating] = useState(5);
+  const [leadId, setLeadId] = useState<string | null>(null);
   const [comment, setComment] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
   const [submittedMasterIds, setSubmittedMasterIds] = useState<Set<string>>(() => new Set());
@@ -48,6 +49,7 @@ export function useReviewModal() {
         lastName: typeof user?.lastName === 'string' ? user.lastName : undefined,
       },
     });
+    setLeadId(isRecord(masterData) && typeof masterData.id === 'string' ? masterData.id : null);
     setRating(5);
     setComment('');
     setPhotos([]);
@@ -57,6 +59,7 @@ export function useReviewModal() {
   const closeModal = () => {
     setIsOpen(false);
     setMaster(null);
+    setLeadId(null);
     setRating(5);
     setComment('');
     setPhotos([]);
@@ -84,6 +87,7 @@ export function useReviewModal() {
     try {
       await createReview({
         masterId: master.id,
+        leadId: leadId || '',
         rating,
         comment: comment || undefined,
         fileIds: fileIds.length ? fileIds : undefined,

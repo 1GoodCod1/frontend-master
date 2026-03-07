@@ -65,6 +65,7 @@ export type ReviewCanCreateResponse = {
   canCreate: boolean;
   alreadyReviewed?: boolean;
   noClosedLead?: boolean;
+  leadId?: string;
 };
 
 export type ReviewStatsResponse = {

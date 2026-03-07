@@ -25,6 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { ProfileViewsHistoryModal } from '@/features/masters/components/master/ProfileViewsHistoryModal';
 import { Progress } from '@/components/ui/progress';
+import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ color?: string; name?: string; value?: number }>; label?: string }) {
   if (active && payload && payload.length) {
@@ -230,6 +231,7 @@ export default function DashboardPage() {
           </div>
         </Alert>
       )}
+      <PushPermissionBanner />
 
       {/* Main Grid Layout */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">

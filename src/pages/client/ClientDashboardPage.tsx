@@ -12,34 +12,36 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { ClientBooking } from '@/hooks/client/dashboard/useClientDashboard';
 
+import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
+
 const iconClass = 'size-7';
 
 type TimelineItem =
   | {
-      id: string;
-      type: 'BOOKING';
-      date: string;
-      status?: string;
-      masterId?: string;
-      masterName: string;
-    }
+    id: string;
+    type: 'BOOKING';
+    date: string;
+    status?: string;
+    masterId?: string;
+    masterName: string;
+  }
   | {
-      id: string;
-      type: 'LEAD';
-      date: string;
-      status?: string;
-      masterId?: string;
-      masterName: string;
-    }
+    id: string;
+    type: 'LEAD';
+    date: string;
+    status?: string;
+    masterId?: string;
+    masterName: string;
+  }
   | {
-      id: string;
-      type: 'REVIEW';
-      date: string;
-      status?: string;
-      masterId?: string;
-      masterName: string;
-      rating?: number;
-    };
+    id: string;
+    type: 'REVIEW';
+    date: string;
+    status?: string;
+    masterId?: string;
+    masterName: string;
+    rating?: number;
+  };
 
 const displayMasterName = (m?: { user?: { firstName?: string | null; lastName?: string | null } | null; name?: string | null } | null) => {
   const full = `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim();
@@ -135,6 +137,7 @@ export default function ClientDashboardPage() {
         title={t('clientDashboard.title')}
         subtitle={t('clientDashboard.subtitle')}
       />
+      <PushPermissionBanner />
 
       {/* Metrics */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">

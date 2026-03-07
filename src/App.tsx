@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import { router } from '@/app/router';
 import { useAppSelector } from '@/app/hooks';
@@ -45,5 +46,9 @@ export function App() {
     };
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
+  );
 }

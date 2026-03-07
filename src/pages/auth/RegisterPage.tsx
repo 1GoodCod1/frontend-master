@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -91,6 +91,7 @@ export default function RegisterPage() {
                       optionsLoading={form.optionsLoading}
                       cities={form.cities}
                       categories={form.categories}
+                      referralInfo={form.referralInfo}
                     />
                   </motion.form>
                 )}

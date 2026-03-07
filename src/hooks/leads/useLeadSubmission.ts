@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import type { CreateLeadDto } from '@/types';
 
 export type LeadSubmissionFormData = {
-  message: string;
-  clientName?: string;
+    message: string;
+    clientName?: string;
 };
 
 export type LeadSubmissionState = {
@@ -69,20 +69,26 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
             }
 
             const payload: CreateLeadDto = {
-              masterId,
-              clientName: formData.clientName?.trim() || undefined,
-              message: formData.message || '',
-              fileIds,
-              // premiumPaymentSessionId: premiumSessionId || undefined, // PREMIUM LEAD: commented out
+                masterId,
+                clientName: formData.clientName?.trim() || undefined,
+                message: formData.message || '',
+                fileIds,
+                // premiumPaymentSessionId: premiumSessionId || undefined, // PREMIUM LEAD: commented out
             };
 
             const result = await createLead(payload).unwrap();
             const lead = result as { encodedId?: string; id?: string };
-            setSubmittedLeadId(lead?.encodedId ?? lead?.id ?? null);
+            const resolvedLeadId = lead?.encodedId ?? lead?.id ?? null;
+            setSubmittedLeadId(resolvedLeadId);
             toast.success('Lead sent');
 
             setAttach([]);
             // setPremiumSessionId(null); // PREMIUM LEAD: commented out
+
+            // Navigate to the lead success page for full post-lead UX
+            if (resolvedLeadId) {
+                navigate(`/client-dashboard/lead-success/${resolvedLeadId}`);
+            }
         } catch (e: unknown) {
             toast.error(toErrorMessage(e));
         }

@@ -43,6 +43,8 @@ import { citiesCategories } from './citiesCategories';
 import { promotionsPage } from './promotionsPage';
 import { servicesPage } from './servicesPage';
 import { portfolio } from './portfolio';
+import { leadSuccess } from './leadSuccess';
+import { referrals } from './referrals';
 
 const modules = [
   app,
@@ -89,6 +91,8 @@ const modules = [
   promotionsPage,
   servicesPage,
   portfolio,
+  leadSuccess,
+  referrals,
 ];
 
 export const resources = {

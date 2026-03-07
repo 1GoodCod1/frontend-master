@@ -69,11 +69,13 @@ const ClientDashboardPage = lazy(() => import('@/pages/client/ClientDashboardPag
 const ClientBookingsPage = lazy(() => import('@/pages/client/ClientBookingsPage'));
 const ClientLeadBookPage = lazy(() => import('@/pages/client/ClientLeadBookPage'));
 const ClientLeadsPage = lazy(() => import('@/pages/client/ClientLeadsPage'));
+const ReferralPage = lazy(() => import('@/pages/referrals/ReferralPage'));
 const ClientFavoritesPage = lazy(() => import('@/pages/client/ClientFavoritesPage'));
 const ClientReportsPage = lazy(() => import('@/pages/client/ClientReportsPage'));
 const ClientProfilePage = lazy(() => import('@/pages/client/ClientProfilePage'));
 const SecuritySettingsPage = lazy(() => import('@/pages/client/SecuritySettingsPage'));
 const ClientChatPage = lazy(() => import('@/pages/client/ChatPage'));
+const LeadSuccessPage = lazy(() => import('@/pages/client/LeadSuccessPage'));
 
 // Wrapper для Suspense
 const LazyPage = ({ children }: { children: React.ReactNode }) => (
@@ -136,6 +138,7 @@ export const router = createBrowserRouter([
               { path: 'security', element: <LazyPage><MasterSecuritySettingsPage /></LazyPage> },
               { path: 'notifications', element: <LazyPage><NotificationsSettingsPage /></LazyPage> },
               { path: 'verification', element: <LazyPage><VerificationPage /></LazyPage> },
+              { path: 'referrals', element: <LazyPage><ReferralPage /></LazyPage> },
               { path: 'chat', element: <LazyPage><MasterChatPage /></LazyPage> },
               { path: 'chat/:conversationId', element: <LazyPage><MasterChatPage /></LazyPage> },
             ],
@@ -153,6 +156,7 @@ export const router = createBrowserRouter([
               { index: true, element: <LazyPage><ClientDashboardPage /></LazyPage> },
               { path: 'bookings', element: <LazyPage><ClientBookingsPage /></LazyPage> },
               { path: 'leads/:leadId/book', element: <LazyPage><ClientLeadBookPage /></LazyPage> },
+              { path: 'lead-success/:leadId', element: <LazyPage><LeadSuccessPage /></LazyPage> },
               { path: 'leads', element: <LazyPage><ClientLeadsPage /></LazyPage> },
               { path: 'favorites', element: <LazyPage><ClientFavoritesPage /></LazyPage> },
               { path: 'reports', element: <LazyPage><ClientReportsPage /></LazyPage> },
@@ -160,6 +164,7 @@ export const router = createBrowserRouter([
               { path: 'security', element: <LazyPage><SecuritySettingsPage /></LazyPage> },
               { path: 'chat', element: <LazyPage><ClientChatPage /></LazyPage> },
               { path: 'chat/:conversationId', element: <LazyPage><ClientChatPage /></LazyPage> },
+              { path: 'referrals', element: <LazyPage><ReferralPage /></LazyPage> },
             ],
           },
         ],

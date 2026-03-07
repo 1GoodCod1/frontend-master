@@ -83,7 +83,7 @@ export default function MasterDetailsPage() {
   const canCreateReviewQuery = useReviewsCanCreateQuery(masterId ?? '', { skip: !isClient || !masterId });
 
   const favorites = useMasterFavorites(masterId, isClient);
-  const reviewSubmission = useReviewSubmission(masterId);
+  const reviewSubmission = useReviewSubmission(masterId, canCreateReviewQuery.data?.leadId);
   const leadSubmission = useLeadSubmission(masterId, isAuthed, role);
 
   const { data: activeLeadData } = useLeadsActiveToMasterQuery(

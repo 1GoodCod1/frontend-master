@@ -14,8 +14,8 @@ export default [
   { ignores: ['dist', 'node_modules', 'vite.config.ts', 'eslint.config.mjs'] },
   js.configs.recommended,
   {
-    files: ['e2e/**/*.ts', 'playwright.config.ts'],
-    languageOptions: { globals: { ...globals.node, process: 'readonly' } },
+    files: ['e2e/**/*.ts', 'playwright.config.ts', 'scripts/**/*.mjs'],
+    languageOptions: { globals: { ...globals.node } },
   },
   {
     files: ['**/*.{ts,tsx}'],

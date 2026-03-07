@@ -39,6 +39,7 @@ export const reviewsApi = api.injectEndpoints({
           canCreate: root.canCreate === true,
           alreadyReviewed: root.alreadyReviewed === true ? true : undefined,
           noClosedLead: root.noClosedLead === true ? true : undefined,
+          leadId: typeof root.leadId === 'string' ? root.leadId : undefined,
         };
       },
       providesTags: (_r, _e, masterId) => [{ type: 'Reviews', id: `can-create-${masterId}` }],

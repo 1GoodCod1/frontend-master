@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import { FormikHelpers } from 'formik';
 
 import { useAuthRegisterMutation, useAuthRegistrationOptionsQuery } from '@/features/auth/authApi';
+import { useReferralsValidateCodeQuery } from '@/features/referrals/referralsApi';
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
@@ -43,9 +44,13 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get('redirect');
+  const refCode = searchParams.get('ref') || undefined;
 
   const [register, registerState] = useAuthRegisterMutation();
   const { data: optionsData, isLoading: optionsLoading } = useAuthRegistrationOptionsQuery();
+  const { data: validateData } = useReferralsValidateCodeQuery(refCode ?? '', {
+    skip: !refCode,
+  });
 
   const cities = useMemo(
     () => {
@@ -84,10 +89,10 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
         ...(isClient
           ? {}
           : {
-              city: yup.string().optional(),
-              category: yup.string().optional(),
-              description: yup.string().optional(),
-            }),
+            city: yup.string().optional(),
+            category: yup.string().optional(),
+            description: yup.string().optional(),
+          }),
       }),
     [t, isClient]
   );
@@ -107,7 +112,7 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
 
   const handleSubmit = async (values: RegisterFormValues, helpers: FormikHelpers<RegisterFormValues>) => {
     try {
-      await register(values).unwrap();
+      await register({ ...values, referralCode: refCode }).unwrap();
       toast.success(t('Account created successfully'));
 
       if (values.role === 'CLIENT') {
@@ -122,6 +127,11 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
     }
   };
 
+  const referralInfo =
+    refCode && validateData?.valid
+      ? { code: refCode, referrerName: validateData.referrerName }
+      : undefined;
+
   return {
     initialValues,
     validationSchema,
@@ -130,5 +140,6 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
     optionsLoading,
     cities,
     categories,
+    referralInfo,
   };
 }

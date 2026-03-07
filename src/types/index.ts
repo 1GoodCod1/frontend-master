@@ -25,6 +25,7 @@ export type RegisterDto = {
   city?: string;
   category?: string;
   description?: string;
+  referralCode?: string;
 };
 
 export type LoginDto = {
@@ -120,6 +121,7 @@ export type UpdateLeadStatusDto = {
 
 export type CreateReviewDto = {
   masterId: string;
+  leadId: string;
   clientPhone?: string;
   clientName?: string;
   rating: number;

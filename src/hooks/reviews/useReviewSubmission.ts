@@ -17,7 +17,7 @@ function toErrorMessage(e: unknown): string | undefined {
     );
 }
 
-export function useReviewSubmission(masterId: string | undefined) {
+export function useReviewSubmission(masterId: string | undefined, leadId: string | undefined) {
     const { t } = useTranslation();
     const [reviewRating, setReviewRating] = useState(5);
     const [reviewComment, setReviewComment] = useState('');
@@ -27,7 +27,7 @@ export function useReviewSubmission(masterId: string | undefined) {
     const [createReview, { isLoading }] = useReviewsCreateMutation();
 
     const handleCreateReview = async () => {
-        if (!masterId) return;
+        if (!masterId || !leadId) return;
 
         try {
             let fileIds: string[] = [];
@@ -43,6 +43,7 @@ export function useReviewSubmission(masterId: string | undefined) {
 
             await createReview({
                 masterId,
+                leadId,
                 rating: reviewRating,
                 comment: reviewComment || undefined,
                 fileIds: fileIds.length ? fileIds : undefined,

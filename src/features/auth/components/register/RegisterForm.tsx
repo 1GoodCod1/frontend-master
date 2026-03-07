@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Mail, Phone, Lock, User, MapPin, Tag, FileText, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Phone, Lock, User, MapPin, Tag, FileText, Eye, EyeOff, ArrowRight, Gift } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
@@ -24,12 +24,18 @@ interface CategoryOption {
   name: string;
   value?: string;
 }
+interface ReferralInfo {
+  code: string;
+  referrerName?: string;
+}
+
 interface RegisterFormProps {
   isClient: boolean;
   isSubmitting: boolean;
   optionsLoading: boolean;
   cities: CityOption[];
   categories: CategoryOption[];
+  referralInfo?: ReferralInfo;
 }
 
 export default function RegisterForm({
@@ -38,6 +44,7 @@ export default function RegisterForm({
   optionsLoading,
   cities,
   categories,
+  referralInfo,
 }: RegisterFormProps) {
   const { t } = useTranslation();
   const [showPass, setShowPass] = useState(false);
@@ -58,6 +65,16 @@ export default function RegisterForm({
 
   return (
     <div className="flex flex-col gap-3.5">
+      {referralInfo && (
+        <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-800 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-200">
+          <Gift className="size-4 shrink-0" />
+          <span>
+            {referralInfo.referrerName
+              ? t('auth.register.invitedBy', 'Приглашён пользователем {{name}}', { name: referralInfo.referrerName })
+              : t('auth.register.invitedByCode', 'Регистрация по пригласительному коду')}
+          </span>
+        </div>
+      )}
       <AuthFormField
         name="email"
         label={t('auth.register.email')}

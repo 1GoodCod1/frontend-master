@@ -11,6 +11,7 @@ import type { LeadCardProps } from '@/types/leads';
 import { getLeadStatusColor, getLeadStatusBgColor } from '@/utils/statusColors';
 import LeaveReviewButton from './LeaveReviewButton';
 import { cn } from '@/lib/utils';
+import { LeadStatusProgress } from '@/features/leads/components/LeadStatusProgress';
 
 const LeadCard = React.memo(function LeadCard({
   lead,
@@ -56,6 +57,9 @@ const LeadCard = React.memo(function LeadCard({
               <p className="mb-4 leading-relaxed text-foreground">{lead.message ?? '—'}</p>
             </div>
           </div>
+
+          {/* Status Progress Tracker */}
+          <LeadStatusProgress status={status} compact />
 
           <Separator className="bg-border" />
 

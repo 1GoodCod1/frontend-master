@@ -13,7 +13,7 @@ const isNetworkOr5xx = (status: number | undefined) =>
 
 type ApiErrorLike = { status?: number; data?: unknown };
 
-function isRecord(v: unknown): v is Record<string, unknown> {
+export function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
 }
 
@@ -230,6 +230,7 @@ export const api = createApi({
     'Chat',
     'ChatMessages',
     'Portfolio',
+    'Referrals',
   ],
   endpoints: () => ({}),
 });
