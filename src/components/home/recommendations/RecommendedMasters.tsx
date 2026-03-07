@@ -29,7 +29,7 @@ export const RecommendedMasters: React.FC<RecommendedMastersProps> = ({
     <section className="mb-10 md:mb-16">
       <div className="-ml-1 mb-6">
         <div className="mb-2 flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md dark:bg-orange-500 dark:text-white">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md dark:bg-primary dark:text-primary-foreground">
             <TrendingUp className="h-6 w-6 shrink-0" strokeWidth={2} />
           </span>
           <h2 className="text-2xl font-semibold text-foreground md:text-[1.75rem]">

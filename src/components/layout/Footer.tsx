@@ -41,11 +41,12 @@ export function Footer() {
     'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
 
   return (
-    <footer className="mt-auto w-full border-t border-amber-500/15 dark:border-amber-500/10 bg-[#faf8f0] dark:bg-[#171510]">
+    <footer className="mt-auto w-full bg-[hsl(var(--background))] dark:bg-[#171510]">
+      <div className="divider-line" aria-hidden />
       {/* Newsletter — hidden after subscribe on F5 */}
       {!subscribedFromStorage && (
         <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <div className="mx-auto max-w-6xl rounded-2xl border border-amber-500/15 dark:border-amber-500/10 bg-white dark:bg-white/[0.04] px-6 py-6 sm:px-8 sm:py-7 shadow-sm">
+          <div className="mx-auto max-w-6xl rounded-2xl bg-white dark:bg-white/[0.04] px-6 py-6 sm:px-8 sm:py-7 shadow-sm">
             {showSuccess ? (
               <div className="mx-auto flex max-w-[560px] items-center gap-3 text-foreground">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta/20 text-cta">
@@ -77,7 +78,7 @@ export function Footer() {
                       className="h-10 rounded-xl pl-9 bg-gray-50 dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08]"
                     />
                   </div>
-                  <Button type="submit" className="min-w-[120px] min-h-[44px] rounded-xl font-semibold bg-cta text-cta-foreground hover:bg-cta/90 dark:bg-cta dark:text-cta-foreground dark:hover:bg-cta/90">
+                  <Button type="submit" className="min-w-[120px] min-h-[44px] rounded-xl font-semibold dark:bg-cta dark:text-cta-foreground dark:hover:bg-cta/90">
                     {t('footer.newsletterButton')}
                   </Button>
                 </div>
@@ -152,8 +153,9 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="mt-10 border-t border-amber-500/15 dark:border-amber-500/10 pt-6 text-center md:text-left">
-            <p className="text-sm text-muted-foreground">
+          <div className="mt-10">
+            <div className="divider-line" aria-hidden />
+            <p className="pt-6 text-sm text-muted-foreground text-center md:text-left">
               © {new Date().getFullYear()} {t('appName')}. {t('footer.copyright')}
             </p>
           </div>

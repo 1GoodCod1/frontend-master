@@ -38,7 +38,7 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
   if (isLoading) {
     const header = (
       <div className="flex items-center gap-3 mb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Users className="h-5 w-5" />
         </div>
         <div>
@@ -72,7 +72,7 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
               key={index}
               className="col-span-12 sm:col-span-6 md:col-span-3"
             >
-              <Card className="bg-card border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+              <Card className="bg-card border-2 border-border dark:border-white/[0.08] shadow-xl shadow-black/8 dark:shadow-none">
                 <Skeleton className="h-[150px] rounded-t-lg" />
                 <CardContent className="space-y-2">
                   <Skeleton className="h-4 w-full" />
@@ -90,7 +90,7 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
     return (
       <div>
         <div className="flex items-center gap-3 mb-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Users className="h-5 w-5" />
           </div>
           <div className="flex-1">
@@ -118,9 +118,9 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
                 key={master.id}
                 type="button"
                 onClick={() => navigate(`/masters/${slug}`)}
-                className="w-full flex items-center gap-3 p-3 rounded-xl border border-transparent hover:bg-amber-50 dark:hover:bg-amber-500/5 hover:border-amber-100 dark:hover:border-amber-500/20 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-3 rounded-xl border border-transparent hover:bg-primary/5 hover:border-primary/20 transition-colors text-left"
               >
-                <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl overflow-hidden bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold flex-shrink-0">
                   {avatarSrc ? (
                     <LazyImage src={avatarSrc} alt={name} objectFit="cover" skeletonHeight={40} className="w-full h-full" style={{ width: '100%', height: '100%' }} />
                   ) : (
@@ -130,7 +130,7 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">{name}</p>
                   <div className="flex items-center gap-1">
-                    <Star size={10} className="text-amber-500 fill-amber-500" />
+                    <Star size={10} className="text-primary fill-primary" />
                     <span className="text-xs text-gray-500 dark:text-gray-400">{r.toFixed(1)} · {city}</span>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
     <div className="py-6 md:py-8">
       <div className="-ml-1 mb-6">
         <div className="mb-2 flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400">
+          <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <Users className="h-[22px] w-[22px]" />
           </span>
           <h3 className="text-xl font-semibold text-foreground md:text-2xl">

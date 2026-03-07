@@ -207,7 +207,7 @@ export default function MasterDetailsPage() {
                   className={cn(
                     'flex-1 min-w-[100px] py-2.5 rounded-xl text-sm font-medium transition-all',
                     activeTab === tab
-                      ? 'bg-amber-500 text-white shadow-sm dark:bg-amber-600'
+                      ? 'bg-[hsl(var(--button-bg))] text-white shadow-sm'
                       : 'bg-transparent text-gray-700 dark:text-gray-400 border border-transparent hover:bg-gray-50 dark:hover:bg-white/5'
                   )}
                 >
@@ -244,8 +244,8 @@ export default function MasterDetailsPage() {
                     promotions={promotions}
                   />
                 ) : !m?.user?.isVerified ? (
-                  <Alert className="rounded-xl border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10">
-                    <ShieldCheck className="size-5 text-amber-600 dark:text-amber-500" />
+                  <Alert className="rounded-xl border-primary/30 bg-primary/5">
+                    <ShieldCheck className="size-5 text-primary" />
                     <AlertTitle className="font-bold text-foreground">
                       {t('verificationBanner.title')}
                     </AlertTitle>
@@ -312,8 +312,8 @@ export default function MasterDetailsPage() {
             {/* Quick Info — Figma: white card, light grey border, dark grey text */}
             <div className={cn(cardCls, 'p-6')}>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-5 flex items-center gap-2.5">
-                <span className="w-7 h-7 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <ChevronRight size={14} className="text-amber-600 dark:text-amber-400" />
+                <span className="w-7 h-7 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <ChevronRight size={14} className="text-primary" />
                 </span>
                 {t('masterDetails.quickInfo', 'Quick info')}
               </h3>

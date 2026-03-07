@@ -137,7 +137,7 @@ export const MasterDetailsLeadForm = ({
             {t('masterDetails.activeLeadDesc', 'You have already sent a request to this master. Wait for it to complete before sending a new one.')}
           </p>
           <div className="space-y-3">
-            <Button size="lg" className="w-full gap-2 font-semibold bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500" onClick={handleOpenActiveChat} disabled={isCreatingChat}>
+            <Button size="lg" className="w-full gap-2 font-semibold " onClick={handleOpenActiveChat} disabled={isCreatingChat}>
               {isCreatingChat ? (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
               ) : (
@@ -145,7 +145,7 @@ export const MasterDetailsLeadForm = ({
               )}
               {t('masterDetails.goToChat', 'Go to chat with master')}
             </Button>
-            <Button variant="outline" size="lg" className="w-full font-semibold border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 hover:bg-amber-50/80 dark:hover:bg-amber-500/10" onClick={() => navigate('/client-dashboard/leads')}>
+            <Button variant="outline" size="lg" className="w-full font-semibold dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10" onClick={() => navigate('/client-dashboard/leads')}>
               {t('clientDashboard.myLeads', 'My leads')}
             </Button>
           </div>
@@ -169,11 +169,11 @@ export const MasterDetailsLeadForm = ({
             {t('masterDetails.leadSentDesc', 'Мастер получил вашу заявку. Вы можете начать чат для обсуждения деталей.')}
           </p>
           <div className="space-y-3">
-            <Button size="lg" className="w-full gap-2 font-semibold bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500" onClick={() => navigate(`/client-dashboard/leads/${submittedLeadId}/book`)}>
+            <Button size="lg" className="w-full gap-2 font-semibold " onClick={() => navigate(`/client-dashboard/leads/${submittedLeadId}/book`)}>
               <CalendarDays className="h-4 w-4" />
               {t('masterDetails.chooseTime', 'Выбрать время')}
             </Button>
-            <Button size="lg" variant="outline" className="w-full gap-2 font-semibold border-[#f5f4eb] dark:border-white/10 hover:border-amber-500/40 hover:bg-amber-50/80 dark:hover:bg-amber-500/10" onClick={handleOpenChat} disabled={isCreatingChat}>
+            <Button size="lg" variant="outline" className="w-full gap-2 font-semibold dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10" onClick={handleOpenChat} disabled={isCreatingChat}>
               {isCreatingChat ? (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
               ) : (
@@ -181,7 +181,7 @@ export const MasterDetailsLeadForm = ({
               )}
               {t('masterDetails.openChat', 'Открыть чат с мастером')}
             </Button>
-            <Button variant="outline" size="lg" className="w-full font-semibold border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 hover:bg-amber-50/80 dark:hover:bg-amber-500/10" onClick={() => navigate('/client-dashboard/leads')}>
+            <Button variant="outline" size="lg" className="w-full font-semibold dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10" onClick={() => navigate('/client-dashboard/leads')}>
               {t('clientDashboard.myLeads', 'Мои заявки')}
             </Button>
           </div>
@@ -203,7 +203,7 @@ export const MasterDetailsLeadForm = ({
           <p className="text-amber-100 text-sm mt-1">{t('masterDetails.becomeClientDesc')}</p>
         </div>
         <CardContent className="p-5 space-y-3 bg-white dark:bg-[hsl(47,22%,9%)]">
-          <Button size="lg" className="w-full gap-2 font-semibold bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500" onClick={() => navigate('/register')}>
+          <Button size="lg" className="w-full gap-2 font-semibold " onClick={() => navigate('/register')}>
             <Send className="h-4 w-4" />
             {t('masterDetails.registerAsClient')}
           </Button>
@@ -322,7 +322,7 @@ export const MasterDetailsLeadForm = ({
 
         <Button
           size="lg"
-          className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-600 dark:hover:bg-amber-500"
+          className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all "
           onClick={handleSubmitLead}
           disabled={isSubmitting || !isMasterAvailable || !message.trim()}
         >

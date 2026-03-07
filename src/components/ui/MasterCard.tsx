@@ -169,33 +169,33 @@ export const MasterCard = React.memo(function MasterCard({
       onKeyDown={handleKeyDown}
       className={cn(
         'group relative w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer',
-        'bg-card shadow-md shadow-black/5 dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
-        'hover:-translate-y-1 hover:shadow-lg hover:shadow-xl hover:shadow-amber-900/15',
+        'bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20',
+        'hover:-translate-y-1 hover:shadow-lg hover:shadow-xl hover:shadow-black/8',
         'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
-        'outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50',
+        'outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
       )}
     >
       {/* Cover image area */}
       <div className="relative h-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-amber-400 to-yellow-300 dark:from-orange-700 dark:via-amber-800 dark:to-orange-950" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-primary/80" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.25),transparent_70%)] dark:bg-[radial-gradient(circle_at_70%_20%,rgba(255,255,255,0.08),transparent_70%)]" />
 
         {/* Floating badges top-right */}
         <div className="absolute top-2 right-2 flex items-center gap-1">
           {activePromotionDiscount !== null && (
-            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-red-500 dark:text-red-400 text-[10px]">
+            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-red-500/15 dark:bg-red-400/20 backdrop-blur-md text-red-600 dark:text-red-400 border border-red-500/25 dark:border-red-400/30 text-[10px] font-medium">
               <TrendingDown className="w-2.5 h-2.5" />
               {activePromotionDiscount}%
             </span>
           )}
           {sectionBadge === 'popular' && (
-            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-orange-600 dark:text-orange-400 text-[10px]">
+            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-orange-500/15 dark:bg-orange-400/20 backdrop-blur-md text-orange-600 dark:text-orange-400 border border-orange-500/25 dark:border-orange-400/30 text-[10px] font-medium">
               <Flame className="w-2.5 h-2.5" />
               {t('common.masterCard.popular')}
             </span>
           )}
           {sectionBadge === 'new' && (
-            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-primary dark:text-primary-foreground text-[10px]">
+            <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-violet-500/15 dark:bg-violet-400/20 backdrop-blur-md text-violet-600 dark:text-violet-400 border border-violet-500/25 dark:border-violet-400/30 text-[10px] font-medium">
               <Sparkles className="w-2.5 h-2.5" />
               {t('common.masterCard.new')}
             </span>
@@ -203,7 +203,7 @@ export const MasterCard = React.memo(function MasterCard({
         </div>
 
         {(isPremium || isVip) && (
-          <div className="absolute top-2 left-2 inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-md text-amber-600 dark:text-amber-400 text-[10px]">
+          <div className="absolute top-2 left-2 inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-amber-500/15 dark:bg-amber-400/20 backdrop-blur-md text-amber-700 dark:text-amber-300 border border-amber-500/25 dark:border-amber-400/30 text-[10px] font-medium">
             <Crown className="w-2.5 h-2.5" />
             {isPremium ? t('common.masterCard.premium') : t('common.masterCard.vip')}
           </div>
@@ -213,20 +213,23 @@ export const MasterCard = React.memo(function MasterCard({
       {/* Avatar overlapping cover */}
       <div className="relative px-3.5 -mt-8">
         <div className="relative inline-block">
-          <div className="w-14 h-14 rounded-xl overflow-hidden border-[2.5px] border-white dark:border-[#1e1e1e] shadow-lg">
-            {avatarSrc ? (
-              <LazyImage
-                src={avatarSrc}
-                alt={displayName}
-                objectFit="cover"
-                skeletonHeight={56}
-                skeletonWidth={56}
-                className="h-full w-full"
-                style={{ borderRadius: '0.75rem' }}
-              />
-            ) : (
-              <AvatarPlaceholder role="master" height={56} variant={placeholderVariant} />
-            )}
+          {/* Gradient border + avatar */}
+          <div className="avatar-gradient-border w-14 h-14 rounded-xl p-[2.5px] shadow-lg">
+            <div className="relative w-full h-full rounded-[10px] overflow-hidden bg-card">
+              {avatarSrc ? (
+                <LazyImage
+                  src={avatarSrc}
+                  alt={displayName}
+                  objectFit="cover"
+                  skeletonHeight={56}
+                  skeletonWidth={56}
+                  className="h-full w-full"
+                  style={{ borderRadius: '0.75rem' }}
+                />
+              ) : (
+                <AvatarPlaceholder role="master" height={56} variant={placeholderVariant} />
+              )}
+            </div>
           </div>
           {master?.isOnline === true && (
             <div
@@ -268,15 +271,15 @@ export const MasterCard = React.memo(function MasterCard({
             )}
           </div>
 
-          {/* Rating pill */}
+          {/* Rating pill — amber/gold для рейтинга в обеих темах */}
           {typeof rating === 'number' && (
-            <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/30 shrink-0">
-              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-              <span className="text-amber-700 dark:text-amber-400 text-[12px]">
+            <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 shrink-0 dark:bg-amber-400/15 dark:border-amber-400/25">
+              <Star className="w-3 h-3 fill-amber-600 text-amber-600 dark:fill-amber-400 dark:text-amber-400" />
+              <span className="text-amber-700 text-[12px] font-medium dark:text-amber-300">
                 {rating.toFixed(1)}
               </span>
               {totalReviews > 0 && (
-                <span className="text-amber-400 dark:text-amber-600 text-[10px]">
+                <span className="text-muted-foreground text-[10px]">
                   ({totalReviews})
                 </span>
               )}
@@ -316,7 +319,7 @@ export const MasterCard = React.memo(function MasterCard({
                   nav(`/register?redirect=${encodeURIComponent(`/masters/${master.slug ?? master.id}`)}`);
                 }
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-900 dark:bg-orange-500 text-white hover:bg-gray-800 dark:hover:bg-orange-400 transition-all duration-200 active:scale-[0.97] text-[12px] ml-auto"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))] transition-all duration-200 active:scale-[0.97] text-[12px] ml-auto"
             >
               <Phone className="w-3 h-3" />
               {t('common.masterCard.contact')}

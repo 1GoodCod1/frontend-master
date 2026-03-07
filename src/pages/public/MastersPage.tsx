@@ -1,4 +1,4 @@
-﻿import { useMemo, useState, useEffect, useRef, lazy, Suspense, type ComponentProps } from 'react';
+import { useMemo, useState, useEffect, useRef, lazy, Suspense, type ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -53,7 +53,7 @@ const MastersMap = lazy(() =>
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl border-2 border-[#f5f4eb] dark:border-white/[0.08] bg-card p-4 space-y-3 shadow-lg shadow-amber-900/10 dark:shadow-none">
+    <div className="rounded-xl border-2 border-border dark:border-white/[0.08] bg-card p-4 space-y-3 shadow-lg shadow-black/5 dark:shadow-none">
       <Skeleton className="h-14 w-14 rounded-full" />
       <Skeleton className="h-6 w-[70%]" />
       <Skeleton className="h-5 w-[50%]" />
@@ -68,7 +68,7 @@ function CardSkeleton() {
 
 function MapSkeleton() {
   return (
-    <div className="rounded-xl border-2 border-[#f5f4eb] dark:border-white/[0.08] bg-card animate-pulse" style={{ minHeight: 400 }}>
+    <div className="rounded-xl border-2 border-border dark:border-white/[0.08] bg-card animate-pulse" style={{ minHeight: 400 }}>
       <div className="flex items-center justify-center h-full min-h-[400px]">
         <div className="text-center">
           <Map className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
@@ -228,7 +228,7 @@ export default function MastersPage() {
     () => Math.max(1, Math.floor((priceRange.max - priceRange.min) / 100)),
     [priceRange.min, priceRange.max]
   );
-  const thumbAmberClass = '!bg-amber-600 !border-amber-700 dark:!bg-amber-500 dark:!border-amber-600';
+  const thumbPrimaryClass = '!bg-primary !border-primary/80';
 
   const getCategoryLabel = (c: MastersFilterItem) => {
     const slug = c?.slug ?? c?.value;
@@ -339,12 +339,12 @@ export default function MastersPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {/* View mode toggle */}
-          <div className="flex rounded-lg border-2 border-[#f5f4eb] dark:border-white/10 overflow-hidden">
+          <div className="flex rounded-lg border-2 border-border dark:border-white/10 overflow-hidden">
             <button
               onClick={() => setViewMode('list')}
               className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all ${viewMode === 'list'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card hover:bg-amber-100/80 dark:hover:bg-amber-500/10 text-muted-foreground'
+                  ? 'bg-[hsl(var(--button-bg))] text-white'
+                  : 'bg-card hover:bg-primary/10 text-muted-foreground'
                 }`}
             >
               <List className="h-4 w-4" />
@@ -353,8 +353,8 @@ export default function MastersPage() {
             <button
               onClick={() => setViewMode('map')}
               className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all ${viewMode === 'map'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card hover:bg-amber-100/80 dark:hover:bg-amber-500/10 text-muted-foreground'
+                  ? 'bg-[hsl(var(--button-bg))] text-white'
+                  : 'bg-card hover:bg-primary/10 text-muted-foreground'
                 }`}
             >
               <Map className="h-4 w-4" />
@@ -365,7 +365,7 @@ export default function MastersPage() {
           <Button
             variant="outline"
             onClick={resetFilters}
-            className="shrink-0 gap-2 border-[#f5f4eb] dark:border-white/10 hover:bg-amber-100/80 dark:hover:bg-amber-500/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40"
+            className="shrink-0 gap-2 border-border dark:border-white/10 hover:bg-primary/10 hover:border-primary/30"
           >
             <SlidersHorizontal className="h-4 w-4 text-primary" />
             {t('common.reset')}
@@ -379,7 +379,7 @@ export default function MastersPage() {
       </div>
 
       {/* Filters card */}
-      <Card className="mb-4 sm:mb-6 border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+      <Card className="mb-4 sm:mb-6 border-2 border-border dark:border-white/[0.08] shadow-xl shadow-black/8 dark:shadow-none">
         <CardContent className="p-4 sm:p-5 md:p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary text-primary-foreground shrink-0">
@@ -433,7 +433,7 @@ export default function MastersPage() {
                     }
                     disabled={filters.isLoading}
                   >
-                    <SelectTrigger className="w-full border-[#f5f4eb] dark:border-white/10 bg-secondary/80 focus:border-[#e8e6dd] dark:focus:border-white/20">
+                    <SelectTrigger className="w-full border-border dark:border-white/10 bg-secondary/80 focus:border-primary/30">
                       <SelectValue placeholder={t('common.all')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -464,7 +464,7 @@ export default function MastersPage() {
                     }
                     disabled={filters.isLoading}
                   >
-                    <SelectTrigger className="w-full border-[#f5f4eb] dark:border-white/10 bg-secondary/80 focus:border-[#e8e6dd] dark:focus:border-white/20">
+                    <SelectTrigger className="w-full border-border dark:border-white/10 bg-secondary/80 focus:border-primary/30">
                       <SelectValue placeholder={t('common.all')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -498,7 +498,7 @@ export default function MastersPage() {
                       }));
                     }}
                   >
-                    <SelectTrigger className="w-full border-[#f5f4eb] dark:border-white/10 bg-secondary/80 focus:border-[#e8e6dd] dark:focus:border-white/20">
+                    <SelectTrigger className="w-full border-border dark:border-white/10 bg-secondary/80 focus:border-primary/30">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -535,7 +535,7 @@ export default function MastersPage() {
                   <Button
                     variant="ghost"
                     onClick={() => setShowAdvanced((v) => !v)}
-                    className="gap-2 text-primary hover:bg-amber-100/80 dark:hover:bg-amber-500/10 w-full sm:w-auto justify-center"
+                    className="gap-2 text-primary hover:bg-primary/10 w-full sm:w-auto justify-center"
                   >
                     <SlidersHorizontal className="h-4 w-4" />
                     {t('masters.advancedFilters')}
@@ -558,9 +558,9 @@ export default function MastersPage() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 pt-5 border-t border-[#f5f4eb] dark:border-white/[0.08]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 pt-5 border-t border-border dark:border-white/[0.08]">
                       {/* Available now */}
-                      <div className="flex items-center justify-between rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-[#f5f4eb] dark:border-white/[0.06]">
+                      <div className="flex items-center justify-between rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-border dark:border-white/[0.06]">
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-green-500/15 dark:bg-green-400/15">
                             <CircleDot className="h-4.5 w-4.5 text-green-600 dark:text-green-400" />
@@ -594,7 +594,7 @@ export default function MastersPage() {
                       </div>
 
                       {/* With promotion */}
-                      <div className="flex items-center justify-between rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-[#f5f4eb] dark:border-white/[0.06]">
+                      <div className="flex items-center justify-between rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-border dark:border-white/[0.06]">
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-rose-500/15 dark:bg-rose-400/15">
                             <Tag className="h-4.5 w-4.5 text-rose-600 dark:text-rose-400" />
@@ -628,10 +628,10 @@ export default function MastersPage() {
                       </div>
 
                       {/* Price range — отдельные прогресс-бары для мин и макс */}
-                      <div className="space-y-4 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-[#f5f4eb] dark:border-white/[0.06]">
+                      <div className="space-y-4 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-border dark:border-white/[0.06]">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-amber-500/15 dark:bg-amber-400/15">
-                            <DollarSign className="h-4.5 w-4.5 text-amber-600 dark:text-amber-400" />
+                          <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-primary/15">
+                            <DollarSign className="h-4.5 w-4.5 text-primary" />
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-foreground">
@@ -650,12 +650,12 @@ export default function MastersPage() {
                               <Label className="text-xs font-medium text-foreground">
                                 {t('masters.priceMin')}
                               </Label>
-                              <span className="text-sm font-semibold tabular-nums text-amber-600 dark:text-amber-400">
+                              <span className="text-sm font-semibold tabular-nums text-primary">
                                 {priceMinClamp(Math.min(priceMinLocal, priceMaxLocal))} {t('masters.currency')}
                               </span>
                             </div>
                             <div className="flex gap-2 items-center">
-                              <div className="flex-1 min-w-0 [&_.relative]:!h-2.5 [&_.relative]:!rounded-full [&_.relative>:first-child]:!bg-amber-500">
+                              <div className="flex-1 min-w-0 [&_.relative]:!h-2.5 [&_.relative]:!rounded-full [&_.relative>:first-child]:!bg-primary">
                                 <Slider
                                   value={[priceMinClamp(Math.min(priceMinLocal, priceMaxLocal))]}
                                   onValueChange={([v]) =>
@@ -671,7 +671,7 @@ export default function MastersPage() {
                                   min={priceRange.min}
                                   max={priceMaxLocal}
                                   step={priceStep}
-                                  thumbClassName={thumbAmberClass}
+                                  thumbClassName={thumbPrimaryClass}
                                   className="w-full"
                                 />
                               </div>
@@ -687,7 +687,7 @@ export default function MastersPage() {
                                   setPriceMinLocal(v);
                                   setQuery((s) => ({ ...s, page: 1, minPrice: v }));
                                 }}
-                                className="h-8 w-20 text-sm border-[#f5f4eb] dark:border-white/10 bg-background shrink-0"
+                                className="h-8 w-20 text-sm border-border dark:border-white/10 bg-background shrink-0"
                               />
                             </div>
                           </div>
@@ -697,12 +697,12 @@ export default function MastersPage() {
                               <Label className="text-xs font-medium text-foreground">
                                 {t('masters.priceMax')}
                               </Label>
-                              <span className="text-sm font-semibold tabular-nums text-amber-600 dark:text-amber-400">
+                              <span className="text-sm font-semibold tabular-nums text-primary">
                                 {priceMaxClamp(Math.max(priceMaxLocal, priceMinLocal))} {t('masters.currency')}
                               </span>
                             </div>
                             <div className="flex gap-2 items-center">
-                              <div className="flex-1 min-w-0 [&_.relative]:!h-2.5 [&_.relative]:!rounded-full [&_.relative>:first-child]:!bg-amber-500">
+                              <div className="flex-1 min-w-0 [&_.relative]:!h-2.5 [&_.relative]:!rounded-full [&_.relative>:first-child]:!bg-primary">
                                 <Slider
                                   value={[priceMaxClamp(Math.max(priceMaxLocal, priceMinLocal))]}
                                   onValueChange={([v]) =>
@@ -718,7 +718,7 @@ export default function MastersPage() {
                                   min={priceMinLocal}
                                   max={priceRange.max}
                                   step={priceStep}
-                                  thumbClassName={thumbAmberClass}
+                                  thumbClassName={thumbPrimaryClass}
                                   className="w-full"
                                 />
                               </div>
@@ -734,7 +734,7 @@ export default function MastersPage() {
                                   setPriceMaxLocal(v);
                                   setQuery((s) => ({ ...s, page: 1, maxPrice: v }));
                                 }}
-                                className="h-8 w-20 text-sm border-[#f5f4eb] dark:border-white/10 bg-background shrink-0"
+                                className="h-8 w-20 text-sm border-border dark:border-white/10 bg-background shrink-0"
                               />
                             </div>
                           </div>
@@ -766,7 +766,7 @@ export default function MastersPage() {
         <ErrorState error={list.error} onRetry={list.refetch} />
       ) : items.length ? (
         <>
-          <div className="mb-4 rounded-lg bg-amber-100/80 dark:bg-amber-900/15 px-4 py-2 flex items-center justify-between">
+          <div className="mb-4 rounded-lg bg-primary/10 px-4 py-2 flex items-center justify-between">
             <p className="text-sm font-semibold text-primary">
               {t('masters.found', { count: total })}
             </p>
@@ -839,7 +839,7 @@ export default function MastersPage() {
           </AnimatePresence>
 
           {/* Pagination */}
-          <Card className="mt-8 mb-4 border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
+          <Card className="mt-8 mb-4 border-2 border-border dark:border-white/[0.08] shadow-xl shadow-black/8 dark:shadow-none">
             <CardContent className="p-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <Button
@@ -848,11 +848,11 @@ export default function MastersPage() {
                   onClick={() =>
                     setQuery((s) => ({ ...s, page: s.page - 1 }))
                   }
-                  className="min-h-[44px] sm:min-h-11 border-[#f5f4eb] dark:border-white/10 hover:bg-amber-100/80 dark:hover:bg-amber-500/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 hover:-translate-x-0.5 transition-transform"
+                  className="min-h-[44px] sm:min-h-11 border-border dark:border-white/10 hover:bg-primary/10 hover:border-primary/30 hover:-translate-x-0.5 transition-transform"
                 >
                   {t('common.prev')}
                 </Button>
-                <span className="px-4 py-2 rounded-md bg-amber-100/80 dark:bg-amber-900/15 font-semibold text-primary text-sm md:text-base">
+                <span className="px-4 py-2 rounded-md bg-primary/10 font-semibold text-primary text-sm md:text-base">
                   {t('common.page')} {query.page}{' '}
                   {totalPages > 0 &&
                     t('common.pageOf', { total: totalPages })}
@@ -863,7 +863,7 @@ export default function MastersPage() {
                   onClick={() =>
                     setQuery((s) => ({ ...s, page: s.page + 1 }))
                   }
-                  className="min-h-[44px] sm:min-h-11 border-[#f5f4eb] dark:border-white/10 hover:bg-amber-100/80 dark:hover:bg-amber-500/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40 hover:translate-x-0.5 transition-transform"
+                  className="min-h-[44px] sm:min-h-11 border-border dark:border-white/10 hover:bg-primary/10 hover:border-primary/30 hover:translate-x-0.5 transition-transform"
                 >
                   {t('common.next')}
                 </Button>

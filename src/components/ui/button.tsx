@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-amber-600 text-white shadow hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600",
+          "bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))] dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 dark:bg-destructive dark:text-destructive-foreground dark:hover:bg-destructive/90 cursor-pointer",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 dark:bg-destructive dark:text-destructive-foreground dark:hover:bg-destructive/90 cursor-pointer",
         outline:
-          "border-0 bg-amber-50 text-amber-700 shadow-sm hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 cursor-pointer",
+          "border-2 border-[hsl(var(--button-bg))] bg-transparent text-[hsl(var(--button-bg))] hover:bg-[hsl(var(--button-bg))] hover:text-white dark:border-amber-500/50 dark:bg-transparent dark:text-amber-400 dark:hover:bg-amber-900/30 dark:hover:text-amber-400 dark:hover:border-amber-500/50 cursor-pointer",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80 cursor-pointer",
+          "bg-[hsl(var(--button-bg))]/10 text-[hsl(var(--button-bg))] hover:bg-[hsl(var(--button-bg))]/20 dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80 cursor-pointer",
         ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent dark:hover:text-accent-foreground cursor-pointer",
         link: "text-cta underline-offset-4 hover:underline dark:text-cta dark:hover:text-cta/90 cursor-pointer",
       },

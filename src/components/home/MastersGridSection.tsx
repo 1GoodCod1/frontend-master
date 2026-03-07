@@ -55,7 +55,7 @@ export const MastersGridSection = ({
   const { t } = useTranslation();
   const effectiveIconBg =
     iconBgColor ??
-    (sectionBadge === 'popular' ? 'bg-amber-500' : sectionBadge === 'new' ? 'bg-primary' : 'bg-primary');
+    (sectionBadge === 'popular' ? 'bg-primary' : sectionBadge === 'new' ? 'bg-primary' : 'bg-primary');
   const list = masters.slice(0, horizontalScroll ? 12 : 4);
 
   if (horizontalScroll) {

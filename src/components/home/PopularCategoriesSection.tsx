@@ -80,7 +80,7 @@ const INITIAL_VISIBLE = 12;
 
 function CategoryCardSkeleton() {
     return (
-        <div className="rounded-2xl border-0 bg-card shadow-md shadow-black/5 dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)] p-5 flex flex-col items-center justify-center gap-3">
+        <div className="rounded-2xl bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20 p-5 flex flex-col items-center justify-center gap-3">
             <Skeleton className="h-14 w-14 rounded-2xl" />
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-3 w-16" />
@@ -154,11 +154,9 @@ export const PopularCategoriesSection = () => {
                             <RouterLink
                                 to={`/masters?category=${cat.slug}${citySlug ? `&city=${citySlug}` : ''}`}
                                 className={cn(
-                                    'group flex flex-col items-center justify-center gap-2 sm:gap-3 rounded-2xl p-4 sm:p-5 h-full border-0',
-                                    'bg-card shadow-md shadow-black/5 dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
-                                    'hover:-translate-y-1 hover:shadow-lg',
-                                    'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
-                                    'hover:shadow-xl hover:shadow-amber-900/15',
+                                    'group flex flex-col items-center justify-center gap-2 sm:gap-3 rounded-2xl p-4 sm:p-5 h-full',
+                                    'bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20',
+                                    'hover:-translate-y-1 hover:shadow-lg hover:shadow-black/8',
                                     'transition-all duration-300 cursor-pointer'
                                 )}
                             >

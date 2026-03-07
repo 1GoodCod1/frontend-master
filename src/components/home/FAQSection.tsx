@@ -24,7 +24,7 @@ export const FAQSection = () => {
     <section className="mt-12 flex flex-col items-center md:mt-16">
       <div className="mb-10 max-w-[600px] text-center">
         <div className="mb-2 flex items-center justify-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-orange-500/15 dark:text-orange-400">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/15 dark:text-primary">
             <HelpCircle className="h-6 w-6" />
           </span>
           <h2 className="text-2xl font-semibold text-foreground md:text-[1.75rem]">

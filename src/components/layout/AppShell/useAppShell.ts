@@ -86,7 +86,7 @@ export function useAppShell() {
     cn(
       navLinkBaseClass,
       isActive
-        ? 'border-t-[3px] border-amber-500 text-amber-600 dark:text-amber-400 dark:border-amber-400'
+        ? 'border-t-[3px] border-primary text-primary dark:border-primary'
         : 'border-t-[3px] border-transparent text-foreground hover:bg-accent hover:text-accent-foreground hover:font-semibold'
     );
 

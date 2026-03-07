@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 
 const quickFilterButtonClass = cn(
   'font-medium rounded-xl px-4 py-3 sm:px-5 sm:py-2.5 min-h-[44px] sm:min-h-0 ring-1 transition-colors',
-  'bg-amber-50 ring-amber-200 text-amber-800 hover:bg-amber-100 hover:ring-amber-300',
-  'dark:bg-amber-950/50 dark:ring-amber-600/80 dark:text-amber-300 dark:hover:bg-amber-900/40 dark:hover:ring-amber-500'
+  'bg-primary/10 ring-primary/20 text-primary hover:bg-primary/15 hover:ring-primary/30',
+  'dark:bg-primary/10 dark:ring-primary/30 dark:text-primary dark:hover:bg-primary/15 dark:hover:ring-primary/40'
 );
 
 export const QuickFiltersSection = () => {
@@ -20,7 +20,7 @@ export const QuickFiltersSection = () => {
         className={cn(
           'rounded-2xl p-4 sm:p-6 md:p-8 bg-card',
           'shadow-lg shadow-black/5 dark:shadow-black/20',
-          'border-2 border-[#f5f4eb] dark:border-white/[0.08]'
+          'border-2 border-border dark:border-white/[0.08]'
         )}
       >
         <div className="flex items-center gap-3 mb-4 sm:mb-6">

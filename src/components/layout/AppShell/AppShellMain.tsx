@@ -33,7 +33,7 @@ export function AppShellMain({
           transition={{ duration: 0.2 }}
           className={cn(
             'flex min-h-[calc(100dvh-3.5rem)] min-w-0 flex-col overflow-x-hidden transition-colors',
-            isPublicPage || isAuthPage ? 'bg-[#faf8f0] dark:bg-[#171510]' : 'bg-background',
+            isPublicPage || isAuthPage ? 'bg-[hsl(var(--background))] dark:bg-[#171510]' : 'bg-background',
             fullWidth ? 'pt-14' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-20 md:pt-24 pb-6 md:pb-8'
           )}
         >

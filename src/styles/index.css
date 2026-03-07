@@ -27,6 +27,8 @@
   --cta-foreground: 0 0% 100%;
   --radius: 0.75rem;
   --home-bg: 220 18% 98%;
+  --button-bg: 220 18% 22%;
+  --button-bg-hover: 220 18% 18%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.18);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.35);
 }
@@ -56,6 +58,8 @@ html[data-theme="dark"],
   --cta: 38 92% 50%;
   --cta-foreground: 0 0% 100%;
   --home-bg: 43 18% 8%;
+  --button-bg: 174 72% 45%;
+  --button-bg-hover: 174 72% 40%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.22);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.4);
 }
@@ -83,6 +87,25 @@ html[data-theme="dark"] .cabinet-theme-scope,
 
 .bg-home-gradient {
   background-color: hsl(var(--home-bg));
+}
+
+/* Gradient border для аватара MasterCard */
+.avatar-gradient-border {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(13,148,136,0.5) 50%, rgba(13,148,136,0.7) 100%);
+}
+.dark .avatar-gradient-border,
+html[data-theme="dark"] .avatar-gradient-border {
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(13,148,136,0.55) 50%, rgba(13,148,136,0.8) 100%);
+}
+
+/* Тонкая линия-разделитель (1px, светлый серый) */
+.divider-line {
+  height: 1px;
+  background: hsl(0 0% 0% / 0.06);
+}
+.dark .divider-line,
+html[data-theme="dark"] .divider-line {
+  background: hsl(0 0% 100% / 0.06);
 }
 
 * {

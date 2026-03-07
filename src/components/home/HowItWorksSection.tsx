@@ -17,9 +17,9 @@ const steps = [
     icon: MessageCircle,
     titleKey: 'home.howItWorks.step2Title',
     descKey: 'home.howItWorks.step2Desc',
-    accent: 'text-amber-600 dark:text-amber-400',
-    bg: 'bg-amber-500/10 dark:bg-amber-400/10',
-    ring: 'ring-amber-500/20 dark:ring-amber-400/20',
+    accent: 'text-primary',
+    bg: 'bg-primary/10',
+    ring: 'ring-primary/20',
   },
   {
     icon: ThumbsUp,

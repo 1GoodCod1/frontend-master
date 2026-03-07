@@ -44,7 +44,7 @@ export default function HomePage() {
         <div
           className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 transition-all duration-700"
           style={{
-            background: isDark ? 'rgba(245,162,0,0.04)' : 'rgba(245,162,0,0.1)',
+            background: isDark ? 'hsl(var(--primary)/0.04)' : 'hsl(var(--primary)/0.06)',
           }}
         />
         <div
@@ -56,8 +56,8 @@ export default function HomePage() {
         <div
           className="absolute inset-0 transition-opacity duration-500"
           style={{
-            opacity: isDark ? 0.02 : 0.05,
-            backgroundImage: `linear-gradient(rgba(245,162,0,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(245,162,0,0.5) 1px, transparent 1px)`,
+            opacity: isDark ? 0.02 : 0.04,
+            backgroundImage: `linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)`,
             backgroundSize: '60px 60px',
           }}
         />
@@ -69,7 +69,7 @@ export default function HomePage() {
 
       <section className="relative min-w-0">
         <div className="container mx-auto min-w-0 max-w-7xl px-4 pt-4 pb-6 md:pt-6 md:pb-12">
-          <div className="border-b border-amber-500/15 dark:border-amber-500/10 mb-4 md:mb-6" />
+          <div className="divider-line mb-4 md:mb-6" aria-hidden />
 
           <MastersGridSection
             title={t('home.popularMasters')}
@@ -84,11 +84,11 @@ export default function HomePage() {
             promotionDiscountByMasterId={promotionDiscountByMasterId}
           />
 
-          <div className="border-b border-slate-200 dark:border-white/[0.08] my-6 md:my-8" />
+          <div className="divider-line my-6 md:my-8" aria-hidden />
 
           <PopularCategoriesSection />
 
-          <div className="border-b border-slate-200 dark:border-white/[0.08] my-6 md:my-8" />
+          <div className="divider-line my-6 md:my-8" aria-hidden />
 
           <HowItWorksSection />
         </div>
