@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { StarRatingDisplay } from '@/components/admin/common/StarRatingDisplay';
+import { StarRatingDisplay } from '@/features/admin/components/common/StarRatingDisplay';
 import { unwrapList } from '@/utils/data';
 import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
 import {

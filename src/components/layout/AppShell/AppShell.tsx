@@ -6,6 +6,7 @@ import { getVisibleNavItems } from './navUtils';
 import { AppShellHeader } from './AppShellHeader';
 import { AppShellNavMobile } from './AppShellNavMobile';
 import { AppShellMain } from './AppShellMain';
+import { ScrollToTopButton } from './ScrollToTopButton';
 
 export function AppShell() {
   const {
@@ -14,6 +15,8 @@ export function AppShell() {
     colorMode,
     mobileNavOpen,
     setMobileNavOpen,
+    showScrollTop,
+    scrollToTop,
     isLoggingOut,
     showNavbar,
     isDashboardOrAdmin,
@@ -37,6 +40,7 @@ export function AppShell() {
             isAuthed={isAuthed}
             role={role}
             colorMode={colorMode}
+            isInCabinet={isDashboardOrAdmin}
             navLinkBaseClass={navLinkBaseClass}
             navLinkClass={navLinkClass}
             isNavCentered={isNavCentered}
@@ -66,6 +70,10 @@ export function AppShell() {
           isDashboardOrAdmin={isDashboardOrAdmin}
           isHomePage={location.pathname === '/'}
         />
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showScrollTop && <ScrollToTopButton onClick={scrollToTop} />}
       </AnimatePresence>
 
       <CookieConsentBanner />

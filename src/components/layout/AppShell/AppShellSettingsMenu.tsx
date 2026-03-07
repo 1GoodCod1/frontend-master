@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { SupportedLanguage } from './types';
 
 type Props = {
@@ -26,19 +25,21 @@ export function AppShellSettingsMenu({
 
   return (
     <DropdownMenu>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-9 w-9 transition-transform duration-200 ease-out hover:scale-110 active:scale-95">
-              <Settings className="h-4 w-4 shrink-0" strokeWidth={2} />
-            </Button>
-          </DropdownMenuTrigger>
-        </TooltipTrigger>
-        <TooltipContent>{t('nav.settings')}</TooltipContent>
-      </Tooltip>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 transition-transform duration-200 ease-out hover:scale-110 active:scale-95"
+          aria-label={t('nav.settings')}
+          title={t('nav.settings')}
+        >
+          <Settings className="h-4 w-4 shrink-0" strokeWidth={2} />
+        </Button>
+      </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="dropdown-content-opaque w-52 border-0 dark:border dark:border-border shadow-lg dark:shadow-xl dark:shadow-black/50"
+        sideOffset={10}
+        className="dropdown-smooth-open dropdown-content-opaque w-52 border-0 rounded-2xl shadow-[0_10px_24px_-14px_hsl(var(--foreground)/0.45)]"
       >
         <DropdownMenuItem onClick={onToggleColorMode}>
           {colorMode === 'dark' ? (

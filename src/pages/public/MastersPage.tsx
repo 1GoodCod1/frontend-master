@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useRef, lazy, Suspense, type ComponentProps } from 'react';
+﻿import { useMemo, useState, useEffect, useRef, lazy, Suspense, type ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,7 @@ import { usePromotionsActiveQuery } from '@/features/promotions/promotionsApi';
 import { useRecommendationsTrackMutation } from '@/features/recommendations/recommendationsApi';
 import { ErrorState } from '@/components/common/States';
 import { MasterCard } from '@/components/ui/MasterCard';
-import { SearchInputWithHistory } from '@/components/search/SearchInputWithHistory';
+import { SearchInputWithHistory } from '@/features/masters/components/search/SearchInputWithHistory';
 import { EmptyState } from '@/components/ui/EmptyState';
 import type { MastersFilterItem, PublicMaster } from '@/types';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -46,7 +46,7 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 
 const MastersMap = lazy(() =>
-  import('@/components/masters/MastersMap').then((m) => ({
+  import('@/features/masters/components/MastersMap').then((m) => ({
     default: m.MastersMap,
   }))
 );

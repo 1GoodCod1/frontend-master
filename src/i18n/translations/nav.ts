@@ -13,7 +13,6 @@ export const nav = {
       account: 'Account',
       settings: 'Settings',
       language: 'Language',
-      ideas: 'Ideas',
     },
   },
   ru: {
@@ -30,7 +29,6 @@ export const nav = {
       account: 'Аккаунт',
       settings: 'Настройки',
       language: 'Язык',
-      ideas: 'Идеи',
     },
   },
   ro: {
@@ -47,7 +45,6 @@ export const nav = {
       account: 'Cont',
       settings: 'Setări',
       language: 'Limba',
-      ideas: 'Idei',
     },
   },
 };

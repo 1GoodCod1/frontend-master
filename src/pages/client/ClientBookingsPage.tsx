@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useClientBookings } from '@/hooks/client/bookings/useClientBookings';
-import BookingsEmptyState from '@/components/client/bookings/BookingsEmptyState';
-import BookingCard from '@/components/client/bookings/BookingCard';
+import BookingsEmptyState from '@/features/clients/components/bookings/BookingsEmptyState';
+import BookingCard from '@/features/clients/components/bookings/BookingCard';
 
 export default function ClientBookingsPage() {
   const { t } = useTranslation();

@@ -36,7 +36,6 @@ import { verification } from './verification';
 import { security } from './security';
 import { unsaved } from './unsaved';
 import { master } from './master';
-import { ideas } from './ideas';
 import { notificationSettings } from './notificationSettings';
 import { paymentOptions } from './paymentOptions';
 import { subscription } from './subscription';
@@ -83,7 +82,6 @@ const modules = [
   security,
   unsaved,
   master,
-  ideas,
   notificationSettings,
   paymentOptions,
   subscription,

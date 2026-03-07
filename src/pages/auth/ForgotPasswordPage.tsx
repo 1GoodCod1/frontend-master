@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
+﻿import { motion } from 'framer-motion';
 import { Formik } from 'formik';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import ForgotPasswordHeader from '@/components/auth/forgot-password/ForgotPasswordHeader';
-import ForgotPasswordForm from '@/components/auth/forgot-password/ForgotPasswordForm';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import ForgotPasswordHeader from '@/features/auth/components/forgot-password/ForgotPasswordHeader';
+import ForgotPasswordForm from '@/features/auth/components/forgot-password/ForgotPasswordForm';
 import { useForgotPasswordForm, type ForgotPasswordFormValues } from '@/hooks/auth/forgot-password/useForgotPasswordForm';
 
 export default function ForgotPasswordPage() {

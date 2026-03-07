@@ -1,8 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import {
-  persistReducer,
   persistStore,
+  persistReducer,
   FLUSH,
   REHYDRATE,
   PAUSE,
@@ -15,32 +15,39 @@ import { api } from '@/services/api';
 import { env } from '@/services/env';
 import { persistRefreshToken } from '@/features/auth/persist';
 import { saveNotifications } from '@/features/socket/persist';
-import {
-  persistApiCacheTransform,
-  API_CACHE_PERSIST_VERSION,
-} from '@/app/persistApiCache';
 import authReducer from '@/features/auth/authSlice';
 import socketReducer from '@/features/socket/socketSlice';
 import uiReducer from '@/features/ui/uiSlice';
 import chatReducer from '@/features/chat/chatSlice';
+import { persistApiCacheTransform } from './persistApiCache';
 
+// API cache: persist only Categories/Cities (via transform)
 const apiPersistConfig = {
-  key: 'api',
+  key: 'mm_api',
   storage,
-  version: API_CACHE_PERSIST_VERSION,
   transforms: [persistApiCacheTransform],
 };
-
 const persistedApiReducer = persistReducer(apiPersistConfig, api.reducer);
 
+const rootReducer = combineReducers({
+  [api.reducerPath]: persistedApiReducer,
+  auth: authReducer,
+  socket: socketReducer,
+  ui: uiReducer,
+  chat: chatReducer,
+});
+
+// Root: persist only ui — auth (tokens) excluded for security (localStorage is XSS-vulnerable)
+const rootPersistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['ui'],
+};
+
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
+
 export const store = configureStore({
-  reducer: {
-    [api.reducerPath]: persistedApiReducer,
-    auth: authReducer,
-    socket: socketReducer,
-    ui: uiReducer,
-    chat: chatReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefault) =>
     getDefault({
       serializableCheck: {
@@ -54,6 +61,10 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
+
+/** Use rootReducer type — persistReducer wraps state with _persist, breaking inference */
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch;
 
 let prevRefresh: string | null = null;
 let prevNotifSig = '';
@@ -71,17 +82,25 @@ store.subscribe(() => {
     prevRefresh = current;
   }
 
+  if (!st?.socket?.notifications) return;
+
   const payload = {
-    unreadLeads: st.socket.unreadLeads,
-    unreadReviews: st.socket.unreadReviews,
+    unreadLeads: st.socket.unreadLeads ?? 0,
+    unreadReviews: st.socket.unreadReviews ?? 0,
     notifications: st.socket.notifications,
   };
-  const sig = `${payload.unreadLeads}|${payload.unreadReviews}|${payload.notifications.length}|${payload.notifications[0]?.id ?? ''}`;
+  const firstNotifId = payload.notifications[0]?.id ?? '';
+  const sig = `${payload.unreadLeads}|${payload.unreadReviews}|${payload.notifications.length}|${firstNotifId}`;
+
   if (sig !== prevNotifSig) {
-    saveNotifications(payload);
-    prevNotifSig = sig;
+    // Throttled persistence to avoid blocking UI on large notification sets
+    const now = Date.now();
+    const lastSave = window._lastNotifSave ?? 0;
+    if (now - lastSave > 2000) {
+      saveNotifications(payload);
+      window._lastNotifSave = now;
+      prevNotifSig = sig;
+    }
   }
 });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;

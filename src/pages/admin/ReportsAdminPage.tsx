@@ -1,13 +1,13 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useAdminReports } from '@/hooks/admin/reports/useAdminReports';
-import StatisticsCards from '@/components/admin/reports/StatisticsCards';
-import ReportsFilters from '@/components/admin/reports/ReportsFilters';
-import ReportCard, { type ReportLike } from '@/components/admin/reports/ReportCard';
-import ReportsEmptyState from '@/components/admin/reports/ReportsEmptyState';
-import ReportReviewDialog from '@/components/admin/reports/ReportReviewDialog';
+import StatisticsCards from '@/features/admin/components/reports/StatisticsCards';
+import ReportsFilters from '@/features/admin/components/reports/ReportsFilters';
+import ReportCard, { type ReportLike } from '@/features/admin/components/reports/ReportCard';
+import ReportsEmptyState from '@/features/admin/components/reports/ReportsEmptyState';
+import ReportReviewDialog from '@/features/admin/components/reports/ReportReviewDialog';
 
 export default function ReportsAdminPage() {
   const { t } = useTranslation();

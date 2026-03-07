@@ -1,13 +1,13 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useClientLeads } from '@/hooks/client/leads/useClientLeads';
 import { useReviewModal } from '@/hooks/client/leads/useReviewModal';
-import LeadsStatusFilter from '@/components/client/leads/LeadsStatusFilter';
-import LeadsEmptyState from '@/components/client/leads/LeadsEmptyState';
-import LeadCard from '@/components/client/leads/LeadCard';
-import ReviewModal from '@/components/client/leads/ReviewModal';
+import LeadsStatusFilter from '@/features/clients/components/leads/LeadsStatusFilter';
+import LeadsEmptyState from '@/features/clients/components/leads/LeadsEmptyState';
+import LeadCard from '@/features/clients/components/leads/LeadCard';
+import ReviewModal from '@/features/clients/components/leads/ReviewModal';
 
 export default function ClientLeadsPage() {
   const { t } = useTranslation();

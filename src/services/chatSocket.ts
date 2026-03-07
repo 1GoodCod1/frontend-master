@@ -1,7 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import toast from 'react-hot-toast';
 import { env } from '@/services/env';
-import type { Store } from '@reduxjs/toolkit';
 import {
   setChatConnected,
   addMessage,
@@ -9,9 +8,9 @@ import {
   markConversationRead,
 } from '@/features/chat/chatSlice';
 import { selectAccessToken } from '@/features/auth/selectors';
-import { api } from '@/services/api';
-import type { ChatMessage } from '@/features/chat/chatApi';
-import type { RootState } from '@/app/store';
+import { chatApi } from '@/features/chat/chatApi';
+import type { ChatMessage, MessagesResponse, Conversation } from '@/features/chat/chatApi';
+import type { RootState, AppDispatch } from '@/app/store';
 
 let chatSocket: Socket | null = null;
 
@@ -19,16 +18,9 @@ export function getChatSocket() {
   return chatSocket;
 }
 
-export function connectChatSocket(store: Store<RootState>) {
-  // If socket already exists and connected, return it
+export function connectChatSocket(store: { dispatch: AppDispatch; getState: () => RootState }) {
   if (chatSocket?.connected) return chatSocket;
-
-  // If socket exists but not connected - disconnect and clear listeners
-  if (chatSocket) {
-    chatSocket.removeAllListeners();
-    chatSocket.disconnect();
-    chatSocket = null;
-  }
+  if (chatSocket) return chatSocket;
 
   const token = selectAccessToken(store.getState());
 
@@ -58,10 +50,31 @@ export function connectChatSocket(store: Store<RootState>) {
     console.log('Chat socket disconnected');
   });
 
-  // Handle incoming messages — invalidate so messages refetch and appear without F5
+  // Handle incoming messages - Update cache directly without full refetch
   chatSocket.on('chat:message', (message: ChatMessage & { conversationId: string }) => {
     store.dispatch(addMessage(message));
-    store.dispatch(api.util.invalidateTags(['Chat', { type: 'ChatMessages', id: message.conversationId }]));
+    store.dispatch(
+      chatApi.util.updateQueryData('getMessages', { id: message.conversationId }, (draft: MessagesResponse) => {
+        if (draft?.messages) {
+          if (!draft.messages.some(m => m.id === message.id)) {
+            draft.messages.unshift(message);
+          }
+        }
+      })
+    );
+
+    store.dispatch(
+      chatApi.util.updateQueryData('getConversations', undefined, (draft: Conversation[]) => {
+        if (!draft) return;
+        const convIndex = draft.findIndex(c => c.id === message.conversationId);
+        if (convIndex !== -1) {
+          const conv = draft[convIndex];
+          conv.lastMessage = message;
+          draft.splice(convIndex, 1);
+          draft.unshift(conv);
+        }
+      })
+    );
 
     const state = store.getState();
     if (state.chat?.activeConversationId !== message.conversationId) {
@@ -69,7 +82,6 @@ export function connectChatSocket(store: Store<RootState>) {
     }
   });
 
-  // Handle typing indicators
   chatSocket.on('chat:typing', (data: {
     conversationId: string;
     userId: string;
@@ -78,14 +90,22 @@ export function connectChatSocket(store: Store<RootState>) {
   }) => {
     store.dispatch(setTyping(data));
   });
-
-  // Handle read receipts
   chatSocket.on('chat:read', (data: {
     conversationId: string;
     readBy: string;
   }) => {
     store.dispatch(markConversationRead(data.conversationId));
-    store.dispatch(api.util.invalidateTags([{ type: 'ChatMessages', id: data.conversationId }]));
+    store.dispatch(
+      chatApi.util.updateQueryData('getMessages', { id: data.conversationId }, (draft: MessagesResponse) => {
+        if (draft?.messages) {
+          draft.messages.forEach(m => {
+            if (!m.readAt && m.senderId !== data.readBy) {
+              m.readAt = new Date().toISOString();
+            }
+          });
+        }
+      })
+    );
   });
 
   return chatSocket;
@@ -98,7 +118,6 @@ export function disconnectChatSocket() {
   chatSocket = null;
 }
 
-// Join a conversation room
 export function joinConversation(conversationId: string): Promise<{ success: boolean; error?: string }> {
   return new Promise((resolve) => {
     if (!chatSocket?.connected) {
@@ -111,7 +130,6 @@ export function joinConversation(conversationId: string): Promise<{ success: boo
   });
 }
 
-// Leave a conversation room
 export function leaveConversation(conversationId: string): Promise<{ success: boolean }> {
   return new Promise((resolve) => {
     if (!chatSocket?.connected) {
@@ -124,7 +142,6 @@ export function leaveConversation(conversationId: string): Promise<{ success: bo
   });
 }
 
-// Send a message via WebSocket
 export function sendMessageWs(
   conversationId: string,
   content: string,
@@ -145,13 +162,11 @@ export function sendMessageWs(
   });
 }
 
-// Send typing indicator
 export function sendTyping(conversationId: string, isTyping: boolean): void {
   if (!chatSocket?.connected) return;
   chatSocket.emit('chat:typing', { conversationId, isTyping });
 }
 
-// Mark messages as read via WebSocket
 export function markAsReadWs(conversationId: string): Promise<{ success: boolean; count?: number }> {
   return new Promise((resolve) => {
     if (!chatSocket?.connected) {

@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import type { GridColDef } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -7,16 +7,16 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminLeads, type AdminLeadRow } from '@/hooks/admin/leads/useAdminLeads';
-import StatisticsCards from '@/components/admin/leads/StatisticsCards';
-import LeadsFilters from '@/components/admin/leads/LeadsFilters';
-import BulkActions from '@/components/admin/leads/BulkActions';
-import LeadDetailsDialog from '@/components/admin/leads/LeadDetailsDialog';
-import LeadsEmptyState from '@/components/admin/leads/LeadsEmptyState';
-import ClientCell from '@/components/admin/leads/ClientCell';
-import MasterCell from '@/components/admin/leads/MasterCell';
-import StatusCell from '@/components/admin/leads/StatusCell';
-import MessageCell from '@/components/admin/leads/MessageCell';
-import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
+import StatisticsCards from '@/features/admin/components/leads/StatisticsCards';
+import LeadsFilters from '@/features/admin/components/leads/LeadsFilters';
+import BulkActions from '@/features/admin/components/leads/BulkActions';
+import LeadDetailsDialog from '@/features/admin/components/leads/LeadDetailsDialog';
+import LeadsEmptyState from '@/features/admin/components/leads/LeadsEmptyState';
+import ClientCell from '@/features/admin/components/leads/ClientCell';
+import MasterCell from '@/features/admin/components/leads/MasterCell';
+import StatusCell from '@/features/admin/components/leads/StatusCell';
+import MessageCell from '@/features/admin/components/leads/MessageCell';
+import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 
 export default function LeadsAdminPage() {
   const { t } = useTranslation();

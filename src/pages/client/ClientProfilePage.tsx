@@ -1,9 +1,9 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { useClientProfile } from '@/hooks/client/profile/useClientProfile';
-import AvatarSection from '@/components/client/profile/AvatarSection';
-import AccountInfoSection from '@/components/client/profile/AccountInfoSection';
+import AvatarSection from '@/features/clients/components/profile/AvatarSection';
+import AccountInfoSection from '@/features/clients/components/profile/AccountInfoSection';
 
 function ClientProfilePage() {
   const { t } = useTranslation();

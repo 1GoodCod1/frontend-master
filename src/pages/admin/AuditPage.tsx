@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { Shield, History, Radio, Download } from 'lucide-react';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -14,16 +14,16 @@ import {
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { useAdminAudit, type AuditLogRow } from '@/hooks/admin/audit/useAdminAudit';
-import StatisticsCards from '@/components/admin/audit/StatisticsCards';
-import AuditLogDetailsDialog from '@/components/admin/audit/AuditLogDetailsDialog';
-import AuditEmptyState from '@/components/admin/audit/AuditEmptyState';
-import StatsTab from '@/components/admin/audit/StatsTab';
-import StreamTab from '@/components/admin/audit/StreamTab';
-import ActionCell from '@/components/admin/audit/ActionCell';
-import EntityCell from '@/components/admin/audit/EntityCell';
-import ActorCell from '@/components/admin/audit/ActorCell';
-import IpCell from '@/components/admin/audit/IpCell';
-import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
+import StatisticsCards from '@/features/admin/components/audit/StatisticsCards';
+import AuditLogDetailsDialog from '@/features/admin/components/audit/AuditLogDetailsDialog';
+import AuditEmptyState from '@/features/admin/components/audit/AuditEmptyState';
+import StatsTab from '@/features/admin/components/audit/StatsTab';
+import StreamTab from '@/features/admin/components/audit/StreamTab';
+import ActionCell from '@/features/admin/components/audit/ActionCell';
+import EntityCell from '@/features/admin/components/audit/EntityCell';
+import ActorCell from '@/features/admin/components/audit/ActorCell';
+import IpCell from '@/features/admin/components/audit/IpCell';
+import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 
 export default function AuditPage() {
   const { t } = useTranslation();

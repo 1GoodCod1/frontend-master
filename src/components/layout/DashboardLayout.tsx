@@ -86,19 +86,19 @@ export function DashboardLayout() {
   }));
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
+    <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
       {!isMdUp && (
-        <div className="flex shrink-0 items-center gap-2 border-b border-slate-200 dark:border-[#2c2a24] bg-white dark:bg-[#1e1c17] py-2 px-4">
+        <div className="flex shrink-0 items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4">
           <Button
             variant="ghost"
             size="icon"
-            className="size-11 shrink-0 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-[#2c2a24]"
+            className="size-11 shrink-0 rounded-xl text-muted-foreground hover:bg-muted"
             onClick={() => setMobileOpen(true)}
             aria-label={t('nav.settings')}
           >
             <Menu className="size-5" />
           </Button>
-          <h2 className="text-lg font-extrabold text-slate-900 dark:text-slate-100">
+          <h2 className="text-lg font-extrabold text-foreground">
             {t('dashboard.title')}
           </h2>
         </div>
@@ -114,7 +114,7 @@ export function DashboardLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main className="flex-1 overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-[#171510] transition-colors duration-300">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300">
         <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
           {role === 'MASTER' && <VerificationRequiredBanner role="MASTER" isVerified={isVerified} />}

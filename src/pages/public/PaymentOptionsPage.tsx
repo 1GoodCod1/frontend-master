@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,7 +8,7 @@ import { usePaymentOptionsPage } from '@/hooks/payments/usePaymentOptionsPage';
 import { toErrorMessage } from '@/utils/errors';
 import { usePaymentsSimulateMiaSandboxMutation } from '@/features/payments/paymentsApi';
 import { LoadingState } from '@/components/common/States';
-import { PaymentMethodCard } from '@/components/payments/PaymentMethodCard';
+import { PaymentMethodCard } from '@/features/payments/components/PaymentMethodCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {

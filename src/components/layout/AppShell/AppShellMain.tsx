@@ -18,8 +18,9 @@ export function AppShellMain({
   const isMasterDetailsPage = /^\/masters\/[^/]+$/.test(pathname);
   const isMastersListPage = pathname === '/masters';
   const isPlansPage = pathname === '/plans' || pathname.startsWith('/plans/');
-  const isOtherPublicPage = ['/faq', '/how-it-works', '/contact', '/privacy', '/terms', '/ideas'].includes(pathname);
-  const fullWidth = isDashboardOrAdmin || isHomePage || isMasterDetailsPage || isMastersListPage || isPlansPage || isOtherPublicPage;
+  const isOtherPublicPage = ['/faq', '/how-it-works', '/contact', '/privacy', '/terms'].includes(pathname);
+  const isPublicPage = isHomePage || isMasterDetailsPage || isMastersListPage || isPlansPage || isOtherPublicPage;
+  const fullWidth = isDashboardOrAdmin || isPublicPage;
   const isAuthPage = /^\/(login|register|forgot-password|reset-password)$/.test(pathname);
 
   return (
@@ -31,7 +32,8 @@ export function AppShellMain({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={cn(
-            'flex min-h-[calc(100vh-3.5rem)] min-w-0 flex-col overflow-x-hidden bg-background transition-colors',
+            'flex min-h-[calc(100dvh-3.5rem)] min-w-0 flex-col overflow-x-hidden transition-colors',
+            isPublicPage || isAuthPage ? 'bg-[#faf8f0] dark:bg-[#171510]' : 'bg-background',
             fullWidth ? 'pt-14' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-20 md:pt-24 pb-6 md:pb-8'
           )}
         >

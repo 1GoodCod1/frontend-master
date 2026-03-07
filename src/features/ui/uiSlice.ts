@@ -3,26 +3,32 @@ import { prefsCookies } from '@/utils/prefsCookies';
 
 export type ColorMode = 'light' | 'dark';
 
-const STORAGE_KEY = 'mm_color_mode';
-
+/** Single source of truth: persist:root (Redux persist). Cookie only for fallback. */
 function readInitialMode(): ColorMode {
   if (typeof window === 'undefined') return 'light';
+  try {
+    const raw = localStorage.getItem('persist:root');
+    if (raw) {
+      const parsed = JSON.parse(raw) as { ui?: string };
+      const ui = parsed?.ui ? (JSON.parse(parsed.ui) as { colorMode?: string }) : null;
+      if (ui?.colorMode === 'light' || ui?.colorMode === 'dark') return ui.colorMode;
+    }
+  } catch {
+    //
+  }
   try {
     const fromCookie = prefsCookies.theme.get();
     if (fromCookie === 'light' || fromCookie === 'dark') return fromCookie;
   } catch {
     //
   }
-  const v = localStorage.getItem(STORAGE_KEY);
-  if (v === 'light' || v === 'dark') return v;
-
   const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
   return prefersDark ? 'dark' : 'light';
 }
 
+/** Sync to cookie only. Redux persist handles persist:root automatically. */
 function persistTheme(mode: ColorMode): void {
   try {
-    localStorage.setItem(STORAGE_KEY, mode);
     prefsCookies.theme.set(mode);
   } catch {
     //

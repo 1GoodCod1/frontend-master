@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CreditCard } from 'lucide-react';
@@ -6,8 +6,8 @@ import { useAppSelector } from '@/app/hooks';
 import { selectRole } from '@/features/auth/selectors';
 import { usePlansLogic } from '@/hooks/payments/usePlansLogic';
 import { LoadingState } from '@/components/common/States';
-import { PlanCard } from '@/components/payments/PlanCard';
-import { PlansAlerts } from '@/components/payments/PlansAlerts';
+import { PlanCard } from '@/features/payments/components/PlanCard';
+import { PlansAlerts } from '@/features/payments/components/PlansAlerts';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';

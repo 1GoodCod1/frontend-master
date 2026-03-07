@@ -1,9 +1,9 @@
-import { useSearchParams } from 'react-router-dom';
+﻿import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Formik } from 'formik';
-import ResetPasswordHeader from '@/components/auth/reset-password/ResetPasswordHeader';
-import ResetPasswordForm from '@/components/auth/reset-password/ResetPasswordForm';
-import InvalidTokenView from '@/components/auth/reset-password/InvalidTokenView';
+import ResetPasswordHeader from '@/features/auth/components/reset-password/ResetPasswordHeader';
+import ResetPasswordForm from '@/features/auth/components/reset-password/ResetPasswordForm';
+import InvalidTokenView from '@/features/auth/components/reset-password/InvalidTokenView';
 import { useResetPasswordForm, type ResetPasswordFormValues } from '@/hooks/auth/reset-password/useResetPasswordForm';
 import { Card, CardContent } from '@/components/ui/card';
 

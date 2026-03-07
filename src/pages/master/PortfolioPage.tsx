@@ -25,11 +25,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { BeforeAfterSlider } from '@/components/portfolio/BeforeAfterSlider';
+import { BeforeAfterSlider } from '@/features/portfolio/components/BeforeAfterSlider';
 import { mediaUrl } from '@/utils/media';
 import type { PortfolioItemDto } from '@/types';
 import type { FileDto } from '@/types';
-import '@/components/portfolio/portfolio.css';
+import '@/features/portfolio/components/portfolio.css';
 
 function getCurrentUserMasterId(me: unknown): string | undefined {
   if (!me || typeof me !== 'object') return undefined;

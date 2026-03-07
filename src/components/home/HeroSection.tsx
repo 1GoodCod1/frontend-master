@@ -19,7 +19,7 @@ import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useUserCity, USER_CITY_STORAGE_KEY } from '@/hooks/useUserCity';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
-import { SearchInputWithHistory } from '@/components/search/SearchInputWithHistory';
+import { SearchInputWithHistory } from '@/features/masters/components/search/SearchInputWithHistory';
 import { Button } from '@/components/ui/button';
 import {
   Select,

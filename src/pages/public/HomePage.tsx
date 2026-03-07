@@ -11,7 +11,6 @@ import { PopularCategoriesSection } from '@/components/home/PopularCategoriesSec
 import { MastersGridSection } from '@/components/home/MastersGridSection';
 import { HowItWorksSection } from '@/components/home/HowItWorksSection';
 import { Flame } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -34,14 +33,11 @@ export default function HomePage() {
   }, [activePromotions]);
 
   return (
-    <motion.main
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className={cn(
-        'relative min-h-screen w-full transition-colors duration-500',
-        'bg-[#faf8f0] dark:bg-black'
-      )}
+      className="relative min-h-screen w-full"
     >
       {/* Background effects - applied to entire HomePage */}
       <div className="absolute inset-0 pointer-events-none">
@@ -97,6 +93,6 @@ export default function HomePage() {
           <HowItWorksSection />
         </div>
       </section>
-    </motion.main>
+    </motion.div>
   );
 }

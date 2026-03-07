@@ -27,34 +27,58 @@
   --cta-foreground: 0 0% 100%;
   --radius: 0.75rem;
   --home-bg: 220 18% 98%;
-  --select-backdrop: hsla(40, 15%, 20%, 0.12);
+  --scrollbar-thumb: hsl(var(--muted-foreground) / 0.18);
+  --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.35);
 }
 
 html[data-theme="dark"],
 .dark {
-  --background: 0 0% 0%;
+  /* Base: #171510 */
+  --background: 43 18% 8%;
   --foreground: 0 0% 98%;
-  --card: 0 0% 4%;
+  --card: 43 16% 10%;
   --card-foreground: 0 0% 98%;
-  --popover: 0 0% 4%;
+  --popover: 43 16% 10%;
   --popover-foreground: 0 0% 98%;
   --primary: 174 72% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 6%;
+  --secondary: 43 14% 12%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 6%;
+  --muted: 43 14% 12%;
   --muted-foreground: 0 0% 55%;
-  --accent: 0 0% 6%;
+  --accent: 43 14% 12%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 63% 55%;
   --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 12%;
-  --input: 0 0% 6%;
+  --border: 43 12% 18%;
+  --input: 43 14% 12%;
   --ring: 174 72% 45%;
   --cta: 38 92% 50%;
   --cta-foreground: 0 0% 100%;
-  --home-bg: 0 0% 0%;
-  --select-backdrop: rgba(0, 0, 0, 0.8);
+  --home-bg: 43 18% 8%;
+  --scrollbar-thumb: hsl(var(--muted-foreground) / 0.22);
+  --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* ── Cabinet layout scope ── */
+.cabinet-theme-scope {
+  --cabinet-sidebar-bg: 0 0% 100%;
+  --cabinet-sidebar-border: 214 32% 91%;
+  --cabinet-main-bg: 220 14% 96%;
+}
+
+html[data-theme="dark"] .cabinet-theme-scope,
+.dark .cabinet-theme-scope {
+  --background: 43 18% 8%;
+  --cabinet-sidebar-bg: 43 16% 10%;
+  --cabinet-sidebar-border: 43 12% 18%;
+  --cabinet-main-bg: 43 18% 8%;
+  --card: 43 16% 10%;
+  --popover: 43 16% 10%;
+  --secondary: 43 14% 12%;
+  --muted: 43 14% 12%;
+  --input: 43 14% 12%;
+  --border: 43 12% 18%;
 }
 
 .bg-home-gradient {
@@ -71,12 +95,15 @@ html {
   overscroll-behavior-x: none;
   overflow-y: scroll; /* скроллбар всегда виден — нет сдвига при открытии Select */
   overflow-anchor: auto;
+  min-height: 100%;
+  background-color: hsl(var(--background));
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
+  min-height: 100dvh;
   height: 100%;
   overflow-x: hidden;
   scroll-behavior: auto;
@@ -93,7 +120,7 @@ body {
 
 #root {
   min-height: 100vh;
-  min-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+  min-height: 100dvh;
   min-width: 0;
   width: 100%;
   max-width: 100%;
@@ -106,8 +133,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -115,12 +142,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 6px;
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  transition: background 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.15);
+  background: var(--scrollbar-thumb-hover);
 }
 
 .text-center {
@@ -160,7 +188,6 @@ body {
 body {
   padding-left: env(safe-area-inset-left, 0);
   padding-right: env(safe-area-inset-right, 0);
-  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 @media print {
@@ -182,12 +209,22 @@ body {
   background-color: hsl(var(--popover)) !important;
 }
 
-.select-dropdown-content[data-state="open"]::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: var(--select-backdrop);
+/* Smooth open/close for header menus - fade only, no slide/zoom */
+@keyframes menu-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes menu-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.popover-smooth-open[data-state="open"],
+.dropdown-smooth-open[data-state="open"] {
+  animation: menu-fade-in 0.25s ease-out !important;
+}
+.popover-smooth-open[data-state="closed"],
+.dropdown-smooth-open[data-state="closed"] {
+  animation: menu-fade-out 0.2s ease-out forwards !important;
 }
 
 input:-webkit-autofill,
@@ -243,7 +280,7 @@ input:-webkit-autofill:active {
   background: #f5f5f5;
 }
 .dark .auth-outline-btn:hover {
-  background: #1a1a1a;
+  background: hsl(var(--accent));
 }
 
 .auth-input-wrapper .auth-label {
@@ -254,7 +291,7 @@ input:-webkit-autofill:active {
   color: #888888;
 }
 .dark .auth-input-wrapper .auth-label {
-  color: #666666;
+  color: hsl(var(--muted-foreground));
 }
 .auth-input {
   background: #f5f5f5;
@@ -274,7 +311,7 @@ input:-webkit-autofill:active {
   color: #eeeeee;
 }
 .dark .auth-input::placeholder {
-  color: #444444;
+  color: hsl(var(--muted-foreground));
 }
 .auth-input:focus {
   outline: none;
@@ -313,7 +350,7 @@ input:-webkit-autofill:active {
   margin-bottom: 8px;
 }
 .dark .auth-heading {
-  color: #f0f0f0;
+  color: hsl(var(--foreground));
 }
 .auth-subheading {
   font-size: 0.85rem;
@@ -321,7 +358,7 @@ input:-webkit-autofill:active {
   margin-bottom: 32px;
 }
 .dark .auth-subheading {
-  color: #7a7a7a;
+  color: hsl(var(--muted-foreground));
 }
 .auth-divider {
   border-top: 1px solid #eeeeee;
@@ -357,7 +394,7 @@ input:-webkit-autofill:active {
   margin-bottom: 32px;
 }
 .dark .auth-back-link {
-  color: #7a7a7a;
+  color: hsl(var(--muted-foreground));
 }
 .auth-back-link:hover {
   text-decoration: underline;

@@ -14,7 +14,6 @@ import {
   DollarSign,
   BarChart2,
   BadgeCheck,
-  Lightbulb,
   Shield,
   Settings,
   FileCheck,
@@ -39,7 +38,6 @@ const items: { key: string; to: string; icon: React.ReactNode }[] = [
   { key: 'tariffs', to: '/admin/tariffs', icon: <DollarSign className="size-5" /> },
   { key: 'analytics', to: '/admin/analytics', icon: <BarChart2 className="size-5" /> },
   { key: 'verificationRequests', to: '/admin/verification-requests', icon: <BadgeCheck className="size-5" /> },
-  { key: 'ideas', to: '/admin/ideas', icon: <Lightbulb className="size-5" /> },
   { key: 'security', to: '/admin/security', icon: <Shield className="size-5" /> },
   { key: 'system', to: '/admin/system', icon: <Settings className="size-5" /> },
   { key: 'audit', to: '/admin/audit', icon: <FileCheck className="size-5" /> },
@@ -69,19 +67,19 @@ export function AdminLayout() {
   }));
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
+    <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
       {!isMdUp && (
-        <div className="flex shrink-0 items-center gap-2 border-b border-slate-200 dark:border-[#2c2a24] bg-white dark:bg-[#1e1c17] py-2 px-4">
+        <div className="flex shrink-0 items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4">
           <Button
             variant="ghost"
             size="icon"
-            className="size-11 shrink-0 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-[#2c2a24]"
+            className="size-11 shrink-0 rounded-xl text-muted-foreground hover:bg-muted"
             onClick={() => setMobileOpen(true)}
             aria-label={t('nav.admin')}
           >
             <Menu className="size-5" />
           </Button>
-          <h2 className="text-lg font-extrabold text-slate-900 dark:text-slate-100">
+          <h2 className="text-lg font-extrabold text-foreground">
             {t('nav.admin')}
           </h2>
         </div>
@@ -96,7 +94,7 @@ export function AdminLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main className="flex-1 overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-[#171510] transition-colors duration-300">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300">
         <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
           <Outlet />

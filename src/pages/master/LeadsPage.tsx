@@ -16,7 +16,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
 import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus, type LeadDto } from '@/types/leads';
-import { LeadStatusProgress } from '@/components/leads/LeadStatusProgress';
+import { LeadStatusProgress } from '@/features/leads/components/LeadStatusProgress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';

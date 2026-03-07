@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Heart, Mail, AlertTriangle, Star } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -7,7 +7,7 @@ import { RecommendedMasters } from '@/components/home/recommendations/Recommende
 import { useClientDashboard } from '@/hooks/client/dashboard/useClientDashboard';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useNow } from '@/hooks/useNow';
-import DashboardMetricCard from '@/components/client/dashboard/DashboardMetricCard';
+import DashboardMetricCard from '@/features/clients/components/dashboard/DashboardMetricCard';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { ClientBooking } from '@/hooks/client/dashboard/useClientDashboard';

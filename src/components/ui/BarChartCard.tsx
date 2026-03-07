@@ -52,8 +52,8 @@ export function BarChartCard({
     <Card className="h-[320px] overflow-hidden">
       <CardContent className="flex h-full flex-col gap-2 p-4">
         <p className="text-sm font-medium">{title}</p>
-        <div className="min-h-0 flex-1">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="min-h-[200px] min-w-0 flex-1">
+          <ResponsiveContainer width="100%" height={240} minHeight={200}>
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey={xKey} />

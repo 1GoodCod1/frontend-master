@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import type { ChatMessage } from './chatApi';
 import { TYPING_TIMEOUT_MS } from './constants';
 
@@ -14,15 +14,13 @@ interface ChatState {
   activeConversationId: string | null;
   unreadCounts: Record<string, number>;
   typingUsers: TypingUser[];
-  recentMessages: ChatMessage[];
-} 
+}
 
 const initialState: ChatState = {
   connected: false,
   activeConversationId: null,
   unreadCounts: {},
   typingUsers: [],
-  recentMessages: [],
 };
 
 const slice = createSlice({
@@ -39,10 +37,6 @@ const slice = createSlice({
 
     addMessage(state, action: PayloadAction<ChatMessage>) {
       const message = action.payload;
-      state.recentMessages.unshift(message);
-      if (state.recentMessages.length > 100) {
-        state.recentMessages.length = 100;
-      }
       if (message.conversationId !== state.activeConversationId) {
         state.unreadCounts[message.conversationId] =
           (state.unreadCounts[message.conversationId] || 0) + 1;
@@ -104,7 +98,6 @@ const slice = createSlice({
       state.activeConversationId = null;
       state.unreadCounts = {};
       state.typingUsers = [];
-      state.recentMessages = [];
     },
   },
 });
@@ -134,8 +127,18 @@ export const selectUnreadCount = (conversationId: string) => (state: { chat: Cha
 export const selectTotalUnreadCount = (state: { chat: ChatState }) =>
   Object.values(state.chat.unreadCounts).reduce((sum, count) => sum + count, 0);
 
-export const selectTypingUsers = (conversationId: string) => (state: { chat: ChatState }) =>
-  state.chat.typingUsers.filter((t) => t.conversationId === conversationId);
+const selectTypingUsersForConversation = createSelector(
+  [
+    (state: { chat: ChatState }) => state.chat.typingUsers,
+    (_state: { chat: ChatState }, conversationId: string) => conversationId,
+  ],
+  (typingUsers, conversationId) =>
+    typingUsers.filter((t) => t.conversationId === conversationId),
+);
 
-export const selectRecentMessages = (state: { chat: ChatState }) =>
-  state.chat.recentMessages;
+export const selectTypingUsers = (conversationId: string) =>
+  (state: { chat: ChatState }) =>
+    selectTypingUsersForConversation(state, conversationId);
+
+export const selectAverageResponseTime = () => 0; // Deprecated or for stats later
+

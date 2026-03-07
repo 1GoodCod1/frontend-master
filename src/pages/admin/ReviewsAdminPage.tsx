@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -7,16 +7,16 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminReviews, type AdminReviewRow } from '@/hooks/admin/reviews/useAdminReviews';
-import StatisticsCards from '@/components/admin/reviews/StatisticsCards';
-import ReviewsFilters from '@/components/admin/reviews/ReviewsFilters';
-import BulkActions from '@/components/admin/reviews/BulkActions';
-import ReviewDetailsDialog from '@/components/admin/reviews/ReviewDetailsDialog';
-import ReviewsEmptyState from '@/components/admin/reviews/ReviewsEmptyState';
-import ClientCell from '@/components/admin/reviews/ClientCell';
-import MasterCell, { type ReviewMasterLike } from '@/components/admin/reviews/MasterCell';
-import RatingCell from '@/components/admin/reviews/RatingCell';
-import CommentCell from '@/components/admin/reviews/CommentCell';
-import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
+import StatisticsCards from '@/features/admin/components/reviews/StatisticsCards';
+import ReviewsFilters from '@/features/admin/components/reviews/ReviewsFilters';
+import BulkActions from '@/features/admin/components/reviews/BulkActions';
+import ReviewDetailsDialog from '@/features/admin/components/reviews/ReviewDetailsDialog';
+import ReviewsEmptyState from '@/features/admin/components/reviews/ReviewsEmptyState';
+import ClientCell from '@/features/admin/components/reviews/ClientCell';
+import MasterCell, { type ReviewMasterLike } from '@/features/admin/components/reviews/MasterCell';
+import RatingCell from '@/features/admin/components/reviews/RatingCell';
+import CommentCell from '@/features/admin/components/reviews/CommentCell';
+import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 import { StatusChip } from '@/components/ui/StatusChip';
 
 export default function ReviewsAdminPage() {

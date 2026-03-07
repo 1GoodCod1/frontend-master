@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useClientFavorites } from '@/hooks/client/favorites/useClientFavorites';
-import FavoriteCard from '@/components/client/favorites/FavoriteCard';
-import FavoritesEmptyState from '@/components/client/favorites/FavoritesEmptyState';
+import FavoriteCard from '@/features/clients/components/favorites/FavoriteCard';
+import FavoritesEmptyState from '@/features/clients/components/favorites/FavoritesEmptyState';
 import type { FavoriteDto } from '@/types';
 
 export default function ClientFavoritesPage() {

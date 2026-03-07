@@ -15,6 +15,7 @@ type Props = {
   isAuthed: boolean;
   role: string | null;
   colorMode: 'light' | 'dark';
+  isInCabinet?: boolean;
   navLinkBaseClass: string;
   navLinkClass: (isActive: boolean) => string;
   isNavCentered: boolean;
@@ -28,6 +29,7 @@ export function AppShellHeader({
   isAuthed,
   role,
   colorMode,
+  isInCabinet = false,
   navLinkBaseClass,
   navLinkClass,
   isNavCentered,
@@ -39,6 +41,13 @@ export function AppShellHeader({
   const { t } = useTranslation();
   const navItems = getVisibleNavItems(isAuthed, role as 'ADMIN' | 'MASTER' | 'CLIENT' | null);
 
+  const headerBg =
+    isInCabinet && colorMode === 'dark'
+      ? 'bg-[#171510]/85'
+      : isInCabinet && colorMode === 'light'
+        ? 'bg-white/85'
+        : 'bg-background/85';
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -8 }}
@@ -46,7 +55,8 @@ export function AppShellHeader({
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25 }}
       className={cn(
-        'fixed top-0 left-0 right-0 z-40 w-full bg-background/85 backdrop-blur-xl',
+        'fixed top-0 left-0 right-0 z-40 w-full backdrop-blur-xl',
+        headerBg,
         RemoveScroll.classNames.fullWidth,
         'shadow-[0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.25)]'
       )}

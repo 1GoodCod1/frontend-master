@@ -16,14 +16,10 @@ import { cn } from '@/lib/utils';
 const SCROLL_THRESHOLD = 150;
 
 function getScrollTop(): number {
-  const win =
-    typeof window.scrollY === 'number' ? window.scrollY : 0;
-  const docEl = document.documentElement.scrollTop ?? 0;
-  const body = document.body.scrollTop ?? 0;
-  const main = document.querySelector('main');
-  const mainScroll =
-    main && main.scrollHeight > main.clientHeight ? main.scrollTop : 0;
-  return Math.max(win, docEl, body, mainScroll, 0);
+  const winScroll = window.scrollY || document.documentElement.scrollTop || 0;
+  const main = document.querySelector<HTMLElement>('main');
+  const mainScroll = main && main.scrollHeight > main.clientHeight ? main.scrollTop : 0;
+  return Math.max(winScroll, mainScroll, 0);
 }
 
 export function useAppShell() {
@@ -56,43 +52,20 @@ export function useAppShell() {
   }, [restoring, isAuthed, role, isLoadingMe]);
 
   useEffect(() => {
-    const updateShow = (scrollValue?: number) => {
-      const top = scrollValue ?? getScrollTop();
-      setShowScrollTop(top > SCROLL_THRESHOLD);
+    const isScrollLocked = () => document.body.hasAttribute('data-scroll-locked');
+    const updateShow = () => {
+      if (isScrollLocked()) return;
+      setShowScrollTop(getScrollTop() > SCROLL_THRESHOLD);
     };
-    const onScroll = (e: Event) => {
-      const target = e.target;
-      if (target instanceof Element && typeof (target as HTMLElement).scrollTop === 'number') {
-        updateShow(Math.max(getScrollTop(), (target as HTMLElement).scrollTop));
-      } else {
-        updateShow();
-      }
-    };
-    const rafId = { current: 0 };
-    const scheduleUpdate = () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(() => updateShow());
-    };
+    const main = document.querySelector<HTMLElement>('main');
+
     updateShow();
-    const t1 = setTimeout(updateShow, 100);
-    const t2 = setTimeout(updateShow, 400);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
-    document.documentElement.addEventListener('scroll', onScroll, { passive: true });
-    document.body.addEventListener('scroll', onScroll, { passive: true });
-    const main = document.querySelector('main');
-    main?.addEventListener('scroll', onScroll, { passive: true });
-    const interval = setInterval(scheduleUpdate, 400);
+    window.addEventListener('scroll', updateShow, { passive: true });
+    main?.addEventListener('scroll', updateShow, { passive: true });
+
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      window.removeEventListener('scroll', onScroll);
-      document.removeEventListener('scroll', onScroll, true);
-      document.documentElement.removeEventListener('scroll', onScroll);
-      document.body.removeEventListener('scroll', onScroll);
-      main?.removeEventListener('scroll', onScroll);
-      clearInterval(interval);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
+      window.removeEventListener('scroll', updateShow);
+      main?.removeEventListener('scroll', updateShow);
     };
   }, [location.pathname]);
 
@@ -122,25 +95,14 @@ export function useAppShell() {
   const closeMobileNav = () => setMobileNavOpen(false);
 
   const scrollToTop = () => {
-    const duration = 600;
-    const start = performance.now();
-    const startY = getScrollTop();
+    const main = document.querySelector<HTMLElement>('main');
+    const isMainScrollable = !!main && main.scrollHeight > main.clientHeight && main.scrollTop > 0;
 
-    const step = (now: number) => {
-      const elapsed = now - start;
-      const t = Math.min(elapsed / duration, 1);
-      const easeOut = 1 - (1 - t) * (1 - t);
-      const y = Math.round(startY * (1 - easeOut));
-      window.scrollTo(0, y);
-      document.documentElement.scrollTop = y;
-      document.body.scrollTop = y;
-      const main = document.querySelector('main');
-      if (main && main.scrollHeight > main.clientHeight) {
-        (main as HTMLElement).scrollTop = y;
-      }
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    if (isMainScrollable) {
+      main.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   async function onLogout() {

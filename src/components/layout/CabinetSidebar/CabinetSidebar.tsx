@@ -73,14 +73,14 @@ export function CabinetSidebar({
       {isMobileOpen && (
         <button
           onClick={onMobileClose}
-          className="absolute top-3 right-3 md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-[#2c2a24] transition-all"
+          className="absolute top-3 right-3 md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition-all"
         >
           <X size={16} />
         </button>
       )}
 
       {/* User Profile Header */}
-      <div className="p-4 border-b border-slate-100 dark:border-[#2c2a24]">
+      <div className="p-4 border-b border-[hsl(var(--cabinet-sidebar-border))]">
         <div className="flex items-center gap-3 min-w-0">
           <div className="relative shrink-0">
             <Avatar className="w-10 h-10 rounded-xl shadow-lg shadow-violet-500/25">
@@ -92,7 +92,7 @@ export function CabinetSidebar({
             {role === 'MASTER' && (
               <div
                 className={cn(
-                  'absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-[#1e1c17]',
+                  'absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[hsl(var(--cabinet-sidebar-bg))]',
                   isOnline ? 'bg-emerald-400' : 'bg-slate-400'
                 )}
               />
@@ -108,7 +108,7 @@ export function CabinetSidebar({
                 className="min-w-0 flex-1 overflow-hidden"
               >
                 <p
-                  className="text-sm font-semibold text-slate-900 dark:text-slate-100 line-clamp-2 break-words"
+                  className="text-sm font-semibold text-foreground line-clamp-2 break-words"
                   title={displayName || undefined}
                 >
                   {displayName || '—'}
@@ -197,7 +197,7 @@ export function CabinetSidebar({
                 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 relative group',
                 selected
                   ? 'bg-violet-50 dark:bg-violet-950/20 text-violet-700 dark:text-violet-300'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#2c2a24] hover:text-slate-900 dark:hover:text-slate-100',
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-muted hover:text-foreground',
                 collapsed ? 'justify-center' : ''
               )}
             >
@@ -234,14 +234,14 @@ export function CabinetSidebar({
                     'text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 min-w-[18px] text-center',
                     selected
                       ? 'bg-violet-600 text-white'
-                      : 'bg-slate-200 dark:bg-[#2c2a24] text-slate-600 dark:text-slate-400'
+                      : 'bg-muted text-muted-foreground'
                   )}
                 >
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>
               )}
               {collapsed && item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full border border-white dark:border-[#1e1c17]" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full border border-[hsl(var(--cabinet-sidebar-bg))]" />
               )}
             </div>
           );
@@ -267,7 +267,7 @@ export function CabinetSidebar({
         <motion.aside
           animate={{ width: collapsed ? 72 : 256 }}
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          className="flex flex-col h-full bg-white dark:bg-[#1e1c17] border-r border-slate-200 dark:border-[#2c2a24] overflow-hidden transition-colors duration-300"
+          className="flex flex-col h-full bg-[hsl(var(--cabinet-sidebar-bg))] border-r border-[hsl(var(--cabinet-sidebar-border))] overflow-hidden transition-colors duration-300"
         >
           {sidebarContent}
         </motion.aside>
@@ -275,7 +275,7 @@ export function CabinetSidebar({
           onClick={onToggle}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="absolute -right-3.5 top-8 z-30 w-7 h-7 bg-white dark:bg-[#2c2a24] border border-slate-200 dark:border-[#3a3730] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all"
+          className="absolute -right-3.5 top-8 z-30 w-7 h-7 bg-[hsl(var(--cabinet-sidebar-bg))] border border-[hsl(var(--cabinet-sidebar-border))] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all"
         >
           {collapsed ? (
             <ChevronRight size={12} className="text-slate-500 dark:text-slate-400" />
@@ -301,7 +301,7 @@ export function CabinetSidebar({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="fixed top-0 left-0 h-full w-72 bg-white dark:bg-[#1e1c17] z-50 md:hidden overflow-hidden"
+              className="fixed top-0 left-0 h-full w-72 bg-[hsl(var(--cabinet-sidebar-bg))] z-50 md:hidden overflow-hidden"
             >
               <div className="relative h-full">{sidebarContent}</div>
             </motion.aside>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -11,12 +11,12 @@ import { SectionCard } from '@/components/ui/SectionCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAdminTariffs } from '@/hooks/admin/tariffs/useAdminTariffs';
-import UpsertDialog from '@/components/admin/tariffs/UpsertDialog';
-import BulkActions from '@/components/admin/tariffs/BulkActions';
-import TypeCell from '@/components/admin/tariffs/TypeCell';
-import FeaturesCell from '@/components/admin/tariffs/FeaturesCell';
-import ActiveCell from '@/components/admin/tariffs/ActiveCell';
-import ActionsCell from '@/components/admin/tariffs/ActionsCell';
+import UpsertDialog from '@/features/admin/components/tariffs/UpsertDialog';
+import BulkActions from '@/features/admin/components/tariffs/BulkActions';
+import TypeCell from '@/features/admin/components/tariffs/TypeCell';
+import FeaturesCell from '@/features/admin/components/tariffs/FeaturesCell';
+import ActiveCell from '@/features/admin/components/tariffs/ActiveCell';
+import ActionsCell from '@/features/admin/components/tariffs/ActionsCell';
 import type { Tariff, UpdateTariffDto } from '@/features/tariffs/tariffsApi';
 
 type Row = Tariff & Record<string, unknown>;

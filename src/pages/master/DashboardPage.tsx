@@ -11,7 +11,7 @@ import { useAnalyticsMyQuery } from '@/features/analytics/analyticsApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { StatCard } from '@/components/ui/StatCard';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
-import { AvailabilityControl } from '@/components/master/AvailabilityControl';
+import { AvailabilityControl } from '@/features/masters/components/master/AvailabilityControl';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsVerified } from '@/features/auth/selectors';
 import { extractItems } from '@/utils/data';
@@ -23,7 +23,7 @@ import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { ProfileViewsHistoryModal } from '@/components/master/ProfileViewsHistoryModal';
+import { ProfileViewsHistoryModal } from '@/features/masters/components/master/ProfileViewsHistoryModal';
 import { Progress } from '@/components/ui/progress';
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ color?: string; name?: string; value?: number }>; label?: string }) {
@@ -284,9 +284,9 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="h-[300px] w-full mt-4">
+              <div className="h-[300px] min-h-[200px] w-full mt-4">
                 {chartData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height={280} minHeight={200}>
                     <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <defs>
                         <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">

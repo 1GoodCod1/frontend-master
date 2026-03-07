@@ -1,11 +1,11 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { Crown } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingState, ErrorState } from '@/components/common/States';
-import { NotificationChannelsForm } from '@/components/master/NotificationChannelsForm';
+import { NotificationChannelsForm } from '@/features/masters/components/master/NotificationChannelsForm';
 import { useNotificationSettings } from '@/hooks/master/useNotificationSettings';
 
 export default function NotificationsSettingsPage() {

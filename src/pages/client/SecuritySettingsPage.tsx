@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
-import { LoginHistory } from '@/components/security/LoginHistory';
-import { ChangePasswordForm } from '@/components/security/ChangePasswordForm';
+import { LoginHistory } from '@/features/security/components/LoginHistory';
+import { ChangePasswordForm } from '@/features/security/components/ChangePasswordForm';
 
 export default function SecuritySettingsPage() {
   const { t } = useTranslation();

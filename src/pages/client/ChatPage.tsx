@@ -1,33 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ChatList, ChatWindow } from '@/components/chat';
+import { ChatList, ChatWindow } from '@/features/chat/components';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { useAppSelector } from '@/app/hooks';
+import { selectMe } from '@/features/auth/selectors';
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { connectChatSocket, disconnectChatSocket } from '@/services/chatSocket';
 import { store } from '@/app/store';
+
+const DISCONNECT_DEFER_MS = 50;
+
 export default function ClientChatPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { conversationId } = useParams();
   const isMdUp = useIsMdUp();
 
-  const currentUser = useAppSelector((state) => state.auth.me);
+  const currentUser = useAppSelector(selectMe);
   const currentUserId = currentUser?.id ?? '';
 
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(conversationId ?? null);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const effectiveSelected = conversationId ?? selectedConversation;
+
+  const mountedRef = useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
     connectChatSocket(store);
     return () => {
-      disconnectChatSocket();
+      mountedRef.current = false;
+      setTimeout(() => {
+        if (!mountedRef.current) disconnectChatSocket();
+      }, DISCONNECT_DEFER_MS);
     };
   }, []);
-
-  if (conversationId && conversationId !== selectedConversation) {
-    setSelectedConversation(conversationId);
-  }
 
   const handleSelectConversation = (id: string) => {
     setSelectedConversation(id);
@@ -46,9 +53,9 @@ export default function ClientChatPage() {
       <div className="flex flex-col" style={{ height: layoutHeight }}>
         <PageHeader title={t('clientDashboard.chat')} subtitle={t('clientDashboard.chatSubtitle')} />
         <div className="mt-4 flex flex-1 flex-col overflow-hidden rounded-2xl border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none">
-          {selectedConversation ? (
+          {effectiveSelected ? (
             <ChatWindow
-              conversationId={selectedConversation}
+              conversationId={effectiveSelected}
               onBack={handleBack}
               currentUserId={currentUserId}
               currentUserRole="CLIENT"
@@ -57,7 +64,7 @@ export default function ClientChatPage() {
             <div className="flex-1 overflow-auto">
               <ChatList
                 onSelectConversation={handleSelectConversation}
-                selectedConversationId={selectedConversation ?? undefined}
+                selectedConversationId={effectiveSelected ?? undefined}
                 userRole="CLIENT"
               />
             </div>
@@ -78,16 +85,16 @@ export default function ClientChatPage() {
           <div className="min-h-0 flex-1 overflow-auto">
             <ChatList
               onSelectConversation={handleSelectConversation}
-              selectedConversationId={selectedConversation ?? undefined}
+              selectedConversationId={effectiveSelected ?? undefined}
               userRole="CLIENT"
             />
           </div>
         </div>
 
         <div className="min-w-0 flex-1 overflow-hidden rounded-2xl border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none">
-          {selectedConversation ? (
+          {effectiveSelected ? (
             <ChatWindow
-              conversationId={selectedConversation}
+              conversationId={effectiveSelected}
               currentUserId={currentUserId}
               currentUserRole="CLIENT"
             />

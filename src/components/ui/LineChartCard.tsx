@@ -22,7 +22,8 @@ export function LineChartCard({ title, data }: { title: string; data: unknown })
 
   if (!title) {
     return (
-      <ResponsiveContainer width="100%" height="100%">
+      <div className="min-h-[200px] w-full">
+        <ResponsiveContainer width="100%" height={200} minHeight={200}>
         <LineChart data={series}>
           <XAxis dataKey="date" hide={series.length > 14} />
           <YAxis />
@@ -36,6 +37,7 @@ export function LineChartCard({ title, data }: { title: string; data: unknown })
           />
         </LineChart>
       </ResponsiveContainer>
+      </div>
     );
   }
 
@@ -43,8 +45,8 @@ export function LineChartCard({ title, data }: { title: string; data: unknown })
     <Card className="h-[320px] overflow-hidden">
       <CardContent className="flex h-full flex-col gap-2 p-4">
         <p className="text-sm font-medium">{title}</p>
-        <div className="min-h-0 flex-1">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="min-h-[200px] min-w-0 flex-1">
+          <ResponsiveContainer width="100%" height={240} minHeight={200}>
             <LineChart data={series}>
               <XAxis dataKey="date" hide={series.length > 14} />
               <YAxis />

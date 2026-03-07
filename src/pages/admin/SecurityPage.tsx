@@ -1,6 +1,6 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { SecurityManagement } from '@/components/security/SecurityManagement';
+import { SecurityManagement } from '@/features/security/components/SecurityManagement';
 
 export default function SecurityPage() {
   const { t } = useTranslation();

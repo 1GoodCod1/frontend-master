@@ -227,7 +227,6 @@ export const api = createApi({
     'Tariffs',
     'Verification',
     'VerificationStats',
-    'Ideas',
     'Chat',
     'ChatMessages',
     'Portfolio',

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -6,15 +6,15 @@ import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminUsers } from '@/hooks/admin/users/useAdminUsers';
-import StatisticsCards from '@/components/admin/users/StatisticsCards';
-import UsersFilters from '@/components/admin/users/UsersFilters';
-import UserDetailsDialog from '@/components/admin/users/UserDetailsDialog';
-import ConfirmationDialog from '@/components/admin/users/ConfirmationDialog';
-import UserCell from '@/components/admin/users/UserCell';
-import RoleCell from '@/components/admin/users/RoleCell';
-import StatusCell from '@/components/admin/users/StatusCell';
-import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
-import ActionsCell from '@/components/admin/users/ActionsCell';
+import StatisticsCards from '@/features/admin/components/users/StatisticsCards';
+import UsersFilters from '@/features/admin/components/users/UsersFilters';
+import UserDetailsDialog from '@/features/admin/components/users/UserDetailsDialog';
+import ConfirmationDialog from '@/features/admin/components/users/ConfirmationDialog';
+import UserCell from '@/features/admin/components/users/UserCell';
+import RoleCell from '@/features/admin/components/users/RoleCell';
+import StatusCell from '@/features/admin/components/users/StatusCell';
+import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
+import ActionsCell from '@/features/admin/components/users/ActionsCell';
 
 export default function UsersPage() {
   const { t } = useTranslation();

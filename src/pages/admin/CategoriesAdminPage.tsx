@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GridColDef } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -8,10 +8,10 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAdminCategories } from '@/hooks/admin/categories/useAdminCategories';
-import CategoryUpsertDialog from '@/components/admin/categories/CategoryUpsertDialog';
-import BulkActions from '@/components/admin/common/BulkActions';
-import ActiveCell from '@/components/admin/common/ActiveCell';
-import ActionsCell from '@/components/admin/common/ActionsCell';
+import CategoryUpsertDialog from '@/features/admin/components/categories/CategoryUpsertDialog';
+import BulkActions from '@/features/admin/components/common/BulkActions';
+import ActiveCell from '@/features/admin/components/common/ActiveCell';
+import ActionsCell from '@/features/admin/components/common/ActionsCell';
 
 type Row = {
   id: string;

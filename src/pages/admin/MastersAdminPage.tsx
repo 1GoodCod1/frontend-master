@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -6,18 +6,18 @@ import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminMasters, type AdminMasterRow } from '@/hooks/admin/masters/useAdminMasters';
-import StatisticsCards from '@/components/admin/masters/StatisticsCards';
-import MastersFilters from '@/components/admin/masters/MastersFilters';
-import MastersEmptyState from '@/components/admin/masters/MastersEmptyState';
-import MasterDetailsDialog from '@/components/admin/masters/MasterDetailsDialog';
-import MasterCell from '@/components/admin/masters/MasterCell';
-import CategoryCell from '@/components/admin/masters/CategoryCell';
-import CityCell from '@/components/admin/masters/CityCell';
-import TariffCell from '@/components/admin/masters/TariffCell';
-import RatingCell from '@/components/admin/masters/RatingCell';
-import ViewsCell from '@/components/admin/masters/ViewsCell';
-import StatusCell from '@/components/admin/masters/StatusCell';
-import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
+import StatisticsCards from '@/features/admin/components/masters/StatisticsCards';
+import MastersFilters from '@/features/admin/components/masters/MastersFilters';
+import MastersEmptyState from '@/features/admin/components/masters/MastersEmptyState';
+import MasterDetailsDialog from '@/features/admin/components/masters/MasterDetailsDialog';
+import MasterCell from '@/features/admin/components/masters/MasterCell';
+import CategoryCell from '@/features/admin/components/masters/CategoryCell';
+import CityCell from '@/features/admin/components/masters/CityCell';
+import TariffCell from '@/features/admin/components/masters/TariffCell';
+import RatingCell from '@/features/admin/components/masters/RatingCell';
+import ViewsCell from '@/features/admin/components/masters/ViewsCell';
+import StatusCell from '@/features/admin/components/masters/StatusCell';
+import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 
 export default function MastersAdminPage() {
   const { t } = useTranslation();

@@ -47,7 +47,7 @@ export function NotificationMenu() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[390px] max-w-[92vw] p-0 overflow-hidden rounded-2xl border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 shadow-[0_10px_24px_-14px_hsl(var(--foreground)/0.45)]"
+        className="popover-smooth-open w-[390px] max-w-[92vw] p-0 overflow-hidden rounded-2xl border-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 shadow-[0_10px_24px_-14px_hsl(var(--foreground)/0.45)]"
         align="end"
         sideOffset={10}
       >

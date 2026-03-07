@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBookingsCalendarQuery, useBookingsUpdateStatusMutation } from '@/features/bookings/bookingsApi';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
@@ -18,11 +18,11 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { addDays, startOfWeek } from 'date-fns';
-import { MasterBookingsCalendar } from '@/components/master/bookings/MasterBookingsCalendar';
-import type { BookingItem } from '@/components/master/bookings/MasterBookingsCalendar';
-import { MasterLeadsWithoutBookingColumn } from '@/components/master/bookings/MasterLeadsWithoutBookingColumn';
-import type { LeadWithoutBooking } from '@/components/master/bookings/MasterLeadsWithoutBookingColumn';
-import { ScheduleSettingsCard } from '@/components/master/bookings/ScheduleSettingsCard';
+import { MasterBookingsCalendar } from '@/features/masters/components/master/bookings/MasterBookingsCalendar';
+import type { BookingItem } from '@/features/masters/components/master/bookings/MasterBookingsCalendar';
+import { MasterLeadsWithoutBookingColumn } from '@/features/masters/components/master/bookings/MasterLeadsWithoutBookingColumn';
+import type { LeadWithoutBooking } from '@/features/masters/components/master/bookings/MasterLeadsWithoutBookingColumn';
+import { ScheduleSettingsCard } from '@/features/masters/components/master/bookings/ScheduleSettingsCard';
 
 export default function BookingsPage() {
   const { t, i18n } = useTranslation();

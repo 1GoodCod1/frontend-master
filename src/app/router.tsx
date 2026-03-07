@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { AppShell } from '@/components/layout/AppShell';
-import { PublicRoute, AuthRoute, MasterRoute, AdminRoute, PlanRoute } from '@/features/auth/guards';
+import { PublicRoute, MasterRoute, AdminRoute, PlanRoute } from '@/features/auth/guards';
 import { ClientRoute } from '@/features/auth/ClientRoute';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { AdminLayout } from '@/components/layout/AdminLayout';
@@ -21,7 +21,6 @@ const HowItWorksPage = lazy(() => import('@/pages/public/HowItWorksPage'));
 const ContactsPage = lazy(() => import('@/pages/public/ContactsPage'));
 const PrivacyPolicyPage = lazy(() => import('@/pages/public/PrivacyPolicyPage'));
 const TermsOfUsePage = lazy(() => import('@/pages/public/TermsOfUsePage'));
-const IdeasPage = lazy(() => import('@/pages/public/IdeasPage'));
 const NotFoundPage = lazy(() => import('@/pages/public/NotFoundPage'));
 
 // Auth pages
@@ -65,8 +64,6 @@ const AuditPage = lazy(() => import('@/pages/admin/AuditPage'));
 const SecurityPage = lazy(() => import('@/pages/admin/SecurityPage'));
 const VerificationRequestsPage = lazy(() => import('@/pages/admin/VerificationRequestsPage'));
 const ReportsAdminPage = lazy(() => import('@/pages/admin/ReportsAdminPage'));
-const IdeasAdminPage = lazy(() => import('@/pages/admin/IdeasAdminPage'));
-
 // Client pages
 const ClientDashboardPage = lazy(() => import('@/pages/client/ClientDashboardPage'));
 const ClientBookingsPage = lazy(() => import('@/pages/client/ClientBookingsPage'));
@@ -102,13 +99,6 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <LazyPage><ContactsPage /></LazyPage> },
       { path: 'privacy', element: <LazyPage><PrivacyPolicyPage /></LazyPage> },
       { path: 'terms', element: <LazyPage><TermsOfUsePage /></LazyPage> },
-
-      {
-        element: <AuthRoute />,
-        children: [
-          { path: 'ideas', element: <LazyPage><IdeasPage /></LazyPage> },
-        ],
-      },
 
       {
         element: <PublicRoute />,
@@ -197,7 +187,6 @@ export const router = createBrowserRouter([
               { path: 'audit', element: <LazyPage><AuditPage /></LazyPage> },
               { path: 'security', element: <LazyPage><SecurityPage /></LazyPage> },
               { path: 'verification-requests', element: <LazyPage><VerificationRequestsPage /></LazyPage> },
-              { path: 'ideas', element: <LazyPage><IdeasAdminPage /></LazyPage> },
             ],
           },
         ],

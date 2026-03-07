@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { Formik } from 'formik';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import RegisterHeader from '../../components/auth/register/RegisterHeader';
-import RoleTabs from '../../components/auth/register/RoleTabs';
-import RegisterForm from '../../components/auth/register/RegisterForm';
-import PremiumAfterVerificationBanner from '../../components/auth/register/PremiumAfterVerificationBanner';
+import { AuthLayout } from '@/features/auth/components/AuthLayout';
+import RegisterHeader from '@/features/auth/components/register/RegisterHeader';
+import RoleTabs from '@/features/auth/components/register/RoleTabs';
+import RegisterForm from '@/features/auth/components/register/RegisterForm';
+import PremiumAfterVerificationBanner from '@/features/auth/components/register/PremiumAfterVerificationBanner';
 import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '../../hooks/auth/register/useRegistrationForm';
 
 export default function RegisterPage() {

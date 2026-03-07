@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLeadsByIdQuery, useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
 import { useCreateConversationMutation, useGetConversationByLeadIdQuery } from '@/features/chat/chatApi';
-import { LeadStatusProgress } from '@/components/leads/LeadStatusProgress';
+import { LeadStatusProgress } from '@/features/leads/components/LeadStatusProgress';
 import { LEAD_STATUS_OPTIONS, type LeadStatus } from '@/types/leads';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';

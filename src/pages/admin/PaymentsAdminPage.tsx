@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+﻿import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -6,15 +6,15 @@ import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminPayments, type AdminPaymentRow } from '@/hooks/admin/payments/useAdminPayments';
-import StatisticsCards from '@/components/admin/payments/StatisticsCards';
-import PaymentsFilters from '@/components/admin/payments/PaymentsFilters';
-import PaymentsEmptyState from '@/components/admin/payments/PaymentsEmptyState';
-import PaymentDetailsDialog from '@/components/admin/payments/PaymentDetailsDialog';
-import MasterCell from '@/components/admin/payments/MasterCell';
-import TariffCell from '@/components/admin/payments/TariffCell';
-import AmountCell from '@/components/admin/payments/AmountCell';
-import StatusCell from '@/components/admin/payments/StatusCell';
-import CreatedAtCell from '@/components/admin/common/CreatedAtCell';
+import StatisticsCards from '@/features/admin/components/payments/StatisticsCards';
+import PaymentsFilters from '@/features/admin/components/payments/PaymentsFilters';
+import PaymentsEmptyState from '@/features/admin/components/payments/PaymentsEmptyState';
+import PaymentDetailsDialog from '@/features/admin/components/payments/PaymentDetailsDialog';
+import MasterCell from '@/features/admin/components/payments/MasterCell';
+import TariffCell from '@/features/admin/components/payments/TariffCell';
+import AmountCell from '@/features/admin/components/payments/AmountCell';
+import StatusCell from '@/features/admin/components/payments/StatusCell';
+import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 
 export default function PaymentsAdminPage() {
   const { t } = useTranslation();

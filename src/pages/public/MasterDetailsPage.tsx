@@ -14,14 +14,14 @@ import { useReviewSubmission } from '@/hooks/reviews/useReviewSubmission';
 import { useLeadSubmission } from '@/hooks/leads/useLeadSubmission';
 import { ErrorState } from '@/components/common/States';
 import { DetailSkeleton } from '@/components/common/Skeletons';
-import { MasterProfileHero } from '@/components/masters/MasterProfileHero';
-import { MasterDetailsInfo } from '@/components/masters/MasterDetailsInfo';
-import { MasterDetailsServices } from '@/components/masters/MasterDetailsServices';
-import { MasterDetailsGallery } from '@/components/masters/MasterDetailsGallery';
-import { MasterDetailsReviews } from '@/components/masters/MasterDetailsReviews';
-import { MasterDetailsLeadForm } from '@/components/masters/MasterDetailsLeadForm';
+import { MasterProfileHero } from '@/features/masters/components/MasterProfileHero';
+import { MasterDetailsInfo } from '@/features/masters/components/MasterDetailsInfo';
+import { MasterDetailsServices } from '@/features/masters/components/MasterDetailsServices';
+import { MasterDetailsGallery } from '@/features/masters/components/MasterDetailsGallery';
+import { MasterDetailsReviews } from '@/features/masters/components/MasterDetailsReviews';
+import { MasterDetailsLeadForm } from '@/features/masters/components/MasterDetailsLeadForm';
 import { SimilarMasters } from '@/components/home/recommendations/SimilarMasters';
-import { PortfolioSection } from '@/components/portfolio/PortfolioSection';
+import { PortfolioSection } from '@/features/portfolio/components/PortfolioSection';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { ShieldCheck, MapPin, Briefcase, Clock, Calendar, ChevronRight } from 'lucide-react';
@@ -160,7 +160,7 @@ export default function MasterDetailsPage() {
     reviews: `💬 ${t('masterDetails.reviews')}`,
   };
 
-  const cardCls = 'bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300';
+  const cardCls = 'bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-3xl shadow-sm transition-colors duration-300';
 
   return (
     <motion.div
@@ -194,12 +194,12 @@ export default function MasterDetailsPage() {
         responseRate={responseRate}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 bg-[#F8F8F8] dark:bg-[hsl(47,29%,6%)]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left column — tabs + content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tabs — Figma: active orange+white, inactive white+light grey border+dark grey text */}
-            <div className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-1.5 flex gap-1 flex-wrap shadow-sm">
+            <div className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-3xl p-2 flex gap-1.5 flex-wrap shadow-sm">
               {(['about', 'services', 'gallery', 'reviews'] as const).map((tab) => (
                 <button
                   key={tab}
@@ -256,7 +256,7 @@ export default function MasterDetailsPage() {
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  <div className={cn(cardCls, 'p-6')}>
+                  <div className={cn(cardCls, 'p-8')}>
                     <p className="text-muted-foreground">{t('masterDetails.noServices')}</p>
                   </div>
                 )}
@@ -310,14 +310,14 @@ export default function MasterDetailsPage() {
             )}
 
             {/* Quick Info — Figma: white card, light grey border, dark grey text */}
-            <div className={cn(cardCls, 'p-5')}>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+            <div className={cn(cardCls, 'p-6')}>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-5 flex items-center gap-2.5">
+                <span className="w-7 h-7 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
                   <ChevronRight size={14} className="text-amber-600 dark:text-amber-400" />
                 </span>
                 {t('masterDetails.quickInfo', 'Quick info')}
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-1">
                 {[
                   { icon: MapPin, label: t('masterDetails.quickInfoLocation', 'Location'), value: m?.city ? getTranslatedCityName(t, m.city) : '—' },
                   { icon: Briefcase, label: t('masterDetails.quickInfoCategory', 'Category'), value: m?.category ? getTranslatedCategoryName(t, m.category) : '—' },
@@ -325,12 +325,12 @@ export default function MasterDetailsPage() {
                   { icon: Calendar, label: t('masterDetails.quickInfoRegistered', 'Registered'), value: m?.createdAt ? formatDateShort(m.createdAt, locale) : '—' },
                   { icon: ShieldCheck, label: t('masterDetails.quickInfoStatus', 'Status'), value: m?.user?.isVerified ? t('masters.verified') : t('masters.notVerified') },
                 ].map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-white/10 last:border-0">
-                    <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div key={item.label} className="flex items-center justify-between py-2.5 border-b border-gray-100 dark:border-white/[0.06] last:border-0">
+                    <div className="flex items-center gap-2.5 text-gray-500 dark:text-gray-400">
                       <item.icon size={15} />
                       <span className="text-sm">{item.label}</span>
                     </div>
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{item.value}</span>
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -338,7 +338,7 @@ export default function MasterDetailsPage() {
 
             {/* Similar masters */}
             {masterId && (
-              <div className={cn(cardCls, 'p-5')}>
+              <div className={cn(cardCls, 'p-6')}>
                 <SimilarMasters masterId={masterId} limit={4} variant="sidebar" />
               </div>
             )}
