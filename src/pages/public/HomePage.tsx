@@ -69,8 +69,6 @@ export default function HomePage() {
 
       <section className="relative min-w-0">
         <div className="container mx-auto min-w-0 max-w-7xl px-4 pt-4 pb-6 md:pt-6 md:pb-12">
-          <div className="divider-line mb-4 md:mb-6" aria-hidden />
-
           <MastersGridSection
             title={t('home.popularMasters')}
             masters={popularList}
@@ -84,11 +82,7 @@ export default function HomePage() {
             promotionDiscountByMasterId={promotionDiscountByMasterId}
           />
 
-          <div className="divider-line my-6 md:my-8" aria-hidden />
-
           <PopularCategoriesSection />
-
-          <div className="divider-line my-6 md:my-8" aria-hidden />
 
           <HowItWorksSection />
         </div>

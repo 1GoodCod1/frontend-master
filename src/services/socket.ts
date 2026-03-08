@@ -28,12 +28,14 @@ export function connectSocket(store: Store<RootState>) {
     socket = null;
   }
 
-  const token = selectAccessToken(store.getState());
   const wsBase = (env.wsUrl || '').replace(/\/$/, '');
   const notificationsUrl = wsBase ? `${wsBase}/notifications` : '/notifications';
   socket = io(notificationsUrl, {
     transports: ['websocket', 'polling'],
-    auth: token ? { token } : undefined,
+    auth: (cb) => {
+      const token = selectAccessToken(store.getState());
+      cb(token ? { token } : {});
+    },
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,

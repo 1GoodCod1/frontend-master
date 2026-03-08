@@ -20,7 +20,7 @@
   --accent-foreground: 220 18% 14%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 214 32% 91%;
+  --border: 220 14% 93%;
   --input: 214 32% 91%;
   --ring: 174 58% 39%;
   --cta: 25 95% 53%;
@@ -31,12 +31,24 @@
   --button-bg-hover: 220 18% 18%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.18);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.35);
+  /* MasterCard design tokens */
+  --card-accent-band: #f0f1f6;
+  --card-rating-bg: #f8f8fc;
+  --card-rating-border: rgba(0,0,0,0.07);
+  --card-category-bg: rgba(0,0,0,0.05);
+  --card-category-text: rgba(0,0,0,0.6);
+  --card-divider: rgba(0,0,0,0.07);
+  --card-tag-bg: rgba(233,117,37,0.08);
+  --card-city-text: rgba(0,0,0,0.45);
+  --card-border: #ffffff;
+  --card-button-bg: #2d3147;
+  --card-button-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
 html[data-theme="dark"],
 .dark {
-  /* Base: #171510 */
-  --background: 43 18% 8%;
+  /* Base: тёмная тема с коричнево-серыми карточками */
+  --background: 0 0% 5%;
   --foreground: 0 0% 98%;
   --card: 43 16% 10%;
   --card-foreground: 0 0% 98%;
@@ -57,17 +69,29 @@ html[data-theme="dark"],
   --ring: 174 72% 45%;
   --cta: 38 92% 50%;
   --cta-foreground: 0 0% 100%;
-  --home-bg: 43 18% 8%;
+  --home-bg: 0 0% 5%;
   --button-bg: 174 72% 45%;
   --button-bg-hover: 174 72% 40%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.22);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.4);
+  /* MasterCard design tokens — neutral dark, гармония с чёрным фоном */
+  --card-accent-band: #222222;
+  --card-rating-bg: #252525;
+  --card-rating-border: rgba(255,255,255,0.06);
+  --card-category-bg: rgba(255,255,255,0.05);
+  --card-category-text: rgba(255,255,255,0.8);
+  --card-divider: rgba(255,255,255,0.06);
+  --card-tag-bg: rgba(233,117,37,0.12);
+  --card-city-text: rgba(255,255,255,0.5);
+  --card-border: #1a1a1a;
+  --card-button-bg: #E97525;
+  --card-button-shadow: 0 4px 20px rgba(233,117,37,0.4);
 }
 
 /* ── Cabinet layout scope ── */
 .cabinet-theme-scope {
   --cabinet-sidebar-bg: 0 0% 100%;
-  --cabinet-sidebar-border: 214 32% 91%;
+  --cabinet-sidebar-border: 220 14% 93%;
   --cabinet-main-bg: 220 14% 96%;
 }
 
@@ -89,13 +113,9 @@ html[data-theme="dark"] .cabinet-theme-scope,
   background-color: hsl(var(--home-bg));
 }
 
-/* Gradient border для аватара MasterCard */
+/* Gradient border для аватара MasterCard (оранжевый акцент по дизайну) */
 .avatar-gradient-border {
-  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(13,148,136,0.5) 50%, rgba(13,148,136,0.7) 100%);
-}
-.dark .avatar-gradient-border,
-html[data-theme="dark"] .avatar-gradient-border {
-  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(13,148,136,0.55) 50%, rgba(13,148,136,0.8) 100%);
+  background: linear-gradient(135deg, #E97525, #f08a3d);
 }
 
 /* Тонкая линия-разделитель (1px, светлый серый) */

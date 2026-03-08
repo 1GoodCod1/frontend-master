@@ -36,6 +36,17 @@ interface ValidateCodeResponse {
 
 export const referralsApi = api.injectEndpoints({
     endpoints: (build) => ({
+        configReferralsEnabled: build.query<{ enabled: boolean }, void>({
+            query: () => ({ url: '/config/referrals-enabled', method: 'GET' }),
+            transformResponse: (raw: unknown) => {
+                const u = unwrapEnvelope(raw);
+                return (u && typeof u === 'object' && 'enabled' in u)
+                    ? { enabled: !!(u as { enabled: boolean }).enabled }
+                    : { enabled: false };
+            },
+            keepUnusedDataFor: 300, // 5 min - public config changes rarely
+        }),
+
         referralsGetMy: build.query<ReferralInfo, void>({
             query: () => ({ url: '/referrals/my', method: 'GET' }),
             transformResponse: (raw: unknown) => unwrapEnvelope(raw) as ReferralInfo,
@@ -55,6 +66,7 @@ export const referralsApi = api.injectEndpoints({
 });
 
 export const {
+    useConfigReferralsEnabledQuery,
     useReferralsGetMyQuery,
     useReferralsValidateCodeQuery,
     useReferralsApplyCodeMutation,

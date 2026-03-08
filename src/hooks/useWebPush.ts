@@ -39,7 +39,7 @@ export function useWebPush() {
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { data: vapidData } = useGetVapidPublicKeyQuery(undefined, {
+    const { data: vapidData, refetch: refetchVapid } = useGetVapidPublicKeyQuery(undefined, {
         skip: !isAuthed || !('serviceWorker' in navigator),
     });
 
@@ -64,7 +64,17 @@ export function useWebPush() {
     }, []);
 
     const subscribe = useCallback(async () => {
-        if (!vapidData?.publicKey || !('serviceWorker' in navigator)) return;
+        if (!('serviceWorker' in navigator)) return;
+
+        let key = vapidData?.publicKey;
+        if (!key) {
+            const { data } = await refetchVapid();
+            key = data?.publicKey;
+            if (!key) {
+                toast.error('Уведомления недоступны. Настройте VAPID ключи на сервере (см. .env)');
+                return;
+            }
+        }
 
         setIsLoading(true);
         try {
@@ -84,7 +94,7 @@ export function useWebPush() {
 
             const subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(vapidData.publicKey),
+                applicationServerKey: urlBase64ToUint8Array(key),
             });
 
             await subscribeMutation({
@@ -101,7 +111,7 @@ export function useWebPush() {
         } finally {
             setIsLoading(false);
         }
-    }, [vapidData?.publicKey, subscribeMutation]);
+    }, [vapidData?.publicKey, subscribeMutation, refetchVapid]);
 
     const unsubscribe = useCallback(async () => {
         setIsLoading(true);

@@ -37,7 +37,10 @@ export function AvatarPlaceholder({
     ? ROLE_SHINE
     : 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%)';
 
-  const fontSize = Math.max(28, Math.floor(height / 3));
+  const fontSize =
+    height <= 48
+      ? Math.floor(height * 0.5)
+      : Math.max(28, Math.floor(height / 3));
 
   return (
     <div

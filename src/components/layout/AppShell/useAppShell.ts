@@ -8,6 +8,7 @@ import {
   selectRestoring,
 } from '@/features/auth/selectors';
 import { useAuthLogoutMutation, useAuthMeQuery } from '@/features/auth/authApi';
+import { useUsersSetPreferredLanguageMutation } from '@/features/users/usersApi';
 import { toggleColorMode } from '@/features/ui/uiSlice';
 import { setLanguage } from '@/i18n';
 import type { SupportedLanguage } from './types';
@@ -31,6 +32,7 @@ export function useAppShell() {
   const refreshToken = useAppSelector(selectRefreshToken);
   const restoring = useAppSelector(selectRestoring);
   const [logout] = useAuthLogoutMutation();
+  const [setPreferredLanguage] = useUsersSetPreferredLanguageMutation();
   const { isLoading: isLoadingMe } = useAuthMeQuery(undefined, { skip: !isAuthed });
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -120,6 +122,11 @@ export function useAppShell() {
 
   const handleLanguageChange = (lang: SupportedLanguage) => {
     setLanguage(lang);
+    if (isAuthed) {
+      setPreferredLanguage({ lang }).catch(() => {
+        // ignore — email language sync is best-effort
+      });
+    }
   };
 
   const handleToggleColorMode = () => {

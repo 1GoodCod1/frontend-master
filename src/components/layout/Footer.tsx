@@ -7,6 +7,7 @@ import { Mail, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DigestSubscriptionCard } from '@/features/digest/DigestSubscriptionCard';
 
 const NEWSLETTER_SUBSCRIBED_KEY = 'newsletter_subscribed';
 
@@ -40,11 +41,16 @@ export function Footer() {
   const linkClass =
     'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
 
+  const showNewsletter = !isAuthed && !subscribedFromStorage;
+  const showDigest = isAuthed;
+
   return (
     <footer className="mt-auto w-full bg-[hsl(var(--background))] dark:bg-[#171510]">
       <div className="divider-line" aria-hidden />
-      {/* Newsletter — hidden after subscribe on F5 */}
-      {!subscribedFromStorage && (
+      {/* Digest — auth only, persisted in DB, no email input */}
+      {showDigest && <DigestSubscriptionCard />}
+      {/* Newsletter — non-auth only, hidden after subscribe on F5 */}
+      {showNewsletter && (
         <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="mx-auto max-w-6xl rounded-2xl bg-white dark:bg-white/[0.04] px-6 py-6 sm:px-8 sm:py-7 shadow-sm">
             {showSuccess ? (

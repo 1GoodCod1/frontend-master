@@ -289,7 +289,7 @@ export default function DashboardPage() {
               <div className="h-[300px] min-h-[200px] w-full mt-4">
                 {chartData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={280} minHeight={200}>
-                    <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <AreaChart data={chartData} margin={{ top: 10, right: 50, left: 0, bottom: 0 }}>
                       <defs>
                         <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
@@ -309,10 +309,11 @@ export default function DashboardPage() {
                         dy={10}
                         hide={chartData.length > 14}
                       />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis yAxisId="views" orientation="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#3b82f6' }} width={35} />
+                      <YAxis yAxisId="leads" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#10b981' }} width={35} />
                       <RechartsTooltip content={<ChartTooltip />} />
-                      <Area type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
-                      <Area type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
+                      <Area yAxisId="views" type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
+                      <Area yAxisId="leads" type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (

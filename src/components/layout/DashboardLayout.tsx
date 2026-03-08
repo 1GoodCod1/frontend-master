@@ -25,6 +25,7 @@ import { useAppSelector } from '@/app/hooks';
 import { selectPlan, selectRole, selectIsVerified } from '@/features/auth/selectors';
 import { TariffPlan, hasMinPlan } from '@/features/auth/plan';
 import { useGetUnreadCountQuery } from '@/features/chat/chatApi';
+import { useConfigReferralsEnabledQuery } from '@/features/referrals/referralsApi';
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { VerificationRequiredBanner } from '@/components/common/VerificationRequiredBanner';
@@ -73,7 +74,9 @@ export function DashboardLayout() {
   const plan: TariffPlan = useAppSelector(selectPlan) ?? 'BASIC';
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);
-  const baseItems = getItems(t, plan);
+  const { data: referralsConfig } = useConfigReferralsEnabledQuery();
+  const referralsEnabled = referralsConfig?.enabled ?? true;
+  const baseItems = getItems(t, plan).filter((it) => it.key !== 'referrals' || referralsEnabled);
 
   const badgeFor = (key: string) => {
     if (key === 'leads') return unreadLeads;

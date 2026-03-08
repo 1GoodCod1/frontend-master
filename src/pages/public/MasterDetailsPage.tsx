@@ -207,7 +207,7 @@ export default function MasterDetailsPage() {
                   className={cn(
                     'flex-1 min-w-[100px] py-2.5 rounded-xl text-sm font-medium transition-all',
                     activeTab === tab
-                      ? 'bg-[hsl(var(--button-bg))] text-white shadow-sm'
+                      ? 'bg-[hsl(var(--button-bg))] dark:bg-[#E97525] text-white shadow-sm'
                       : 'bg-transparent text-gray-700 dark:text-gray-400 border border-transparent hover:bg-gray-50 dark:hover:bg-white/5'
                   )}
                 >

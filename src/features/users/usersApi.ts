@@ -29,6 +29,17 @@ export const usersApi = api.injectEndpoints({
       query: ({ fileId }) => ({ url: '/users/me/avatar', method: 'PUT', data: { fileId: fileId || '' } }),
       invalidatesTags: ['Me', 'Users', 'Files'],
     }),
+    usersSetPreferredLanguage: build.mutation<
+      { preferredLanguage: string },
+      { lang: 'en' | 'ru' | 'ro' }
+    >({
+      query: ({ lang }) => ({
+        url: '/users/me/preferred-language',
+        method: 'PATCH',
+        data: { lang },
+      }),
+      invalidatesTags: ['Me'],
+    }),
   }),
 });
 
@@ -40,4 +51,5 @@ export const {
   useUsersToggleVerifyMutation,
   useUsersStatsQuery,
   useUsersSetAvatarMutation,
+  useUsersSetPreferredLanguageMutation,
 } = usersApi;

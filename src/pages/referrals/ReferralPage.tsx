@@ -3,7 +3,7 @@ import { Copy, Gift, ExternalLink, Share2, Users, CheckCircle, Clock } from 'luc
 import toast from 'react-hot-toast';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { LoadingState, ErrorState } from '@/components/common/States';
-import { useReferralsGetMyQuery } from '@/features/referrals/referralsApi';
+import { useReferralsGetMyQuery, useConfigReferralsEnabledQuery } from '@/features/referrals/referralsApi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,12 +15,31 @@ import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
  */
 export default function ReferralPage() {
     const { t, i18n } = useTranslation();
+    const { data: referralsConfig } = useConfigReferralsEnabledQuery();
     const { data: referralInfo, isLoading, isError, error, refetch } = useReferralsGetMyQuery();
 
     const { code = '', referrals = [], stats } = referralInfo ?? {};
+    const referralsEnabled = referralsConfig?.enabled ?? true;
 
     if (isLoading) return <LoadingState label={t('referrals.loading')} />;
     if (isError) return <ErrorState error={error as Error} onRetry={refetch} />;
+
+    if (!referralsEnabled) {
+        return (
+            <div className="mx-auto max-w-5xl px-4 py-8 md:px-6 lg:px-8 space-y-8 animate-in fade-in">
+                <PageHeader title={t('referrals.title')} subtitle={t('referrals.subtitle')} />
+                <Card className="border-amber-500/30 bg-amber-500/5">
+                    <CardContent className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                        <Gift className="size-12 text-amber-500/50 mb-4" />
+                        <h4 className="text-lg font-semibold">{t('referrals.disabled')}</h4>
+                        <p className="text-muted-foreground text-sm mt-1 max-w-sm">
+                            {t('referrals.disabledDesc')}
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
     const safeStats = stats ?? { total: 0, pending: 0, qualified: 0, rewarded: 0 };
 

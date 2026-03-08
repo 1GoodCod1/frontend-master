@@ -72,6 +72,26 @@ export const adminApi = api.injectEndpoints({
     adminSystemInfo: build.query<unknown, void>({
       query: () => ({ url: '/admin/system/info', method: 'GET' }),
     }),
+    adminReferralsEnabled: build.query<{ enabled: boolean }, void>({
+      query: () => ({ url: '/admin/settings/referrals', method: 'GET' }),
+      transformResponse: (raw: unknown) => {
+        const r = raw && typeof raw === 'object' && 'data' in raw
+          ? (raw as { data?: unknown }).data
+          : raw;
+        return r && typeof r === 'object' && 'enabled' in r
+          ? { enabled: !!(r as { enabled: boolean }).enabled }
+          : { enabled: true };
+      },
+      providesTags: ['Admin'],
+    }),
+    adminSetReferralsEnabled: build.mutation<{ enabled: boolean }, boolean>({
+      query: (enabled) => ({
+        url: '/admin/settings/referrals',
+        method: 'PUT',
+        data: { enabled },
+      }),
+      invalidatesTags: ['Admin'],
+    }),
     adminInvalidateTariffsCache: build.mutation<{ invalidated: number }, void>({
       query: () => ({ url: '/admin/cache/tariffs/invalidate', method: 'POST' }),
       invalidatesTags: ['Tariffs'],
@@ -93,5 +113,7 @@ export const {
   useAdminCreateBackupMutation,
   useAdminListBackupsQuery,
   useAdminSystemInfoQuery,
+  useAdminReferralsEnabledQuery,
+  useAdminSetReferralsEnabledMutation,
   useAdminInvalidateTariffsCacheMutation,
 } = adminApi;

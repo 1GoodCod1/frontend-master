@@ -45,6 +45,7 @@ import { servicesPage } from './servicesPage';
 import { portfolio } from './portfolio';
 import { leadSuccess } from './leadSuccess';
 import { referrals } from './referrals';
+import { digest } from './digest';
 
 const modules = [
   app,
@@ -93,6 +94,7 @@ const modules = [
   portfolio,
   leadSuccess,
   referrals,
+  digest,
 ];
 
 export const resources = {

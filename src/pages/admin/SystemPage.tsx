@@ -8,6 +8,8 @@ import {
   useAdminSystemInfoQuery,
   useAdminListBackupsQuery,
   useAdminCreateBackupMutation,
+  useAdminReferralsEnabledQuery,
+  useAdminSetReferralsEnabledMutation,
 } from '@/features/admin/adminApi';
 import { useAppSelector } from '@/app/hooks';
 import { env } from '@/services/env';
@@ -16,6 +18,8 @@ import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import toast from 'react-hot-toast';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   AreaChart,
   Area,
@@ -347,6 +351,9 @@ export default function SystemPage() {
     return [];
   })();
   const [createBackup, { isLoading: isCreatingBackup }] = useAdminCreateBackupMutation();
+  const { data: referralsData } = useAdminReferralsEnabledQuery();
+  const [setReferralsEnabled, { isLoading: isSavingReferrals }] = useAdminSetReferralsEnabledMutation();
+  const referralsEnabled = referralsData?.enabled ?? true;
 
   const infoRaw = info.data as unknown;
   const infoObj = isRecord(infoRaw) ? infoRaw : undefined;
@@ -361,6 +368,16 @@ export default function SystemPage() {
     typeof lastUpdatedRaw === 'string' || typeof lastUpdatedRaw === 'number'
       ? new Date(lastUpdatedRaw)
       : null;
+
+  const handleReferralsToggle = async (checked: boolean) => {
+    try {
+      await setReferralsEnabled(checked).unwrap();
+      toast.success(t('admin.system.referralsToggleSuccess'));
+    } catch (e: unknown) {
+      const msg = e && typeof e === 'object' && 'data' in e && (e as { data?: { message?: string } }).data?.message;
+      toast.error((msg as string) ?? t('admin.system.referralsToggleFailed'));
+    }
+  };
 
   const handleCreateBackup = async () => {
     try {
@@ -561,6 +578,32 @@ export default function SystemPage() {
             </SectionCard>
           </div>
         )}
+
+        {/* Feature flags: Referrals */}
+        <SectionCard
+          title={t('admin.system.referralsProgram')}
+          subtitle={t('admin.system.referralsProgramDesc')}
+          className="mb-6"
+        >
+          <div className="flex items-center justify-between gap-4 rounded-lg border bg-card/50 p-4">
+            <div className="space-y-0.5">
+              <Label htmlFor="referrals-toggle" className="text-base font-semibold cursor-pointer">
+                {t('admin.system.referralsEnabled')}
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                {referralsEnabled
+                  ? t('admin.system.referralsEnabledOn')
+                  : t('admin.system.referralsEnabledOff')}
+              </p>
+            </div>
+            <Switch
+              id="referrals-toggle"
+              checked={referralsEnabled}
+              onCheckedChange={handleReferralsToggle}
+              disabled={isSavingReferrals}
+            />
+          </div>
+        </SectionCard>
 
         {/* Backups Section */}
         <SectionCard

@@ -16,6 +16,7 @@ import {
 import { useAppSelector } from '@/app/hooks';
 import { selectRole, selectIsVerified } from '@/features/auth/selectors';
 import { useGetUnreadCountQuery } from '@/features/chat/chatApi';
+import { useConfigReferralsEnabledQuery } from '@/features/referrals/referralsApi';
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { VerificationRequiredBanner } from '@/components/common/VerificationRequiredBanner';
@@ -42,7 +43,9 @@ export function ClientDashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const items = getItems(t);
+  const { data: referralsConfig } = useConfigReferralsEnabledQuery();
+  const referralsEnabled = referralsConfig?.enabled ?? true;
+  const items = getItems(t).filter((it) => it.key !== 'referrals' || referralsEnabled);
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);
   const { data: chatUnreadData } = useGetUnreadCountQuery(undefined, { pollingInterval: 30000 });

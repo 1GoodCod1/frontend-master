@@ -34,7 +34,10 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
 
   chatSocket = io(chatUrl, {
     transports: ['websocket', 'polling'],
-    auth: { token },
+    auth: (cb) => {
+      const t = selectAccessToken(store.getState());
+      cb(t ? { token: t } : {});
+    },
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,

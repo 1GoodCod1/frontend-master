@@ -23,6 +23,8 @@ export const referrals = {
       descQualified: 'Friend completed an order. You received a bonus!',
       descPending: "Waiting for your friend to close their first deal.",
       user: 'User',
+      disabled: 'Referral program is currently disabled',
+      disabledDesc: 'The referral program has been temporarily disabled. Please check back later.',
     },
   },
   ru: {
@@ -49,6 +51,8 @@ export const referrals = {
       descQualified: 'Друг совершил заказ. Вам начислен бонус!',
       descPending: 'Ожидаем, пока друг закроет свою первую сделку.',
       user: 'Пользователь',
+      disabled: 'Реферальная программа временно отключена',
+      disabledDesc: 'Реферальная программа отключена администратором. Загляните позже.',
     },
   },
   ro: {
@@ -75,6 +79,8 @@ export const referrals = {
       descQualified: 'Prietenul a finalizat o comandă. Ai primit un bonus!',
       descPending: 'Așteptăm ca prietenul să închidă prima tranzacție.',
       user: 'Utilizator',
+      disabled: 'Programul de referință este dezactivat',
+      disabledDesc: 'Programul de referință a fost dezactivat temporar. Verificați mai târziu.',
     },
   },
 };

@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { useMastersLandingStatsQuery } from '@/features/masters/mastersApi';
 import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesApi';
-import { useMastersPopularQuery } from '@/features/masters/mastersApi';
 import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useUserCity, USER_CITY_STORAGE_KEY } from '@/hooks/useUserCity';
@@ -53,7 +52,6 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
   const isDark = useIsDark();
   const { data: landingStats } = useMastersLandingStatsQuery();
   const { data: categories = [] } = useCategoriesWithCountsQuery();
-  const popular = useMastersPopularQuery({ limit: 5 });
   const { data: citiesFromDb = [] } = useCitiesListQuery({ isActive: true });
   const { cityId: detectedCityId } = useUserCity();
   const { add: addSearchHistory } = useSearchHistory();
@@ -67,7 +65,6 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
     t(`cities.${c.slug}`, { defaultValue: c.name }) || c.name;
   const getCitySlugForUrl = (cityIdOrSlug: string) =>
     cities.find((c) => c.id === cityIdOrSlug || c.slug === cityIdOrSlug)?.slug ?? cityIdOrSlug;
-  const popularMasters = (popular.data ?? []).slice(0, 3);
   const heroCategories = (categories as CategoryDto[]).slice(0, 6);
 
   const stats = useMemo(() => {
@@ -132,47 +129,59 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
           {/* LEFT COLUMN */}
-          <div className="flex flex-col gap-6 sm:gap-8">
+          <div className={cn(
+            'flex flex-col gap-6 sm:gap-8 pl-4 sm:pl-6 border-l-4 rounded-r-lg',
+            isDark ? 'border-[#E97525]/60' : 'border-primary/40'
+          )}>
             {/* Badge */}
             <div
               className={cn(
                 'inline-flex items-center gap-2 self-start px-4 py-2 rounded-full backdrop-blur-sm border transition-all duration-500',
                 isDark
-                  ? 'bg-primary/10 border-primary/20'
+                  ? 'bg-[#E97525]/15 border-[#E97525]/30'
                   : 'bg-primary/12 border-primary/25'
               )}
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="text-primary text-xs font-medium tracking-wide uppercase">
+              <div className={cn('w-1.5 h-1.5 rounded-full animate-pulse', isDark ? 'bg-[#E97525]' : 'bg-primary')} />
+              <span className={cn('text-xs font-medium tracking-wide uppercase', isDark ? 'text-[#E97525]' : 'text-primary')}>
                 {t('home.heroPlatformBadge')}
               </span>
             </div>
 
             {/* Heading */}
-            <div>
+            <div
+              className={cn(
+                'rounded-xl p-5 sm:p-6 transition-all duration-500',
+                isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white/60 border border-gray-200/80 shadow-sm'
+              )}
+            >
               <h1
                 className={cn(
-                  'leading-tight mb-4 transition-colors duration-500',
-                  'text-3xl sm:text-4xl md:text-5xl font-extrabold',
+                  'leading-[1.15] mb-4 transition-colors duration-500',
+                  'text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight',
                   'text-slate-900 dark:text-white'
                 )}
               >
                 {t('home.heroTitleLine1')}{' '}
-                <span className="relative inline-block">
-                  <span className="text-primary font-extrabold">
-                    {t('home.heroTitleLine2Masters')}
-                  </span>
+                <span className={cn(
+                  'font-bold',
+                  isDark ? 'text-[#E97525]' : 'text-primary'
+                )}>
+                  {t('home.heroTitleLine2Masters')}
                 </span>
                 <br />
-                <span className="text-slate-900 dark:text-white">
+                <span className="text-slate-900 dark:text-white font-medium">
                   {t('home.heroTitleLine2From')}{' '}
                 </span>
                 <span className="relative inline-block">
-                  <span className="text-primary font-extrabold">
+                  <span className={cn(
+                    'font-bold',
+                    isDark ? 'text-[#E97525]' : 'text-primary'
+                  )}>
                     Moldova
                   </span>
-                  <svg className="absolute -bottom-1 left-0 w-full" height="6" viewBox="0 0 200 6" fill="none">
-                    <path d="M0 5 Q50 1 100 4 Q150 7 200 3" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6" className="text-primary" />
+                  <svg className="absolute -bottom-0.5 left-0 w-full" height="4" viewBox="0 0 200 4" fill="none">
+                    <path d="M0 3 Q50 0 100 2.5 Q150 4 200 1.5" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5" className={isDark ? 'text-[#E97525]' : 'text-primary'} />
                   </svg>
                 </span>
               </h1>
@@ -186,14 +195,16 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
               </p>
             </div>
 
+            <div className="h-px shrink-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" aria-hidden />
+
             {/* Search */}
             <form onSubmit={handleSearch}>
               <div
                 className={cn(
-                  'flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 rounded-2xl backdrop-blur-md border transition-all duration-500 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.15)]',
+                  'flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl backdrop-blur-md border transition-all duration-500 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.15)]',
                   isDark
-                    ? 'bg-white/[0.04] border-white/10'
-                    : 'bg-white/80 border-border'
+                    ? 'bg-white/[0.06] border border-white/10 shadow-lg shadow-black/20'
+                    : 'bg-white/90 border border-gray-200 shadow-md shadow-black/5'
                 )}
               >
                 <div className="flex items-center gap-3 flex-1 px-3 min-h-[44px] min-w-0">
@@ -260,8 +271,15 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
               </div>
             </form>
 
+            <div className="h-px shrink-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" aria-hidden />
+
             {/* Category pills - Categorii populare */}
-            <div>
+            <div
+              className={cn(
+                'rounded-xl p-4 transition-all duration-500',
+                isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white/40 border border-gray-200/60'
+              )}
+            >
               <p
                 className={cn(
                   'text-xs uppercase tracking-wider mb-3 transition-colors duration-500',
@@ -295,6 +313,8 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
               </div>
             </div>
 
+            <div className="h-px shrink-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" aria-hidden />
+
             {/* CTA Buttons */}
             <div className="flex items-center flex-wrap gap-4">
               <Button asChild className="group flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-semibold hover:scale-105 active:scale-100 transition-all duration-200">
@@ -324,21 +344,41 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
             </div>
 
             {/* Trust badges */}
-            <div className="flex flex-wrap gap-4">
-              {badges.map((b) => (
-                <div
-                  key={b.textKey}
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground"
-                >
-                  <span className="text-primary">{b.icon}</span>
-                  {t(`home.${b.textKey}`)}
+            <div
+              className={cn(
+                'flex flex-wrap items-center gap-0 rounded-xl px-4 py-3 transition-all duration-500',
+                isDark ? 'bg-white/[0.04] border border-white/[0.06]' : 'bg-white/50 border border-gray-200/60'
+              )}
+            >
+              {badges.map((b, idx) => (
+                <div key={b.textKey} className="flex items-center shrink-0">
+                  {idx > 0 && (
+                    <div
+                      className="w-px h-5 mx-3 shrink-0"
+                      style={{
+                        background: isDark
+                          ? 'linear-gradient(to bottom, transparent, rgba(233,117,37,0.4), transparent)'
+                          : 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.12), transparent)',
+                      }}
+                    />
+                  )}
+                  <div
+                    className={cn(
+                      'flex items-center gap-2 py-1.5 px-2 rounded-lg transition-colors',
+                      'text-xs font-medium',
+                      isDark ? 'text-white/80' : 'text-slate-600'
+                    )}
+                  >
+                    <span className={isDark ? 'text-[#E97525]' : 'text-primary'}>{b.icon}</span>
+                    {t(`home.${b.textKey}`)}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* RIGHT COLUMN */}
-          <div className="relative flex items-center justify-center order-first lg:order-none">
+          <div className="relative flex items-center justify-center order-first lg:order-none mt-8 lg:mt-16">
             <div
               className="absolute inset-0 rounded-[3rem] blur-3xl transition-all duration-500"
               style={{
@@ -354,8 +394,8 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                 className={cn(
                   'relative rounded-[2.5rem] border overflow-hidden transition-all duration-500',
                   isDark
-                    ? 'bg-black border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.8)]'
-                    : 'bg-card border-border shadow-[0_30px_80px_rgba(0,0,0,0.06)]'
+                    ? 'bg-[#1a1a1a] border-white/[0.08] shadow-[0_20px_60px_rgba(0,0,0,0.5)]'
+                    : 'bg-card border-gray-200 shadow-lg shadow-black/5'
                 )}
               >
                 {/* Card top bar */}
@@ -382,14 +422,14 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                 {/* Image area */}
                 <div
                   className={cn(
-                    'relative h-64 sm:h-72 transition-all duration-500',
-                    isDark ? 'bg-black' : 'bg-muted/50'
+                    'relative h-72 sm:h-80 md:h-[22rem] transition-all duration-500',
+                    isDark ? 'bg-[#1a1a1a]' : 'bg-muted/50'
                   )}
                 >
                   <OptimizedImage
                     basePath={isDark ? '/images/hero-masters-dark' : '/images/hero-masters'}
                     alt=""
-                    className="w-full h-full object-cover transition-opacity duration-500"
+                    className="w-full h-full object-contain object-bottom transition-opacity duration-500"
                     loading="eager"
                     draggable={false}
                   />
@@ -397,7 +437,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                     className="absolute inset-0 transition-all duration-500"
                     style={{
                       background: isDark
-                        ? 'linear-gradient(to top, #000000 10%, transparent 60%)'
+                        ? 'linear-gradient(to top, #1a1a1a 10%, transparent 60%)'
                         : 'linear-gradient(to top, rgba(248,250,252,0.6) 0%, transparent 40%)',
                     }}
                   />
@@ -405,7 +445,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                   <div
                     className={cn(
                       'absolute top-4 right-4 flex items-center gap-2 px-3 py-2 rounded-xl backdrop-blur-md transition-all duration-500',
-                      isDark ? 'bg-black/80' : 'bg-card/90'
+                      isDark ? 'bg-[#1a1a1a]/90' : 'bg-card/90'
                     )}
                   >
                     <div className="flex -space-x-1">
@@ -422,64 +462,13 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                   </div>
                 </div>
 
-                {/* Card bottom */}
-                <div className="px-5 pb-5 pt-3 space-y-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    {popularMasters.length > 0
-                      ? popularMasters.map((m) => {
-                          const displayName =
-                            `${m?.user?.firstName ?? ''} ${m?.user?.lastName ?? ''}`.trim() || 'Master';
-                          const shortName =
-                            displayName.split(' ')[0] +
-                            (displayName.includes(' ') ? ' ' + (displayName.split(' ')[1]?.[0] ?? '') + '.' : '');
-                          const catName = m.category?.name ?? t('home.findMasters');
-                          const rating = (m.rating ?? m.avgRating ?? 4.9).toFixed(1);
-                          return (
-                            <RouterLink
-                              key={m.id}
-                              to={`/masters/${m.slug ?? m.id}`}
-                              className={cn(
-                                'p-2.5 rounded-xl cursor-pointer transition-all duration-200',
-                                'hover:shadow-lg hover:shadow-black/8',
-                                isDark ? 'bg-white/[0.06] shadow-lg shadow-black/20' : 'bg-white/95 shadow-md shadow-black/5'
-                              )}
-                            >
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-lg">
-                                  {CATEGORY_EMOJI[m.category?.slug ?? ''] ?? '🔧'}
-                                </span>
-                                <div className="flex items-center gap-0.5 text-primary">
-                                  <Star size={9} fill="currentColor" />
-                                  <span className="text-[10px] text-muted-foreground">{rating}</span>
-                                </div>
-                              </div>
-                              <p className="text-xs font-medium truncate text-foreground">{shortName}</p>
-                              <p className="text-[10px] text-muted-foreground truncate">{catName}</p>
-                            </RouterLink>
-                          );
-                        })
-                      : [1, 2, 3].map((i) => (
-                          <div
-                            key={i}
-                            className={cn(
-                              'p-2.5 rounded-xl',
-                              isDark ? 'bg-white/[0.06] shadow-lg shadow-black/20' : 'bg-white/95 shadow-md shadow-black/5'
-                            )}
-                          >
-                            <div className="h-4 w-4 rounded bg-muted mb-2" />
-                            <div className="h-3 w-8 bg-muted rounded mb-1" />
-                            <div className="h-2.5 w-12 bg-muted rounded" />
-                          </div>
-                        ))}
-                  </div>
-                </div>
               </div>
 
               {/* Floating stat cards */}
               <div
                 className={cn(
                   'absolute -left-4 lg:-left-8 top-16 px-4 py-3 rounded-2xl shadow-xl hidden lg:block transition-all duration-500',
-                  isDark ? 'bg-black/90 shadow-lg shadow-black/20' : 'bg-white/95 shadow-md shadow-black/5'
+                  isDark ? 'bg-[#1a1a1a] border border-white/[0.06] shadow-lg shadow-black/30' : 'bg-white/95 shadow-md shadow-black/5'
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -495,8 +484,8 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
 
               <div
                 className={cn(
-                  'absolute -right-4 lg:-right-6 bottom-24 px-4 py-3 rounded-2xl shadow-xl hidden lg:block transition-all duration-500',
-                  isDark ? 'bg-black/90 shadow-lg shadow-black/20' : 'bg-white/95 shadow-md shadow-black/5'
+                  'absolute -right-4 lg:-right-6 bottom-6 px-4 py-3 rounded-2xl shadow-xl hidden lg:block transition-all duration-500',
+                  isDark ? 'bg-[#1a1a1a] border border-white/[0.06] shadow-lg shadow-black/30' : 'bg-white/95 shadow-md shadow-black/5'
                 )}
               >
                 <div className="flex items-center gap-3">

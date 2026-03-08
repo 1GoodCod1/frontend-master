@@ -1,14 +1,45 @@
 import { useTranslation } from 'react-i18next';
 import { Bell, BellOff, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWebPush } from '@/hooks/useWebPush';
+
+const PUSH_BANNER_DISMISSED_KEY = 'push-banner-dismissed';
+
+function getDismissedFromStorage(): boolean {
+    try {
+        return localStorage.getItem(PUSH_BANNER_DISMISSED_KEY) === 'true';
+    } catch {
+        return false;
+    }
+}
+
+function setDismissedToStorage(value: boolean): void {
+    try {
+        if (value) {
+            localStorage.setItem(PUSH_BANNER_DISMISSED_KEY, 'true');
+        } else {
+            localStorage.removeItem(PUSH_BANNER_DISMISSED_KEY);
+        }
+    } catch {
+        /* ignore */
+    }
+}
 
 export function PushPermissionBanner() {
     const { t } = useTranslation();
     const { permissionState, isSubscribed, isLoading, isSupported, subscribe } =
         useWebPush();
-    const [dismissed, setDismissed] = useState(false);
+    const [dismissed, setDismissed] = useState(getDismissedFromStorage);
+
+    useEffect(() => {
+        setDismissed(getDismissedFromStorage());
+    }, []);
+
+    const handleDismiss = () => {
+        setDismissed(true);
+        setDismissedToStorage(true);
+    };
 
     // Don't show if: not supported, already subscribed, denied, or dismissed
     if (!isSupported || isSubscribed || permissionState === 'denied' || dismissed) {
@@ -50,7 +81,7 @@ export function PushPermissionBanner() {
                         size="sm"
                         variant="ghost"
                         className="h-8 w-8 p-0"
-                        onClick={() => setDismissed(true)}
+                        onClick={handleDismiss}
                     >
                         <X className="h-4 w-4" />
                     </Button>

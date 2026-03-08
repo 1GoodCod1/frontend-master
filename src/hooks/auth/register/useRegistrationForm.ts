@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import { FormikHelpers } from 'formik';
 
 import { useAuthRegisterMutation, useAuthRegistrationOptionsQuery } from '@/features/auth/authApi';
-import { useReferralsValidateCodeQuery } from '@/features/referrals/referralsApi';
+import { useReferralsValidateCodeQuery, useConfigReferralsEnabledQuery } from '@/features/referrals/referralsApi';
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
@@ -48,8 +48,11 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
 
   const [register, registerState] = useAuthRegisterMutation();
   const { data: optionsData, isLoading: optionsLoading } = useAuthRegistrationOptionsQuery();
-  const { data: validateData } = useReferralsValidateCodeQuery(refCode ?? '', {
-    skip: !refCode,
+  const { data: referralsConfig } = useConfigReferralsEnabledQuery();
+  const referralsEnabled = referralsConfig?.enabled ?? true;
+  const effectiveRefCode = referralsEnabled ? refCode : undefined;
+  const { data: validateData } = useReferralsValidateCodeQuery(effectiveRefCode ?? '', {
+    skip: !effectiveRefCode,
   });
 
   const cities = useMemo(
@@ -112,7 +115,7 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
 
   const handleSubmit = async (values: RegisterFormValues, helpers: FormikHelpers<RegisterFormValues>) => {
     try {
-      await register({ ...values, referralCode: refCode }).unwrap();
+      await register({ ...values, referralCode: effectiveRefCode }).unwrap();
       toast.success(t('Account created successfully'));
 
       if (values.role === 'CLIENT') {
@@ -128,8 +131,8 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
   };
 
   const referralInfo =
-    refCode && validateData?.valid
-      ? { code: refCode, referrerName: validateData.referrerName }
+    effectiveRefCode && validateData?.valid
+      ? { code: effectiveRefCode, referrerName: validateData.referrerName }
       : undefined;
 
   return {

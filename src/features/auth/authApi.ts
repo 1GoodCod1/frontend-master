@@ -4,6 +4,8 @@ import type { LoginDto, RegisterDto, RefreshTokenDto, MeResponse } from '@/types
 import { setMe, setTokens, clearAuth } from './authSlice';
 import { persistRefreshToken, setLogoutFlag } from './persist';
 import type { RootState } from '@/app/store';
+import { usersApi } from '@/features/users/usersApi';
+import i18n from '@/i18n';
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
@@ -46,6 +48,14 @@ export const authApi = api.injectEndpoints({
             await dispatch(
               authApi.endpoints.authMe.initiate(undefined, { forceRefetch: true }),
             ).unwrap();
+            const lang = i18n.language;
+            if (lang && ['en', 'ru', 'ro'].includes(lang)) {
+              dispatch(
+                usersApi.endpoints.usersSetPreferredLanguage.initiate({
+                  lang: lang as 'en' | 'ru' | 'ro',
+                }),
+              ).catch(() => {});
+            }
           }
         } catch {
           // ignore token refresh errors

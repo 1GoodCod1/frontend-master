@@ -231,6 +231,7 @@ export const api = createApi({
     'ChatMessages',
     'Portfolio',
     'Referrals',
+    'Digest',
   ],
   endpoints: () => ({}),
 });
