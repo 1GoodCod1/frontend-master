@@ -1,7 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
-import { selectIsAuthed } from '@/features/auth/selectors';
+import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { useState } from 'react';
 import { Mail, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -14,6 +14,7 @@ const NEWSLETTER_SUBSCRIBED_KEY = 'newsletter_subscribed';
 export function Footer() {
   const { t } = useTranslation();
   const isAuthed = useAppSelector(selectIsAuthed);
+  const role = useAppSelector(selectRole);
   const [email, setEmail] = useState('');
   const [subscribedFromStorage] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -42,7 +43,7 @@ export function Footer() {
     'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
 
   const showNewsletter = !isAuthed && !subscribedFromStorage;
-  const showDigest = isAuthed;
+  const showDigest = isAuthed && role !== 'ADMIN';
 
   return (
     <footer className="mt-auto w-full bg-[hsl(var(--background))] dark:bg-[#171510]">

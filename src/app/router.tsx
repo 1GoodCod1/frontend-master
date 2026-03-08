@@ -63,6 +63,7 @@ const SystemPage = lazy(() => import('@/pages/admin/SystemPage'));
 const AuditPage = lazy(() => import('@/pages/admin/AuditPage'));
 const SecurityPage = lazy(() => import('@/pages/admin/SecurityPage'));
 const VerificationRequestsPage = lazy(() => import('@/pages/admin/VerificationRequestsPage'));
+const DigestAdminPage = lazy(() => import('@/pages/admin/DigestAdminPage'));
 const ReportsAdminPage = lazy(() => import('@/pages/admin/ReportsAdminPage'));
 // Client pages
 const ClientDashboardPage = lazy(() => import('@/pages/client/ClientDashboardPage'));
@@ -192,6 +193,7 @@ export const router = createBrowserRouter([
               { path: 'audit', element: <LazyPage><AuditPage /></LazyPage> },
               { path: 'security', element: <LazyPage><SecurityPage /></LazyPage> },
               { path: 'verification-requests', element: <LazyPage><VerificationRequestsPage /></LazyPage> },
+              { path: 'digest', element: <LazyPage><DigestAdminPage /></LazyPage> },
             ],
           },
         ],

@@ -18,6 +18,7 @@ import {
   Settings,
   FileCheck,
   Menu,
+  Mailbox,
 } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { useIsMdUp } from '@/hooks/useMediaQuery';
@@ -38,6 +39,7 @@ const items: { key: string; to: string; icon: React.ReactNode }[] = [
   { key: 'tariffs', to: '/admin/tariffs', icon: <DollarSign className="size-5" /> },
   { key: 'analytics', to: '/admin/analytics', icon: <BarChart2 className="size-5" /> },
   { key: 'verificationRequests', to: '/admin/verification-requests', icon: <BadgeCheck className="size-5" /> },
+  { key: 'digest', to: '/admin/digest', icon: <Mailbox className="size-5" /> },
   { key: 'security', to: '/admin/security', icon: <Shield className="size-5" /> },
   { key: 'system', to: '/admin/system', icon: <Settings className="size-5" /> },
   { key: 'audit', to: '/admin/audit', icon: <FileCheck className="size-5" /> },
