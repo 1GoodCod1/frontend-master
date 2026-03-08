@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Bell, BellOff, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWebPush } from '@/hooks/useWebPush';
 
@@ -31,10 +31,6 @@ export function PushPermissionBanner() {
     const { permissionState, isSubscribed, isLoading, isSupported, subscribe } =
         useWebPush();
     const [dismissed, setDismissed] = useState(getDismissedFromStorage);
-
-    useEffect(() => {
-        setDismissed(getDismissedFromStorage());
-    }, []);
 
     const handleDismiss = () => {
         setDismissed(true);
