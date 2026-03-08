@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, Megaphone, UserX, FileCode2, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -62,11 +62,6 @@ function TemplateOverrideForm({
 }) {
   const [subject, setSubject] = useState(initialSubject);
   const [bodyHtml, setBodyHtml] = useState(initialBodyHtml);
-
-  useEffect(() => {
-    setSubject(initialSubject);
-    setBodyHtml(initialBodyHtml);
-  }, [initialSubject, initialBodyHtml]);
 
   return (
     <div className="space-y-4 rounded-lg border border-border bg-muted/30 p-4">
