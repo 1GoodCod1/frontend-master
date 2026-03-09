@@ -15,9 +15,13 @@ export const notificationSettings = {
         notConnected: 'Not connected',
         chatIdLabel: 'Chat ID',
         chatIdPlaceholder: 'e.g. 123456789 (from @userinfobot)',
-        chatIdHelp: 'Send /start to our bot, then get your Chat ID from @userinfobot and paste it here.',
+        chatIdHelp: 'Click "Connect Telegram" to link automatically, or paste Chat ID from @userinfobot manually.',
         connect: 'Connect',
         disconnect: 'Disconnect',
+        connectButton: 'Connect Telegram',
+        connecting: 'Opening...',
+        connectToast: 'Open Telegram and press Start to complete the connection.',
+        connectError: 'Failed to create connect link',
       },
 
       whatsapp: {
@@ -33,6 +37,20 @@ export const notificationSettings = {
         disconnect: 'Disconnect',
       },
 
+      leadChannel: {
+        label: 'Channel for lead notifications',
+        description: 'SMS is always sent. Choose one additional channel for leads.',
+        telegram: 'Telegram only',
+        whatsapp: 'WhatsApp only',
+        both: 'Both (Telegram + WhatsApp)',
+        none: 'SMS only',
+      },
+      tariffChannel: {
+        label: 'Tariff notifications',
+        description: 'Choose how to receive tariff expiration reminders.',
+        sms: 'SMS',
+        inApp: 'In-app',
+      },
       save: 'Save',
       saving: 'Saving...',
       saved: 'Settings saved',
@@ -56,9 +74,13 @@ export const notificationSettings = {
         notConnected: 'Не подключено',
         chatIdLabel: 'Chat ID',
         chatIdPlaceholder: 'например 123456789 (из @userinfobot)',
-        chatIdHelp: 'Отправьте /start нашему боту, затем получите Chat ID в @userinfobot и вставьте сюда.',
+        chatIdHelp: 'Нажмите «Подключить Telegram» для автоматической привязки или вставьте Chat ID из @userinfobot вручную.',
         connect: 'Подключить',
         disconnect: 'Отключить',
+        connectButton: 'Подключить Telegram',
+        connecting: 'Открываю...',
+        connectToast: 'Откройте Telegram и нажмите Start для завершения подключения.',
+        connectError: 'Не удалось создать ссылку',
       },
 
       whatsapp: {
@@ -74,6 +96,20 @@ export const notificationSettings = {
         disconnect: 'Отключить',
       },
 
+      leadChannel: {
+        label: 'Канал для уведомлений о заявках',
+        description: 'SMS отправляется всегда. Выберите один дополнительный канал.',
+        telegram: 'Только Telegram',
+        whatsapp: 'Только WhatsApp',
+        both: 'Оба (Telegram + WhatsApp)',
+        none: 'Только SMS',
+      },
+      tariffChannel: {
+        label: 'Уведомления о тарифе',
+        description: 'Выберите, как получать напоминания об истечении тарифа.',
+        sms: 'SMS',
+        inApp: 'In-app',
+      },
       save: 'Сохранить',
       saving: 'Сохранение...',
       saved: 'Настройки сохранены',
@@ -97,9 +133,13 @@ export const notificationSettings = {
         notConnected: 'Neconectat',
         chatIdLabel: 'Chat ID',
         chatIdPlaceholder: 'ex. 123456789 (de la @userinfobot)',
-        chatIdHelp: 'Trimite /start botului nostru, apoi obține Chat ID de la @userinfobot și lipește-l aici.',
+        chatIdHelp: 'Apasă «Conectează Telegram» pentru legare automată sau lipește Chat ID de la @userinfobot manual.',
         connect: 'Conectează',
         disconnect: 'Deconectează',
+        connectButton: 'Conectează Telegram',
+        connecting: 'Se deschide...',
+        connectToast: 'Deschide Telegram și apasă Start pentru a finaliza conexiunea.',
+        connectError: 'Nu s-a putut crea linkul',
       },
 
       whatsapp: {
@@ -115,6 +155,20 @@ export const notificationSettings = {
         disconnect: 'Deconectează',
       },
 
+      leadChannel: {
+        label: 'Canal pentru notificări despre cereri',
+        description: 'SMS se trimite mereu. Alege un canal suplimentar.',
+        telegram: 'Doar Telegram',
+        whatsapp: 'Doar WhatsApp',
+        both: 'Ambele (Telegram + WhatsApp)',
+        none: 'Doar SMS',
+      },
+      tariffChannel: {
+        label: 'Notificări despre abonament',
+        description: 'Alege cum primești memento-uri despre expirarea abonamentului.',
+        sms: 'SMS',
+        inApp: 'In-app',
+      },
       save: 'Salvează',
       saving: 'Se salvează...',
       saved: 'Setări salvate',

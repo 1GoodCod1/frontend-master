@@ -1,5 +1,5 @@
-const KEY = 'moldmasters.refreshToken';
-const LOGOUT_FLAG_KEY = 'moldmasters.logout';
+const KEY = 'master-hub.refreshToken';
+const LOGOUT_FLAG_KEY = 'master-hub.logout';
 
 export function loadPersistedRefreshToken(): string | null {
   try {

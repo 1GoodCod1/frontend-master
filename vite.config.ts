@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
       open: true,
     }),
     Sitemap({
-      hostname: 'https://moldmasters.md', // Update with actual domain
+      hostname: 'https://master-hub.md', // Update with actual domain
       dynamicRoutes: [
         '/masters',
         '/plans',

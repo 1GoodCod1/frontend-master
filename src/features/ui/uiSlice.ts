@@ -22,8 +22,7 @@ function readInitialMode(): ColorMode {
   } catch {
     //
   }
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
-  return prefersDark ? 'dark' : 'light';
+  return 'light';
 }
 
 /** Sync to cookie only. Redux persist handles persist:root automatically. */

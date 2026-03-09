@@ -23,7 +23,7 @@ import { persistApiCacheTransform } from './persistApiCache';
 
 // API cache: persist only Categories/Cities (via transform)
 const apiPersistConfig = {
-  key: 'mm_api',
+  key: 'mh_api',
   storage,
   transforms: [persistApiCacheTransform],
 };

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    container_name: moldmasters-frontend-dev
+    container_name: master-hub-frontend-dev
     ports:
       - "3000:3000"
     volumes:

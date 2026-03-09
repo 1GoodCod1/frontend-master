@@ -19,7 +19,7 @@ self.addEventListener('push', (event) => {
             body: body || '',
             icon: icon || '/favicon.ico',
             badge: badge || '/favicon.ico',
-            tag: tag || 'moldmasters-notification',
+            tag: tag || 'master-hub-notification',
             data: { url, ...(data || {}) },
             vibrate: [200, 100, 200],
             actions: url
@@ -28,11 +28,11 @@ self.addEventListener('push', (event) => {
             requireInteraction: false,
         };
 
-        event.waitUntil(self.registration.showNotification(title || 'MoldMasters', options));
+        event.waitUntil(self.registration.showNotification(title || 'Master-Hub', options));
     } catch {
         const text = event.data.text();
         event.waitUntil(
-            self.registration.showNotification('MoldMasters', { body: text }),
+            self.registration.showNotification('Master-Hub', { body: text }),
         );
     }
 });

@@ -80,7 +80,7 @@ function TemplateOverrideForm({
           id="override-subject"
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          placeholder="MoldMasters: Digest"
+          placeholder="Master-Hub: Digest"
         />
       </div>
       <div className="space-y-2">

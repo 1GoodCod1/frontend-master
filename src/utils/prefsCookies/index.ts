@@ -24,13 +24,13 @@ function getCookie(name: string): string | null {
 
 export const prefsCookies = {
   lang: {
-    key: 'mm_lang',
-    get: () => getCookie('mm_lang'),
-    set: (value: string) => setCookie('mm_lang', value),
+    key: 'mh_lang',
+    get: () => getCookie('mh_lang'),
+    set: (value: string) => setCookie('mh_lang', value),
   },
   theme: {
-    key: 'mm_theme',
-    get: () => getCookie('mm_theme'),
-    set: (value: string) => setCookie('mm_theme', value),
+    key: 'master_hub_theme',
+    get: () => getCookie('mh_theme'),
+    set: (value: string) => setCookie('mh_theme', value),
   },
 };

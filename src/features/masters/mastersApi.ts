@@ -239,6 +239,17 @@ export const mastersApi = api.injectEndpoints({
       invalidatesTags: ['Master', 'Masters'],
     }),
 
+    mastersCreateTelegramConnectLink: build.mutation<
+      { link: string; expiresAt: string },
+      void
+    >({
+      query: () => ({
+        url: '/masters/telegram-connect-token/me',
+        method: 'POST',
+      }),
+      invalidatesTags: ['Master'],
+    }),
+
     mastersGetScheduleSettings: build.query<{ workStartHour: number; workEndHour: number; slotDurationMinutes: number }, void>({
       query: () => ({ url: '/masters/schedule-settings/me', method: 'GET' }),
       providesTags: ['Master'],
@@ -304,6 +315,7 @@ export const {
   useMastersGetAvailabilityStatusQuery,
   useMastersGetNotificationSettingsQuery,
   useMastersUpdateNotificationSettingsMutation,
+  useMastersCreateTelegramConnectLinkMutation,
   useMastersGetScheduleSettingsQuery,
   useMastersUpdateScheduleSettingsMutation,
   useMastersGetQuickRepliesQuery,

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import i18n from 'i18next';
 import { loadNotifications, loadNotificationSettings, saveNotificationSettings, clearNotificationsStorage } from './persist';
 import { clearAuth } from '@/features/auth/authSlice';
 
@@ -234,15 +235,32 @@ function shouldAutoPin(
 function makeMessage(type: SocketEventType, payload: unknown): string | undefined {
   const p = isRecord(payload) ? payload : {};
   const data = isRecord(p.data) ? (p.data as Record<string, unknown>) : {};
-  // Use message from backend if present (in-app notification service already sets it)
+
+  // Backend sends messageKey + messageParams for i18n — translate on frontend
+  const messageKey = p.messageKey ?? data.messageKey;
+  const messageParams = (p.messageParams ?? data.messageParams) as Record<string, string | number> | undefined;
+  if (typeof messageKey === 'string' && messageParams) {
+    const params = { ...messageParams };
+    // Translate lead status (IN_PROGRESS → "В РАБОТЕ" etc.)
+    if (messageKey.includes('leadStatusFrom') && params.status) {
+      const statusKey = `notifications.status.${String(params.status).toLowerCase()}`;
+      params.status = i18n.t(statusKey, { defaultValue: String(params.status) });
+    }
+    return i18n.t(messageKey, params);
+  }
+
+  // Fallback: use message from backend if present
   if (typeof p.message === 'string') {
     return p.message;
   }
 
+  // Build fallback with i18n
   if (type === 'new_lead' || type === 'admin_new_lead') {
-    const name = p.name ?? p.clientName;
-    const phone = p.phone ?? p.clientPhone ?? p.contact;
-    return [name, phone].filter(Boolean).join(' · ') || undefined;
+    const name = p.name ?? p.clientName ?? data.clientName ?? data.name;
+    const phone = p.phone ?? p.clientPhone ?? p.contact ?? data.clientPhone ?? data.phone;
+    if (name && phone) return i18n.t('notifications.messages.newLeadFromPhone', { clientName: String(name), phone: String(phone) });
+    if (name) return i18n.t('notifications.messages.newLeadFrom', { clientName: String(name) });
+    return phone ? String(phone) : undefined;
   }
   if (type === 'new_review' || type === 'admin_new_review') {
     const rating = p.rating;
@@ -250,31 +268,38 @@ function makeMessage(type: SocketEventType, payload: unknown): string | undefine
     return [author, rating ? `★ ${rating}` : null].filter(Boolean).join(' · ') || undefined;
   }
   if (type === 'lead_status_updated') {
-    const st = p.status ?? p.newStatus;
-    const id = p.id ?? p.leadId;
-    return [id ? `#${String(id).slice(0, 8)}` : null, st].filter(Boolean).join(' · ') || undefined;
+    const st = p.status ?? p.newStatus ?? data.status;
+    const clientName = p.clientName ?? p.name ?? data.clientName ?? data.name;
+    if (clientName && st) {
+      const statusTranslated = i18n.t(`notifications.status.${String(st).toLowerCase()}`, { defaultValue: String(st) });
+      return i18n.t('notifications.messages.leadStatusFrom', { clientName: String(clientName), status: statusTranslated });
+    }
+    return [clientName ? String(clientName) : null, st].filter(Boolean).join(' · ') || undefined;
   }
   if (type === 'lead_sent') {
-    const masterName = p.masterName;
-    return masterName ? `Мастеру ${masterName}` : undefined;
+    const masterName = p.masterName ?? data.masterName;
+    return masterName ? i18n.t('notifications.messages.leadSentTo', { masterName: String(masterName) }) : undefined;
   }
   if (type === 'new_chat_message') {
-    return p.conversationId ? 'Открыть чат' : undefined;
+    return p.conversationId ? i18n.t('notifications.messages.openChat') : undefined;
   }
   if (type === 'subscription_expiring') {
     const days = p.daysLeft ?? data.daysLeft;
     const tariff = p.tariffType ?? data.tariffType;
-    if (days && tariff) return `${tariff} истекает через ${days} дн.`;
+    if (days && tariff) return i18n.t('notifications.messages.subscriptionExpiring', { tariff: String(tariff), days: Number(days) });
     return undefined;
   }
   if (type === 'subscription_expired') {
-    return p.tariffType ? `Тариф ${String(p.tariffType)} истёк` : 'Подписка истекла';
+    const tariff = p.tariffType ?? data.tariffType;
+    return tariff ? i18n.t('notifications.messages.subscriptionExpired', { tariff: String(tariff) }) : undefined;
   }
   if (type === 'payment_success') {
-    return p.tariffType ? `Тариф ${String(p.tariffType)} оплачен` : 'Оплата прошла успешно';
+    const tariff = p.tariffType ?? data.tariffType;
+    return tariff ? i18n.t('notifications.messages.paymentSuccess', { tariff: String(tariff) }) : i18n.t('notifications.messages.paymentSuccessGeneric');
   }
   if (type === 'payment_failed') {
-    return p.tariffType ? `Ошибка оплаты ${String(p.tariffType)}` : 'Ошибка оплаты';
+    const tariff = p.tariffType ?? data.tariffType;
+    return tariff ? i18n.t('notifications.messages.paymentFailed', { tariff: String(tariff) }) : undefined;
   }
   if (type === 'verification_approved') return 'Ваш профиль верифицирован ✅';
   if (type === 'verification_rejected') return (typeof p.reason === 'string' ? p.reason : undefined) ?? 'Верификация отклонена';

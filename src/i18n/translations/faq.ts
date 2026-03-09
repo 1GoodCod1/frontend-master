@@ -36,7 +36,7 @@ export const faq = {
       q7: {
         question: 'How can I contact support?',
         answer:
-          'You can reach us via email at support@moldmasters.md, phone at +373 22 123 456, or Telegram at @moldmasters_support. Visit our',
+          'You can reach us via email at support@master-hub.md, phone at +373 22 123 456, or Telegram at @master_hub_support. Visit our',
         linkSuffix: 'page for more details and working hours.',
       },
     },
@@ -78,7 +78,7 @@ export const faq = {
       q7: {
         question: 'Как я могу связаться со службой поддержки?',
         answer:
-          'Вы можете связаться с нами по email: support@moldmasters.md, телефону: +373 22 123 456 или Telegram: @moldmasters_support. Посетите нашу',
+          'Вы можете связаться с нами по email: support@master-hub.md, телефону: +373 22 123 456 или Telegram: @master_hub_support. Посетите нашу',
         linkSuffix: 'страницу для получения дополнительной информации и рабочих часов.',
       },
     },
@@ -120,7 +120,7 @@ export const faq = {
       q7: {
         question: 'Cum pot contacta suportul?',
         answer:
-          'Ne puteți contacta prin email la support@moldmasters.md, telefon la +373 22 123 456 sau Telegram la @moldmasters_support. Vizitați pagina noastră de',
+          'Ne puteți contacta prin email la support@master-hub.md, telefon la +373 22 123 456 sau Telegram la @master_hub_support. Vizitați pagina noastră de',
         linkSuffix: 'Contacte pentru mai multe detalii și ore de lucru.',
       },
     },

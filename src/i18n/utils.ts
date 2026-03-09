@@ -2,7 +2,7 @@ import { prefsCookies } from '@/utils/prefsCookies';
 
 export type AppLanguage = 'en' | 'ru' | 'ro';
 
-export const STORAGE_KEY = 'mm_lang';
+export const STORAGE_KEY = 'mh_lang';
 
 function getStorageItem(key: string): string | null {
   if (typeof window !== 'undefined' && window.localStorage) {

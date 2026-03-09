@@ -1,6 +1,6 @@
-# MoldMasters Frontend 🎨🇲🇩
+# Master-Hub Frontend 🎨🇲🇩
 
-The client-facing application for the MoldMasters platform, built with React and Vite.
+The client-facing application for the Master-Hub platform, built with React and Vite.
 
 ---
 
@@ -62,4 +62,4 @@ If you are using the root `docker-compose.dev.yml` setup, the frontend is availa
 ---
 
 ## 📜 License
-Private / MoldMasters Team © 2026
+Private / Master-Hub Team © 2026

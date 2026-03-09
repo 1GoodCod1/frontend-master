@@ -1,4 +1,4 @@
-const KEY = 'mm_cookie_consent';
+const KEY = 'mh_cookie_consent';
 
 export type CookieConsentChoice = 'all' | 'necessary';
 

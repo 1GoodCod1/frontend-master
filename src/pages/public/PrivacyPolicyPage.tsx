@@ -58,10 +58,10 @@ export default function PrivacyPolicyPage() {
             <li>
               {t('privacy.contactEmail')}:{' '}
               <a
-                href="mailto:support@moldmasters.md"
+                href="mailto:support@master-hub.md"
                 className="font-medium text-primary hover:underline"
               >
-                support@moldmasters.md
+                support@master-hub.md
               </a>
             </li>
             <li>

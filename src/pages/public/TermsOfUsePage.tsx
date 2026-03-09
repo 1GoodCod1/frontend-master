@@ -60,8 +60,8 @@ export default function TermsOfUsePage() {
           <ul className="list-inside list-disc space-y-1 pl-2 text-muted-foreground">
             <li>
               {t('terms.contactEmail')}:{' '}
-              <a href="mailto:support@moldmasters.md" className="font-medium text-primary hover:underline">
-                support@moldmasters.md
+              <a href="mailto:support@master-hub.md" className="font-medium text-primary hover:underline">
+                support@master-hub.md
               </a>
             </li>
             <li>

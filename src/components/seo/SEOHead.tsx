@@ -10,10 +10,10 @@ interface SEOHeadProps {
     noindex?: boolean;
 }
 
-const BASE_TITLE = 'MoldMasters';
-const SITE_URL = 'https://moldmasters.md';
+const BASE_TITLE = 'Master-Hub';
+const SITE_URL = 'https://master-hub.md';
 const DEFAULT_DESCRIPTION =
-    'MoldMasters — платформа для поиска лучших мастеров Молдовы. Маникюр, стрижки, ремонт, уборка и многое другое.';
+    'Master-Hub — платформа для поиска лучших мастеров Молдовы. Маникюр, стрижки, ремонт, уборка и многое другое.';
 const DEFAULT_OG_IMAGE = '/og-image.png';
 
 export function SEOHead({

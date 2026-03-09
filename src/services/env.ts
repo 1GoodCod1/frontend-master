@@ -24,10 +24,10 @@ function fromWindow(key: string): string | undefined {
 }
 
 // Vite: use VITE_*
-// Fallback: allow injecting values at runtime (optional) by setting window.__MOLDMASTERS_ENV__ = { apiUrl, wsUrl, envName }
+// Fallback: allow injecting values at runtime (optional) by setting window.__MASTER_HUB_ENV__ = { apiUrl, wsUrl, envName }
 const runtime = (() => {
   try {
-    return window.__MOLDMASTERS_ENV__ as Partial<AppEnv> | undefined;
+    return window.__MASTER_HUB_ENV__ as Partial<AppEnv> | undefined;
   } catch {
     return undefined;
   }

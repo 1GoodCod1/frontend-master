@@ -6,7 +6,7 @@ declare global {
     grecaptcha?: {
       execute: (siteKey: string, opts: { action: string }) => Promise<string>;
     };
-    __MOLDMASTERS_ENV__?: Partial<{
+    __MASTER_HUB_ENV__?: Partial<{
       apiUrl: string;
       wsUrl: string;
       envName: string;

@@ -17,4 +17,4 @@ Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password
 
-Sitemap: https://moldmasters.md/sitemap.xml
+Sitemap: https://master-hub.md/sitemap.xml

@@ -19,11 +19,20 @@ export function useNotificationSettings() {
 
   const [update, updateState] = useMastersUpdateNotificationSettingsMutation();
 
-  const settings = data ?? { telegramChatId: null, whatsappPhone: null };
+  const settings = data ?? {
+    telegramChatId: null,
+    whatsappPhone: null,
+    leadNotifyChannel: 'both',
+    notifyTariffSms: true,
+    notifyTariffInApp: true,
+  };
 
   const [form, setForm] = useState<UpdateNotificationSettingsDto>({
     telegramChatId: settings.telegramChatId ?? null,
     whatsappPhone: settings.whatsappPhone ?? null,
+    leadNotifyChannel: (settings.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ?? 'both',
+    notifyTariffSms: settings.notifyTariffSms ?? true,
+    notifyTariffInApp: settings.notifyTariffInApp ?? true,
   });
 
   useEffect(() => {
@@ -32,6 +41,9 @@ export function useNotificationSettings() {
       setForm({
         telegramChatId: data.telegramChatId ?? null,
         whatsappPhone: data.whatsappPhone ?? null,
+        leadNotifyChannel: (data.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ?? 'both',
+        notifyTariffSms: data.notifyTariffSms ?? true,
+        notifyTariffInApp: data.notifyTariffInApp ?? true,
       });
     });
   }, [data]);
@@ -40,10 +52,10 @@ export function useNotificationSettings() {
     setForm((prev) => ({ ...prev, ...partial }));
   };
 
-  const save = async () => {
+  const save = async (overrides?: Partial<UpdateNotificationSettingsDto>) => {
     if (!isPremium) return;
     try {
-      await update({ ...form }).unwrap();
+      await update({ ...form, ...overrides }).unwrap();
       toast.success(t('notificationSettings.saved'));
       refetch();
     } catch (e: unknown) {

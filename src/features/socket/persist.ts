@@ -1,7 +1,7 @@
 import type { NotificationItem } from './socketSlice';
 
-const KEY_DATA = 'mm_notifications_v1';
-const KEY_SETTINGS = 'mm_notif_settings_v1';
+const KEY_DATA = 'mh_notifications_v1';
+const KEY_SETTINGS = 'mh_notif_settings_v1';
 
 export type PersistedNotifications = {
   unreadLeads: number;

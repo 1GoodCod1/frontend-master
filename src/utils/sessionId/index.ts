@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'mm_session_id';
+const STORAGE_KEY = 'mh_session_id';
 
 /**
  * Возвращает или создаёт постоянный session ID для анонимных пользователей.

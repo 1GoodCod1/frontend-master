@@ -11,8 +11,8 @@ export default function ContactsPage() {
     {
       icon: Mail,
       title: t('contact.email'),
-      value: 'support@moldmasters.md',
-      link: 'mailto:support@moldmasters.md',
+      value: 'support@master-hub.md',
+      link: 'mailto:support@master-hub.md',
       description: t('contact.emailDescription'),
     },
     {
@@ -25,8 +25,8 @@ export default function ContactsPage() {
     {
       icon: Send,
       title: t('contact.telegram'),
-      value: '@moldmasters_support',
-      link: 'https://t.me/moldmasters_support',
+      value: '@master_hub_support',
+      link: 'https://t.me/master_hub_support',
       description: t('contact.telegramDescription'),
     },
   ];

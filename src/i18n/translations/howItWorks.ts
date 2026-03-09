@@ -48,7 +48,7 @@ export const howItWorks = {
       ready: {
         title: 'Ready to get started?',
         description:
-          'Join thousands of satisfied users who have found their perfect specialist through MoldMasters.',
+          'Join thousands of satisfied users who have found their perfect specialist through Master-Hub.',
       },
     },
   },
@@ -101,7 +101,7 @@ export const howItWorks = {
       ready: {
         title: 'Готовы начать?',
         description:
-          'Присоединяйтесь к тысячам довольных пользователей, которые нашли своего идеального специалиста через MoldMasters.',
+          'Присоединяйтесь к тысячам довольных пользователей, которые нашли своего идеального специалиста через Master-Hub.',
       },
     },
   },
@@ -154,7 +154,7 @@ export const howItWorks = {
       ready: {
         title: 'Gata să începeți?',
         description:
-          'Alăturați-vă miilor de utilizatori mulțumiți care și-au găsit specialistul perfect prin MoldMasters.',
+          'Alăturați-vă miilor de utilizatori mulțumiți care și-au găsit specialistul perfect prin Master-Hub.',
       },
     },
   },
