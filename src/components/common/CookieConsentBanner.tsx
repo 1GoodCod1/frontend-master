@@ -6,6 +6,7 @@ import {
   setCookieConsent,
   type CookieConsentChoice,
 } from '@/features/cookie-consent/storage';
+import { CookiePreferencesModal } from '@/features/cookie-consent/CookiePreferencesModal';
 import { prefsCookies } from '@/utils/prefsCookies';
 import { store } from '@/app/store';
 import { Button } from '@/components/ui/button';
@@ -13,22 +14,26 @@ import { cn } from '@/lib/utils';
 
 export function CookieConsentBanner() {
   const { t, i18n } = useTranslation();
-  const [visible, setVisible] = useState(() => !hasConsent());
+  const [prefsModalOpen, setPrefsModalOpen] = useState(false);
+  const [prefsOpenKey, setPrefsOpenKey] = useState(0);
 
   const handleChoice = (choice: CookieConsentChoice) => {
-    setCookieConsent(choice);
     if (choice === 'all') {
+      setCookieConsent('all');
       const lang = i18n.language || 'ro';
       if (['en', 'ru', 'ro'].includes(lang)) prefsCookies.lang.set(lang);
       const theme = store.getState().ui?.colorMode || 'light';
       prefsCookies.theme.set(theme);
+    } else {
+      setPrefsOpenKey((k) => k + 1);
+      setPrefsModalOpen(true);
     }
-    setVisible(false);
   };
 
-  if (!visible) return null;
+  if (hasConsent()) return null;
 
   return (
+    <>
     <div
       className={cn(
         'fixed bottom-4 left-4 right-4 z-[1300] mx-auto flex max-w-[520px] flex-col gap-3 rounded-xl p-4',
@@ -65,5 +70,11 @@ export function CookieConsentBanner() {
         </Button>
       </div>
     </div>
+      <CookiePreferencesModal
+        key={prefsOpenKey}
+        open={prefsModalOpen}
+        onOpenChange={setPrefsModalOpen}
+      />
+    </>
   );
 }

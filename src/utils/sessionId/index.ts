@@ -1,5 +1,5 @@
 import { safeStorage } from '@/utils/safeStorage';
-import { hasFullConsent } from '@/features/cookie-consent/storage';
+import { hasSessionConsent } from '@/features/cookie-consent/storage';
 
 const STORAGE_KEY = 'mh_session_id';
 
@@ -10,7 +10,7 @@ const STORAGE_KEY = 'mh_session_id';
  */
 export function getSessionId(isAuthenticated = false): string | null {
   if (typeof window === 'undefined') return null;
-  if (!isAuthenticated && !hasFullConsent()) return null;
+  if (!isAuthenticated && !hasSessionConsent()) return null;
 
   let id = safeStorage.getItem(STORAGE_KEY);
   if (!id) {

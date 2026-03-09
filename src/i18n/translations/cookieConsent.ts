@@ -7,6 +7,20 @@ export const cookieConsent = {
       necessaryOnly: 'Necessary only',
       learnMore: 'Learn more',
       manageCookies: 'Manage cookies',
+      preferencesTitle: 'Cookie preferences',
+      preferencesDescription:
+        'Choose which optional features to enable. Essential cookies (login, security) are always active.',
+      preferenceSearchHistory: 'Search history',
+      preferenceSearchHistoryDesc:
+        'Save your recent search queries for quick access (up to 12 items).',
+      preferenceSession: 'Personalized recommendations',
+      preferenceSessionDesc:
+        'Remember your session to show relevant master recommendations.',
+      preferenceCity: 'City by location',
+      preferenceCityDesc:
+        'Detect your city by IP to suggest nearby masters (requires your consent).',
+      savePreferences: 'Save',
+      rejectAll: 'Reject all optional',
     },
   },
   ru: {
@@ -16,6 +30,20 @@ export const cookieConsent = {
       necessaryOnly: 'Только необходимые',
       learnMore: 'Подробнее',
       manageCookies: 'Настроить куки',
+      preferencesTitle: 'Настройки cookie',
+      preferencesDescription:
+        'Выберите, какие дополнительные функции включить. Необходимые cookie (вход, безопасность) всегда активны.',
+      preferenceSearchHistory: 'История поиска',
+      preferenceSearchHistoryDesc:
+        'Сохранять последние поисковые запросы для быстрого доступа (до 12 записей).',
+      preferenceSession: 'Персонализированные рекомендации',
+      preferenceSessionDesc:
+        'Запоминать сессию для показа подходящих мастеров.',
+      preferenceCity: 'Город по местоположению',
+      preferenceCityDesc:
+        'Определять город по IP для подбора мастеров рядом с вами (требуется согласие).',
+      savePreferences: 'Сохранить',
+      rejectAll: 'Отклонить все опциональные',
     },
   },
   ro: {
@@ -26,6 +54,20 @@ export const cookieConsent = {
       necessaryOnly: 'Doar necesare',
       learnMore: 'Află mai multe',
       manageCookies: 'Gestionează cookie-uri',
+      preferencesTitle: 'Preferințe cookie',
+      preferencesDescription:
+        'Alege ce funcții opționale să activezi. Cookie-urile esențiale (autentificare, securitate) sunt mereu active.',
+      preferenceSearchHistory: 'Istoric căutare',
+      preferenceSearchHistoryDesc:
+        'Salvează ultimele interogări pentru acces rapid (până la 12 elemente).',
+      preferenceSession: 'Recomandări personalizate',
+      preferenceSessionDesc:
+        'Memorează sesiunea pentru a afișa meșteri relevanți.',
+      preferenceCity: 'Oraș după locație',
+      preferenceCityDesc:
+        'Detectează orașul după IP pentru a sugera meșteri din apropiere (necesită consimțământul tău).',
+      savePreferences: 'Salvează',
+      rejectAll: 'Respinge toate opționale',
     },
   },
 };

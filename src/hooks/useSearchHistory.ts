@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react';
 import { safeStorage } from '@/utils/safeStorage';
-import { hasFullConsent } from '@/features/cookie-consent/storage';
+import { hasSearchHistoryConsent } from '@/features/cookie-consent/storage';
 
 const STORAGE_KEY = 'mastersSearchHistory';
 const MAX_ITEMS = 12;
 
 function loadHistory(): string[] {
-  if (!hasFullConsent()) return [];
+  if (!hasSearchHistoryConsent()) return [];
   try {
     const raw = safeStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
@@ -20,7 +20,7 @@ function loadHistory(): string[] {
 }
 
 function saveHistory(items: string[]) {
-  if (!hasFullConsent()) return;
+  if (!hasSearchHistoryConsent()) return;
   try {
     safeStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_ITEMS)));
   } catch {
@@ -36,7 +36,7 @@ export function useSearchHistory() {
   }, []);
 
   const add = useCallback((term: string) => {
-    if (!hasFullConsent()) return;
+    if (!hasSearchHistoryConsent()) return;
     const trimmed = term.trim();
     if (!trimmed) return;
     setHistory((prev) => {

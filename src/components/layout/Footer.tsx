@@ -2,22 +2,24 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { DigestSubscriptionCard } from '@/features/digest/DigestSubscriptionCard';
-import { resetCookieConsent } from '@/features/cookie-consent/storage';
+import { CookiePreferencesModal } from '@/features/cookie-consent/CookiePreferencesModal';
 
 export function Footer() {
   const { t } = useTranslation();
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
+  const [prefsModalOpen, setPrefsModalOpen] = useState(false);
+  const [prefsOpenKey, setPrefsOpenKey] = useState(0);
   const linkClass =
     'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
 
   const showDigest = isAuthed && role !== 'ADMIN';
 
   const handleManageCookies = useCallback(() => {
-    resetCookieConsent();
-    window.location.reload();
+    setPrefsOpenKey((k) => k + 1);
+    setPrefsModalOpen(true);
   }, []);
 
   return (
@@ -97,6 +99,12 @@ export function Footer() {
               </nav>
             </div>
           </div>
+
+          <CookiePreferencesModal
+            key={prefsOpenKey}
+            open={prefsModalOpen}
+            onOpenChange={setPrefsModalOpen}
+          />
 
           <div className="mt-10">
             <div className="divider-line" aria-hidden />
