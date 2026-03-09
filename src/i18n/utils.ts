@@ -1,20 +1,16 @@
 import { prefsCookies } from '@/utils/prefsCookies';
+import { safeStorage } from '@/utils/safeStorage';
 
 export type AppLanguage = 'en' | 'ru' | 'ro';
 
 export const STORAGE_KEY = 'mh_lang';
 
 function getStorageItem(key: string): string | null {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    return localStorage.getItem(key);
-  }
-  return null;
+  return safeStorage.getItem(key);
 }
 
 export function setStorageItem(key: string, value: string): void {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    localStorage.setItem(key, value);
-  }
+  safeStorage.setItem(key, value);
 }
 
 function getLangFromCookie(): AppLanguage | null {

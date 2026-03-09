@@ -92,8 +92,7 @@ export const axiosBaseQuery =
           headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
-        // Session ID для рекомендаций и «Недавно просмотренные» (анонимы и дублирование для юзеров)
-        const sessionId = getSessionId();
+        const sessionId = getSessionId(!!accessToken);
         if (sessionId) {
           headers['x-session-id'] = sessionId;
         }

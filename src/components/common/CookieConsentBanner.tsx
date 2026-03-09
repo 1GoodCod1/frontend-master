@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   hasConsent,
   setCookieConsent,
@@ -30,17 +31,23 @@ export function CookieConsentBanner() {
   return (
     <div
       className={cn(
-        'fixed bottom-4 left-4 right-4 z-[1300] mx-auto flex max-w-[520px] flex-wrap items-center justify-between gap-4 rounded-xl p-4',
+        'fixed bottom-4 left-4 right-4 z-[1300] mx-auto flex max-w-[520px] flex-col gap-3 rounded-xl p-4',
         'bg-white dark:bg-[hsl(var(--card))]',
         'border border-slate-200 dark:border-[hsl(var(--border))]',
         'text-slate-800 dark:text-[hsl(var(--card-foreground))]',
         'shadow-[0_10px_40px_-12px_rgba(0,0,0,0.2)] dark:shadow-[0_10px_40px_-12px_rgba(0,0,0,0.5)]'
       )}
     >
-      <p className="min-w-[280px] flex-1 text-sm text-slate-600 dark:text-[hsl(var(--muted-foreground))]">
-        {t('cookieConsent.message')}
+      <p className="text-sm text-slate-600 dark:text-[hsl(var(--muted-foreground))]">
+        {t('cookieConsent.message')}{' '}
+        <RouterLink
+          to="/privacy"
+          className="font-medium text-[hsl(var(--primary))] underline underline-offset-2 hover:text-[hsl(var(--primary))]/80"
+        >
+          {t('cookieConsent.learnMore')}
+        </RouterLink>
       </p>
-      <div className="flex shrink-0 gap-2">
+      <div className="flex shrink-0 gap-2 self-end">
         <Button
           variant="outline"
           size="sm"

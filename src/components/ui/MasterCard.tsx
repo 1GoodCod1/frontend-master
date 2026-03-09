@@ -190,9 +190,9 @@ export const MasterCard = React.memo(function MasterCard({
       className={cn(
         'group relative w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer',
         'outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-        'bg-white dark:bg-[#1a1a1a]',
-        'shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] dark:border dark:border-white/[0.06]',
-        'hover:-translate-y-0.5 hover:shadow-[0_24px_64px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)] dark:hover:border-white/[0.08]',
+        'bg-white dark:bg-white/[0.06]',
+        'shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-lg dark:shadow-black/20',
+        'hover:-translate-y-0.5 hover:shadow-[0_24px_64px_rgba(0,0,0,0.12)] dark:hover:shadow-xl dark:hover:shadow-black/30',
       )}
     >
       {/* Top colored band */}

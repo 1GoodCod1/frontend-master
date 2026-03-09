@@ -13,16 +13,6 @@ function pick(...vals: Array<string | undefined | null>): string | undefined {
   return undefined;
 }
 
-function fromWindow(key: string): string | undefined {
-  try {
-    const v = (window as unknown as Record<string, unknown>)?.[key];
-    if (typeof v === 'string' && v.trim()) return v.trim();
-  } catch {
-    // ignore access errors
-  }
-  return undefined;
-}
-
 // Vite: use VITE_*
 // Fallback: allow injecting values at runtime (optional) by setting window.__MASTER_HUB_ENV__ = { apiUrl, wsUrl, envName }
 const runtime = (() => {
@@ -34,9 +24,14 @@ const runtime = (() => {
 })();
 
 export const env: AppEnv = {
-  apiUrl:
-    pick(import.meta.env.VITE_API_URL, runtime?.apiUrl, fromWindow('__REACT_APP_API_URL__')) || 'http://localhost:4000',
-  wsUrl: pick(import.meta.env.VITE_WS_URL, runtime?.wsUrl, fromWindow('__REACT_APP_WS_URL__')) || 'ws://localhost:4000',
+  apiUrl: pick(import.meta.env.VITE_API_URL, runtime?.apiUrl) || 'http://localhost:4000',
+  wsUrl: pick(import.meta.env.VITE_WS_URL, runtime?.wsUrl) || 'ws://localhost:4000',
   envName: pick(import.meta.env.VITE_ENV, runtime?.envName) || 'development',
-  useHttpOnly: import.meta.env.VITE_USE_HTTPONLY === 'true',
+  useHttpOnly: (() => {
+    const explicit = import.meta.env.VITE_USE_HTTPONLY;
+    if (explicit === 'true') return true;
+    if (explicit === 'false') return false;
+    const isProd = import.meta.env.MODE === 'production' || import.meta.env.VITE_ENV === 'production';
+    return isProd;
+  })(),
 };

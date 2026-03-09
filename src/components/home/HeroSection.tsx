@@ -17,6 +17,7 @@ import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesAp
 import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useUserCity, USER_CITY_STORAGE_KEY } from '@/hooks/useUserCity';
+import { safeStorage } from '@/utils/safeStorage';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { SearchInputWithHistory } from '@/features/masters/components/search/SearchInputWithHistory';
 import { Button } from '@/components/ui/button';
@@ -228,18 +229,14 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                     onValueChange={(v) => {
                     const id = v === 'all' ? '' : v;
                     setCityId(id);
-                    try {
-                      if (id) {
-                        const city = cities.find((c) => c.id === id);
-                        const name = city?.name ?? city?.slug ?? '';
-                        if (name) {
-                          localStorage.setItem(USER_CITY_STORAGE_KEY, name);
-                        }
-                      } else {
-                        localStorage.removeItem(USER_CITY_STORAGE_KEY);
+                    if (id) {
+                      const city = cities.find((c) => c.id === id);
+                      const name = city?.name ?? city?.slug ?? '';
+                      if (name) {
+                        safeStorage.setItem(USER_CITY_STORAGE_KEY, name);
                       }
-                    } catch {
-                      /* ignore */
+                    } else {
+                      safeStorage.removeItem(USER_CITY_STORAGE_KEY);
                     }
                   }}
                   >

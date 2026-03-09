@@ -3,27 +3,17 @@ import { Bell, BellOff, X } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWebPush } from '@/hooks/useWebPush';
+import { safeStorage } from '@/utils/safeStorage';
 
 const PUSH_BANNER_DISMISSED_KEY = 'push-banner-dismissed';
 
 function getDismissedFromStorage(): boolean {
-    try {
-        return localStorage.getItem(PUSH_BANNER_DISMISSED_KEY) === 'true';
-    } catch {
-        return false;
-    }
+  return safeStorage.getItem(PUSH_BANNER_DISMISSED_KEY) === 'true';
 }
 
 function setDismissedToStorage(value: boolean): void {
-    try {
-        if (value) {
-            localStorage.setItem(PUSH_BANNER_DISMISSED_KEY, 'true');
-        } else {
-            localStorage.removeItem(PUSH_BANNER_DISMISSED_KEY);
-        }
-    } catch {
-        /* ignore */
-    }
+  if (value) safeStorage.setItem(PUSH_BANNER_DISMISSED_KEY, 'true');
+  else safeStorage.removeItem(PUSH_BANNER_DISMISSED_KEY);
 }
 
 export function PushPermissionBanner() {

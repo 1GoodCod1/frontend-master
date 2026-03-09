@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { prefsCookies } from '@/utils/prefsCookies';
+import { safeStorage } from '@/utils/safeStorage';
 
 export type ColorMode = 'light' | 'dark';
 
@@ -7,7 +8,7 @@ export type ColorMode = 'light' | 'dark';
 function readInitialMode(): ColorMode {
   if (typeof window === 'undefined') return 'light';
   try {
-    const raw = localStorage.getItem('persist:root');
+    const raw = safeStorage.getItem('persist:root');
     if (raw) {
       const parsed = JSON.parse(raw) as { ui?: string };
       const ui = parsed?.ui ? (JSON.parse(parsed.ui) as { colorMode?: string }) : null;

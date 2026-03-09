@@ -74,16 +74,16 @@ html[data-theme="dark"],
   --button-bg-hover: 174 72% 40%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.22);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.4);
-  /* MasterCard design tokens — neutral dark, гармония с чёрным фоном */
-  --card-accent-band: #222222;
-  --card-rating-bg: #252525;
-  --card-rating-border: rgba(255,255,255,0.06);
+  /* MasterCard design tokens — glass style, гармония с чёрным фоном */
+  --card-accent-band: rgba(255,255,255,0.04);
+  --card-rating-bg: rgba(255,255,255,0.06);
+  --card-rating-border: rgba(255,255,255,0.08);
   --card-category-bg: rgba(255,255,255,0.05);
   --card-category-text: rgba(255,255,255,0.8);
   --card-divider: rgba(255,255,255,0.06);
   --card-tag-bg: rgba(233,117,37,0.12);
   --card-city-text: rgba(255,255,255,0.5);
-  --card-border: #1a1a1a;
+  --card-border: rgba(255,255,255,0.08);
   --card-button-bg: #E97525;
   --card-button-shadow: 0 4px 20px rgba(233,117,37,0.4);
 }

@@ -1,5 +1,31 @@
 import { api } from '@/services/api';
+import { clearAuth } from '@/features/auth/authSlice';
+import { persistRefreshToken, setLogoutFlag } from '@/features/auth/persist';
 import type { UpdateUserDto } from '@/types';
+
+export interface PersonalDataExport {
+  exportDate: string;
+  user: {
+    id: string;
+    email: string;
+    phone: string;
+    firstName: string | null;
+    lastName: string | null;
+    role: string;
+    isVerified: boolean;
+    preferredLanguage: string | null;
+    createdAt: string;
+    updatedAt: string;
+    lastLoginAt: string | null;
+  };
+  masterProfile: unknown | null;
+  leads: unknown[];
+  reviews: unknown[];
+  bookings: unknown[];
+  loginHistory: unknown[];
+  favorites: unknown[];
+  notifications: unknown[];
+}
 
 export const usersApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -40,6 +66,25 @@ export const usersApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Me'],
     }),
+
+    usersDeleteSelf: build.mutation<{ ok: true }, void>({
+      query: () => ({ url: '/users/me', method: 'DELETE' }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(api.util.resetApiState());
+          dispatch(clearAuth());
+          persistRefreshToken(null);
+          setLogoutFlag();
+        } catch {
+          // deletion failed — keep state
+        }
+      },
+    }),
+
+    usersExportPersonalData: build.query<PersonalDataExport, void>({
+      query: () => ({ url: '/users/me/export', method: 'GET' }),
+    }),
   }),
 });
 
@@ -52,4 +97,6 @@ export const {
   useUsersStatsQuery,
   useUsersSetAvatarMutation,
   useUsersSetPreferredLanguageMutation,
+  useUsersDeleteSelfMutation,
+  useLazyUsersExportPersonalDataQuery,
 } = usersApi;

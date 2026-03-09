@@ -1,36 +1,31 @@
+import { safeStorage } from '@/utils/safeStorage';
+
 const KEY = 'master-hub.refreshToken';
 const LOGOUT_FLAG_KEY = 'master-hub.logout';
 
 export function loadPersistedRefreshToken(): string | null {
-  try {
-    const v = localStorage.getItem(KEY);
-    return v && v.trim() ? v : null;
-  } catch {
-    return null;
-  }
+  const v = safeStorage.getItem(KEY);
+  return v && v.trim() ? v : null;
 }
 
 export function persistRefreshToken(refreshToken: string | null) {
-  try {
-    if (refreshToken && refreshToken.trim()) localStorage.setItem(KEY, refreshToken);
-    else localStorage.removeItem(KEY);
-  } catch {
-    // ignore localStorage errors
-  }
+  if (refreshToken && refreshToken.trim()) safeStorage.setItem(KEY, refreshToken);
+  else safeStorage.removeItem(KEY);
 }
 
 export function setLogoutFlag() {
   try {
-    sessionStorage.setItem(LOGOUT_FLAG_KEY, '1');
+    if (typeof window !== 'undefined') window.sessionStorage.setItem(LOGOUT_FLAG_KEY, '1');
   } catch {
-    // ignore sessionStorage errors
+    //
   }
 }
 
 export function takeLogoutFlag(): boolean {
   try {
-    const v = sessionStorage.getItem(LOGOUT_FLAG_KEY);
-    sessionStorage.removeItem(LOGOUT_FLAG_KEY);
+    if (typeof window === 'undefined') return false;
+    const v = window.sessionStorage.getItem(LOGOUT_FLAG_KEY);
+    window.sessionStorage.removeItem(LOGOUT_FLAG_KEY);
     return v === '1';
   } catch {
     return false;

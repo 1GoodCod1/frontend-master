@@ -1,13 +1,12 @@
-/**
- * Куки для настроек (язык, тема). Сохраняются при смене пользователем и восстанавливаются после F5.
- */
-
 const MAX_AGE_DAYS = 365;
+const IS_SECURE = window.location.protocol === 'https:';
 
 function setCookie(name: string, value: string): void {
   try {
     const maxAge = MAX_AGE_DAYS * 24 * 60 * 60;
-    document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+    let cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; SameSite=Lax`;
+    if (IS_SECURE) cookie += '; Secure';
+    document.cookie = cookie;
   } catch {
     //
   }

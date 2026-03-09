@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
-const LAST_UPDATED = '2025-01-29';
+const LAST_UPDATED = '2026-03-09';
 
 export default function PrivacyPolicyPage() {
   const { t } = useTranslation();
@@ -13,11 +13,13 @@ export default function PrivacyPolicyPage() {
     { title: t('privacy.section1Title'), p: [t('privacy.section1P1'), t('privacy.section1P2'), t('privacy.section1P3')] },
     { title: t('privacy.section2Title'), p: [t('privacy.section2P1')] },
     { title: t('privacy.section3Title'), p: [t('privacy.section3P1')] },
+    { title: t('privacy.section3aTitle'), p: [t('privacy.section3aP1')] },
     { title: t('privacy.section4Title'), p: [t('privacy.section4P1')] },
     { title: t('privacy.section5Title'), p: [t('privacy.section5P1')] },
     { title: t('privacy.section6Title'), p: [t('privacy.section6P1')] },
     { title: t('privacy.section7Title'), p: [t('privacy.section7P1')] },
     { title: t('privacy.section8Title'), p: [t('privacy.section8P1')] },
+    { title: t('privacy.section9Title'), p: [t('privacy.section9P1')] },
   ];
 
   return (

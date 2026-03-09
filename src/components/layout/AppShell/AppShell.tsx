@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { CookieConsentBanner } from '@/components/common/CookieConsentBanner';
+import { ScrollToTopOnNavigate } from '@/components/common/ScrollToTopOnNavigate';
 import { useAppShell } from './useAppShell';
 import { getVisibleNavItems } from './navUtils';
 import { AppShellHeader } from './AppShellHeader';
@@ -34,6 +35,7 @@ export function AppShell() {
 
   return (
     <TooltipProvider delayDuration={200}>
+      <ScrollToTopOnNavigate />
       <AnimatePresence mode="wait">
         {showNavbar && (
           <AppShellHeader

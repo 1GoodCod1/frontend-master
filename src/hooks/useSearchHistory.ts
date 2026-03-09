@@ -1,11 +1,14 @@
 import { useState, useCallback } from 'react';
+import { safeStorage } from '@/utils/safeStorage';
+import { hasFullConsent } from '@/features/cookie-consent/storage';
 
 const STORAGE_KEY = 'mastersSearchHistory';
 const MAX_ITEMS = 12;
 
 function loadHistory(): string[] {
+  if (!hasFullConsent()) return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = safeStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed)
@@ -17,10 +20,11 @@ function loadHistory(): string[] {
 }
 
 function saveHistory(items: string[]) {
+  if (!hasFullConsent()) return;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_ITEMS)));
+    safeStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_ITEMS)));
   } catch {
-    /* ignore */
+    //
   }
 }
 
@@ -32,6 +36,7 @@ export function useSearchHistory() {
   }, []);
 
   const add = useCallback((term: string) => {
+    if (!hasFullConsent()) return;
     const trimmed = term.trim();
     if (!trimmed) return;
     setHistory((prev) => {
@@ -44,7 +49,11 @@ export function useSearchHistory() {
 
   const clear = useCallback(() => {
     setHistory([]);
-    saveHistory([]);
+    try {
+      safeStorage.removeItem(STORAGE_KEY);
+    } catch {
+      //
+    }
   }, []);
 
   const getFiltered = useCallback((query: string) => {

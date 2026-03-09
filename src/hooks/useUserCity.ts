@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import type { CityDto } from '@/types';
+import { safeStorage } from '@/utils/safeStorage';
+import { hasFullConsent } from '@/features/cookie-consent/storage';
 
 export const USER_CITY_STORAGE_KEY = 'userCityName';
 const STORAGE_KEY = USER_CITY_STORAGE_KEY;
@@ -53,11 +55,7 @@ export function useUserCity() {
       if (matched) {
         setCityId(matched.id);
         setCityName(matched.name);
-        try {
-          localStorage.setItem(STORAGE_KEY, matched.name);
-        } catch {
-          /* ignore */
-        }
+        safeStorage.setItem(STORAGE_KEY, matched.name);
       }
     },
     [cities]
@@ -71,7 +69,7 @@ export function useUserCity() {
       return;
     }
 
-    const cached = localStorage.getItem(STORAGE_KEY);
+    const cached = safeStorage.getItem(STORAGE_KEY);
     if (cached?.trim()) {
       const normalized = normalizeForMatch(cached);
       const found = cities.find((c) => {
@@ -92,6 +90,11 @@ export function useUserCity() {
         });
         return;
       }
+    }
+
+    if (!hasFullConsent()) {
+      queueMicrotask(() => setIsLoading(false));
+      return;
     }
 
     let cancelled = false;

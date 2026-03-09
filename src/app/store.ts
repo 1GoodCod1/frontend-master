@@ -10,7 +10,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { safePersistStorage } from '@/utils/safeStorage';
 import { api } from '@/services/api';
 import { env } from '@/services/env';
 import { persistRefreshToken } from '@/features/auth/persist';
@@ -24,7 +24,7 @@ import { persistApiCacheTransform } from './persistApiCache';
 // API cache: persist only Categories/Cities (via transform)
 const apiPersistConfig = {
   key: 'mh_api',
-  storage,
+  storage: safePersistStorage,
   transforms: [persistApiCacheTransform],
 };
 const persistedApiReducer = persistReducer(apiPersistConfig, api.reducer);
@@ -40,7 +40,7 @@ const rootReducer = combineReducers({
 // Root: persist only ui — auth (tokens) excluded for security (localStorage is XSS-vulnerable)
 const rootPersistConfig = {
   key: 'root',
-  storage,
+  storage: safePersistStorage,
   whitelist: ['ui'],
 };
 

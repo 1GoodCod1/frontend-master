@@ -1,4 +1,5 @@
 import type { NotificationItem } from './socketSlice';
+import { safeStorage } from '@/utils/safeStorage';
 
 const KEY_DATA = 'mh_notifications_v1';
 const KEY_SETTINGS = 'mh_notif_settings_v1';
@@ -25,7 +26,7 @@ const DEFAULT_SETTINGS: PersistedNotificationSettings = {
 
 export function loadNotifications(): PersistedNotifications | null {
   try {
-    const raw = localStorage.getItem(KEY_DATA);
+    const raw = safeStorage.getItem(KEY_DATA);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed as PersistedNotifications;
@@ -36,23 +37,19 @@ export function loadNotifications(): PersistedNotifications | null {
 
 export function saveNotifications(data: PersistedNotifications) {
   try {
-    localStorage.setItem(KEY_DATA, JSON.stringify(data));
+    safeStorage.setItem(KEY_DATA, JSON.stringify(data));
   } catch {
-    // ignore localStorage errors
+    //
   }
 }
 
 export function clearNotificationsStorage() {
-  try {
-    localStorage.removeItem(KEY_DATA);
-  } catch {
-    // ignore localStorage errors
-  }
+  safeStorage.removeItem(KEY_DATA);
 }
 
 export function loadNotificationSettings(): PersistedNotificationSettings {
   try {
-    const raw = localStorage.getItem(KEY_SETTINGS);
+    const raw = safeStorage.getItem(KEY_SETTINGS);
     if (!raw) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(raw) as Partial<PersistedNotificationSettings>;
     return {
@@ -68,8 +65,8 @@ export function loadNotificationSettings(): PersistedNotificationSettings {
 
 export function saveNotificationSettings(s: PersistedNotificationSettings) {
   try {
-    localStorage.setItem(KEY_SETTINGS, JSON.stringify(s));
+    safeStorage.setItem(KEY_SETTINGS, JSON.stringify(s));
   } catch {
-    // ignore localStorage errors
+    //
   }
 }

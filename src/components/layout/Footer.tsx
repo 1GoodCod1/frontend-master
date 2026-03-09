@@ -2,98 +2,29 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
-import { useState } from 'react';
-import { Mail, Check } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useCallback } from 'react';
 import { DigestSubscriptionCard } from '@/features/digest/DigestSubscriptionCard';
-
-const NEWSLETTER_SUBSCRIBED_KEY = 'newsletter_subscribed';
+import { resetCookieConsent } from '@/features/cookie-consent/storage';
 
 export function Footer() {
   const { t } = useTranslation();
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
-  const [email, setEmail] = useState('');
-  const [subscribedFromStorage] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    try {
-      return localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === '1';
-    } catch {
-      return false;
-    }
-  });
-  const [showSuccess, setShowSuccess] = useState(false);
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    try {
-      localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, '1');
-    } catch {
-      // ignore
-    }
-    setShowSuccess(true);
-    toast.success(t('footer.newsletterSuccess'));
-    setEmail('');
-  };
-
   const linkClass =
     'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
 
-  const showNewsletter = isAuthed && !subscribedFromStorage;
   const showDigest = isAuthed && role !== 'ADMIN';
+
+  const handleManageCookies = useCallback(() => {
+    resetCookieConsent();
+    window.location.reload();
+  }, []);
 
   return (
     <footer className="mt-auto w-full bg-[hsl(var(--background))] dark:bg-[#171510]">
       <div className="divider-line" aria-hidden />
       {/* Digest — auth only, persisted in DB, no email input */}
       {showDigest && <DigestSubscriptionCard />}
-      {/* Newsletter — auth only, hidden after subscribe on F5 */}
-      {showNewsletter && (
-        <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <div className="mx-auto max-w-6xl rounded-2xl bg-white dark:bg-white/[0.04] px-6 py-6 sm:px-8 sm:py-7 shadow-sm">
-            {showSuccess ? (
-              <div className="mx-auto flex max-w-[560px] items-center gap-3 text-foreground">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta/20 text-cta">
-                  <Check className="h-5 w-5" />
-                </div>
-                <p className="font-semibold">{t('footer.newsletterSuccess')}</p>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleNewsletterSubmit}
-                className="mx-auto flex max-w-[640px] flex-col gap-4 sm:gap-5 sm:flex-row sm:items-center"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="mb-1 font-bold text-foreground">
-                    {t('footer.newsletterTitle')}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {t('footer.newsletterDescription')}
-                  </p>
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-2.5 sm:min-w-[320px] sm:flex-row">
-                  <div className="relative flex-1">
-                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      type="email"
-                      placeholder={t('footer.newsletterPlaceholder')}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="h-10 rounded-xl pl-9 bg-gray-50 dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08]"
-                    />
-                  </div>
-                  <Button type="submit" className="min-w-[120px] min-h-[44px] rounded-xl font-semibold dark:bg-cta dark:text-cta-foreground dark:hover:bg-cta/90">
-                    {t('footer.newsletterButton')}
-                  </Button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Main footer */}
       <div className="px-4 pt-8 pb-[max(2rem,env(safe-area-inset-bottom,0px))] md:px-6 md:pt-10 md:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] lg:px-8">
@@ -156,6 +87,13 @@ export function Footer() {
                 <RouterLink to="/terms" className={linkClass}>
                   {t('footer.terms')}
                 </RouterLink>
+                <button
+                  type="button"
+                  onClick={handleManageCookies}
+                  className={linkClass}
+                >
+                  {t('cookieConsent.manageCookies')}
+                </button>
               </nav>
             </div>
           </div>
