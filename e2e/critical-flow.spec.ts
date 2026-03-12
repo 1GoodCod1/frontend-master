@@ -2,10 +2,29 @@
  * E2E Critical Flow: Registration → Lead Creation → Booking
  * Uses Playwright APIRequestContext to test the backend API directly.
  * Requires: API running at API_BASE_URL (default localhost:4000)
+ *
+ * SAFETY: Tests are blocked against production API. Use E2E_ALLOW_PROD=1 to override (not recommended).
  */
 import { test, expect } from '@playwright/test';
 
 const API_BASE = process.env.API_BASE_URL || 'http://localhost:4000';
+
+const PROD_BLOCKED_HOSTS = [
+  'api.master-hub.md',
+  'master-hub.md',
+  'api.master-hub.com',
+  'master-hub.com',
+];
+
+function isProductionApi(url: string): boolean {
+  if (process.env.E2E_ALLOW_PROD === '1') return false;
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return PROD_BLOCKED_HOSTS.some((h) => host === h || host.endsWith('.' + h));
+  } catch {
+    return false;
+  }
+}
 
 /** API wraps responses in { success, data, timestamp, path } */
 function unwrap<T>(raw: unknown): T {
@@ -29,6 +48,7 @@ test.describe('Critical Flow: Register → Lead → Booking', () => {
   let _bookingId: string;
 
   test.beforeAll(async ({ request }) => {
+    test.skip(isProductionApi(API_BASE), `E2E tests cannot run against production API (${API_BASE}). Use localhost or staging.`);
     const base = API_BASE;
     const res = await request.get(`${base}/health`);
     expect(res.ok()).toBeTruthy();
@@ -233,7 +253,16 @@ test.describe('Critical Flow: Register → Lead → Booking', () => {
     expect(res.ok()).toBeTruthy();
   });
 
-  test.afterAll(() => {
+  test.afterAll(async ({ request }) => {
+    if (accessToken) {
+      try {
+        await request.delete(`${API_BASE}/users/me`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+      } catch {
+        // ignore cleanup errors
+      }
+    }
     expect(typeof _categorySlug).toBe('string');
     expect(typeof _citySlug).toBe('string');
     if (_bookingId) expect(typeof _bookingId).toBe('string');
