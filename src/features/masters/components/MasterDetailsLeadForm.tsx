@@ -66,7 +66,10 @@ export const MasterDetailsLeadForm = ({
   const userId = useAppSelector((state) => state.auth.me?.id ?? '');
   const { data: activeLeadData } = useLeadsActiveToMasterQuery(
     { masterId, userId },
-    { skip: !isAuthed || role !== 'CLIENT' || !userId },
+    {
+      skip: !isAuthed || role !== 'CLIENT' || !userId,
+      refetchOnMountOrArgChange: true,
+    },
   );
   const activeLead = activeLeadData;
 

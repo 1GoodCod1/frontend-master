@@ -32,7 +32,9 @@ export default function ReviewsPage() {
   const [statusFilter, setStatusFilter] = useState<ReviewFilterStatus>('ALL');
   const [sortOrder, setSortOrder] = useState<SortOrderNewestOldest>('newest');
 
-  const q = useReviewsMyQuery();
+  const q = useReviewsMyQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
     dispatch(clearUnreadReviews());

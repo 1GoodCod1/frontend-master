@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -20,7 +20,8 @@ import {
   Menu,
   Mailbox,
 } from 'lucide-react';
-import { useAppSelector } from '@/app/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
+import { clearUnreadLeads, clearUnreadReviews } from '@/features/socket/socketSlice';
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
@@ -47,12 +48,23 @@ const items: { key: string; to: string; icon: React.ReactNode }[] = [
 
 export function AdminLayout() {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
   const isMdUp = useIsMdUp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const unreadLeads = useAppSelector((s) => s.socket.unreadLeads);
   const unreadReviews = useAppSelector((s) => s.socket.unreadReviews);
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/admin/leads')) {
+      dispatch(clearUnreadLeads());
+    }
+    if (location.pathname.startsWith('/admin/reviews')) {
+      dispatch(clearUnreadReviews());
+    }
+  }, [location.pathname, dispatch]);
 
   const badgeFor = (key: string) => {
     if (key === 'leads') return unreadLeads;

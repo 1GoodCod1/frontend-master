@@ -27,7 +27,7 @@ export function NotificationList({ groups, role, onMarkRead, onClose }: Props) {
                 {translatedLabel}
               </p>
             </div>
-            <div className="space-y-2 px-2 pb-1">
+            <div className="divide-y divide-border px-2 pb-1">
               {g.items.map((n) => (
                 <NotificationItem
                   key={n.id}

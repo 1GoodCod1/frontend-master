@@ -91,7 +91,9 @@ export const reviewsApi = api.injectEndpoints({
       query: () => ({ url: '/reviews/my-reviews', method: 'GET' }),
       transformResponse: (raw: unknown): ReviewDto[] => {
         const inner = unwrapEnvelope<unknown>(raw);
-        return Array.isArray(inner) ? (inner as ReviewDto[]) : [];
+        if (Array.isArray(inner)) return inner as ReviewDto[];
+        const paginated = isRecord(inner) && 'items' in inner ? (inner as { items?: unknown[] }).items : undefined;
+        return Array.isArray(paginated) ? (paginated as ReviewDto[]) : [];
       },
       providesTags: ['Reviews'],
     }),

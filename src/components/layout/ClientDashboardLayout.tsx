@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Heart,
@@ -48,8 +48,17 @@ export function ClientDashboardLayout() {
   const items = getItems(t).filter((it) => it.key !== 'referrals' || referralsEnabled);
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);
-  const { data: chatUnreadData } = useGetUnreadCountQuery(undefined, { pollingInterval: 30000 });
+  const location = useLocation();
+  const { data: chatUnreadData, refetch: refetchChatUnread } = useGetUnreadCountQuery(undefined, {
+    pollingInterval: 30000,
+  });
   const unreadChats = chatUnreadData?.count ?? 0;
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/client-dashboard/chat')) {
+      refetchChatUnread();
+    }
+  }, [location.pathname, refetchChatUnread]);
 
   const itemsWithBadge: CabinetNavItem[] = items.map((it) => ({
     ...it,

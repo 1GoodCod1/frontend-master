@@ -11,12 +11,9 @@ import {
 import { useGetConversationsQuery, type Conversation } from '@/features/chat/chatApi';
 import {
   getFileUrl,
-  formatMessageDate,
-  truncateMessage,
   getOtherPartyFromConversation,
   groupConversationsByContact,
 } from '@/utils/chat';
-import { MESSAGE_PREVIEW_MAX_LENGTH } from '@/features/chat/constants';
 import type { ChatListProps } from '@/types/chat';
 import { cn } from '@/lib/utils';
 
@@ -62,22 +59,13 @@ export default function ChatList({
   }
 
   return (
-    <ul className="py-1">
+    <ul className="divide-y divide-border py-1">
       {conversations.map((conv: Conversation) => {
         const isSelected = conv.id === selectedConversationId;
         const otherParty = getOtherPartyFromConversation(conv, userRole);
 
-        const lastMessagePreview = conv.lastMessage
-          ? truncateMessage(conv.lastMessage.content, MESSAGE_PREVIEW_MAX_LENGTH)
-          : conv.lead.message
-            ? truncateMessage(conv.lead.message, MESSAGE_PREVIEW_MAX_LENGTH)
-            : t('common.startConversation');
-
-        const lastMessageTime = conv.lastMessage?.createdAt || conv.createdAt;
-        const formattedTime = formatMessageDate(lastMessageTime, t('common.yesterday'));
-
         return (
-          <li key={conv.id} className="px-2">
+          <li key={conv.id} className="px-2 first:pt-0 last:pb-0">
             <button
               type="button"
               className={cn(
@@ -139,25 +127,6 @@ export default function ChatList({
                     )}
                   >
                     {otherParty?.name}
-                  </span>
-                  <span
-                    className={cn(
-                      'shrink-0 text-xs',
-                      conv.unreadCount > 0 ? 'font-semibold text-primary' : 'text-muted-foreground',
-                    )}
-                  >
-                    {formattedTime}
-                  </span>
-                </div>
-                <div className="mt-0.5 flex items-center justify-between gap-2">
-                  <span
-                    className={cn(
-                      'truncate text-xs',
-                      conv.unreadCount > 0 ? 'font-medium text-foreground' : 'text-muted-foreground',
-                      conv.closedAt ? 'max-w-[65%]' : 'max-w-full',
-                    )}
-                  >
-                    {lastMessagePreview}
                   </span>
                   {conv.closedAt && (
                     <Badge variant="destructive" className="shrink-0 text-[9px]">

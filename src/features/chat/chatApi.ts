@@ -111,6 +111,21 @@ export const chatApi = api.injectEndpoints({
         const data = unwrap<{ count: number }>(response);
         return { count: data?.count ?? 0 };
       },
+      async onQueryStarted(conversationId, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          chatApi.util.updateQueryData('getConversations', undefined, (draft: Conversation[]) => {
+            if (!draft) return;
+            const conv = draft.find((c) => c.id === conversationId);
+            if (conv) conv.unreadCount = 0;
+          })
+        );
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(chatApi.util.updateQueryData('getUnreadCount', undefined, () => ({ count: data?.count ?? 0 })));
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: (_r, _e, conversationId) => [
         { type: 'ChatMessages', id: conversationId },
         'ChatMessages',

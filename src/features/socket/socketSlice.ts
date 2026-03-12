@@ -247,7 +247,7 @@ function makeMessage(type: SocketEventType, payload: unknown): string | undefine
   if (typeof messageKey === 'string' && messageParams) {
     const params = { ...messageParams };
     // Translate lead status (IN_PROGRESS → "В РАБОТЕ" etc.)
-    if (messageKey.includes('leadStatusFrom') && params.status) {
+    if ((messageKey.includes('leadStatusFrom') || messageKey.includes('leadStatusUpdated') || messageKey.includes('reviewStatusUpdated')) && params.status) {
       const statusKey = `notifications.status.${String(params.status).toLowerCase()}`;
       params.status = i18n.t(statusKey, { defaultValue: String(params.status) });
     }
@@ -286,7 +286,11 @@ function makeMessage(type: SocketEventType, payload: unknown): string | undefine
     return masterName ? i18n.t('notifications.messages.leadSentTo', { masterName: String(masterName) }) : undefined;
   }
   if (type === 'new_chat_message') {
-    return p.conversationId ? i18n.t('notifications.messages.openChat') : undefined;
+    const convId = p.conversationId ?? (isRecord(p.data) ? (p.data as Record<string, unknown>).conversationId : undefined);
+    const senderName = p.senderName ?? (isRecord(p.data) ? (p.data as Record<string, unknown>).senderName : undefined);
+    if (typeof senderName === 'string' && senderName.trim()) return senderName.trim();
+    if (convId) return i18n.t('notifications.messages.openChat');
+    return undefined;
   }
   if (type === 'subscription_expiring') {
     const days = p.daysLeft ?? data.daysLeft;
@@ -452,7 +456,18 @@ const slice = createSlice({
     markRead(state, action: PayloadAction<string>) {
       const id = action.payload;
       const n = state.notifications.find((x) => x.id === id);
-      if (n) n.read = true;
+      if (n) {
+        const wasUnread = !n.read;
+        n.read = true;
+        if (wasUnread) {
+          if (n.type === 'new_lead' || n.type === 'lead_sent' || n.type === 'admin_new_lead') {
+            state.unreadLeads = Math.max(0, state.unreadLeads - 1);
+          }
+          if (n.type === 'new_review' || n.type === 'admin_new_review') {
+            state.unreadReviews = Math.max(0, state.unreadReviews - 1);
+          }
+        }
+      }
     },
 
 
@@ -476,8 +491,13 @@ const slice = createSlice({
       const socketOnly = state.notifications.filter((n) => !apiIds.has(n.id));
       const merged = [...apiItems, ...socketOnly].sort((a, b) => b.createdAt - a.createdAt);
       state.notifications = merged.slice(0, MAX_NOTIFICATIONS);
-      state.unreadLeads = merged.filter((n) => !n.read && (n.type === 'new_lead' || n.type === 'lead_sent' || n.type === 'admin_new_lead')).length;
-      state.unreadReviews = merged.filter((n) => !n.read && (n.type === 'new_review' || n.type === 'admin_new_review')).length;
+      // Only set counts on first load from API (no prior notifications). Otherwise preserve
+      // unreadLeads/unreadReviews — they are cleared by visiting the page and must persist across F5.
+      const hadNoNotifications = state.notifications.length === 0;
+      if (hadNoNotifications && apiItems.length > 0) {
+        state.unreadLeads = merged.filter((n) => !n.read && (n.type === 'new_lead' || n.type === 'lead_sent' || n.type === 'admin_new_lead')).length;
+        state.unreadReviews = merged.filter((n) => !n.read && (n.type === 'new_review' || n.type === 'admin_new_review')).length;
+      }
     },
 
     clearLastEvent(state) {

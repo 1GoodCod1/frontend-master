@@ -53,12 +53,17 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
 
   // Handle incoming messages - Update cache directly without full refetch
   chatSocket.on('chat:message', (message: ChatMessage & { conversationId: string }) => {
+    const state = store.getState();
+    const isViewing = state.chat?.activeConversationId === message.conversationId;
+
     store.dispatch(addMessage(message));
     store.dispatch(
       chatApi.util.updateQueryData('getMessages', { id: message.conversationId }, (draft: MessagesResponse) => {
         if (draft?.messages) {
-          if (!draft.messages.some(m => m.id === message.id)) {
-            draft.messages.unshift(message);
+          const existing = draft.messages.find(m => m.id === message.id);
+          if (!existing) {
+            const msgWithRead = isViewing ? { ...message, readAt: new Date().toISOString() } : message;
+            draft.messages.unshift(msgWithRead);
           }
         }
       })
@@ -71,14 +76,19 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
         if (convIndex !== -1) {
           const conv = draft[convIndex];
           conv.lastMessage = message;
+          if (isViewing) conv.unreadCount = 0;
+          else conv.unreadCount = (conv.unreadCount || 0) + 1;
           draft.splice(convIndex, 1);
           draft.unshift(conv);
         }
       })
     );
 
-    const state = store.getState();
-    if (state.chat?.activeConversationId !== message.conversationId) {
+    if (isViewing) {
+      store.dispatch(markConversationRead(message.conversationId));
+      markAsReadWs(message.conversationId);
+      store.dispatch(chatApi.util.invalidateTags(['ChatMessages']));
+    } else {
       toast('Новое сообщение в чате', { icon: '💬' });
     }
   });
@@ -107,6 +117,14 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
         }
       })
     );
+    store.dispatch(
+      chatApi.util.updateQueryData('getConversations', undefined, (draft: Conversation[]) => {
+        if (!draft) return;
+        const conv = draft.find(c => c.id === data.conversationId);
+        if (conv) conv.unreadCount = 0;
+      })
+    );
+    store.dispatch(chatApi.util.invalidateTags(['ChatMessages']));
   });
 
   return chatSocket;

@@ -54,6 +54,9 @@ export function patchInListResponse<T>(
 
 export function idMatches(item: unknown, id: string): boolean {
   if (!isRecord(item)) return false;
+  const idStr = String(id);
   const v = item.id ?? item._id ?? item.uuid;
-  return v != null && String(v) === String(id);
+  if (v != null && String(v) === idStr) return true;
+  const enc = item.encodedId;
+  return enc != null && String(enc) === idStr;
 }

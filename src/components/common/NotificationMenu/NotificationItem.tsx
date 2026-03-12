@@ -12,6 +12,12 @@ function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
 }
 
+function getConversationId(p: Record<string, unknown>): string | undefined {
+  if (typeof p.conversationId === 'string') return p.conversationId;
+  const data = isRecord(p.data) ? p.data : {};
+  return typeof data.conversationId === 'string' ? data.conversationId : undefined;
+}
+
 type Props = {
   item: NotificationItemType;
   role: string;
@@ -28,8 +34,9 @@ export function NotificationItem({ item, role, onMarkRead, onClose }: Props) {
       const p = item.payload;
       if (!isRecord(p)) return undefined;
       const data = isRecord(p.data) ? p.data : undefined;
+      const conversationId = getConversationId(p);
       return {
-        conversationId: typeof p.conversationId === 'string' ? p.conversationId : undefined,
+        conversationId: conversationId || undefined,
         masterId: typeof p.masterId === 'string' ? p.masterId : undefined,
         data:
           data && typeof data.masterId === 'string'

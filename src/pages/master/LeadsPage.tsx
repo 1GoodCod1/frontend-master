@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { ExternalLink, User, Phone, Clock, Filter, Download, AlertCircle, MessageSquare } from 'lucide-react';
+import { Filter, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -13,10 +13,7 @@ import { exportService } from '@/features/export/exportApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { StatusChip } from '@/components/ui/StatusChip';
-import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
-import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus, type LeadDto } from '@/types/leads';
-import { LeadStatusProgress } from '@/features/leads/components/LeadStatusProgress';
+import { LeadCard } from '@/features/leads/components/LeadCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -28,6 +25,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import { getLocaleFromLanguage } from '@/utils/date';
+import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus, type LeadDto } from '@/types/leads';
 
 function extractItems(resp: unknown): unknown[] {
   const root = (resp as { data?: unknown })?.data ?? resp;
@@ -70,6 +69,10 @@ export default function LeadsPage() {
   const { data, isLoading, isError, error, refetch } = useLeadsMyListQuery(params);
   const items = extractItems(data) as { id?: string; clientName?: string; clientPhone?: string; createdAt?: string; message?: string; status?: string }[];
 
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   const [updateStatus, { isLoading: isUpdating }] = useLeadsUpdateStatusMutation();
 
   const isRecent = useCallback(
@@ -81,9 +84,11 @@ export default function LeadsPage() {
     [recentMap],
   );
 
-  const onChangeStatus = async (id: string, next: LeadStatus) => {
+  const onChangeStatus = async (lead: { id: string; encodedId?: string | null }, next: LeadStatus) => {
+    const id = (lead as LeadDto).encodedId ?? lead.id;
     try {
       await updateStatus({ id, body: { status: next } }).unwrap();
+      toast.success(t('leads.statusUpdated'));
     } catch (e: unknown) {
       const msg = e && typeof e === 'object' && 'data' in e && (e as { data?: { message?: string } }).data?.message;
       toast.error((msg as string) || (e instanceof Error ? e.message : t('leads.updateStatusFailed')));
@@ -172,130 +177,34 @@ export default function LeadsPage() {
               totalCount={items.length}
               itemContent={(index) => {
                 const lead = items[index];
-                const isClosed = lead?.status === 'CLOSED' || lead?.status === 'SPAM';
-
+                const leadId = (lead as LeadDto).encodedId ?? lead.id;
                 return (
-                  <div className={index === 0 ? 'pb-2' : 'py-2'}>
-                    <Card
-                      key={lead.id}
+                  <div
+                    key={lead.id}
+                    className={cn(
+                      index === 0 ? 'pb-2' : 'py-2',
+                      index < items.length - 1 && 'border-b border-border'
+                    )}
+                  >
+                    <div
                       className={cn(
-                        'group relative overflow-hidden transition-all duration-300',
-                        'rounded-xl border border-slate-200 dark:border-white/[0.08]',
-                        'bg-white dark:bg-[#0c0c0e]',
-                        'hover:border-amber-500/30 dark:hover:border-amber-500/30',
-                        isRecent(String(lead.id)) && 'ring-1 ring-amber-500/20 dark:ring-amber-500/10',
-                        isClosed && 'opacity-80'
+                        isRecent(String(lead.id)) && 'ring-1 ring-amber-500/20 dark:ring-amber-500/10 rounded-xl'
                       )}
                       onMouseEnter={() => {
-                        if (lead?.id) {
-                          dispatch(leadsApi.util.prefetch('leadsById', { id: String(lead.id) }, { force: false }));
+                        if (leadId) {
+                          dispatch(leadsApi.util.prefetch('leadsById', { id: String(leadId) }, { force: false }));
                         }
                       }}
                     >
-                      <CardContent className="flex flex-col gap-4 p-5 sm:p-6">
-                        {/* Header: Avatar + Info + Status (like LeadDetailsDialog) */}
-                        <div className="flex flex-wrap items-start justify-between gap-4">
-                          <div className="flex gap-4 flex-1 min-w-0">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
-                              <User className="size-5" />
-                            </div>
-                            <div className="flex flex-col justify-center space-y-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className="truncate text-lg font-semibold text-foreground">
-                                  {lead?.clientName || t('leads.client')}
-                                </h3>
-                                <div className="sm:hidden shrink-0">
-                                  <StatusChip kind="lead" value={lead?.status} />
-                                </div>
-                              </div>
-                              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                                {lead?.clientPhone && (
-                                  <span className="flex items-center gap-1.5">
-                                    <Phone className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                                    {lead.clientPhone}
-                                  </span>
-                                )}
-                                {lead?.createdAt && (
-                                  <span className="flex items-center gap-1.5">
-                                    <Clock className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                                    {formatDateTimeString(lead.createdAt, locale)}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
-                            <div className="hidden sm:block">
-                              <StatusChip kind="lead" value={lead?.status} />
-                            </div>
-                            <Select
-                              value={(lead?.status as LeadStatus) ?? 'NEW'}
-                              onValueChange={(v) => onChangeStatus(String(lead.id), v as LeadStatus)}
-                              disabled={isUpdating || isClosed}
-                            >
-                              <SelectTrigger className="h-8 w-[140px] rounded-lg border-slate-200 dark:border-white/[0.08]">
-                                <SelectValue placeholder={t('leads.setStatus')} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {LEAD_STATUS_OPTIONS.filter((s) => s !== 'SPAM').map((s) => (
-                                  <SelectItem key={s} value={s} className="cursor-pointer">
-                                    {t(`leads.${s.toLowerCase()}` as 'leads.new' | 'leads.in_progress' | 'leads.closed' | 'leads.spam')}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-
-                        {/* Progress */}
-                        <div className="max-w-md">
-                          <LeadStatusProgress status={lead?.status} compact />
-                        </div>
-
-                        {/* Message (like LeadDetailsDialog) */}
-                        {lead?.message && (
-                          <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03] p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <MessageSquare className="size-5 text-amber-600 dark:text-amber-400 shrink-0" />
-                              <p className="text-sm font-semibold text-foreground">{t('leads.message')}</p>
-                            </div>
-                            <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all">
-                              {lead.message}
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Actions (like LeadDetailsDialog buttons) */}
-                        {lead?.id && (
-                          <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-                            <Button
-                              size="sm"
-                              onClick={() => nav(`/dashboard/leads/${(lead as LeadDto).encodedId ?? lead.id}`)}
-                              className="h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
-                            >
-                              <ExternalLink className="size-3.5" />
-                              {t('leads.open')}
-                            </Button>
-                            {!isClosed && (
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => {
-                                  if (window.confirm(t('leads.confirmSpam'))) {
-                                    onChangeStatus(String(lead.id), 'SPAM');
-                                  }
-                                }}
-                                className="h-8 gap-1.5 px-3 text-sm text-muted-foreground hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/30 dark:hover:text-rose-400"
-                              >
-                                <AlertCircle className="size-3.5" />
-                                <span className="hidden sm:inline">{t('leads.markAsSpam')}</span>
-                                <span className="sm:hidden">{t('leads.spamLabel')}</span>
-                              </Button>
-                            )}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
+                      <LeadCard
+                        lead={{ ...lead, id: String(lead?.id ?? '') }}
+                        locale={locale}
+                        isUpdating={isUpdating}
+                        onStatusChange={onChangeStatus}
+                        onOpenDetails={(l) => nav(`/dashboard/leads/${(l as LeadDto).encodedId ?? l.id}`)}
+                        variant="list"
+                      />
+                    </div>
                   </div>
                 );
               }}

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   User,
@@ -21,10 +21,11 @@ import {
   ListChecks,
   Gift,
 } from 'lucide-react';
-import { useAppSelector } from '@/app/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { selectPlan, selectRole, selectIsVerified } from '@/features/auth/selectors';
 import { TariffPlan, hasMinPlan } from '@/features/auth/plan';
 import { useGetUnreadCountQuery } from '@/features/chat/chatApi';
+import { clearUnreadLeads, clearUnreadReviews } from '@/features/socket/socketSlice';
 import { useConfigReferralsEnabledQuery } from '@/features/referrals/referralsApi';
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
@@ -62,14 +63,30 @@ function getItems(
 
 export function DashboardLayout() {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
   const isMdUp = useIsMdUp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const unreadLeads = useAppSelector((s) => s.socket.unreadLeads);
   const unreadReviews = useAppSelector((s) => s.socket.unreadReviews);
-  const { data: chatUnreadData } = useGetUnreadCountQuery(undefined, { pollingInterval: 30000 });
+  const { data: chatUnreadData, refetch: refetchChatUnread } = useGetUnreadCountQuery(undefined, {
+    pollingInterval: 30000,
+  });
   const unreadChats = chatUnreadData?.count ?? 0;
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/dashboard/chat')) {
+      refetchChatUnread();
+    }
+    if (location.pathname.startsWith('/dashboard/leads')) {
+      dispatch(clearUnreadLeads());
+    }
+    if (location.pathname.startsWith('/dashboard/reviews')) {
+      dispatch(clearUnreadReviews());
+    }
+  }, [location.pathname, refetchChatUnread, dispatch]);
 
   const plan: TariffPlan = useAppSelector(selectPlan) ?? 'BASIC';
   const role = useAppSelector(selectRole);

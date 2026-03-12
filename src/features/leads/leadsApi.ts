@@ -89,10 +89,22 @@ export const leadsApi = api.injectEndpoints({
           patcher({ status: 'SPAM' }),
         ];
 
+        let byIdPatch: { undo: () => void } | undefined;
+        try {
+          byIdPatch = dispatch(
+            leadsApi.util.updateQueryData('leadsById', { id }, (draft) => {
+              if (draft && typeof draft === 'object') (draft as LeadDto).status = body.status;
+            }),
+          );
+        } catch {
+          // No cache entry for this id
+        }
+
         try {
           await queryFulfilled;
         } catch {
           patches.forEach((p) => p.undo());
+          byIdPatch?.undo();
         }
       },
     }),
