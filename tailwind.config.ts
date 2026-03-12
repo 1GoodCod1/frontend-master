@@ -54,8 +54,8 @@ const config: Config = {
                 },
             },
             animation: {
-                'accordion-down': 'accordion-down 0.2s ease-out',
-                'accordion-up': 'accordion-up 0.2s ease-out',
+                'accordion-down': 'accordion-down 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                'accordion-up': 'accordion-up 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
                 'fade-in': 'fade-in 0.3s ease-out',
                 'fade-out': 'fade-out 0.3s ease-out',
                 'favorite-pulse': 'favoritePulse 0.6s ease-in-out',

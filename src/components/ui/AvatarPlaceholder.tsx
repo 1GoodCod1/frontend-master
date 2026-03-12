@@ -30,7 +30,7 @@ export function AvatarPlaceholder({
     : variant === 'vip'
       ? 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)'
       : variant === 'premium'
-        ? 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)'
+        ? 'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)'
         : `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
 
   const shine = useRoleStyle

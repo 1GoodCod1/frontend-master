@@ -147,7 +147,7 @@ export function CabinetSidebar({
             transition={{ duration: 0.2 }}
             className="mx-3 mt-3 overflow-hidden"
           >
-            <div className="relative rounded-xl bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 p-3 overflow-hidden">
+            <div className="relative rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 p-3 overflow-hidden">
               <div
                 className="absolute inset-0 opacity-20"
                 style={{

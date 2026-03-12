@@ -53,10 +53,10 @@ const PLAN_COLORS: Record<string, { bg: string; border: string; text: string; ic
         icon: 'text-amber-500 dark:text-amber-400',
     },
     PREMIUM: {
-        bg: 'bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30',
-        border: 'border-violet-300 dark:border-violet-600/40',
-        text: 'text-violet-700 dark:text-violet-300',
-        icon: 'text-violet-500 dark:text-violet-400',
+        bg: 'bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30',
+        border: 'border-teal-300 dark:border-teal-600/40',
+        text: 'text-teal-700 dark:text-teal-300',
+        icon: 'text-teal-500 dark:text-teal-400',
     },
 };
 
@@ -162,14 +162,14 @@ export default function SubscriptionPage() {
             <Card className={cn(
                 'overflow-hidden relative border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300',
                 effectivePlan === 'VIP' && 'border-amber-200/50 dark:border-amber-600/30',
-                effectivePlan === 'PREMIUM' && 'border-violet-200/50 dark:border-violet-600/30'
+                effectivePlan === 'PREMIUM' && 'border-teal-200/50 dark:border-teal-600/30'
             )}>
                 <div className={cn('absolute inset-0 opacity-50', colors.bg)} />
                 <CardContent className="relative p-6 md:p-8">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                         <div className={cn(
                             'flex items-center justify-center w-16 h-16 rounded-2xl',
-                            effectivePlan === 'PREMIUM' ? 'bg-violet-100 dark:bg-violet-900/40' :
+                            effectivePlan === 'PREMIUM' ? 'bg-teal-100 dark:bg-teal-900/40' :
                                 effectivePlan === 'VIP' ? 'bg-amber-100 dark:bg-amber-900/40' :
                                     'bg-slate-100 dark:bg-slate-800'
                         )}>
@@ -276,10 +276,10 @@ export default function SubscriptionPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upgrade Section */}
                 {effectivePlan !== 'PREMIUM' && !pendingUpgrade && (
-                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-violet-200/50 dark:border-violet-600/30">
-                        <div className="absolute inset-0 bg-gradient-to-br from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20 pointer-events-none" />
+                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-teal-200/50 dark:border-teal-600/30">
+                        <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20 pointer-events-none" />
                         <CardHeader className="relative">
-                            <CardTitle className="flex items-center gap-2 text-violet-700 dark:text-violet-300">
+                            <CardTitle className="flex items-center gap-2 text-teal-700 dark:text-teal-300">
                                 <ArrowUpCircle className="h-5 w-5" />
                                 {t('subscription.upgradeTitle')}
                             </CardTitle>
@@ -293,7 +293,7 @@ export default function SubscriptionPage() {
                                 size="lg"
                                 className={cn(
                                     'w-full font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5',
-                                    'bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white'
+                                    'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white'
                                 )}
                                 onClick={effectivePlan === 'BASIC' ? () => navigate('/plans') : handleUpgrade}
                             >
@@ -416,7 +416,7 @@ export default function SubscriptionPage() {
                                         <div className="flex items-center gap-3">
                                             <div className={cn(
                                                 'flex items-center justify-center w-8 h-8 rounded-lg',
-                                                payment.tariffType === 'PREMIUM' ? 'bg-violet-100 dark:bg-violet-900/30' :
+                                                payment.tariffType === 'PREMIUM' ? 'bg-teal-100 dark:bg-teal-900/30' :
                                                     payment.tariffType === 'VIP' ? 'bg-amber-100 dark:bg-amber-900/30' :
                                                         'bg-slate-100 dark:bg-slate-800'
                                             )}>

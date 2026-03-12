@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
           actions={
             <div className="flex flex-wrap items-center gap-2">
               {isPremium && (
-                <Badge variant="secondary" className="gap-1 font-semibold">
+                <Badge variant="secondary" className="gap-1 font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 border-teal-200 dark:border-teal-700/50">
                   <BarChart3 className="size-3.5" />
                   {t('analyticsPage.premiumBadge', 'PREMIUM - Расширенная аналитика')}
                 </Badge>

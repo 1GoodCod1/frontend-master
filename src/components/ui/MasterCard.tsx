@@ -312,8 +312,8 @@ export const MasterCard = React.memo(function MasterCard({
             <div className="flex flex-col items-end gap-0.5 sm:gap-1 shrink-0">
               {isPremium && (
                 <div className="flex items-center gap-0.5">
-                  <Crown size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: '#8b5cf6' }} />
-                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide" style={{ color: '#8b5cf6' }}>
+                  <Crown size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: '#0d9488' }} />
+                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide" style={{ color: '#0d9488' }}>
                     {t('common.masterCard.premium')}
                   </span>
                 </div>

@@ -31,7 +31,7 @@ export const PlansAlerts = ({
   return (
     <div className="flex flex-col gap-4">
       {pendingUpgrade && (
-        <Alert className="rounded-lg border-[#f5f4eb] dark:border-amber-500/40 bg-amber-50/80 dark:bg-amber-900/20 text-foreground dark:text-slate-100">
+        <Alert className="rounded-lg border-[#f5f4eb] dark:border-amber-800/50 bg-amber-50/80 dark:bg-amber-900/20 text-foreground dark:text-slate-100">
           <AlertDescription className="flex flex-col gap-3">
             <span className="text-sm">
               <strong>{t('plans.pendingUpgradeTitle')}:</strong>{' '}
