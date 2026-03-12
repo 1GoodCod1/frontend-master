@@ -70,6 +70,7 @@ export const admin = {
         clickToEdit: 'Click an override to edit.',
         templateSubject: 'Subject',
         templateBody: 'HTML body',
+        passwordResetPlaceholders: 'Use {{resetLink}} for the password reset link, {{frontendUrl}} for the site URL.',
         overrideSaved: 'Override saved',
       },
       roles: {
@@ -442,6 +443,7 @@ export const admin = {
         clickToEdit: 'Нажмите на override для редактирования.',
         templateSubject: 'Subject',
         templateBody: 'HTML body',
+        passwordResetPlaceholders: 'Используйте {{resetLink}} для ссылки сброса пароля, {{frontendUrl}} для URL сайта.',
         overrideSaved: 'Override сохранён',
       },
       roles: {
@@ -814,6 +816,7 @@ export const admin = {
         clickToEdit: 'Apăsați pe o suprascriere pentru editare.',
         templateSubject: 'Subject',
         templateBody: 'Corp HTML',
+        passwordResetPlaceholders: 'Folosiți {{resetLink}} pentru linkul de resetare parolă, {{frontendUrl}} pentru URL-ul site-ului.',
         overrideSaved: 'Suprascriere salvată',
       },
       roles: {

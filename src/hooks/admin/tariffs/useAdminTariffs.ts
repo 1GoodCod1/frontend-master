@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import type { GridRowSelectionModel } from '@/types/dataGrid';
 import {
   useGetTariffsQuery,
@@ -16,24 +16,9 @@ type Row = Tariff & {
   [k: string]: unknown;
 };
 
-const LOG = true; // set to false to disable admin tariffs logs
-
 export function useAdminTariffs() {
   const q = useGetTariffsQuery();
   const [invalidateCache, invalidateState] = useAdminInvalidateTariffsCacheMutation();
-
-  useEffect(() => {
-    if (!LOG) return;
-    console.log('[useAdminTariffs] query state:', {
-      status: q.status,
-      isLoading: q.isLoading,
-      isFetching: q.isFetching,
-      isError: q.isError,
-      error: q.error,
-      dataLength: Array.isArray(q.data) ? q.data.length : (q.data ? 'not array' : 'undefined'),
-      data: q.data,
-    });
-  }, [q.status, q.isLoading, q.isFetching, q.isError, q.error, q.data]);
   const [del] = useDeleteTariffMutation();
   const [create] = useCreateTariffMutation();
   const [update] = useUpdateTariffMutation();

@@ -45,12 +45,10 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
 
   chatSocket.on('connect', () => {
     store.dispatch(setChatConnected(true));
-    console.log('Chat socket connected');
   });
 
   chatSocket.on('disconnect', () => {
     store.dispatch(setChatConnected(false));
-    console.log('Chat socket disconnected');
   });
 
   // Handle incoming messages - Update cache directly without full refetch

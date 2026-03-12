@@ -188,16 +188,16 @@ export const MasterCard = React.memo(function MasterCard({
       onMouseEnter={handleMouseEnter}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group relative w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer',
+        'group relative w-full rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer',
         'outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
         'bg-white dark:bg-white/[0.06]',
-        'shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-lg dark:shadow-black/20',
-        'hover:-translate-y-0.5 hover:shadow-[0_24px_64px_rgba(0,0,0,0.12)] dark:hover:shadow-xl dark:hover:shadow-black/30',
+        'shadow-[0_12px_40px_rgba(0,0,0,0.08)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-lg dark:shadow-black/20',
+        'hover:-translate-y-0.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.1)] sm:hover:shadow-[0_24px_64px_rgba(0,0,0,0.12)] dark:hover:shadow-xl dark:hover:shadow-black/30',
       )}
     >
       {/* Top colored band */}
       <div
-        className="relative h-16"
+        className="relative h-12 sm:h-14 md:h-16"
         style={{
           background: 'var(--card-accent-band)',
         }}
@@ -212,9 +212,9 @@ export const MasterCard = React.memo(function MasterCard({
 
         {/* Promotion discount badge — top-right of band */}
         {activePromotionDiscount !== null && (
-          <div className="absolute top-2 right-2">
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-500/15 dark:bg-red-400/20 text-red-600 dark:text-red-400 border border-red-500/25 dark:border-red-400/30 text-[10px] font-medium">
-              <TrendingDown className="w-2 h-2" />
+          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
+            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-500/15 dark:bg-red-400/20 text-red-600 dark:text-red-400 border border-red-500/25 dark:border-red-400/30 text-[9px] sm:text-[10px] font-medium">
+              <TrendingDown className="w-2 h-2 shrink-0" />
               {activePromotionDiscount}%
             </span>
           </div>
@@ -222,7 +222,7 @@ export const MasterCard = React.memo(function MasterCard({
 
         {/* Avatar */}
         <div
-          className="absolute -bottom-8 left-5 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden border-[3px]"
+          className="absolute -bottom-6 sm:-bottom-7 md:-bottom-8 left-4 sm:left-5 w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center overflow-hidden border-2 sm:border-[3px]"
           style={{
             background: `linear-gradient(135deg, ${CARD_ACCENT}, ${CARD_ACCENT_LIGHT})`,
             borderColor: 'var(--card-border)',
@@ -247,7 +247,7 @@ export const MasterCard = React.memo(function MasterCard({
         {/* Online indicator */}
         {master?.isOnline === true && (
           <div
-            className="absolute bottom-5 left-[3.75rem] w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 z-10"
+            className="absolute bottom-3.5 sm:bottom-4 md:bottom-5 left-[2.75rem] sm:left-[3.25rem] md:left-[3.75rem] w-3 h-3 sm:w-3.5 sm:h-3.5 bg-emerald-400 rounded-full border-2 z-10"
             style={{ borderColor: 'var(--card-border)' }}
             title={t('masters.availableNow')}
           />
@@ -256,18 +256,18 @@ export const MasterCard = React.memo(function MasterCard({
         {/* Rating pill — bottom-right of band */}
         {typeof rating === 'number' && (
           <div
-            className="absolute bottom-2.5 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full"
+            className="absolute bottom-1.5 right-2 sm:bottom-2.5 sm:right-3 flex items-center gap-0.5 sm:gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full"
             style={{
               background: 'var(--card-rating-bg)',
               border: '1px solid var(--card-rating-border)',
             }}
           >
-            <Star size={11} className="text-amber-500 fill-amber-500 shrink-0" />
-            <span className="font-semibold text-[12px] text-foreground">
+            <Star size={10} className="sm:w-[11px] sm:h-[11px] text-amber-500 fill-amber-500 shrink-0" />
+            <span className="font-semibold text-[11px] sm:text-[12px] text-foreground">
               {rating.toFixed(1)}
             </span>
             {totalReviews > 0 && (
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-[9px] sm:text-[10px] text-muted-foreground hidden sm:inline">
                 ({totalReviews})
               </span>
             )}
@@ -276,15 +276,14 @@ export const MasterCard = React.memo(function MasterCard({
       </div>
 
       {/* Body */}
-      <div className="pt-10 px-5 pb-4 flex flex-col gap-3">
+      <div className="pt-8 sm:pt-9 md:pt-10 px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 flex flex-col gap-2 sm:gap-3">
         {/* Name row + badges */}
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1 sm:gap-1.5">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
               <span
-                className="truncate"
+                className="truncate text-sm sm:text-base"
                 style={{
-                  fontSize: 16,
                   fontWeight: 600,
                   letterSpacing: '-0.3px',
                   lineHeight: 1.2,
@@ -298,7 +297,7 @@ export const MasterCard = React.memo(function MasterCard({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="flex shrink-0">
-                        <ShieldCheck size={16} className="text-emerald-500" />
+                        <ShieldCheck size={14} className="sm:w-4 sm:h-4 text-emerald-500" />
                       </span>
                     </TooltipTrigger>
                     <TooltipContent className={badgeTooltipClass}>
@@ -310,63 +309,35 @@ export const MasterCard = React.memo(function MasterCard({
             </div>
 
             {/* Badges — right side, stacked vertically */}
-            <div className="flex flex-col items-end gap-1 shrink-0">
+            <div className="flex flex-col items-end gap-0.5 sm:gap-1 shrink-0">
               {isPremium && (
                 <div className="flex items-center gap-0.5">
-                  <Crown size={11} style={{ color: '#8b5cf6' }} />
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: '0.3px',
-                      color: '#8b5cf6',
-                    }}
-                  >
+                  <Crown size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: '#8b5cf6' }} />
+                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide" style={{ color: '#8b5cf6' }}>
                     {t('common.masterCard.premium')}
                   </span>
                 </div>
               )}
               {isVip && !isPremium && (
                 <div className="flex items-center gap-0.5">
-                  <Crown size={11} style={{ color: '#8b5cf6' }} />
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: '0.3px',
-                      color: '#8b5cf6',
-                    }}
-                  >
+                  <Crown size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: '#8b5cf6' }} />
+                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide" style={{ color: '#8b5cf6' }}>
                     {t('common.masterCard.vip')}
                   </span>
                 </div>
               )}
               {sectionBadge === 'popular' && (
                 <div className="flex items-center gap-0.5">
-                  <TrendingUp size={11} style={{ color: '#f59e0b' }} />
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: '0.3px',
-                      color: '#f59e0b',
-                    }}
-                  >
+                  <TrendingUp size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: '#f59e0b' }} />
+                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide" style={{ color: '#f59e0b' }}>
                     {t('common.masterCard.top')}
                   </span>
                 </div>
               )}
               {sectionBadge === 'new' && (
                 <div className="flex items-center gap-0.5">
-                  <Sparkles size={11} style={{ color: '#a78bfa' }} />
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: '0.3px',
-                      color: '#a78bfa',
-                    }}
-                  >
+                  <Sparkles size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: '#a78bfa' }} />
+                  <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide" style={{ color: '#a78bfa' }}>
                     {t('common.masterCard.new')}
                   </span>
                 </div>
@@ -377,19 +348,13 @@ export const MasterCard = React.memo(function MasterCard({
           {/* Category pill */}
           {categoryName && (
             <div
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg self-start"
+              className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg self-start"
               style={{
                 background: 'var(--card-category-bg)',
               }}
             >
-              <Briefcase size={11} style={{ color: 'var(--muted-foreground)' }} />
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: 'var(--card-category-text)',
-                }}
-              >
+              <Briefcase size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: 'var(--muted-foreground)' }} />
+              <span className="text-[10px] sm:text-[11px] font-semibold truncate max-w-[120px] sm:max-w-none" style={{ color: 'var(--card-category-text)' }}>
                 {categoryName}
               </span>
             </div>
@@ -403,14 +368,12 @@ export const MasterCard = React.memo(function MasterCard({
         />
 
         {/* Tags + City in same row */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
           {serviceTags.map((tag, idx) => (
             <span
               key={idx}
-              className="px-2 py-0.5 rounded-full"
+              className="px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium truncate max-w-[80px] sm:max-w-[100px]"
               style={{
-                fontSize: 10,
-                fontWeight: 500,
                 background: 'var(--card-tag-bg)',
                 color: CARD_ACCENT,
                 border: '1px solid rgba(233,117,37,0.25)',
@@ -422,21 +385,15 @@ export const MasterCard = React.memo(function MasterCard({
 
           {serviceTags.length > 0 && city && (
             <div
-              className="w-px self-stretch mx-1 shrink-0"
+              className="w-px self-stretch mx-0.5 sm:mx-1 shrink-0"
               style={{ background: 'var(--card-divider)' }}
             />
           )}
 
           {city && (
-            <div className="flex items-center gap-1">
-              <MapPin size={11} style={{ color: CARD_ACCENT }} />
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: 'var(--card-city-text)',
-                }}
-              >
+            <div className="flex items-center gap-0.5 sm:gap-1 min-w-0">
+              <MapPin size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: CARD_ACCENT }} />
+              <span className="text-[10px] sm:text-[11px] font-medium truncate" style={{ color: 'var(--card-city-text)' }}>
                 {city}
               </span>
             </div>
@@ -454,7 +411,7 @@ export const MasterCard = React.memo(function MasterCard({
             {/* Contact button — compact, original colors */}
             <button
               onClick={handleContactClick}
-              className="w-full h-9 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] text-white font-medium text-[12px] hover:opacity-90"
+              className="w-full h-8 sm:h-9 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] text-white font-medium text-[11px] sm:text-[12px] hover:opacity-90"
               style={{
                 background: 'var(--card-button-bg)',
                 boxShadow: 'var(--card-button-shadow)',

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { CheckCircle, ArrowUpCircle, ShieldCheck } from 'lucide-react';
+import { ArrowUpCircle, ShieldCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -129,11 +129,15 @@ export const PlanCard = ({
 
         <Separator />
 
-        <ul className="flex flex-col gap-2">
+        <ul className="space-y-1.5 list-none">
           {features.map((f: string, idx: number) => (
-            <li key={idx} className="flex flex-row items-start gap-2">
-              <CheckCircle className={cn('h-4 w-4 shrink-0 mt-0.5', accent.text)} />
-              <span className="text-sm text-muted-foreground">{f}</span>
+            <li key={idx} className="flex items-start gap-2.5 pl-0">
+              <span className={cn('mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full', {
+                'bg-primary/70': planName === 'BASIC',
+                'bg-amber-500/80': planName === 'VIP',
+                'bg-violet-500/80': planName === 'PREMIUM',
+              })} aria-hidden />
+              <span className="text-sm text-muted-foreground leading-relaxed">{f}</span>
             </li>
           ))}
         </ul>

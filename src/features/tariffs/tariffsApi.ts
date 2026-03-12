@@ -43,10 +43,8 @@ export const tariffsApi = api.injectEndpoints({
         params: params ?? {},
       }),
       transformResponse: (response: unknown): Tariff[] => {
-        console.log('[tariffsApi.getTariffs] raw response:', response);
         const data = unwrap<Tariff[]>(response);
         const result = Array.isArray(data) ? data : [];
-        console.log('[tariffsApi.getTariffs] unwrapped data:', data, '→ rows count:', result.length);
         return result;
       },
       providesTags: ['Tariffs'],
@@ -54,10 +52,8 @@ export const tariffsApi = api.injectEndpoints({
     getActiveTariffs: build.query<Tariff[], void>({
       query: () => ({ url: '/tariffs/active', method: 'GET' }),
       transformResponse: (response: unknown): Tariff[] => {
-        console.log('[tariffsApi.getActiveTariffs] raw response:', response);
         const data = unwrap<Tariff[]>(response);
         const result = Array.isArray(data) ? data : [];
-        console.log('[tariffsApi.getActiveTariffs] rows count:', result.length);
         return result;
       },
       providesTags: ['Tariffs'],

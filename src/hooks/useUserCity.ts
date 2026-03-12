@@ -48,6 +48,13 @@ export function useUserCity() {
   const [cityId, setCityId] = useState<string>('');
   const [cityName, setCityName] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
+  const [consentVersion, setConsentVersion] = useState(0);
+
+  useEffect(() => {
+    const handler = () => setConsentVersion((v) => v + 1);
+    window.addEventListener('mh:cityConsentChanged', handler);
+    return () => window.removeEventListener('mh:cityConsentChanged', handler);
+  }, []);
 
   const resolveAndStore = useCallback(
     (apiCity: string) => {
@@ -136,7 +143,7 @@ export function useUserCity() {
       cancelled = true;
       controller.abort();
     };
-  }, [cities, citiesQuery.isLoading, resolveAndStore]);
+  }, [cities, citiesQuery.isLoading, resolveAndStore, consentVersion]);
 
   const citySlug = useMemo(() => {
     if (!cityId) return '';

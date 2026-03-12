@@ -132,7 +132,10 @@ export const router = createBrowserRouter([
                 element: <PlanRoute min="VIP" />,
                 children: [{ path: 'analytics', element: <LazyPage><AnalyticsPage /></LazyPage> }],
               },
-              { path: 'promotions', element: <LazyPage><PromotionsPage /></LazyPage> },
+              {
+                element: <PlanRoute min="PREMIUM" />,
+                children: [{ path: 'promotions', element: <LazyPage><PromotionsPage /></LazyPage> }],
+              },
               { path: 'bookings', element: <LazyPage><BookingsPage /></LazyPage> },
               { path: 'files', element: <LazyPage><FilesPage /></LazyPage> },
               { path: 'portfolio', element: <LazyPage><PortfolioPage /></LazyPage> },

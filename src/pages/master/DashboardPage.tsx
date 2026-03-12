@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid } from 'recharts';
 import {
-  Eye, CheckCircle, Rocket, ShieldCheck, Lock, History,
+  Eye, CheckCircle, Rocket, Lock, History,
   Activity, BarChart3, Users, Clock, MousePointerClick
 } from 'lucide-react';
 import { useMastersMyStatsQuery, useMastersMyProfileQuery, useMastersUpdateOnlineStatusMutation, useMastersGetAvailabilityStatusQuery, useMastersUpdateAvailabilityStatusMutation } from '@/features/masters/mastersApi';
@@ -12,8 +12,6 @@ import { LoadingState, ErrorState } from '@/components/common/States';
 import { StatCard } from '@/components/ui/StatCard';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { AvailabilityControl } from '@/features/masters/components/master/AvailabilityControl';
-import { useAppSelector } from '@/app/hooks';
-import { selectIsVerified } from '@/features/auth/selectors';
 import { extractItems } from '@/utils/data';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { useState, useRef, useEffect } from 'react';
@@ -21,7 +19,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { ProfileViewsHistoryModal } from '@/features/masters/components/master/ProfileViewsHistoryModal';
 import { Progress } from '@/components/ui/progress';
@@ -50,7 +47,6 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
 export default function DashboardPage() {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
-  const isVerified = useAppSelector(selectIsVerified);
   const stats = useMastersMyStatsQuery(undefined, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 60_000,
@@ -192,45 +188,11 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6 lg:px-8 space-y-8 min-h-[calc(100vh-4rem)]">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('dashboard.title', 'Дашборд')}</h1>
-          <p className="text-muted-foreground mt-1">{t('dashboard.subtitle', 'Обзор вашей активности и статистики')}</p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {masterData?.tariffType === 'PREMIUM' ? (
-            <Badge variant="outline" className="px-3 py-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 text-sm font-semibold rounded-full shadow-sm flex items-center gap-1.5 transition-all">
-              <Rocket className="size-4" />
-              PREMIUM
-            </Badge>
-          ) : (
-            <Button asChild variant="outline" className="border-amber-500/30 bg-amber-500/5 text-amber-600 hover:bg-amber-500/10 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 rounded-full transition-all group">
-              <Link to="/plans" className="flex items-center gap-2">
-                <Rocket className="size-4 group-hover:-translate-y-0.5 transition-transform" />
-                {t('dashboard.upgradeToPremium', 'Upgrade to Premium')}
-              </Link>
-            </Button>
-          )}
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('dashboard.title', 'Дашборд')}</h1>
+        <p className="text-muted-foreground mt-1">{t('dashboard.subtitle', 'Обзор вашей активности и статистики')}</p>
       </div>
 
-      {!isVerified && (
-        <Alert variant="default" className="border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10 rounded-xl shadow-sm">
-          <ShieldCheck className="size-5 text-amber-600 dark:text-amber-500" />
-          <div className="ml-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
-            <div>
-              <h4 className="font-semibold text-foreground text-base mb-1">{t('dashboard.premiumStepsTitle', 'Подтвердите профиль')}</h4>
-              <AlertDescription className="text-muted-foreground">
-                {t('dashboard.premiumStepsIntro', 'Пройдите верификацию, чтобы получить доверие клиентов и открыть все функции платформы.')}
-              </AlertDescription>
-            </div>
-            <Button asChild size="sm" className="shrink-0 bg-amber-600 hover:bg-amber-700 text-white rounded-lg shadow-sm">
-              <Link to="/dashboard/verification">{t('dashboard.goToVerification', 'Пройти проверку')}</Link>
-            </Button>
-          </div>
-        </Alert>
-      )}
       <PushPermissionBanner />
 
       {/* Main Grid Layout */}
@@ -309,11 +271,10 @@ export default function DashboardPage() {
                         dy={10}
                         hide={chartData.length > 14}
                       />
-                      <YAxis yAxisId="views" orientation="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#3b82f6' }} width={35} />
-                      <YAxis yAxisId="leads" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#10b981' }} width={35} />
+                      <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} width={35} />
                       <RechartsTooltip content={<ChartTooltip />} />
-                      <Area yAxisId="views" type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
-                      <Area yAxisId="leads" type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
+                      <Area type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
+                      <Area type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (

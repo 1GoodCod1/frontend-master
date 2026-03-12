@@ -16,10 +16,13 @@ export function CookieConsentBanner() {
   const { t, i18n } = useTranslation();
   const [prefsModalOpen, setPrefsModalOpen] = useState(false);
   const [prefsOpenKey, setPrefsOpenKey] = useState(0);
+  const [consentGiven, setConsentGiven] = useState(false);
 
   const handleChoice = (choice: CookieConsentChoice) => {
     if (choice === 'all') {
       setCookieConsent('all');
+      setConsentGiven(true);
+      window.dispatchEvent(new CustomEvent('mh:cityConsentChanged'));
       const lang = i18n.language || 'ro';
       if (['en', 'ru', 'ro'].includes(lang)) prefsCookies.lang.set(lang);
       const theme = store.getState().ui?.colorMode || 'light';
@@ -30,7 +33,7 @@ export function CookieConsentBanner() {
     }
   };
 
-  if (hasConsent()) return null;
+  if (hasConsent() || consentGiven) return null;
 
   return (
     <>

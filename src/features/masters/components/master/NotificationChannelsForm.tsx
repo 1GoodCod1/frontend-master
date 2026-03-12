@@ -38,7 +38,12 @@ export function NotificationChannelsForm() {
 
   const handleConnectTelegram = useCallback(async () => {
     try {
-      const { link } = await createLink().unwrap();
+      const result = await createLink().unwrap();
+      const link = (result as { data?: { link?: string } })?.data?.link ?? (result as { link?: string }).link;
+      if (!link) {
+        toast.error(t('notificationSettings.telegram.connectError'));
+        return;
+      }
       window.open(link, '_blank', 'noopener,noreferrer');
       toast.success(t('notificationSettings.telegram.connectToast'));
       const stopAt = Date.now() + POLL_DURATION_MS;

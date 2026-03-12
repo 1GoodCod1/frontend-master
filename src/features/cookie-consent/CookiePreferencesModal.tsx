@@ -43,6 +43,9 @@ export function CookiePreferencesModal({
   const handleSave = () => {
     clearPreferencesData(prefs);
     setCookiePreferences(prefs);
+    if (prefs.city) {
+      window.dispatchEvent(new CustomEvent('mh:cityConsentChanged'));
+    }
     onSave?.();
     onOpenChange(false);
   };

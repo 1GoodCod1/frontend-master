@@ -53,13 +53,13 @@ const MastersMap = lazy(() =>
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-white/[0.08] bg-card p-4 space-y-3 shadow-lg shadow-black/5 dark:shadow-none">
-      <Skeleton className="h-14 w-14 rounded-full" />
-      <Skeleton className="h-6 w-[70%]" />
-      <Skeleton className="h-5 w-[50%]" />
+    <div className="rounded-2xl sm:rounded-xl border border-gray-200 dark:border-white/[0.08] bg-card p-3 sm:p-4 space-y-2 sm:space-y-3 shadow-lg shadow-black/5 dark:shadow-none">
+      <Skeleton className="h-11 w-11 sm:h-14 sm:w-14 rounded-full" />
+      <Skeleton className="h-5 sm:h-6 w-[70%]" />
+      <Skeleton className="h-4 sm:h-5 w-[50%]" />
       <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} className="h-3.5 w-3.5 rounded" />
+          <Skeleton key={i} className="h-3 w-3 sm:h-3.5 sm:w-3.5 rounded" />
         ))}
       </div>
     </div>
@@ -82,7 +82,10 @@ function MapSkeleton() {
 const VirtualizedGridList = (props: ComponentProps<'div'>) => (
   <div
     {...props}
-    className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
+    className="grid gap-4 sm:gap-5 md:gap-6"
+    style={{
+      gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+    }}
   />
 );
 
@@ -327,37 +330,37 @@ export default function MastersPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="container max-w-7xl mx-auto py-4 sm:py-6 md:py-8 px-4"
+      className="container max-w-7xl mx-auto py-3 sm:py-5 md:py-6 lg:py-8 px-3 sm:px-4"
     >
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight">
             {t('masters.title')}
           </h1>
-          <p className="text-muted-foreground mt-1">{t('masters.subtitle')}</p>
+          <p className="text-muted-foreground mt-0.5 sm:mt-1 text-sm sm:text-base">{t('masters.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
           {/* View mode toggle */}
           <div className="flex rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden">
             <button
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all ${viewMode === 'list'
+              className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 min-h-[44px] sm:min-h-0 text-sm font-medium transition-all ${viewMode === 'list'
                   ? 'bg-[hsl(var(--button-bg))] text-white'
                   : 'bg-card hover:bg-primary/10 text-muted-foreground'
                 }`}
             >
-              <List className="h-4 w-4" />
+              <List className="h-4 w-4 shrink-0" />
               <span className="hidden sm:inline">{t('masters.listView')}</span>
             </button>
             <button
               onClick={() => setViewMode('map')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all ${viewMode === 'map'
+              className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 min-h-[44px] sm:min-h-0 text-sm font-medium transition-all ${viewMode === 'map'
                   ? 'bg-[hsl(var(--button-bg))] text-white'
                   : 'bg-card hover:bg-primary/10 text-muted-foreground'
                 }`}
             >
-              <Map className="h-4 w-4" />
+              <Map className="h-4 w-4 shrink-0" />
               <span className="hidden sm:inline">{t('masters.mapView')}</span>
             </button>
           </div>
@@ -365,7 +368,7 @@ export default function MastersPage() {
           <Button
             variant="outline"
             onClick={resetFilters}
-            className="shrink-0 gap-2 border-gray-200 dark:border-white/10 hover:bg-primary/10 hover:border-primary/30"
+            className="shrink-0 gap-1.5 sm:gap-2 min-h-[44px] sm:min-h-9 border-gray-200 dark:border-white/10 hover:bg-primary/10 hover:border-primary/30 text-sm"
           >
             <SlidersHorizontal className="h-4 w-4 text-primary" />
             {t('common.reset')}
@@ -379,17 +382,17 @@ export default function MastersPage() {
       </div>
 
       {/* Filters card */}
-      <Card className="mb-4 sm:mb-6 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
-        <CardContent className="p-4 sm:p-5 md:p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-primary text-primary-foreground shrink-0">
-              <Search className="h-5 w-5" />
+      <Card className="mb-3 sm:mb-5 md:mb-6 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
+        <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+            <div className="flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-primary text-primary-foreground shrink-0">
+              <Search className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <h2 className="text-lg font-bold text-foreground">
+            <h2 className="text-base sm:text-lg font-bold text-foreground">
               {t('masters.searchAndFilters')}
             </h2>
           </div>
-          <p className="text-sm text-muted-foreground mb-4 ml-0 sm:ml-14">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 ml-0 sm:ml-14">
             {t('masters.searchAndFiltersSubtitle')}
           </p>
           {filters.isError ? (
@@ -400,7 +403,7 @@ export default function MastersPage() {
           ) : (
             <>
               {/* Main filters row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {/* Search */}
                 <div className="lg:col-span-2 space-y-2">
                   <Label htmlFor="masters-search">{t('masters.search')}</Label>
@@ -483,7 +486,7 @@ export default function MastersPage() {
               </div>
 
               {/* Sort row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4">
                 <div className="space-y-2">
                   <Label>{t('masters.sortBy')}</Label>
                   <Select
@@ -558,9 +561,9 @@ export default function MastersPage() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 pt-5 border-t border-gray-200 dark:border-white/[0.08]">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-200 dark:border-white/[0.08]">
                       {/* Available now */}
-                      <div className="flex items-center justify-between rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-gray-200 dark:border-white/[0.06]">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06]">
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-green-500/15 dark:bg-green-400/15">
                             <CircleDot className="h-4.5 w-4.5 text-green-600 dark:text-green-400" />
@@ -594,7 +597,7 @@ export default function MastersPage() {
                       </div>
 
                       {/* With promotion */}
-                      <div className="flex items-center justify-between rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-gray-200 dark:border-white/[0.06]">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06]">
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-rose-500/15 dark:bg-rose-400/15">
                             <Tag className="h-4.5 w-4.5 text-rose-600 dark:text-rose-400" />
@@ -628,7 +631,7 @@ export default function MastersPage() {
                       </div>
 
                       {/* Price range — отдельные прогресс-бары для мин и макс */}
-                      <div className="space-y-4 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-4 py-3.5 border border-gray-200 dark:border-white/[0.06]">
+                      <div className="space-y-4 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06] md:col-span-2">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-primary/15">
                             <DollarSign className="h-4.5 w-4.5 text-primary" />
@@ -754,7 +757,12 @@ export default function MastersPage() {
       {/* Results */}
       {list.isLoading ? (
         viewMode === 'list' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div
+            className="grid gap-4 sm:gap-5 md:gap-6"
+            style={{
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+            }}
+          >
             {Array.from({ length: 12 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
@@ -766,7 +774,7 @@ export default function MastersPage() {
         <ErrorState error={list.error} onRetry={list.refetch} />
       ) : items.length ? (
         <>
-          <div className="mb-4 rounded-lg bg-primary/10 px-4 py-2 flex items-center justify-between">
+          <div className="mb-3 sm:mb-4 rounded-lg bg-primary/10 px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
             <p className="text-sm font-semibold text-primary">
               {t('masters.found', { count: total })}
             </p>
@@ -820,7 +828,7 @@ export default function MastersPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25 }}
-                style={{ height: 500 }}
+                className="h-[400px] sm:h-[450px] md:h-[500px]"
               >
                 <Suspense fallback={<MapSkeleton />}>
                   <MastersMap
@@ -839,9 +847,9 @@ export default function MastersPage() {
           </AnimatePresence>
 
           {/* Pagination */}
-          <Card className="mt-8 mb-4 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
-            <CardContent className="p-4">
-              <div className="flex flex-wrap items-center justify-between gap-4">
+          <Card className="mt-6 sm:mt-8 mb-4 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
                 <Button
                   variant="outline"
                   disabled={!canPrev || list.isFetching}
@@ -852,7 +860,7 @@ export default function MastersPage() {
                 >
                   {t('common.prev')}
                 </Button>
-                <span className="px-4 py-2 rounded-md bg-primary/10 font-semibold text-primary text-sm md:text-base">
+                <span className="px-3 sm:px-4 py-2 rounded-md bg-primary/10 font-semibold text-primary text-xs sm:text-sm md:text-base">
                   {t('common.page')} {query.page}{' '}
                   {totalPages > 0 &&
                     t('common.pageOf', { total: totalPages })}

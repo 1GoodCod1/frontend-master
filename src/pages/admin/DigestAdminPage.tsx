@@ -85,6 +85,11 @@ function TemplateOverrideForm({
       </div>
       <div className="space-y-2">
         <Label htmlFor="override-body">{t('admin.digest.templateBody', 'HTML body')}</Label>
+        {templateId === 'password-reset' && (
+          <p className="text-xs text-muted-foreground rounded-md bg-muted/50 p-2">
+            {t('admin.digest.passwordResetPlaceholders', 'Use {{resetLink}} for the password reset link, {{frontendUrl}} for the site URL.')}
+          </p>
+        )}
         <Textarea
           id="override-body"
           value={bodyHtml}
