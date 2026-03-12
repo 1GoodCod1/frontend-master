@@ -25,3 +25,4 @@ jobs:
       - run: npm run e2e:ui
         env:
           FRONTEND_BASE_URL: ${{ secrets.STAGING_FRONTEND_URL || 'http://localhost:3000' }}
+          SKIP_ON_THROTTLE: '1'

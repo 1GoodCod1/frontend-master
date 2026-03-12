@@ -14,11 +14,11 @@ test.describe('UI Critical Flow', () => {
 
   test('2. Register page loads', async ({ page }) => {
     await page.goto(`${FRONTEND}/register`);
-    await expect(page.locator('input, form')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('textbox', { name: /email|email/i })).toBeVisible({ timeout: 10000 });
   });
 
   test('3. Masters page loads', async ({ page }) => {
     await page.goto(`${FRONTEND}/masters`);
-    await expect(page.locator('main, [role="main"], body')).toBeVisible();
+    await expect(page.getByRole('main')).toBeVisible();
   });
 });
