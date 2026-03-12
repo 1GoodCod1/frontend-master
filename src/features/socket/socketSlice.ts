@@ -78,6 +78,11 @@ function makeId() {
   return `${now()}_${Math.random().toString(16).slice(2)}`;
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export function isNotificationIdFromBackend(id: unknown): id is string {
+  return typeof id === 'string' && UUID_REGEX.test(id);
+}
+
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
 }
@@ -420,8 +425,12 @@ const slice = createSlice({
       pruneRecent(state.recent.leads, t);
       pruneRecent(state.recent.reviews, t);
 
+      const payloadRecord = isRecord(evt.payload) ? evt.payload : {};
+      const backendId = payloadRecord.id ?? (isRecord(payloadRecord.data) ? (payloadRecord.data as Record<string, unknown>).id : undefined);
+      const itemId = isNotificationIdFromBackend(backendId) ? String(backendId) : makeId();
+
       const item: NotificationItem = {
-        id: makeId(),
+        id: itemId,
         type: evt.type,
         title: makeTitle(evt.type),
         message: makeMessage(evt.type, evt.payload),
@@ -461,6 +470,16 @@ const slice = createSlice({
       clearNotificationsStorage();
     },
 
+    setNotificationsFromApi(state, action: PayloadAction<NotificationItem[]>) {
+      const apiItems = action.payload;
+      const apiIds = new Set(apiItems.map((n) => n.id));
+      const socketOnly = state.notifications.filter((n) => !apiIds.has(n.id));
+      const merged = [...apiItems, ...socketOnly].sort((a, b) => b.createdAt - a.createdAt);
+      state.notifications = merged.slice(0, MAX_NOTIFICATIONS);
+      state.unreadLeads = merged.filter((n) => !n.read && (n.type === 'new_lead' || n.type === 'lead_sent' || n.type === 'admin_new_lead')).length;
+      state.unreadReviews = merged.filter((n) => !n.read && (n.type === 'new_review' || n.type === 'admin_new_review')).length;
+    },
+
     clearLastEvent(state) {
       state.lastEvent = null;
     },
@@ -492,6 +511,7 @@ export const {
   markRead,
   togglePin,
   clearNotifications,
+  setNotificationsFromApi,
   clearLastEvent,
   clearUnreadLeads,
   clearUnreadReviews,

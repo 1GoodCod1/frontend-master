@@ -89,18 +89,13 @@ store.subscribe(() => {
     unreadReviews: st.socket.unreadReviews ?? 0,
     notifications: st.socket.notifications,
   };
+  const readCount = payload.notifications.filter((n) => n.read).length;
   const firstNotifId = payload.notifications[0]?.id ?? '';
-  const sig = `${payload.unreadLeads}|${payload.unreadReviews}|${payload.notifications.length}|${firstNotifId}`;
+  const sig = `${payload.unreadLeads}|${payload.unreadReviews}|${payload.notifications.length}|${readCount}|${firstNotifId}`;
 
   if (sig !== prevNotifSig) {
-    // Throttled persistence to avoid blocking UI on large notification sets
-    const now = Date.now();
-    const lastSave = window._lastNotifSave ?? 0;
-    if (now - lastSave > 2000) {
-      saveNotifications(payload);
-      window._lastNotifSave = now;
-      prevNotifSig = sig;
-    }
+    saveNotifications(payload);
+    prevNotifSig = sig;
   }
 });
 

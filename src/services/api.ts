@@ -231,6 +231,7 @@ export const api = createApi({
     'Portfolio',
     'Referrals',
     'Digest',
+    'Notifications',
   ],
   endpoints: () => ({}),
 });

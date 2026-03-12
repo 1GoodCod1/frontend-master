@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { isToday, isYesterday } from 'date-fns';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
@@ -6,10 +6,18 @@ import {
   markAllRead,
   markRead,
   setNotificationSettings,
+  setNotificationsFromApi,
 } from '@/features/socket/socketSlice';
+import { isNotificationIdFromBackend } from '@/features/socket/socketSlice';
 import type { NotificationItem } from '@/features/socket/socketSlice';
 import type { TabKey } from './types';
 import { filterByTab } from './utils';
+import {
+  useGetNotificationsQuery,
+  useMarkNotificationAsReadMutation,
+  useMarkAllNotificationsAsReadMutation,
+  useDeleteAllNotificationsMutation,
+} from '@/features/notifications/notificationsApi';
 
 const MAX_VISIBLE = 80;
 
@@ -18,9 +26,24 @@ export function useNotificationMenu() {
   const notifications = useAppSelector((s) => s.socket.notifications);
   const settings = useAppSelector((s) => s.socket.notificationSettings);
   const role = useAppSelector((s) => s.auth.role);
+  const isAuthed = Boolean(role);
 
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<TabKey>('all');
+
+  const { data: apiNotifications } = useGetNotificationsQuery(undefined, {
+    skip: !isAuthed,
+    refetchOnMountOrArgChange: 30,
+  });
+  const [markAsReadApi] = useMarkNotificationAsReadMutation();
+  const [markAllAsReadApi] = useMarkAllNotificationsAsReadMutation();
+  const [deleteAllApi] = useDeleteAllNotificationsMutation();
+
+  useEffect(() => {
+    if (apiNotifications?.length !== undefined) {
+      dispatch(setNotificationsFromApi(apiNotifications));
+    }
+  }, [apiNotifications, dispatch]);
 
   const unread = notifications.filter((n) => !n.read).length;
 
@@ -73,9 +96,30 @@ export function useNotificationMenu() {
 
   const handleClose = () => setOpen(false);
 
-  const handleMarkAllRead = () => dispatch(markAllRead());
-  const handleClearAll = () => dispatch(clearNotifications());
-  const handleMarkRead = (id: string) => dispatch(markRead(id));
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllAsReadApi().unwrap();
+      dispatch(markAllRead());
+    } catch {
+      dispatch(markAllRead());
+    }
+  };
+
+  const handleClearAll = async () => {
+    try {
+      await deleteAllApi().unwrap();
+      dispatch(clearNotifications());
+    } catch {
+      // Don't clear on API failure — data would reappear on F5
+    }
+  };
+
+  const handleMarkRead = async (id: string) => {
+    dispatch(markRead(id));
+    if (isNotificationIdFromBackend(id)) {
+      markAsReadApi(id).catch(() => {});
+    }
+  };
   const handleSettings = (patch: Partial<typeof settings>) =>
     dispatch(setNotificationSettings(patch));
 
