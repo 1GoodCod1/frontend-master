@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect, KeyboardEvent } from 'react';
 import { Send, Paperclip, X, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -77,8 +78,22 @@ export default function ChatInput({
             })
             .filter((id): id is string => typeof id === 'string' && id.length > 0);
           fileIds = [...fileIds, ...ids];
+          if (ids.length === 0) {
+            toast.error(t('common.uploadFailed'));
+            return;
+          }
+        } else {
+          toast.error(t('common.uploadFailed'));
+          return;
         }
-      } catch {
+      } catch (err) {
+        const errObj = err && typeof err === 'object' ? (err as Record<string, unknown>) : null;
+        const data = errObj?.data;
+        const msg =
+          data && typeof data === 'object' && data !== null && 'message' in data
+            ? String((data as { message?: unknown }).message ?? t('common.uploadFailed'))
+            : t('common.uploadFailed');
+        toast.error(msg);
         return;
       }
     }
