@@ -67,7 +67,6 @@ interface SystemStats {
     newUsers: number;
     newLeads: number;
     newReviews: number;
-    revenue: number;
   };
 }
 
@@ -568,7 +567,6 @@ export default function SystemPage() {
                   <StatCard title={t('admin.system.newUsersToday')} value={stats.daily.newUsers} color={isDark ? '#4caf50' : '#66bb6a'} />
                   <StatCard title={t('admin.system.newLeadsToday')} value={stats.daily.newLeads} color={isDark ? '#9e9e9e' : '#4A90E2'} />
                   <StatCard title={t('admin.system.newReviewsToday')} value={stats.daily.newReviews} color={isDark ? '#ff9800' : '#ffa726'} />
-                  <StatCard title={t('admin.system.revenueToday')} value={`${stats.daily.revenue.toFixed(2)} MDL`} color={isDark ? '#4caf50' : '#66bb6a'} />
                 </div>
                 <DailyMetricsChart data={stats.daily} />
               </div>

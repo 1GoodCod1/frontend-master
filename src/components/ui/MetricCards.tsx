@@ -6,7 +6,6 @@ import {
   ClipboardList,
   Star,
   CreditCard,
-  TrendingUp,
   UserPlus,
   Mail,
 } from 'lucide-react';
@@ -26,7 +25,6 @@ const metricConfig: Record<
   totalLeads: { labelKey: 'totalLeads', icon: <ClipboardList className="size-5" />, colorClass: 'bg-violet-500/15 text-violet-600 dark:text-violet-400' },
   totalReviews: { labelKey: 'totalReviews', icon: <Star className="size-5" />, colorClass: 'bg-amber-500/15 text-amber-600 dark:text-amber-400' },
   totalPayments: { labelKey: 'totalPayments', icon: <CreditCard className="size-5" />, colorClass: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' },
-  revenue: { labelKey: 'revenueToday', icon: <TrendingUp className="size-5" />, colorClass: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' },
   newUsers: { labelKey: 'newUsersToday', icon: <UserPlus className="size-5" />, colorClass: 'bg-blue-500/15 text-blue-600 dark:text-blue-400' },
   newLeads: { labelKey: 'newLeadsToday', icon: <Mail className="size-5" />, colorClass: 'bg-violet-500/15 text-violet-600 dark:text-violet-400' },
   newReviews: { labelKey: 'newReviewsToday', icon: <Star className="size-5" />, colorClass: 'bg-amber-500/15 text-amber-600 dark:text-amber-400' },
@@ -74,16 +72,6 @@ function pickMetrics(obj: unknown): Array<{
         colorClass: metricConfig[key].colorClass,
       });
     }
-  }
-
-  if (isFiniteNumber(daily.revenue) && metricConfig.revenue) {
-    metrics.push({
-      key: 'revenue',
-      labelKey: metricConfig.revenue.labelKey,
-      value: daily.revenue,
-      icon: metricConfig.revenue.icon,
-      colorClass: metricConfig.revenue.colorClass,
-    });
   }
 
   return metrics.slice(0, 8);

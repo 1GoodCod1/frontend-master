@@ -97,7 +97,7 @@ export default function DashboardPage() {
     }).unwrap();
   };
 
-  if (stats.isLoading || leadsStats.isLoading || profile.isLoading) {
+  if (stats.isLoading || leadsStats.isLoading || profile.isLoading || analytics.isLoading) {
     return <LoadingState label={t('dashboard.loading')} />;
   }
   if (stats.isError) return <ErrorState error={stats.error} onRetry={stats.refetch} />;
@@ -154,16 +154,9 @@ export default function DashboardPage() {
     return compact ? formatDateCompact(d, locale) : formatDateShort(dayKey, locale);
   };
 
-  const todayKey = toLocalDayKey(new Date());
-  const hasAppliedToday = rawChartData.some(
-    (item: unknown) =>
-      toLocalDayKey((item as { date?: unknown }).date) !== '' && toLocalDayKey((item as { date?: unknown }).date) === todayKey
-  );
   const chartData = rawChartData
     .map((item: unknown) => {
       const dayKey = toLocalDayKey((item as { date?: unknown }).date);
-      const isToday = dayKey !== '' && dayKey === todayKey;
-
       const baseViews = Number((item as { viewsCount?: unknown; views?: unknown }).viewsCount ?? (item as { viewsCount?: unknown; views?: unknown }).views ?? 0);
       const baseLeads = Number((item as { leadsCount?: unknown; leads?: unknown }).leadsCount ?? (item as { leadsCount?: unknown; leads?: unknown }).leads ?? 0);
 
@@ -171,24 +164,13 @@ export default function DashboardPage() {
         dayKey,
         date: dayKey ? formatDayLabel(dayKey) : '',
         dateCompact: dayKey ? formatDayLabel(dayKey, true) : '',
-        views: isToday ? Math.max(baseViews, viewsToday) : baseViews,
-        leads: isToday ? Math.max(baseLeads, leadsToday) : baseLeads,
+        views: baseViews,
+        leads: baseLeads,
       };
     })
     .filter((item) => item.dayKey !== '')
     .sort((a, b) => a.dayKey.localeCompare(b.dayKey))
     .slice(-14);
-
-  // If today isn't in the chart data at all but we have data for today, append it
-  if (!hasAppliedToday && (viewsToday > 0 || leadsToday > 0)) {
-    chartData.push({
-      dayKey: todayKey,
-      date: formatDayLabel(todayKey),
-      dateCompact: formatDayLabel(todayKey, true),
-      views: viewsToday,
-      leads: leadsToday,
-    });
-  }
 
   return (
     <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8 space-y-6 sm:space-y-8 min-h-[calc(100vh-4rem)]">
@@ -289,7 +271,6 @@ export default function DashboardPage() {
                         textAnchor={isChartWide ? 'middle' : 'end'}
                         tick={{ fontSize: isChartWide ? 12 : 10, fill: 'hsl(var(--muted-foreground))' }}
                         dy={isChartWide ? 10 : 0}
-                        hide={chartData.length > 14}
                       />
                       <YAxis
                         allowDecimals={false}

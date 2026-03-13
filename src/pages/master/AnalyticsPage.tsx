@@ -4,7 +4,6 @@ import {
   TrendingUp,
   Eye,
   Star,
-  DollarSign,
   Download,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -19,25 +18,21 @@ import { LoadingState, ErrorState } from '@/components/common/States';
 import { LineChartCard } from '@/components/ui/LineChartCard';
 import { BarChartCard } from '@/components/ui/BarChartCard';
 import { StatCard } from '@/components/ui/StatCard';
-import { PageHeader } from '@/components/ui/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
 
 type ChartDataItem = {
   date: string;
   leads: number;
   views: number;
   reviews: number;
-  revenue: number;
   rating: number;
 };
 
 type ConversionData = { viewsToLeads?: number; leadsToBookings?: number; bookingsToReviews?: number };
-type RoiData = { roiPercent?: number; spent?: number; earned?: number };
 
 export default function AnalyticsPage() {
   const { t } = useTranslation();
@@ -87,77 +82,71 @@ export default function AnalyticsPage() {
   };
 
   const rawData = extractItems<Record<string, unknown>>(analyticsData?.data ?? data?.data ?? analyticsData ?? data);
-  const chartData: ChartDataItem[] = rawData.map((item) => ({
-    date: String(item.date ?? ''),
-    leads: readNumber(item, ['leadsCount', 'leads', 'totalLeads']),
-    views: readNumber(item, ['viewsCount', 'views', 'totalViews']),
-    reviews: readNumber(item, ['reviewsCount', 'reviews', 'totalReviews']),
-    revenue: readNumber(item, ['revenue', 'totalRevenue']),
-    rating: readNumber(item, ['rating', 'avgRating']),
-  }));
+  const chartData: ChartDataItem[] = rawData.map((item) => {
+    const rating = readNumber(item, ['rating', 'avgRating']);
+    return {
+      date: String(item.date ?? ''),
+      leads: readNumber(item, ['leadsCount', 'leads', 'totalLeads']),
+      views: readNumber(item, ['viewsCount', 'views', 'totalViews']),
+      reviews: readNumber(item, ['reviewsCount', 'reviews', 'totalReviews']),
+      rating,
+    };
+  });
 
-  const sectionHeader = (icon: React.ReactNode, title: string, subtitle: string) => (
-    <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
-      <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-500">{icon}</div>
-        <div>
-          <h2 className="text-lg font-semibold text-foreground tracking-tight">{title}</h2>
-          <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>
-        </div>
-      </div>
-    </div>
-  );
+  const blockClass = 'bg-card border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]';
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
-      <div className="mb-8">
-        <PageHeader
-          title={t('analyticsPage.title', 'Аналитика')}
-          subtitle={
-            isPremium
+    <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8 space-y-6 sm:space-y-8 min-h-[calc(100vh-4rem)] bg-muted/10 dark:bg-muted/5">
+      {/* Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('analyticsPage.title', 'Аналитика')}</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1">
+            {isPremium
               ? t('analyticsPage.subtitleBoost', 'Расширенная аналитика и прогнозы')
-              : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')
-          }
-          actions={
-            <div className="flex flex-wrap items-center gap-2">
-              {isPremium && (
-                <Badge variant="secondary" className="gap-1 font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 border-teal-200 dark:border-teal-700/50">
-                  <BarChart3 className="size-3.5" />
-                  {t('analyticsPage.premiumBadge', 'PREMIUM - Расширенная аналитика')}
-                </Badge>
-              )}
-              {isPremium && masterId && (
-                <Button
-                  size="sm"
-                  className="gap-1.5 border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
-                  onClick={async () => {
-                    try {
-                      await exportService.exportAnalyticsPDF(masterId, accessToken ?? undefined);
-                      toast.success(t('export.analyticsPDFSuccess'));
-                    } catch (err: unknown) {
-                      const msg = err instanceof Error ? err.message : t('export.exportFailed');
-                      toast.error(msg);
-                    }
-                  }}
-                >
-                  <Download className="size-4" />
-                  {t('export.exportPDF')}
-                </Button>
-              )}
-            </div>
-          }
-        />
+              : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {isPremium && (
+            <Badge variant="secondary" className="gap-1 font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 border-teal-200 dark:border-teal-700/50">
+              <BarChart3 className="size-3.5" />
+              {t('analyticsPage.premiumBadge', 'PREMIUM')}
+            </Badge>
+          )}
+          {isPremium && masterId && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 border-amber-500/50 dark:border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400"
+              onClick={async () => {
+                try {
+                  await exportService.exportAnalyticsPDF(masterId, accessToken ?? undefined);
+                  toast.success(t('export.analyticsPDFSuccess'));
+                } catch (err: unknown) {
+                  const msg = err instanceof Error ? err.message : t('export.exportFailed');
+                  toast.error(msg);
+                }
+              }}
+            >
+              <Download className="size-4" />
+              {t('export.exportPDF')}
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Summary */}
-      <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
-        {sectionHeader(
-          <BarChart3 className="size-5" />,
-          t('analyticsPage.summary', 'Основные показатели'),
-          t('analyticsPage.summarySubtitle', 'За последние {{days}} дней', { days: defaultDays })
-        )}
-        <CardContent className="p-6">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <Card className={`overflow-hidden ${blockClass}`}>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <BarChart3 className="size-5 text-indigo-500" />
+            {t('analyticsPage.summary', 'Основные показатели')}
+          </CardTitle>
+          <CardDescription className="text-sm">{t('analyticsPage.summarySubtitle', 'За последние {{days}} дней', { days: defaultDays })}</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <StatCard
               title={t('analyticsPage.totalLeads', 'Всего лидов')}
               value={readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}
@@ -174,15 +163,11 @@ export default function AnalyticsPage() {
             />
             <StatCard
               title={t('analyticsPage.totalReviews', 'Отзывы')}
-              value={readNumber(summary, ['totalReviews', 'reviewsCount', 'reviews'])}
+              value={readNumber(summary, ['masterTotalReviews', 'totalReviews', 'reviewsCount', 'reviews'])}
+              subtitle={readNumber(summary, ['masterRating']) > 0
+                ? `${t('analyticsPage.ratingChart', 'Рейтинг')}: ${readNumber(summary, ['masterRating']).toFixed(1)}`
+                : undefined}
               icon={<Star className="size-5 text-amber-500 opacity-70 dark:text-amber-400" />}
-            />
-            <StatCard
-              title={t('analyticsPage.totalRevenue', 'Выручка')}
-              value={`${readNumber(summary, ['totalRevenue', 'revenue'])} MDL`}
-              trend={trends?.revenueTrend as 'up' | 'down' | 'stable' | undefined}
-              changePercent={trends?.revenueChangePercent as number | undefined}
-              icon={<DollarSign className="size-5 text-emerald-600 opacity-70 dark:text-emerald-400" />}
             />
           </div>
         </CardContent>
@@ -190,162 +175,155 @@ export default function AnalyticsPage() {
 
       {/* Conversion (Premium) */}
       {isPremium && Boolean(conversion) && (
-        <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
-          {sectionHeader(
-            <TrendingUp className="size-5" />,
-            t('analyticsPage.conversion', 'Воронка продаж'),
-            t('analyticsPage.conversionSubtitle', 'Эффективность каждого этапа')
-          )}
-          <CardContent className="p-6">
-            <div className="grid gap-4 md:grid-cols-4">
-              <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08]">
+        <Card className={`overflow-hidden ${blockClass}`}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <TrendingUp className="size-5 text-indigo-500" />
+              {t('analyticsPage.conversion', 'Воронка продаж')}
+            </CardTitle>
+            <CardDescription className="text-sm">{t('analyticsPage.conversionSubtitle', 'Эффективность каждого этапа')}</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="flex flex-nowrap items-stretch gap-2 overflow-x-auto pb-2 sm:gap-4 sm:overflow-visible sm:pb-0">
+              <div className="flex flex-col items-center justify-center flex-shrink-0 w-[100px] sm:w-auto sm:flex-1 p-4 rounded-xl bg-background/80 dark:bg-background/50 border-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.views', 'Просмотры')}</span>
-                <span className="text-2xl font-black">{readNumber(summary, ['totalViews', 'viewsCount', 'views'])}</span>
+                <span className="text-2xl font-bold">{readNumber(summary, ['totalViews', 'viewsCount', 'views'])}</span>
               </div>
-              <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08] relative">
-                <div className="absolute -left-2 top-1/2 -translate-y-1/2 bg-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white z-10">
-                  {Number((conversion as ConversionData).viewsToLeads || 0).toFixed(1)}%
-                </div>
+              <div className="flex flex-shrink-0 items-center">
+                <span className="bg-blue-600 text-[10px] font-bold px-2 py-1 rounded-md text-white whitespace-nowrap">
+                  {Math.min(100, Number((conversion as ConversionData).viewsToLeads || 0)).toFixed(1)}%
+                </span>
+              </div>
+              <div className="flex flex-col items-center justify-center flex-shrink-0 w-[100px] sm:w-auto sm:flex-1 p-4 rounded-xl bg-background/80 dark:bg-background/50 border-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.leads', 'Лиды')}</span>
-                <span className="text-2xl font-black">{readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}</span>
+                <span className="text-2xl font-bold">{readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}</span>
               </div>
-              <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08] relative">
-                <div className="absolute -left-2 top-1/2 -translate-y-1/2 bg-amber-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white z-10">
-                  {Number((conversion as ConversionData).leadsToBookings || 0).toFixed(1)}%
-                </div>
+              <div className="flex flex-shrink-0 items-center">
+                <span className="bg-amber-600 text-[10px] font-bold px-2 py-1 rounded-md text-white whitespace-nowrap">
+                  {Math.min(100, Number((conversion as ConversionData).leadsToBookings || 0)).toFixed(1)}%
+                </span>
+              </div>
+              <div className="flex flex-col items-center justify-center flex-shrink-0 w-[100px] sm:w-auto sm:flex-1 p-4 rounded-xl bg-background/80 dark:bg-background/50 border-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.bookings', 'Записи')}</span>
-                <span className="text-2xl font-black">{Number(analyticsData.bookingsCount ?? 0)}</span>
+                <span className="text-2xl font-bold">{Number(analyticsData.bookingsCount ?? 0)}</span>
               </div>
-              <div className="flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-white/[0.04] rounded-xl border border-slate-100 dark:border-white/[0.08] relative">
-                <div className="absolute -left-2 top-1/2 -translate-y-1/2 bg-emerald-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white z-10">
-                  {Number((conversion as ConversionData).bookingsToReviews || 0).toFixed(1)}%
-                </div>
+              <div className="flex flex-shrink-0 items-center">
+                <span className="bg-emerald-600 text-[10px] font-bold px-2 py-1 rounded-md text-white whitespace-nowrap">
+                  {Math.min(100, Number((conversion as ConversionData).bookingsToReviews || 0)).toFixed(1)}%
+                </span>
+              </div>
+              <div className="flex flex-col items-center justify-center flex-shrink-0 w-[100px] sm:w-auto sm:flex-1 p-4 rounded-xl bg-background/80 dark:bg-background/50 border-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
                 <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.reviews', 'Отзывы')}</span>
-                <span className="text-2xl font-black">{readNumber(summary, ['totalReviews', 'reviewsCount', 'reviews'])}</span>
+                <span className="text-2xl font-bold">{readNumber(summary, ['totalReviews', 'reviewsCount', 'reviews'])}</span>
               </div>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* ROI & Insights (Premium) */}
-      {isPremium &&
-        (Boolean(analyticsData.roi) || Boolean(analyticsData.insights)) && (
-          <div className="grid gap-6 md:grid-cols-3 mb-6">
-            {analyticsData.roi != null && (
-              <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-emerald-200/50 dark:border-emerald-600/30 md:col-span-1">
-                <div className="border-b border-slate-100 dark:border-white/[0.08] bg-emerald-500/10 dark:bg-emerald-500/20 px-6 py-4">
-                  <h3 className="font-bold flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
-                    <DollarSign className="size-4" />
-                    {t('analyticsPage.roiTitle', 'ROI / Эффективность')}
-                  </h3>
-                </div>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-end">
-                      <span className="text-sm text-muted-foreground">{t('analyticsPage.roiPayback', 'Окупаемость')}:</span>
-                      <span className={cn(
-                        "text-2xl font-black",
-                        ((analyticsData.roi as RoiData)?.roiPercent ?? 0) > 0 ? "text-emerald-600" : "text-amber-500"
-                      )}>
-                        {(analyticsData.roi as RoiData)?.roiPercent ?? 0}%
-                      </span>
+      {/* Insights (Premium) */}
+      {isPremium && Array.isArray(analyticsData.insights) && analyticsData.insights.length > 0 && (
+        <Card className={`overflow-hidden border-l-4 border-l-blue-500 ${blockClass}`}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center gap-2 text-blue-700 dark:text-blue-400">
+              <TrendingUp className="size-5" />
+              {t('analyticsPage.insightsTitle')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <ul className="space-y-3">
+              {(analyticsData.insights as Array<string | { key: string; params?: Record<string, number | string> }>).map((insight, idx) => {
+                const text = typeof insight === 'string'
+                  ? insight
+                  : t(`analyticsPage.${insight.key}`, insight.params ?? {});
+                return (
+                  <li key={idx} className="text-sm flex gap-3 items-start">
+                    <div className="size-5 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="text-blue-600 dark:text-blue-400 font-black text-[10px]">{idx + 1}</span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-1.5">
-                      <div className="bg-emerald-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, (analyticsData.roi as RoiData)?.roiPercent ?? 0))}%` }} />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
-                        <p className="text-muted-foreground mb-1">{t('analyticsPage.roiSpent', 'Потрачено')}</p>
-                        <p className="font-bold">{(analyticsData.roi as RoiData).spent} MDL</p>
-                      </div>
-                      <div className="p-2 bg-slate-50 dark:bg-white/[0.06] rounded-lg">
-                        <p className="text-muted-foreground mb-1">{t('analyticsPage.roiEarned', 'Заработано')}</p>
-                        <p className="font-bold">{(analyticsData.roi as RoiData).earned} MDL</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {Array.isArray(analyticsData.insights) && (
-              <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-blue-200/50 dark:border-blue-600/30 md:col-span-2">
-                <div className="border-b border-slate-100 dark:border-white/[0.08] bg-blue-500/10 dark:bg-blue-500/20 px-6 py-4">
-                  <h3 className="font-bold flex items-center gap-2 text-blue-700 dark:text-blue-400">
-                    <TrendingUp className="size-4" />
-                    {t('analyticsPage.insightsTitle', 'Персональные инсайты')}
-                  </h3>
-                </div>
-                <CardContent className="p-6">
-                  <ul className="space-y-3">
-                    {(analyticsData.insights as string[]).map((insight, idx) => (
-                      <li key={idx} className="text-sm flex gap-3 items-start">
-                        <div className="size-5 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <span className="text-blue-600 dark:text-blue-400 font-black text-[10px]">{idx + 1}</span>
-                        </div>
-                        <p className="leading-relaxed">{insight}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        )}
+                    <p className="leading-relaxed">{text}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Comparison (Premium) */}
       {isPremium && Boolean(comparison) && (
-        <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
-          {sectionHeader(
-            <Eye className="size-5" />,
-            t('analyticsPage.comparison', 'Сравнение с конкурентами'),
-            t('analyticsPage.comparisonSubtitle', 'Ваша позиция в категории и городе')
-          )}
-          <CardContent className="p-6">
+        <Card className={`overflow-hidden ${blockClass}`}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Eye className="size-5 text-indigo-500" />
+              {t('analyticsPage.comparison')}
+            </CardTitle>
+            <CardDescription className="text-sm">{t('analyticsPage.comparisonSubtitle', 'Ваша позиция в категории и городе')}</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
             <div className="grid gap-4 md:grid-cols-2">
-              <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/30 dark:backdrop-blur-sm shadow-[0_2px_10px_-3px_rgba(6,81,237,0.06)] hover:shadow-[0_6px_24px_rgb(0,0,0,0.06)] dark:shadow-none dark:hover:bg-white/[0.03] transition-all duration-300">
-                <CardContent className="p-6">
-                  <h3 className="mb-4 text-base font-bold">
-                    {t('analyticsPage.categoryAverage', 'Средние показатели в категории')}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgLeads', 'Средние лиды')}</p>
-                      <p className="text-xl font-bold">{(Number((comparison.categoryAvg as { avgLeads?: number })?.avgLeads) || 0).toFixed(1)}</p>
-                    </div>
-                    <div>
-                      <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgViews', 'Средние просмотры')}</p>
-                      <p className="text-xl font-bold">{(Number((comparison.categoryAvg as { avgViews?: number })?.avgViews) || 0).toFixed(1)}</p>
-                    </div>
-                    <div>
-                      <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.yourPosition', 'Ваша позиция')}</p>
-                      <p className="text-xl font-bold text-amber-600 dark:text-amber-500">#{String((comparison.position as { inCategory?: number })?.inCategory ?? '—')}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/30 dark:backdrop-blur-sm shadow-[0_2px_10px_-3px_rgba(6,81,237,0.06)] hover:shadow-[0_6px_24px_rgb(0,0,0,0.06)] dark:shadow-none dark:hover:bg-white/[0.03] transition-all duration-300">
-                <CardContent className="p-6">
-                  <h3 className="mb-4 text-base font-bold">
-                    {t('analyticsPage.cityAverage', 'Средние показатели в городе')}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgLeads', 'Средние лиды')}</p>
-                      <p className="text-xl font-bold">{(Number((comparison.cityAvg as { avgLeads?: number })?.avgLeads) || 0).toFixed(1)}</p>
-                    </div>
-                    <div>
-                      <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgViews', 'Средние просмотры')}</p>
-                      <p className="text-xl font-bold">{(Number((comparison.cityAvg as { avgViews?: number })?.avgViews) || 0).toFixed(1)}</p>
-                    </div>
-                    <div>
-                      <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.yourPosition', 'Ваша позиция')}</p>
-                      <p className="text-xl font-bold text-amber-600 dark:text-amber-500">#{String((comparison.position as { inCity?: number })?.inCity ?? '—')}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              {(() => {
+                const cat = comparison.categoryAvg as { avgLeads?: number; avgViews?: number; mastersCount?: number };
+                const posCat = (comparison.position as { inCategory?: number })?.inCategory ?? 0;
+                const totalCat = (cat.mastersCount ?? 0) + 1;
+                const hasCompetitors = totalCat > 1;
+                const formatVal = (v: number) => (!hasCompetitors ? '—' : v.toFixed(1));
+                const formatPos = () => (!hasCompetitors ? '—' : `#${posCat} ${t('analyticsPage.ofTotal', 'из')} ${totalCat}`);
+                return (
+                  <Card className="border-0 shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)] bg-background/80 dark:bg-background/50">
+                    <CardContent className="p-5">
+                      <h3 className="mb-4 text-base font-bold">
+                        {t('analyticsPage.categoryAverage')}
+                      </h3>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgLeads')}</p>
+                          <p className="text-xl font-bold">{formatVal(Number(cat.avgLeads) || 0)}</p>
+                        </div>
+                        <div>
+                          <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgViews')}</p>
+                          <p className="text-xl font-bold">{formatVal(Number(cat.avgViews) || 0)}</p>
+                        </div>
+                        <div>
+                          <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.yourPosition')}</p>
+                          <p className="text-xl font-bold text-amber-600 dark:text-amber-500">{formatPos()}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })()}
+              {(() => {
+                const city = comparison.cityAvg as { avgLeads?: number; avgViews?: number; mastersCount?: number };
+                const posCity = (comparison.position as { inCity?: number })?.inCity ?? 0;
+                const totalCity = (city.mastersCount ?? 0) + 1;
+                const hasCompetitors = totalCity > 1;
+                const formatVal = (v: number) => (!hasCompetitors ? '—' : v.toFixed(1));
+                const formatPos = () => (!hasCompetitors ? '—' : `#${posCity} ${t('analyticsPage.ofTotal', 'из')} ${totalCity}`);
+                return (
+                  <Card className="border-0 shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)] bg-background/80 dark:bg-background/50">
+                    <CardContent className="p-5">
+                      <h3 className="mb-4 text-base font-bold">
+                        {t('analyticsPage.cityAverage')}
+                      </h3>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgLeads')}</p>
+                          <p className="text-xl font-bold">{formatVal(Number(city.avgLeads) || 0)}</p>
+                        </div>
+                        <div>
+                          <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.avgViews')}</p>
+                          <p className="text-xl font-bold">{formatVal(Number(city.avgViews) || 0)}</p>
+                        </div>
+                        <div>
+                          <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.yourPosition')}</p>
+                          <p className="text-xl font-bold text-amber-600 dark:text-amber-500">{formatPos()}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })()}
             </div>
           </CardContent>
         </Card>
@@ -353,26 +331,24 @@ export default function AnalyticsPage() {
 
       {/* Forecast (Premium) */}
       {isPremium && forecast && (
-        <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
-          {sectionHeader(
-            <TrendingUp className="size-5" />,
-            t('analyticsPage.forecast', 'Прогноз на следующую неделю'),
-            t('analyticsPage.forecastSubtitle', 'Прогнозируемые показатели')
-          )}
-          <CardContent className="p-6">
-            <div className="grid gap-4 md:grid-cols-3">
+        <Card className={`overflow-hidden ${blockClass}`}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <TrendingUp className="size-5 text-indigo-500" />
+              {t('analyticsPage.forecast', 'Прогноз на следующую неделю')}
+            </CardTitle>
+            <CardDescription className="text-sm">{t('analyticsPage.forecastSubtitle')}</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="grid gap-4 md:grid-cols-2">
               <StatCard
-                title={t('analyticsPage.forecastLeads', 'Прогноз лидов')}
+                title={t('analyticsPage.forecastLeads')}
                 value={Number(forecast.nextWeekLeads) || 0}
                 subtitle={t('analyticsPage.confidence', 'Уверенность: {{confidence}}%', { confidence: Number(forecast.confidence) || 0 })}
               />
               <StatCard
-                title={t('analyticsPage.forecastViews', 'Прогноз просмотров')}
+                title={t('analyticsPage.forecastViews')}
                 value={Number(forecast.nextWeekViews) || 0}
-              />
-              <StatCard
-                title={t('analyticsPage.forecastRevenue', 'Прогноз выручки')}
-                value={`${Number(forecast.nextWeekRevenue) || 0} MDL`}
               />
             </div>
           </CardContent>
@@ -380,46 +356,47 @@ export default function AnalyticsPage() {
       )}
 
       {/* Charts */}
-      <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
-        {sectionHeader(
-          <BarChart3 className="size-5" />,
-          t('analyticsPage.charts', 'Графики'),
-          t('analyticsPage.chartsSubtitle', 'Визуализация данных')
-        )}
-        <CardContent className="p-6">
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'overview' | 'details')} className="mb-6">
+      <Card className={`overflow-hidden ${blockClass}`}>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <BarChart3 className="size-5 text-indigo-500" />
+            {t('analyticsPage.charts', 'Графики')}
+          </CardTitle>
+          <CardDescription className="text-sm">{t('analyticsPage.chartsSubtitle')}</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'overview' | 'details')} className="mb-4">
             <TabsList>
               <TabsTrigger value="overview">{t('analyticsPage.tabOverview', 'Обзор')}</TabsTrigger>
-              {isPremium && <TabsTrigger value="details">{t('analyticsPage.tabDetails', 'Детали')}</TabsTrigger>}
+              {isPremium && <TabsTrigger value="details">{t('analyticsPage.tabDetails')}</TabsTrigger>}
             </TabsList>
 
-            <TabsContent value="overview" className="mt-6">
+            <TabsContent value="overview" className="mt-4">
               <div className="grid gap-6 md:grid-cols-2">
                 <LineChartCard
-                  title={t('analyticsPage.leadsChart', 'Лиды')}
+                  title={t('analyticsPage.leadsChart')}
                   data={chartData.map((d) => ({ date: d.date, value: d.leads }))}
+                  color="emerald"
                 />
                 <LineChartCard
-                  title={t('analyticsPage.viewsChart', 'Просмотры')}
+                  title={t('analyticsPage.viewsChart')}
                   data={chartData.map((d) => ({ date: d.date, value: d.views }))}
+                  color="blue"
                 />
                 <LineChartCard
-                  title={t('analyticsPage.reviewsChart', 'Отзывы')}
+                  title={t('analyticsPage.reviewsChart')}
                   data={chartData.map((d) => ({ date: d.date, value: d.reviews }))}
-                />
-                <LineChartCard
-                  title={t('analyticsPage.revenueChart', 'Выручка')}
-                  data={chartData.map((d) => ({ date: d.date, value: d.revenue }))}
+                  color="amber"
                 />
               </div>
             </TabsContent>
 
             {isPremium && (
-              <TabsContent value="details" className="mt-6">
+              <TabsContent value="details" className="mt-4">
                 <div className="grid gap-6 md:grid-cols-2">
                   {peakHours.length > 0 && (
                     <BarChartCard
-                      title={t('analyticsPage.peakHours', 'Пиковые часы')}
+                      title={t('analyticsPage.peakHours')}
                       data={peakHours.map((h: Record<string, unknown>) => ({
                         hour: `${h.hour}:00`,
                         leads: Number(h.leadsCount),
@@ -430,7 +407,7 @@ export default function AnalyticsPage() {
                   )}
                   {topSources.length > 0 && (
                     <BarChartCard
-                      title={t('analyticsPage.topSources', 'Топ источники')}
+                      title={t('analyticsPage.topSources')}
                       data={topSources.map((s: Record<string, unknown>) => ({
                         source: String(s.source),
                         leads: Number(s.leads),
@@ -440,8 +417,13 @@ export default function AnalyticsPage() {
                     />
                   )}
                   <LineChartCard
-                    title={t('analyticsPage.ratingChart', 'Рейтинг')}
-                    data={chartData.map((d) => ({ date: d.date, value: d.rating }))}
+                    title={t('analyticsPage.ratingChart')}
+                    data={chartData.map((d) => ({
+                      date: d.date,
+                      value: d.rating > 0 ? d.rating : null,
+                    }))}
+                    color="teal"
+                    allowDecimals
                   />
                 </div>
               </TabsContent>
@@ -451,9 +433,9 @@ export default function AnalyticsPage() {
       </Card>
 
       {!isPremium && !isVip && (
-        <Alert className="rounded-lg border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-white/[0.04]">
+        <Alert className="rounded-xl border-border bg-muted/50">
           <AlertDescription>
-            {t('analyticsPage.upgradeMessage', 'Обновите тариф до VIP или PREMIUM для доступа к аналитике')}
+            {t('analyticsPage.upgradeMessage')}
           </AlertDescription>
         </Alert>
       )}

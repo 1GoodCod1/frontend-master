@@ -17,7 +17,7 @@ export function StatCard({ title, value, trend, changePercent, subtitle, icon }:
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
 
   return (
-    <Card>
+    <Card className="border-0 shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
       <CardContent className="pt-6">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row items-center justify-between gap-2">
