@@ -13,8 +13,9 @@ import { StatCard } from '@/components/ui/StatCard';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { AvailabilityControl } from '@/features/masters/components/master/AvailabilityControl';
 import { extractItems } from '@/utils/data';
-import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
+import { formatDateShort, formatDateCompact, getLocaleFromLanguage } from '@/utils/date';
 import { useState, useRef, useEffect } from 'react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -60,6 +61,7 @@ export default function DashboardPage() {
   const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
   const [viewsHistoryOpen, setViewsHistoryOpen] = useState(false);
   const successTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isChartWide = useMediaQuery('(min-width: 640px)');
 
   useEffect(() => {
     return () => {
@@ -142,12 +144,14 @@ export default function DashboardPage() {
     return `${year}-${month}-${day}`;
   };
 
-  const formatDayLabel = (dayKey: string): string => {
+  const formatDayLabel = (dayKey: string, compact = false): string => {
     if (/^\d{4}-\d{2}-\d{2}$/.test(dayKey)) {
       const [year, month, day] = dayKey.split('-').map(Number);
-      return formatDateShort(new Date(year, month - 1, day), locale);
+      const d = new Date(year, month - 1, day);
+      return compact ? formatDateCompact(d, locale) : formatDateShort(d, locale);
     }
-    return formatDateShort(dayKey, locale);
+    const d = new Date(dayKey);
+    return compact ? formatDateCompact(d, locale) : formatDateShort(dayKey, locale);
   };
 
   const todayKey = toLocalDayKey(new Date());
@@ -166,6 +170,7 @@ export default function DashboardPage() {
       return {
         dayKey,
         date: dayKey ? formatDayLabel(dayKey) : '',
+        dateCompact: dayKey ? formatDayLabel(dayKey, true) : '',
         views: isToday ? Math.max(baseViews, viewsToday) : baseViews,
         leads: isToday ? Math.max(baseLeads, leadsToday) : baseLeads,
       };
@@ -176,21 +181,21 @@ export default function DashboardPage() {
 
   // If today isn't in the chart data at all but we have data for today, append it
   if (!hasAppliedToday && (viewsToday > 0 || leadsToday > 0)) {
-    const todayLabel = formatDayLabel(todayKey);
     chartData.push({
       dayKey: todayKey,
-      date: todayLabel,
+      date: formatDayLabel(todayKey),
+      dateCompact: formatDayLabel(todayKey, true),
       views: viewsToday,
       leads: leadsToday,
     });
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6 lg:px-8 space-y-8 min-h-[calc(100vh-4rem)]">
+    <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8 space-y-6 sm:space-y-8 min-h-[calc(100vh-4rem)]">
       {/* Header Section */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t('dashboard.title', 'Дашборд')}</h1>
-        <p className="text-muted-foreground mt-1">{t('dashboard.subtitle', 'Обзор вашей активности и статистики')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('dashboard.title', 'Дашборд')}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-1">{t('dashboard.subtitle', 'Обзор вашей активности и статистики')}</p>
       </div>
 
       <PushPermissionBanner />
@@ -231,27 +236,35 @@ export default function DashboardPage() {
 
           {/* Charts Section */}
           <Card className="shadow-sm overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <div>
-                <CardTitle className="text-xl">{t('dashboard.activityTrend', 'График активности')}</CardTitle>
-                <CardDescription>{t('dashboard.viewsAndLeadsTrend', 'Динамика просмотров и заявок за последние 14 дней')}</CardDescription>
+            <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-2">
+              <div className="min-w-0">
+                <CardTitle className="text-lg sm:text-xl">{t('dashboard.activityTrend', 'График активности')}</CardTitle>
+                <CardDescription className="text-sm">{t('dashboard.viewsAndLeadsTrend', 'Динамика просмотров и заявок за последние 14 дней')}</CardDescription>
               </div>
-              <div className="flex gap-4 text-sm font-medium">
+              <div className="flex gap-3 sm:gap-4 text-xs sm:text-sm font-medium shrink-0">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 shrink-0"></div>
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-blue-500 shrink-0"></div>
                   <span className="text-muted-foreground">{t('dashboard.views', 'Просмотры')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-emerald-500 shrink-0"></div>
+                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 shrink-0"></div>
                   <span className="text-muted-foreground">{t('dashboard.leads', 'Заявки')}</span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-6">
-              <div className="h-[300px] min-h-[200px] w-full mt-4">
+            <CardContent className="pt-4 sm:pt-6">
+              <div className="h-[260px] min-h-[200px] sm:h-[280px] w-full mt-2 sm:mt-4">
                 {chartData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={280} minHeight={200}>
-                    <AreaChart data={chartData} margin={{ top: 10, right: 50, left: 0, bottom: 0 }}>
+                  <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+                    <AreaChart
+                      data={chartData}
+                      margin={{
+                        top: 10,
+                        right: isChartWide ? 20 : 10,
+                        left: isChartWide ? 0 : -10,
+                        bottom: isChartWide ? 0 : 50,
+                      }}
+                    >
                       <defs>
                         <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
@@ -263,18 +276,31 @@ export default function DashboardPage() {
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
-                      <XAxis dataKey="date"
+                      <XAxis
+                        dataKey={isChartWide ? 'date' : 'dateCompact'}
                         axisLine={false}
                         tickLine={false}
-                        tickFormatter={(val, i) => i % 2 !== 0 ? '' : val}
-                        tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
-                        dy={10}
+                        tickFormatter={(val, i) => {
+                          if (isChartWide) return i % 2 !== 0 ? '' : val;
+                          return i % 3 !== 0 ? '' : val;
+                        }}
+                        interval={isChartWide ? 'preserveStartEnd' : 0}
+                        angle={isChartWide ? 0 : -45}
+                        textAnchor={isChartWide ? 'middle' : 'end'}
+                        tick={{ fontSize: isChartWide ? 12 : 10, fill: 'hsl(var(--muted-foreground))' }}
+                        dy={isChartWide ? 10 : 0}
                         hide={chartData.length > 14}
                       />
-                      <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} width={35} />
+                      <YAxis
+                        allowDecimals={false}
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: isChartWide ? 12 : 10, fill: 'hsl(var(--muted-foreground))' }}
+                        width={isChartWide ? 35 : 28}
+                      />
                       <RechartsTooltip content={<ChartTooltip />} />
-                      <Area type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorViews)" />
-                      <Area type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
+                      <Area type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={isChartWide ? 3 : 2} fillOpacity={1} fill="url(#colorViews)" />
+                      <Area type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={isChartWide ? 3 : 2} fillOpacity={1} fill="url(#colorLeads)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 ) : (

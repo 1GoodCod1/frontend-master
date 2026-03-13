@@ -50,6 +50,19 @@ export function formatDateTimeString(
   });
 }
 
+/** Date compact for charts (day + short month, no year). */
+export function formatDateCompact(
+  dateInput: string | Date | null | undefined,
+  locale: string = LOCALE_RU
+): string {
+  if (dateInput == null) return '—';
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  return date.toLocaleDateString(locale, {
+    day: '2-digit',
+    month: 'short',
+  });
+}
+
 /** Date only (short). */
 export function formatDateShort(
   dateInput: string | Date | null | undefined,

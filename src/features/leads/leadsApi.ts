@@ -70,7 +70,7 @@ export const leadsApi = api.injectEndpoints({
 
     leadsUpdateStatus: build.mutation<LeadDto, { id: string; body: UpdateLeadStatusDto }>({
       query: ({ id, body }) => ({ url: `/leads/${id}/status`, method: 'PATCH', data: body }),
-      invalidatesTags: ['Leads'],
+      invalidatesTags: ['Leads', 'Master'],
       async onQueryStarted({ id, body }, { dispatch, queryFulfilled }) {
         const patcher = (args: { limit?: number; page?: number; status?: string } | void) =>
           dispatch(
