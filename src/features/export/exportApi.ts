@@ -35,8 +35,13 @@ export const exportService = {
     await downloadFile(url, filename, accessToken);
   },
 
-  async exportAnalyticsPDF(masterId: string, accessToken?: string) {
-    const url = `${env.apiUrl}/export/analytics/pdf/${masterId}`;
+  async exportAnalyticsPDF(
+    masterId: string,
+    accessToken?: string,
+    locale?: string,
+  ) {
+    const params = locale ? `?locale=${locale}` : '';
+    const url = `${env.apiUrl}/export/analytics/pdf/${masterId}${params}`;
     const filename = `analytics_${masterId}_${new Date().toISOString().split('T')[0]}.pdf`;
     await downloadFile(url, filename, accessToken);
   },

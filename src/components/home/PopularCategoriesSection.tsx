@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { ErrorState } from '@/components/common/States';
 import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesApi';
 import { useUserCity } from '@/hooks/useUserCity';
 import { cn } from '@/lib/utils';
@@ -90,7 +91,7 @@ function CategoryCardSkeleton() {
 
 export const PopularCategoriesSection = () => {
     const { t, i18n } = useTranslation();
-    const { data, isLoading } = useCategoriesWithCountsQuery();
+    const { data, isLoading, isError, error, refetch } = useCategoriesWithCountsQuery();
     const { citySlug } = useUserCity();
     const [expanded, setExpanded] = useState(false);
 
@@ -110,6 +111,22 @@ export const PopularCategoriesSection = () => {
                         <CategoryCardSkeleton key={i} />
                     ))}
                 </div>
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div className="mb-6 md:mb-8">
+                <div className="mb-6 text-center">
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1.5">
+                        {t('home.popularCategories.title')}
+                    </h2>
+                    <p className="text-muted-foreground text-[0.9375rem] mb-4">
+                        {t('home.popularCategories.subtitle')}
+                    </p>
+                </div>
+                <ErrorState error={error} onRetry={refetch} />
             </div>
         );
     }

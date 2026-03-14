@@ -1,4 +1,4 @@
-import { createTransform } from 'redux-persist';
+import { createTransform, type PersistedState } from 'redux-persist';
 
 const PERSISTED_ENDPOINT_PREFIXES = [
   'categoriesList',
@@ -35,4 +35,38 @@ export const persistApiCacheTransform = createTransform(
   null
 );
 
-export const API_CACHE_PERSIST_VERSION = 1;
+export const API_CACHE_PERSIST_VERSION = 3;
+
+/** Keys to purge on migration (stale data in normal browser) */
+const PURGE_QUERY_PREFIXES = [
+  'categoriesList',
+  'categoriesWithCounts',
+  'categoriesById',
+  'mastersPopular',
+  'mastersNew',
+];
+
+function purgeQueries(queries: Record<string, unknown>): Record<string, unknown> {
+  const filtered: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(queries)) {
+    const shouldPurge = PURGE_QUERY_PREFIXES.some((p) => key.startsWith(p));
+    if (!shouldPurge) filtered[key] = value;
+  }
+  return filtered;
+}
+
+export function migrateApiCache(
+  state: PersistedState,
+  _version: number
+): Promise<PersistedState> {
+  if (!state || typeof state !== 'object') return Promise.resolve(state as PersistedState);
+  const s = state as Record<string, unknown> & { _persist?: { version?: number } };
+  const storedVersion = s._persist?.version ?? 0;
+  if (storedVersion >= API_CACHE_PERSIST_VERSION) return Promise.resolve(state);
+  const queries = s.queries;
+  if (queries && typeof queries === 'object') {
+    const migrated = { ...s, queries: purgeQueries(queries as Record<string, unknown>) };
+    return Promise.resolve(migrated as unknown as PersistedState);
+  }
+  return Promise.resolve(state);
+}

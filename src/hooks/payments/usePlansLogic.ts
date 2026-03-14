@@ -9,7 +9,7 @@ import {
 } from '@/features/payments/paymentsApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole, selectIsVerified } from '@/features/auth/selectors';
-import { PaidTariff, TariffPlan, effectivePlanFromMasterProfile } from '@/features/auth/plan';
+import { PaidTariff, TariffPlan, effectivePlanFromMasterProfile, isPlan } from '@/features/auth/plan';
 import { useGetActiveTariffsQuery } from '@/features/tariffs/tariffsApi';
 import { plans, type PlanUI } from '@/types/plans';
 
@@ -74,10 +74,23 @@ export function usePlansLogic() {
         pendingUpgrade && typeof pendingUpgrade.to === 'string' ? pendingUpgrade.to : undefined;
     const cancelAtPeriodEnd = tariff.tariffCancelAtPeriodEnd === true;
 
-    const effectivePlan: TariffPlan =
-        isAuthed && myProfile.data
+    // Use tariff API as source of truth for masters (has isExpired); profile can be stale
+    const effectivePlan: TariffPlan = (() => {
+        if (!isMaster) {
+            return isAuthed && myProfile.data
+                ? effectivePlanFromMasterProfile(unwrapEnvelope(myProfile.data))
+                : 'BASIC';
+        }
+        if (isRecord(rawTariff) && rawTariff.tariffType != null) {
+            const expired = rawTariff.isExpired === true;
+            const type = rawTariff.tariffType;
+            if (expired) return 'BASIC';
+            return isPlan(type) ? type : 'BASIC';
+        }
+        return myProfile.data
             ? effectivePlanFromMasterProfile(unwrapEnvelope(myProfile.data))
             : 'BASIC';
+    })();
 
 
 
@@ -201,7 +214,9 @@ export function usePlansLogic() {
         isExpired,
         pendingUpgrade,
         plansToShow,
-        isLoading: (isMaster && myProfile.isLoading) || tariffsLoading,
+        isLoading:
+            (isMaster && (myProfile.isLoading || myTariff.isLoading)) ||
+            tariffsLoading,
         checkoutLoading: false,
         claimLoading: claimState.isLoading,
         confirmLoading: false,

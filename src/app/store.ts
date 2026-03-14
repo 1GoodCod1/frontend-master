@@ -19,13 +19,19 @@ import authReducer from '@/features/auth/authSlice';
 import socketReducer from '@/features/socket/socketSlice';
 import uiReducer from '@/features/ui/uiSlice';
 import chatReducer from '@/features/chat/chatSlice';
-import { persistApiCacheTransform } from './persistApiCache';
+import {
+  persistApiCacheTransform,
+  API_CACHE_PERSIST_VERSION,
+  migrateApiCache,
+} from './persistApiCache';
 
 // API cache: persist only Categories/Cities (via transform)
 const apiPersistConfig = {
   key: 'mh_api',
+  version: API_CACHE_PERSIST_VERSION,
   storage: safePersistStorage,
   transforms: [persistApiCacheTransform],
+  migrate: migrateApiCache,
 };
 const persistedApiReducer = persistReducer(apiPersistConfig, api.reducer);
 

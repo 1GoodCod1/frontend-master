@@ -6,11 +6,9 @@ import {
   Heart,
   Share2,
   Clock,
-  CheckCircle,
 } from 'lucide-react';
 import { LazyImage } from '@/components/ui/LazyImage';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
-import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { mediaUrl } from '@/utils/media';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,7 +52,7 @@ export const MasterProfileHero = ({
   categoryName: _categoryName,
   cityName: _cityName,
   rating,
-  isVerified,
+  isVerified: _isVerified,
   isOnline,
   lastActivityAt,
   isFavorite,
@@ -145,32 +143,12 @@ export const MasterProfileHero = ({
                   <AvatarPlaceholder role="master" height={112} variant="default" />
                 )}
               </div>
-              {isVerified && (
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 dark:bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                  <CheckCircle size={14} className="text-white" />
-                </div>
-              )}
-              {(isOnline || lastActivityAt) && (
-                <div className="absolute bottom-1 right-1">
-                  <OnlineStatusBadge
-                    isOnline={isOnline}
-                    lastActivityAt={lastActivityAt}
-                    variant="dot"
-                    size="medium"
-                  />
-                </div>
-              )}
             </div>
 
             {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-1">
                 <h1 className="text-2xl sm:text-3xl font-bold text-white">{title}</h1>
-                {isVerified && (
-                  <span className="bg-amber-50/95 dark:bg-amber-100/90 text-gray-600 dark:text-gray-700 text-xs px-3 py-1 rounded-full font-medium">
-                    {t('masters.verified')} ✓
-                  </span>
-                )}
               </div>
               {(isOnline || lastActivityAt) && (
                 <div className="flex flex-wrap items-center gap-1.5 text-sm mb-3">

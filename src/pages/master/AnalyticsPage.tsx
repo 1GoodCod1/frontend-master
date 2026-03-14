@@ -35,7 +35,7 @@ type ChartDataItem = {
 type ConversionData = { viewsToLeads?: number; leadsToBookings?: number; bookingsToReviews?: number };
 
 export default function AnalyticsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const plan = useAppSelector(selectPlan) ?? 'BASIC';
   const isPremium = plan === 'PREMIUM';
   const isVip = plan === 'VIP';
@@ -121,7 +121,8 @@ export default function AnalyticsPage() {
               className="gap-1.5 border-amber-500/50 dark:border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400"
               onClick={async () => {
                 try {
-                  await exportService.exportAnalyticsPDF(masterId, accessToken ?? undefined);
+                  const lang = i18n.language?.startsWith('ru') ? 'ru' : 'en';
+                  await exportService.exportAnalyticsPDF(masterId, accessToken ?? undefined, lang);
                   toast.success(t('export.analyticsPDFSuccess'));
                 } catch (err: unknown) {
                   const msg = err instanceof Error ? err.message : t('export.exportFailed');
