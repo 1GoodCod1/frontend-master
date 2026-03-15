@@ -45,10 +45,10 @@ export default function ChatMessage({
 
         <div
           className={cn(
-            'relative rounded-2xl px-3 py-2 shadow-sm',
+            'relative rounded-2xl px-4 py-2.5 shadow-sm',
             isOwn
-              ? 'rounded-tr-md bg-amber-600 text-white dark:bg-amber-600 dark:text-white'
-              : 'rounded-tl-md bg-muted dark:bg-white/10 dark:text-foreground',
+              ? 'rounded-br-md bg-gradient-to-r from-orange-500 to-amber-500 text-white'
+              : 'rounded-bl-md bg-white dark:bg-white/10 dark:text-foreground shadow-sm',
           )}
         >
           <p className="whitespace-pre-wrap break-words text-sm leading-snug">

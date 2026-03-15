@@ -29,7 +29,7 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
     return null;
   }
 
-  const wsBase = (env.wsUrl || '').replace(/\/$/, '');
+  const wsBase = (env.wsUrl || env.apiUrl || '').replace(/\/$/, '');
   const chatUrl = wsBase ? `${wsBase}/chat` : '/chat';
 
   chatSocket = io(chatUrl, {
@@ -95,11 +95,17 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
 
   chatSocket.on('chat:typing', (data: {
     conversationId: string;
-    userId: string;
-    userRole: 'CLIENT' | 'MASTER';
+    userId?: string;
+    userRole?: 'CLIENT' | 'MASTER';
     isTyping: boolean;
   }) => {
-    store.dispatch(setTyping(data));
+    if (!data.conversationId || typeof data.userId !== 'string') return;
+    store.dispatch(setTyping({
+      conversationId: data.conversationId,
+      userId: data.userId,
+      userRole: data.userRole === 'CLIENT' || data.userRole === 'MASTER' ? data.userRole : 'CLIENT',
+      isTyping: data.isTyping,
+    }));
   });
   chatSocket.on('chat:read', (data: {
     conversationId: string;

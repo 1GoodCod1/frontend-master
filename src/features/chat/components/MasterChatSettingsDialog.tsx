@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowDown, ArrowUp, MessageSquareMore, Plus, Trash2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -108,6 +108,9 @@ export function MasterChatSettingsDialog(props: Props) {
             </div>
             {t('chat.settings', 'Настройки чата')}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('chat.settingsDescription', 'Настройки шаблонов и автоответчика чата')}
+          </DialogDescription>
         </DialogHeader>
 
         <DialogBody>

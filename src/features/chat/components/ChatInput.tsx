@@ -1,9 +1,15 @@
 import { useState, useRef, useCallback, useEffect, KeyboardEvent } from 'react';
-import { Send, Paperclip, X, Sparkles } from 'lucide-react';
+import { Send, Paperclip, X, Smile } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
+import EmojiPicker, { type EmojiClickData, Theme } from 'emoji-picker-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Tooltip,
   TooltipContent,
@@ -23,8 +29,6 @@ export default function ChatInput({
   onTyping,
   disabled = false,
   placeholder,
-  quickReplies,
-  onManageQuickReplies,
 }: ChatInputProps) {
   const { t } = useTranslation();
   const [message, setMessage] = useState('');
@@ -133,37 +137,13 @@ export default function ChatInput({
 
   const canSend = !disabled && !isUploading && (message.trim().length > 0 || files.length > 0);
 
+  const handleEmojiClick = (data: EmojiClickData) => {
+    setMessage((prev) => prev + data.emoji);
+    handleTyping();
+  };
+
   return (
-    <div className="border-t border-border/60 bg-muted/20 p-2.5 sm:p-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
-      {(onManageQuickReplies || (quickReplies && quickReplies.length > 0)) && (
-        <div className="mb-2 flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {(quickReplies ?? []).map((qr) => (
-              <button
-                key={qr.id}
-                type="button"
-                className="max-w-[180px] sm:max-w-[240px] shrink-0 rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-medium text-amber-900 hover:bg-amber-500/15 dark:text-amber-200"
-                onClick={() => setMessage(qr.text)}
-                title={qr.text}
-              >
-                <span className="truncate">{qr.text}</span>
-              </button>
-            ))}
-          </div>
-          {onManageQuickReplies && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="ml-auto shrink-0 gap-2"
-              onClick={onManageQuickReplies}
-            >
-              <Sparkles className="size-4" />
-              {t('common.templates', 'Шаблоны')}
-            </Button>
-          )}
-        </div>
-      )}
+    <div className="border-t border-slate-200/80 dark:border-white/10 bg-white dark:bg-white/5 p-2.5 sm:p-3">
       {files.length > 0 && (
         <div className="mb-2 sm:mb-3 flex flex-wrap gap-1.5 sm:gap-2">
           {files.map((file, index) => (
@@ -187,7 +167,7 @@ export default function ChatInput({
         </div>
       )}
 
-      <div className="flex items-end gap-1.5 sm:gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 p-2 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-white/5 shadow-sm focus-within:ring-2 focus-within:ring-orange-500/20 focus-within:border-orange-500/40 dark:focus-within:ring-orange-500/15 dark:focus-within:border-orange-500/30 transition-all">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -195,7 +175,7 @@ export default function ChatInput({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="shrink-0 size-9 sm:size-10"
+                className="shrink-0 size-9 sm:size-10 rounded-xl text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={disabled || isUploading}
               >
@@ -215,8 +195,37 @@ export default function ChatInput({
           accept="image/*,.pdf,.doc,.docx,.txt"
         />
 
+        <Popover>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0 size-9 sm:size-10 rounded-xl text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80"
+                    disabled={disabled}
+                  >
+                    <Smile className="size-4 sm:size-5" />
+                  </Button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>{t('common.emoji')}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <PopoverContent className="w-auto p-0 border-0 shadow-none" align="start" side="top">
+            <EmojiPicker
+              onEmojiClick={handleEmojiClick}
+              theme={typeof document !== 'undefined' && document.documentElement?.classList?.contains('dark') ? Theme.DARK : Theme.LIGHT}
+              width={320}
+              height={360}
+            />
+          </PopoverContent>
+        </Popover>
+
         <Textarea
-          className="min-h-[36px] sm:min-h-[40px] max-h-20 sm:max-h-24 resize-none rounded-lg sm:rounded-xl border-border bg-background focus-visible:ring-2 focus-visible:ring-amber-500/50 dark:border-white/10 dark:bg-white/5 text-sm sm:text-base"
+          className="min-h-[36px] sm:min-h-[40px] max-h-20 sm:max-h-24 resize-none rounded-xl border-0 bg-transparent focus-visible:ring-0 focus-visible:shadow-none text-sm sm:text-base flex-1 placeholder:text-slate-400 dark:placeholder:text-white/50"
           placeholder={placeholder ?? defaultPlaceholder}
           value={message}
           onChange={(e) => {
@@ -231,14 +240,14 @@ export default function ChatInput({
         <Button
           type="button"
           size="icon"
-          className="size-9 sm:size-10 shrink-0 rounded-full bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500"
+          className="size-9 sm:size-10 shrink-0 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30 hover:shadow-orange-500/40 hover:opacity-95 transition-all"
           onClick={handleSend}
           disabled={!canSend}
         >
           {isUploading ? (
             <span className="size-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
           ) : (
-            <Send className="size-5" />
+            <Send className="size-4 sm:size-5" />
           )}
         </Button>
       </div>

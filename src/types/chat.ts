@@ -106,8 +106,6 @@ export interface ChatInputProps {
   onTyping?: (isTyping: boolean) => void;
   disabled?: boolean;
   placeholder?: string;
-  quickReplies?: QuickReply[];
-  onManageQuickReplies?: () => void;
 }
 
 export interface ChatMessageProps {

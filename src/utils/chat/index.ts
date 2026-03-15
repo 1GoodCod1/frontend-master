@@ -47,6 +47,31 @@ export function formatMessageTime(dateString: string): string {
   return date.toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' });
 }
 
+/** Date key for grouping messages (YYYY-MM-DD). */
+export function getMessageDateKey(dateString: string): string {
+  const d = new Date(dateString);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** Returns date label for divider: 'today' | 'yesterday' | formatted date. Use with i18n. */
+export function getMessageDateLabel(
+  dateString: string,
+  labels: { today: string; yesterday: string }
+): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return labels.today;
+  if (diffDays === 1) return labels.yesterday;
+  return date.toLocaleDateString(LOCALE, {
+    day: 'numeric',
+    month: 'short',
+    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+  });
+}
+
 /** Truncate text with ellipsis. */
 export function truncateMessage(text: string, maxLength: number = 50): string {
   if (text.length <= maxLength) return text;
@@ -96,7 +121,7 @@ export function getContactKey(conversation: Conversation | ConversationDetail, u
   return clientId ?? conversation.clientPhone ?? conversation.lead?.clientPhone ?? conversation.id;
 }
 
-/** One row per contact: keep the latest conversation per contact. */
+/** One row per contact: keep the latest conversation per contact, sum unreadCount across all conversations for that contact. */
 export function groupConversationsByContact(
   conversations: (Conversation | ConversationDetail)[],
   userRole: ChatUserRole
@@ -106,17 +131,39 @@ export function groupConversationsByContact(
       'lastMessage' in c && c.lastMessage ? c.lastMessage.createdAt : undefined;
     return new Date(lastMessageAt ?? c.updatedAt ?? c.createdAt ?? 0).getTime();
   };
-  const byContact = new Map<string, Conversation | ConversationDetail>();
+  const getUnread = (c: Conversation | ConversationDetail): number =>
+    'unreadCount' in c ? c.unreadCount : 0;
+
+  const byContact = new Map<
+    string,
+    { conv: Conversation | ConversationDetail; unreadTotal: number }
+  >();
+
   for (const c of conversations) {
     const key = getContactKey(c, userRole);
+    const unread = getUnread(c);
     const existing = byContact.get(key);
     const cTime = activityTime(c);
-    const exTime = existing ? activityTime(existing) : 0;
-    if (!existing || cTime > exTime) {
-      byContact.set(key, c);
+    const exTime = existing ? activityTime(existing.conv) : 0;
+
+    if (!existing) {
+      byContact.set(key, { conv: c, unreadTotal: unread });
+    } else {
+      const newUnreadTotal = existing.unreadTotal + unread;
+      if (cTime > exTime) {
+        byContact.set(key, { conv: c, unreadTotal: newUnreadTotal });
+      } else {
+        byContact.set(key, { conv: existing.conv, unreadTotal: newUnreadTotal });
+      }
     }
   }
-  return Array.from(byContact.values()).sort((a, b) => {
+
+  const result = Array.from(byContact.values()).map(({ conv, unreadTotal }) => ({
+    ...conv,
+    unreadCount: unreadTotal,
+  })) as (Conversation | ConversationDetail)[];
+
+  return result.sort((a, b) => {
     const aTime = activityTime(a);
     const bTime = activityTime(b);
     return bTime - aTime;

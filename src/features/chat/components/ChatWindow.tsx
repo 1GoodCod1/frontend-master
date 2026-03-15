@@ -12,9 +12,16 @@ import {
 import {
   setActiveConversation,
   selectTypingUsers,
+  selectChatConnected,
   markConversationRead,
 } from '@/features/chat/chatSlice';
-import { getFileUrl, getOtherPartyFromConversation, isValidConversationId } from '@/utils/chat';
+import {
+  getFileUrl,
+  getOtherPartyFromConversation,
+  getMessageDateKey,
+  getMessageDateLabel,
+  isValidConversationId,
+} from '@/utils/chat';
 import { joinConversation, leaveConversation, sendTyping, markAsReadWs } from '@/services/chatSocket';
 import type { ChatWindowProps } from '@/types/chat';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -36,6 +43,7 @@ import { MasterChatSettingsDialog } from './MasterChatSettingsDialog';
 export default function ChatWindow({
   conversationId,
   onBack,
+  currentUserId,
   currentUserRole,
 }: ChatWindowProps) {
   const { t } = useTranslation();
@@ -46,7 +54,9 @@ export default function ChatWindow({
   const isValid = isValidConversationId(conversationId);
   const validConversationId = isValid ? conversationId : undefined;
 
-  const typingUsers = useAppSelector(selectTypingUsers(validConversationId ?? ''));
+  const allTypingUsers = useAppSelector(selectTypingUsers(validConversationId ?? ''));
+  const typingUsers = allTypingUsers.filter((t) => t.userId && t.userId !== currentUserId);
+  const chatConnected = useAppSelector(selectChatConnected);
 
   const { data: conversation, isLoading: loadingConversation } = useGetConversationQuery(
     validConversationId ?? '',
@@ -78,12 +88,31 @@ export default function ChatWindow({
   useEffect(() => {
     if (!isValid || !validConversationId) return;
     dispatch(setActiveConversation(validConversationId));
-    joinConversation(validConversationId);
+    if (!chatConnected) return;
+
+    let cancelled = false;
+    let retryCount = 0;
+    const maxRetries = 8;
+
+    const tryJoin = () => {
+      if (cancelled) return;
+      joinConversation(validConversationId).then((res) => {
+        if (cancelled) return;
+        if (res.success) return;
+        if (res.error === 'Not connected' && retryCount < maxRetries) {
+          retryCount += 1;
+          setTimeout(tryJoin, 800);
+        }
+      });
+    };
+    tryJoin();
+
     return () => {
+      cancelled = true;
       dispatch(setActiveConversation(null));
       leaveConversation(validConversationId);
     };
-  }, [validConversationId, isValid, dispatch]);
+  }, [validConversationId, isValid, chatConnected, dispatch]);
 
   useEffect(() => {
     if (!isValid || !validConversationId) return;
@@ -94,14 +123,34 @@ export default function ChatWindow({
     markAsReadWs(validConversationId);
   }, [validConversationId, isValid, markAsRead, dispatch]);
 
+  const prevMessagesLengthRef = useRef(0);
+  const prevConversationRef = useRef<string | null>(null);
+
   useEffect(() => {
     const messages = messagesData?.messages ?? [];
-    if (messages.length === 0) return;
     const conversationKey = validConversationId ?? '';
-    const alreadyScrolled = didInitialScrollRef.current === conversationKey;
-    if (!alreadyScrolled) {
+    if (messages.length === 0) return;
+
+    if (prevConversationRef.current !== conversationKey) {
+      prevConversationRef.current = conversationKey;
+      prevMessagesLengthRef.current = 0;
+    }
+
+    const prevLen = prevMessagesLengthRef.current;
+    const messagesIncreased = messages.length > prevLen;
+    prevMessagesLengthRef.current = messages.length;
+
+    const shouldScroll = prevLen === 0 || messagesIncreased;
+
+    if (prevLen === 0) {
       didInitialScrollRef.current = conversationKey;
-      messagesEndRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' });
+    }
+
+    if (shouldScroll) {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: prevLen === 0 ? 'auto' : 'smooth',
+        block: 'end',
+      });
     }
   }, [messagesData?.messages, validConversationId]);
 
@@ -128,6 +177,21 @@ export default function ChatWindow({
     [conversation, currentUserRole]
   );
 
+  const messages = useMemo(
+    () => messagesData?.messages ?? [],
+    [messagesData?.messages]
+  );
+  const messagesByDate = useMemo(() => {
+    const groups = new Map<string, ChatMessageType[]>();
+    for (const msg of messages) {
+      const key = getMessageDateKey(msg.createdAt);
+      const list = groups.get(key) ?? [];
+      list.push(msg);
+      groups.set(key, list);
+    }
+    return Array.from(groups.entries()).map(([dateKey, msgs]) => ({ dateKey, msgs }));
+  }, [messages]);
+
   if (!isValid) {
     return (
       <div className="flex h-full items-center justify-center bg-background/50">
@@ -139,8 +203,6 @@ export default function ChatWindow({
   const leadStatus = conversation?.lead?.status;
   const isLeadActive = leadStatus && ['NEW', 'IN_PROGRESS'].includes(String(leadStatus));
   const canSendMessages = !conversation?.closedAt && Boolean(isLeadActive);
-
-  const messages = messagesData?.messages || [];
 
   if (loadingConversation) {
     return (
@@ -171,7 +233,7 @@ export default function ChatWindow({
   return (
     <div className="flex h-full flex-col bg-background">
       {/* Header */}
-      <div className="border-b border-border/60 bg-muted/20 px-3 sm:px-4 py-2.5 sm:py-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
+      <div className="border-b border-slate-200/80 dark:border-white/10 bg-white dark:bg-white/5 px-3 sm:px-4 py-2.5 sm:py-3">
         <div className="flex items-center gap-2 sm:gap-3">
           {onBack && (
             <Button variant="ghost" size="icon" className="shrink-0 size-9 sm:size-10 rounded-full" onClick={onBack}>
@@ -179,10 +241,22 @@ export default function ChatWindow({
             </Button>
           )}
 
-          <Avatar className="size-9 sm:size-11 shrink-0 border-2 border-amber-500/20 bg-amber-500/10 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-300">
-            <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
-            <AvatarFallback className="font-semibold">{otherParty?.name?.[0]?.toUpperCase() ?? '?'}</AvatarFallback>
-          </Avatar>
+          <div className="relative shrink-0">
+            <Avatar className="size-9 sm:size-11 bg-slate-600 dark:bg-slate-500 text-white">
+              <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
+              <AvatarFallback className="font-semibold bg-slate-600 dark:bg-slate-500 text-white">
+                {otherParty?.name
+                  ?.split(/\s+/)
+                  .map((n) => n[0])
+                  .join('')
+                  .toUpperCase()
+                  .slice(0, 2) ?? '?'}
+              </AvatarFallback>
+            </Avatar>
+            {currentUserRole === 'CLIENT' && otherParty?.isOnline && (
+              <span className="absolute bottom-0 left-0 size-2.5 rounded-full border-2 border-white dark:border-white/10 bg-emerald-500" />
+            )}
+          </div>
 
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm sm:text-base font-semibold text-foreground">{otherParty?.name ?? '—'}</p>
@@ -206,13 +280,19 @@ export default function ChatWindow({
             <Button
               variant="ghost"
               size="icon"
+              className="text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
               onClick={() => setSettingsOpen(true)}
               aria-label={t('chat.settings', 'Настройки чата')}
             >
               <MoreVertical className="size-5" />
             </Button>
           ) : (
-            <Button variant="ghost" size="icon" aria-label={t('common.more', 'Ещё')}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
+              aria-label={t('common.more', 'Ещё')}
+            >
               <MoreVertical className="size-5" />
             </Button>
           )}
@@ -220,7 +300,7 @@ export default function ChatWindow({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-auto bg-muted/10 py-3 sm:py-4 dark:bg-white/[0.02]">
+      <div className="flex-1 overflow-auto bg-muted/10 px-3 sm:px-4 py-3 sm:py-4 dark:bg-white/[0.02]">
         {loadingMessages ? (
           <div className="space-y-4 p-4">
             {[1, 2, 3, 4].map((i) => (
@@ -233,31 +313,71 @@ export default function ChatWindow({
                 )}
               />
             ))}
+            {typingUsers.length > 0 && (
+              <div className="flex items-center gap-2 rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2 w-fit">
+                <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
+              </div>
+            )}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex h-full items-center justify-center p-4 sm:p-6">
+          <div className="flex flex-col h-full items-center justify-center p-4 sm:p-6 gap-4">
             <p className="text-center text-xs sm:text-sm text-muted-foreground">
               {t('common.firstMessage')}
             </p>
+            {typingUsers.length > 0 && (
+              <div className="flex items-center gap-2 rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2">
+                <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
+              </div>
+            )}
           </div>
         ) : (
           <>
-            {messages.map((msg: ChatMessageType) => {
-              const isOwn =
-                (currentUserRole === 'CLIENT' && msg.senderType === 'CLIENT') ||
-                (currentUserRole === 'MASTER' && msg.senderType === 'MASTER');
+            {messagesByDate.map(({ dateKey, msgs }, index) => (
+              <div key={dateKey}>
+                <div
+                  className={cn(
+                    'flex items-center justify-center',
+                    index === 0 ? 'mt-0 mb-4' : 'my-4'
+                  )}
+                >
+                  <span className="px-3 py-1 rounded-full bg-muted/60 text-muted-foreground text-xs border border-slate-200/40 dark:border-transparent">
+                    {getMessageDateLabel(msgs[0].createdAt, {
+                      today: t('common.today'),
+                      yesterday: t('common.yesterday'),
+                    })}
+                  </span>
+                </div>
+                {msgs.map((msg: ChatMessageType) => {
+                  const isOwn =
+                    (currentUserRole === 'CLIENT' && msg.senderType === 'CLIENT') ||
+                    (currentUserRole === 'MASTER' && msg.senderType === 'MASTER');
 
-              return (
-                <ChatMessage
-                  key={msg.id}
-                  message={msg}
-                  isOwn={isOwn}
-                  showAvatar={true}
-                  avatarUrl={isOwn ? undefined : otherParty?.avatar}
-                  senderName={isOwn ? 'Я' : otherParty?.name}
-                />
-              );
-            })}
+                  return (
+                    <ChatMessage
+                      key={msg.id}
+                      message={msg}
+                      isOwn={isOwn}
+                      showAvatar={true}
+                      avatarUrl={isOwn ? undefined : otherParty?.avatar}
+                      senderName={isOwn ? 'Я' : otherParty?.name}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+            {typingUsers.length > 0 && (
+              <div className="flex items-end gap-2 mt-2">
+                <Avatar className="size-8 shrink-0">
+                  <AvatarImage src={otherParty?.avatar} alt="" />
+                  <AvatarFallback className="text-[10px] bg-slate-500 text-white">
+                    {(otherParty?.name ?? '?').slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2">
+                  <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </>
         )}
@@ -268,8 +388,6 @@ export default function ChatWindow({
           onSend={handleSend}
           onTyping={handleTyping}
           disabled={loadingMessages}
-          quickReplies={isMaster ? (quickRepliesData?.items ?? []) : undefined}
-          onManageQuickReplies={isMaster ? () => setSettingsOpen(true) : undefined}
         />
       )}
 

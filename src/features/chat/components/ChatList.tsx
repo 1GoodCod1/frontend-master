@@ -1,13 +1,8 @@
-import { MessageCircle, Circle } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { MessageCircle, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { useGetConversationsQuery, type Conversation } from '@/features/chat/chatApi';
 import {
   getFileUrl,
@@ -17,6 +12,8 @@ import {
 import type { ChatListProps } from '@/types/chat';
 import { cn } from '@/lib/utils';
 
+type ChatTab = 'all' | 'unread';
+
 export default function ChatList({
   onSelectConversation,
   selectedConversationId,
@@ -25,10 +22,35 @@ export default function ChatList({
   const { t } = useTranslation();
   const ns = userRole === 'CLIENT' ? 'clientDashboard' : 'dashboard';
 
+  const [searchText, setSearchText] = useState('');
+  const [activeTab, setActiveTab] = useState<ChatTab>('all');
+
   const { data: conversationsData, isLoading } = useGetConversationsQuery();
 
   const rawConversations = Array.isArray(conversationsData) ? conversationsData : [];
-  const conversations = groupConversationsByContact(rawConversations, userRole) as Conversation[];
+  const grouped = groupConversationsByContact(rawConversations, userRole) as Conversation[];
+
+  const unreadCount = useMemo(
+    () => grouped.filter((c) => ('unreadCount' in c ? c.unreadCount : 0) > 0).length,
+    [grouped]
+  );
+
+  const conversations = useMemo(() => {
+    let filtered = grouped;
+    if (activeTab === 'unread') {
+      filtered = filtered.filter((c) => ('unreadCount' in c ? c.unreadCount : 0) > 0);
+    }
+    if (searchText.trim()) {
+      const q = searchText.trim().toLowerCase();
+      filtered = filtered.filter((c) => {
+        const other = getOtherPartyFromConversation(c, userRole);
+        const name = (other?.name ?? '').toLowerCase();
+        const lastMsg = (c.lastMessage?.content ?? '').toLowerCase();
+        return name.includes(q) || lastMsg.includes(q);
+      });
+    }
+    return filtered;
+  }, [grouped, activeTab, searchText, userRole]);
 
   if (isLoading) {
     return (
@@ -46,99 +68,164 @@ export default function ChatList({
     );
   }
 
-  if (conversations.length === 0) {
-    return (
-      <div className="flex h-full min-h-[160px] sm:min-h-[200px] flex-col items-center justify-center p-4 sm:p-6 text-center">
-        <div className="mb-3 sm:mb-4 flex size-12 sm:size-16 items-center justify-center rounded-xl sm:rounded-2xl bg-amber-500/10 dark:bg-amber-500/20">
-          <MessageCircle className="size-6 sm:size-8 text-amber-600 dark:text-amber-400" />
-        </div>
-        <h3 className="text-xs sm:text-sm font-semibold text-foreground">{t(`${ns}.noActiveChats`)}</h3>
-        <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground">{t(`${ns}.noActiveChatsHint`)}</p>
+  const emptyStateAll = (
+    <div className="flex h-full min-h-[160px] sm:min-h-[200px] flex-col items-center justify-center p-4 sm:p-6 text-center">
+      <div className="mb-3 sm:mb-4 flex size-12 sm:size-16 items-center justify-center rounded-xl sm:rounded-2xl bg-orange-500/10 dark:bg-orange-500/20">
+        <MessageCircle className="size-6 sm:size-8 text-orange-600 dark:text-orange-400" />
       </div>
-    );
+      <h3 className="text-xs sm:text-sm font-semibold text-foreground">{t(`${ns}.noActiveChats`)}</h3>
+      <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground">{t(`${ns}.noActiveChatsHint`)}</p>
+    </div>
+  );
+
+  const emptyStateUnread = (
+    <div className="flex h-full min-h-[160px] sm:min-h-[200px] flex-col items-center justify-center p-4 sm:p-6 text-center">
+      <div className="mb-3 sm:mb-4 flex size-12 sm:size-16 items-center justify-center rounded-xl sm:rounded-2xl bg-orange-500/10 dark:bg-orange-500/20">
+        <MessageCircle className="size-6 sm:size-8 text-orange-600 dark:text-orange-400" />
+      </div>
+      <h3 className="text-xs sm:text-sm font-semibold text-foreground">{t('common.noUnreadChats')}</h3>
+      <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground">{t('common.noUnreadChatsHint')}</p>
+    </div>
+  );
+
+  if (grouped.length === 0) {
+    return emptyStateAll;
   }
 
   return (
-    <ul className="space-y-1 py-1">
-      {conversations.map((conv: Conversation) => {
-        const isSelected = conv.id === selectedConversationId;
-        const otherParty = getOtherPartyFromConversation(conv, userRole);
+    <div className="flex flex-col h-full">
+      <div className="p-3 sm:p-4 shrink-0">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 dark:text-white/50" />
+          <input
+            type="text"
+            placeholder={t(`${ns}.chatSearchPlaceholder`)}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-foreground placeholder:text-slate-400 dark:placeholder:text-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500/50 dark:focus:ring-orange-500/20 dark:focus:border-orange-500/40 transition-all"
+          />
+        </div>
+      </div>
 
-        return (
-          <li key={conv.id} className="px-1.5 sm:px-2 first:pt-0 last:pb-0">
-            <button
-              type="button"
-              className={cn(
-                'flex w-full items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2.5 sm:px-3 py-2.5 sm:py-3 text-left transition-all border',
-                'hover:bg-muted/50 dark:hover:bg-white/[0.05]',
-                isSelected
-                  ? 'bg-amber-500/20 dark:bg-amber-500/25 border-amber-500/40 dark:border-amber-500/50 border-l-4 border-l-amber-500 dark:border-l-amber-400'
-                  : 'bg-slate-50/70 dark:bg-white/[0.04] border-slate-200/80 dark:border-white/[0.06]',
-              )}
-              onClick={() => onSelectConversation(conv.id)}
-            >
-              <div className="relative shrink-0">
-                {conv.unreadCount > 0 && (
-                  <Badge
-                    className="absolute -right-0.5 -top-0.5 size-5 min-w-5 justify-center rounded-full bg-amber-500 p-0 text-[10px] text-white dark:bg-amber-500"
-                    variant="default"
-                  >
-                    {conv.unreadCount > 99 ? '99+' : conv.unreadCount}
-                  </Badge>
-                )}
-                <Avatar
-                  className={cn(
-                    'size-10 sm:size-12 border-2 bg-muted text-foreground dark:bg-white/10',
-                    isSelected ? 'border-amber-500/50' : 'border-transparent',
-                  )}
-                >
-                  <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
-                  <AvatarFallback className="font-semibold">
-                    {otherParty?.name?.[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                {userRole === 'CLIENT' && otherParty?.isOnline !== undefined && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <span className="absolute bottom-0 right-0 flex size-3.5 items-center justify-center rounded-full border-2 border-background">
-                          <Circle
-                            className={cn(
-                              'size-2 fill-current',
-                              otherParty.isOnline ? 'text-green-500' : 'text-muted-foreground',
-                            )}
-                          />
-                        </span>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {otherParty.isOnline ? t('master.status.online') : t('master.status.offline')}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
+      <div className="px-3 sm:px-4 pb-2 shrink-0">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('all')}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-sm transition-all',
+              activeTab === 'all'
+                ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400'
+                : 'text-muted-foreground hover:bg-muted/50',
+            )}
+          >
+            {t(`${ns}.allChats`)}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('unread')}
+            className={cn(
+              'px-3 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5',
+              activeTab === 'unread'
+                ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400'
+                : 'text-muted-foreground hover:bg-muted/50',
+            )}
+          >
+            {t(`${ns}.unreadChats`)}
+            {unreadCount > 0 && (
+              <span className="size-5 min-w-5 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-medium">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
 
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span
+      <div className="flex-1 min-h-0 overflow-auto px-2">
+        {conversations.length === 0 ? (
+          activeTab === 'unread' ? emptyStateUnread : emptyStateAll
+        ) : (
+          <ul className="space-y-1 py-1">
+            {conversations.map((conv: Conversation) => {
+              const isSelected = conv.id === selectedConversationId;
+              const otherParty = getOtherPartyFromConversation(conv, userRole);
+
+              return (
+                <li key={conv.id} className="px-1 first:pt-0 last:pb-0">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
                     className={cn(
-                      'truncate text-sm',
-                      conv.unreadCount > 0 ? 'font-bold' : 'font-medium',
+                      'flex w-full items-center gap-3 p-3 rounded-2xl transition-all duration-200 cursor-pointer text-left border',
+                      isSelected
+                        ? 'bg-gradient-to-r from-orange-500/15 to-amber-500/10 border-orange-500/30'
+                        : 'hover:bg-muted/50 border-slate-200/40 dark:border-transparent',
                     )}
+                    onClick={() => onSelectConversation(conv.id)}
                   >
-                    {otherParty?.name}
-                  </span>
-                  {conv.closedAt && (
-                    <Badge variant="destructive" className="shrink-0 text-[9px]">
-                      {t('common.closedChat')}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
+                    <div className="relative shrink-0">
+                      <Avatar
+                        className={cn(
+                          'size-11',
+                          isSelected
+                            ? 'ring-2 ring-orange-500/30'
+                            : '',
+                        )}
+                      >
+                        <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
+                        <AvatarFallback
+                          className={cn(
+                            isSelected
+                              ? 'bg-gradient-to-br from-orange-500 to-amber-600 text-white'
+                              : 'bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600 text-white',
+                          )}
+                        >
+                          {otherParty?.name?.[0]?.toUpperCase() ?? '?'}
+                        </AvatarFallback>
+                      </Avatar>
+                      {userRole === 'CLIENT' && otherParty?.isOnline && (
+                        <span className="absolute bottom-0 right-0 size-3 bg-emerald-500 border-2 border-background rounded-full" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span
+                          className={cn(
+                            'truncate text-sm',
+                            isSelected ? 'text-orange-600 dark:text-orange-400 font-semibold' : 'text-foreground',
+                            conv.unreadCount > 0 && !isSelected && 'font-bold',
+                          )}
+                        >
+                          {otherParty?.name}
+                        </span>
+                        <span className="text-muted-foreground text-xs shrink-0">
+                          {conv.lastMessage
+                            ? new Date(conv.lastMessage.createdAt).toLocaleTimeString(undefined, {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
+                            : ''}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-sm truncate mt-0.5">
+                        {conv.closedAt
+                          ? t('common.closedChat')
+                          : conv.lastMessage?.content ?? '—'}
+                      </p>
+                    </div>
+                    {conv.unreadCount > 0 && (
+                      <span className="shrink-0 size-5 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-medium">
+                        {conv.unreadCount > 99 ? '99+' : conv.unreadCount}
+                      </span>
+                    )}
+                  </motion.button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 }
