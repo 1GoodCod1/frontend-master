@@ -13,9 +13,9 @@ import type { PageHeaderProps } from '@/types/ui';
 
 export type { PageHeaderProps };
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, crumbs, actions }) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, crumbs, actions, className }) => {
   return (
-    <div className="mb-6">
+    <div className={cn('mb-6', className)}>
       {crumbs && crumbs.length > 0 && (
         <Breadcrumb className="mb-2 opacity-90">
           <BreadcrumbList>

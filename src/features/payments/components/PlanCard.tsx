@@ -80,7 +80,7 @@ export const PlanCard = ({
   const isPremium = planName === 'PREMIUM';
 
   const cardClassName = cn(
-    'relative rounded-2xl border p-5 flex flex-col transition-all overflow-hidden',
+    'relative rounded-xl sm:rounded-2xl border p-4 sm:p-5 flex flex-col transition-all overflow-hidden h-full min-h-[280px]',
     'bg-white dark:bg-zinc-900/95',
     'border border-gray-200 dark:border-zinc-800',
     'shadow-sm dark:shadow-none'
@@ -185,7 +185,7 @@ export const PlanCard = ({
         </div>
       )}
 
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-2 sm:mb-3">
         <PlanIcon planName={planName} />
         <span
           className={cn(
@@ -204,10 +204,10 @@ export const PlanCard = ({
             {regularPrice}
           </p>
         )}
-        <p className="text-3xl font-bold text-gray-900 dark:text-white">{priceText}</p>
+        <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{priceText}</p>
       </div>
 
-      <p className="text-sm text-gray-600 dark:text-zinc-300 mb-3">{descriptionText}</p>
+      <p className="text-sm text-gray-600 dark:text-zinc-300 mb-2 sm:mb-3">{descriptionText}</p>
 
       {(showRegisterToGetFree || showVerifyToGetFree) && isPaid && (
         <p
@@ -223,7 +223,7 @@ export const PlanCard = ({
 
       <div className="flex-1" />
 
-      <div className="mt-4">{renderCta()}</div>
+      <div className="mt-auto pt-4">{renderCta()}</div>
     </div>
   );
 };

@@ -52,14 +52,15 @@ export default function PlansPage() {
 
   if (role === 'ADMIN') {
     return (
-      <div className="container max-w-md mx-auto py-8 md:py-12 px-4">
+      <div className="w-full max-w-md mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="flex justify-center"
         >
-          <Card className="border border-border text-center overflow-hidden rounded-2xl">
-            <CardContent className="p-8 md:p-10">
+          <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
+            <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
                 <CreditCard className="h-8 w-8" />
               </div>
@@ -83,18 +84,19 @@ export default function PlansPage() {
 
   if (isClient) {
     return (
-      <div className="container max-w-2xl mx-auto py-8 md:py-12 px-4">
+      <div className="w-full max-w-2xl mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="flex justify-center"
         >
-          <Card className="border border-border text-center overflow-hidden rounded-2xl">
-            <CardContent className="p-8 md:p-10">
+          <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
+            <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
                 <CreditCard className="h-8 w-8" />
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
                 {t('plans.becomeMaster.title')}
               </h2>
               <p className="text-base font-medium text-primary mb-4">
@@ -103,7 +105,7 @@ export default function PlansPage() {
               <p className="text-sm text-muted-foreground mb-6 max-w-lg mx-auto">
                 {t('plans.becomeMaster.description')}
               </p>
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center items-stretch sm:items-center gap-3">
                 <Button variant="outline" asChild className="rounded-xl">
                   <RouterLink to="/">{t('common.back')}</RouterLink>
                 </Button>
@@ -131,18 +133,18 @@ export default function PlansPage() {
       transition={{ duration: 0.4 }}
       className="min-h-screen bg-gray-50/50 dark:bg-transparent"
     >
-      <div className="max-w-5xl mx-auto px-4 pb-16">
-        <div className="text-center mb-12 pt-8 md:pt-12">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-[max(3rem,env(safe-area-inset-bottom,0px))] sm:pb-16">
+        <div className="text-center mb-8 sm:mb-12 pt-6 sm:pt-8 md:pt-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 tracking-tight">
             {isMaster ? t('plans.myPlan') : t('plans.title')}
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-1">
             {isMaster ? t('plans.myPlanSubtitle') : t('plans.subtitle')}
           </p>
         </div>
 
         {isMaster && !isVerified && (
-          <div className="rounded-lg border border-amber-500/40 bg-amber-50/80 dark:bg-amber-900/20 p-4 text-center mb-8">
+          <div className="rounded-xl sm:rounded-2xl border border-amber-500/40 bg-amber-50/80 dark:bg-amber-900/20 p-4 sm:p-5 text-center mb-6 sm:mb-8">
             <p className="text-sm font-medium text-gray-900 dark:text-amber-100">
               {t('plans.verifyBanner')}
             </p>
@@ -166,7 +168,7 @@ export default function PlansPage() {
           onCancelUpgrade={onCancelPendingUpgrade}
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 mb-6 sm:mb-8 items-stretch">
           {plansToShow.map((p) => {
             const isUpgradeOption =
               isAuthed &&
@@ -179,6 +181,7 @@ export default function PlansPage() {
                 key={p.name}
                 delay={0.05 * plansToShow.indexOf(p)}
                 duration={0.4}
+                className="h-full min-h-0"
               >
                 <PlanCard
                   plan={p}

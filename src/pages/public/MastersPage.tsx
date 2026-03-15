@@ -82,10 +82,7 @@ function MapSkeleton() {
 const VirtualizedGridList = (props: ComponentProps<'div'>) => (
   <div
     {...props}
-    className="grid gap-4 sm:gap-5 md:gap-6"
-    style={{
-      gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-    }}
+    className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]"
   />
 );
 
@@ -392,9 +389,6 @@ export default function MastersPage() {
               {t('masters.searchAndFilters')}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 ml-0 sm:ml-14">
-            {t('masters.searchAndFiltersSubtitle')}
-          </p>
           {filters.isError ? (
             <ErrorState
               error={filters.error}
@@ -758,10 +752,7 @@ export default function MastersPage() {
       {list.isLoading ? (
         viewMode === 'list' ? (
           <div
-            className="grid gap-4 sm:gap-5 md:gap-6"
-            style={{
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-            }}
+            className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]"
           >
             {Array.from({ length: 12 }).map((_, i) => (
               <CardSkeleton key={i} />

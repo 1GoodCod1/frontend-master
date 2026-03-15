@@ -30,8 +30,10 @@ import { useConfigReferralsEnabledQuery } from '@/features/referrals/referralsAp
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { VerificationRequiredBanner } from '@/components/common/VerificationRequiredBanner';
+import { ReportsWarningBanner } from '@/components/common/ReportsWarningBanner';
 import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 function getItems(
   t: ReturnType<typeof useTranslation>['t'],
@@ -110,7 +112,7 @@ export function DashboardLayout() {
   return (
     <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
       {!isMdUp && (
-        <div className="flex shrink-0 items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4">
+        <div className="fixed top-14 left-0 right-0 z-30 flex items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4 md:static md:z-auto">
           <Button
             variant="ghost"
             size="icon"
@@ -136,10 +138,14 @@ export function DashboardLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300">
+      <main className={cn(
+        'flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300',
+        !isMdUp && 'pt-14'
+      )}>
         <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
           {role === 'MASTER' && <VerificationRequiredBanner role="MASTER" isVerified={isVerified} />}
+          {role === 'MASTER' && <ReportsWarningBanner />}
           <Outlet />
         </div>
       </main>

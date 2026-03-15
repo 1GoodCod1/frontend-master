@@ -10,6 +10,7 @@ export interface PageHeaderProps {
   subtitle?: string;
   crumbs?: Crumb[];
   actions?: ReactNode;
+  className?: string;
 }
 
 export interface NavItem {

@@ -134,15 +134,15 @@ export default function ChatInput({
   const canSend = !disabled && !isUploading && (message.trim().length > 0 || files.length > 0);
 
   return (
-    <div className="border-t border-border/60 bg-muted/20 p-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
+    <div className="border-t border-border/60 bg-muted/20 p-2.5 sm:p-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
       {(onManageQuickReplies || (quickReplies && quickReplies.length > 0)) && (
-        <div className="mb-2 flex items-center gap-2 overflow-x-auto pb-1">
-          <div className="flex items-center gap-2">
+        <div className="mb-2 flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {(quickReplies ?? []).map((qr) => (
               <button
                 key={qr.id}
                 type="button"
-                className="max-w-[240px] shrink-0 rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-900 hover:bg-amber-500/15 dark:text-amber-200"
+                className="max-w-[180px] sm:max-w-[240px] shrink-0 rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-medium text-amber-900 hover:bg-amber-500/15 dark:text-amber-200"
                 onClick={() => setMessage(qr.text)}
                 title={qr.text}
               >
@@ -165,11 +165,11 @@ export default function ChatInput({
         </div>
       )}
       {files.length > 0 && (
-        <div className="mb-3 flex flex-wrap gap-2">
+        <div className="mb-2 sm:mb-3 flex flex-wrap gap-1.5 sm:gap-2">
           {files.map((file, index) => (
             <span
               key={`${file.name}-${index}`}
-              className="inline-flex max-w-[200px] items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-xs"
+              className="inline-flex max-w-[160px] sm:max-w-[200px] items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[11px] sm:text-xs"
             >
               <span className="truncate">
                 {file.name.length > 20 ? `${file.name.slice(0, 17)}...` : file.name}
@@ -187,7 +187,7 @@ export default function ChatInput({
         </div>
       )}
 
-      <div className="flex items-end gap-2">
+      <div className="flex items-end gap-1.5 sm:gap-2">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -195,11 +195,11 @@ export default function ChatInput({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="shrink-0"
+                className="shrink-0 size-9 sm:size-10"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={disabled || isUploading}
               >
-                <Paperclip className="size-5" />
+                <Paperclip className="size-4 sm:size-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t('common.attachFile')}</TooltipContent>
@@ -216,7 +216,7 @@ export default function ChatInput({
         />
 
         <Textarea
-          className="min-h-[40px] max-h-24 resize-none rounded-xl border-border bg-background focus-visible:ring-2 focus-visible:ring-amber-500/50 dark:border-white/10 dark:bg-white/5"
+          className="min-h-[36px] sm:min-h-[40px] max-h-20 sm:max-h-24 resize-none rounded-lg sm:rounded-xl border-border bg-background focus-visible:ring-2 focus-visible:ring-amber-500/50 dark:border-white/10 dark:bg-white/5 text-sm sm:text-base"
           placeholder={placeholder ?? defaultPlaceholder}
           value={message}
           onChange={(e) => {
@@ -231,7 +231,7 @@ export default function ChatInput({
         <Button
           type="button"
           size="icon"
-          className="size-10 shrink-0 rounded-full bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500"
+          className="size-9 sm:size-10 shrink-0 rounded-full bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500"
           onClick={handleSend}
           disabled={!canSend}
         >

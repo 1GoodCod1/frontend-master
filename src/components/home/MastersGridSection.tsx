@@ -83,7 +83,7 @@ export const MastersGridSection = ({
           </div>
         </div>
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <CardSkeleton key={i} />
             ))}
@@ -91,7 +91,7 @@ export const MastersGridSection = ({
         ) : isError ? (
           <ErrorState error={error} onRetry={onRetry} />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             {list.map((m, idx: number) => (
               <ScrollReveal key={m.id} delay={idx * 0.04} duration={0.4}>
                 <MasterCard
@@ -135,7 +135,7 @@ export const MastersGridSection = ({
         </div>
       </div>
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
           {[1, 2, 3, 4].map((i) => (
             <CardSkeleton key={i} />
           ))}
@@ -143,7 +143,7 @@ export const MastersGridSection = ({
       ) : isError ? (
         <ErrorState error={error} onRetry={onRetry} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
           {list.map((m, idx: number) => (
             <ScrollReveal key={m.id} delay={idx * 0.04} duration={0.4}>
               <MasterCard

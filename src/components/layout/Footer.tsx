@@ -13,7 +13,7 @@ export function Footer() {
   const [prefsModalOpen, setPrefsModalOpen] = useState(false);
   const [prefsOpenKey, setPrefsOpenKey] = useState(0);
   const linkClass =
-    'text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1.5 sm:py-0 min-h-[44px] sm:min-h-0 flex items-center';
+    'text-xs sm:text-sm text-muted-foreground transition-colors hover:text-cta dark:text-muted-foreground dark:hover:text-cta underline-offset-2 hover:underline py-1 sm:py-0.5 min-h-[36px] sm:min-h-0 flex items-center';
 
   const showDigest = isAuthed && role !== 'ADMIN';
 
@@ -29,32 +29,32 @@ export function Footer() {
       {showDigest && <DigestSubscriptionCard />}
 
       {/* Main footer */}
-      <div className="px-4 pt-8 pb-[max(2rem,env(safe-area-inset-bottom,0px))] md:px-6 md:pt-10 md:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] lg:px-8">
+      <div className="px-4 pt-5 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:px-5 sm:pt-6 md:px-6 md:pt-8 md:pb-[max(2rem,env(safe-area-inset-bottom,0px))] lg:px-8 lg:pt-10 lg:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-12 gap-8 justify-between gap-y-8">
-            <div className="col-span-12 md:col-span-4">
-              <div className="mb-2 flex items-center gap-2">
+          <div className="grid grid-cols-12 gap-5 sm:gap-6 md:gap-x-8 md:gap-y-6 lg:gap-8 justify-between gap-y-5 sm:gap-y-6 lg:gap-y-8">
+            <div className="col-span-12 lg:col-span-4 md:text-center lg:text-left">
+              <div className="mb-1.5 sm:mb-2 flex items-center gap-2 justify-center md:justify-center lg:justify-start">
                 <img
                   src="/brand/favicon.svg"
                   alt=""
-                  className="h-8 w-8"
+                  className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8"
                   width={32}
                   height={32}
                 />
-                <h3 className="text-lg font-extrabold tracking-tight">
+                <h3 className="text-base sm:text-lg font-bold sm:font-extrabold tracking-tight">
                   {t('appName')}
                 </h3>
               </div>
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="text-xs sm:text-sm leading-snug sm:leading-relaxed text-muted-foreground max-w-md md:mx-auto lg:mx-0">
                 {t('footer.aboutDescription')}
               </p>
             </div>
 
-            <div className="col-span-6 sm:col-span-4 md:col-span-2">
-              <h4 className="mb-2 text-sm font-bold tracking-wide">
+            <div className="col-span-6 md:col-span-6 lg:col-span-2 md:flex md:flex-col md:items-center lg:items-start">
+              <h4 className="mb-1.5 sm:mb-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {t('footer.quickLinks')}
               </h4>
-              <nav className="flex flex-col gap-1 sm:gap-2">
+              <nav className="flex flex-col gap-0.5 sm:gap-1">
                 <RouterLink to="/masters" className={linkClass}>
                   {t('footer.masters')}
                 </RouterLink>
@@ -75,11 +75,11 @@ export function Footer() {
               </nav>
             </div>
 
-            <div className="col-span-6 sm:col-span-4 md:col-span-2">
-              <h4 className="mb-2 text-sm font-bold tracking-wide">
+            <div className="col-span-6 md:col-span-6 lg:col-span-2 md:flex md:flex-col md:items-center lg:items-start">
+              <h4 className="mb-1.5 sm:mb-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {t('footer.support')}
               </h4>
-              <nav className="flex flex-col gap-1 sm:gap-2">
+              <nav className="flex flex-col gap-0.5 sm:gap-1">
                 <RouterLink to="/contact" className={linkClass}>
                   {t('footer.contact')}
                 </RouterLink>
@@ -106,9 +106,9 @@ export function Footer() {
             onOpenChange={setPrefsModalOpen}
           />
 
-          <div className="mt-10">
+          <div className="mt-6 sm:mt-8 md:mt-10">
             <div className="divider-line" aria-hidden />
-            <p className="pt-6 text-sm text-muted-foreground text-center md:text-left">
+            <p className="pt-4 sm:pt-5 md:pt-6 text-xs sm:text-sm text-muted-foreground text-center lg:text-left">
               © {new Date().getFullYear()} {t('appName')}. {t('footer.copyright')}
             </p>
           </div>

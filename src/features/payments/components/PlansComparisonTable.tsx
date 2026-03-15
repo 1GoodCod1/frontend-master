@@ -132,8 +132,10 @@ export function PlansComparisonTable() {
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/95 overflow-hidden shadow-sm dark:shadow-none">
-      <div className="grid grid-cols-[1fr_repeat(3,_100px)] border-b border-gray-200 dark:border-zinc-800">
+    <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/95 overflow-hidden shadow-sm dark:shadow-none">
+      <div className="overflow-x-auto overscroll-x-contain">
+        <div className="min-w-[320px] sm:min-w-0">
+      <div className="grid grid-cols-[minmax(140px,1fr)_repeat(3,minmax(80px,100px))] sm:grid-cols-[1fr_repeat(3,_100px)] border-b border-gray-200 dark:border-zinc-800">
         <div className="px-5 py-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
           {t('plans.comparisonTable.featureLabel')}
         </div>
@@ -156,11 +158,11 @@ export function PlansComparisonTable() {
         <div
           key={row.labelKey}
           className={cn(
-            'grid grid-cols-[1fr_repeat(3,_100px)] border-b last:border-b-0 border-gray-200 dark:border-zinc-800',
+            'grid grid-cols-[minmax(140px,1fr)_repeat(3,minmax(80px,100px))] sm:grid-cols-[1fr_repeat(3,_100px)] border-b last:border-b-0 border-gray-200 dark:border-zinc-800',
             i % 2 === 0 && 'bg-gray-50/80 dark:bg-zinc-800/50'
           )}
         >
-          <div className="px-5 py-3 text-sm text-gray-900 dark:text-white">
+          <div className="px-5 py-3 text-sm text-gray-900 dark:text-white min-w-0">
             {t(row.labelKey)}
           </div>
           {row.values.map((val, j) => {
@@ -199,6 +201,8 @@ export function PlansComparisonTable() {
           })}
         </div>
       ))}
+        </div>
+      </div>
     </div>
   );
 }

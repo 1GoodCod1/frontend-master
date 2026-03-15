@@ -2,27 +2,22 @@ export const files = {
   en: {
     files: {
       title: 'Files',
-      subtitle: 'Upload photos and manage your gallery (max {{limit}})',
+      subtitle: 'Upload photos and manage gallery',
       upload: 'Upload',
-      uploadSubtitle:
-        'Upload images to your gallery. First image becomes avatar automatically (if none set).',
-      onlyImagesRule: 'Only images are used in gallery.',
-      galleryLimitRule:
-        'Gallery limit: {{limit}} photos ({{current}}/{{limit}}).',
-      setAnyPhotoAsAvatarRule: 'You can set any photo as avatar.',
+      uploadSubtitle: 'Add images. First one becomes avatar.',
+      rulesHint: 'Images only. {{current}}/{{limit}}.',
       uploadImageButton: 'Upload image',
       uploadingButton: 'Uploading…',
-      limitReachedButton: 'Limit reached ({{current}}/{{limit}})',
+      limitReachedButton: 'Limit reached',
       myGallery: 'My gallery',
-      myGallerySubtitle:
-        'Used on MasterDetails (up to 15). Avatar is used on cards.',
+      myGallerySubtitle: 'Shown on your profile and cards.',
       loadingGallery: 'Loading gallery...',
       noPhotosYet: 'No photos yet',
-      noPhotosDescription:
-        'Upload up to {{limit}} images to show them on your profile.',
+      noPhotosDescription: 'Upload images to show on your profile.',
       maxPhotos: 'max',
       setAsAvatar: 'Set as avatar',
       removeFromGallery: 'Remove from gallery',
+      removedAndAvatarAutoSet: 'Photo removed. First remaining photo set as avatar.',
       avatar: 'Avatar',
       uploadedSuccess: 'Uploaded',
       uploadFailed: 'Upload failed',
@@ -38,27 +33,22 @@ export const files = {
   ru: {
     files: {
       title: 'Файлы',
-      subtitle: 'Загружайте фотографии и управляйте галереей (макс. {{limit}})',
+      subtitle: 'Загрузка фото и управление галереей',
       upload: 'Загрузка',
-      uploadSubtitle:
-        'Загрузите изображения в вашу галерею. Первое изображение автоматически становится аватаром (если не установлен).',
-      onlyImagesRule: 'В галерее используются только изображения.',
-      galleryLimitRule:
-        'Лимит галереи: {{limit}} фото ({{current}}/{{limit}}).',
-      setAnyPhotoAsAvatarRule: 'Вы можете установить любое фото как аватар.',
+      uploadSubtitle: 'Добавьте изображения. Первое станет аватаром.',
+      rulesHint: 'Только изображения. {{current}}/{{limit}}.',
       uploadImageButton: 'Загрузить изображение',
       uploadingButton: 'Загрузка…',
-      limitReachedButton: 'Лимит достигнут ({{current}}/{{limit}})',
+      limitReachedButton: 'Лимит достигнут',
       myGallery: 'Моя галерея',
-      myGallerySubtitle:
-        'Используется на странице мастера (до 15). Аватар используется на карточках.',
+      myGallerySubtitle: 'Отображается в профиле и на карточках.',
       loadingGallery: 'Загрузка галереи...',
       noPhotosYet: 'Пока нет фото',
-      noPhotosDescription:
-        'Загрузите до {{limit}} изображений, чтобы показать их в вашем профиле.',
+      noPhotosDescription: 'Загрузите фото для отображения в профиле.',
       maxPhotos: 'макс',
       setAsAvatar: 'Установить как аватар',
       removeFromGallery: 'Удалить из галереи',
+      removedAndAvatarAutoSet: 'Фото удалено. Первое оставшееся фото установлено как аватар.',
       avatar: 'Аватар',
       uploadedSuccess: 'Загружено',
       uploadFailed: 'Ошибка загрузки',
@@ -74,27 +64,22 @@ export const files = {
   ro: {
     files: {
       title: 'Fișiere',
-      subtitle: 'Încarcă fotografii și gestionează galeria ta (max {{limit}})',
+      subtitle: 'Încarcă fotografii și gestionează galeria',
       upload: 'Încărcare',
-      uploadSubtitle:
-        'Încarcă imagini în galeria ta. Prima imagine devine automat avatar (dacă nu este setat).',
-      onlyImagesRule: 'În galerie se folosesc doar imagini.',
-      galleryLimitRule:
-        'Limita galeriei: {{limit}} poze ({{current}}/{{limit}}).',
-      setAnyPhotoAsAvatarRule: 'Poți seta orice poză ca avatar.',
+      uploadSubtitle: 'Adaugă imagini. Prima devine avatar.',
+      rulesHint: 'Doar imagini. {{current}}/{{limit}}.',
       uploadImageButton: 'Încarcă imagine',
       uploadingButton: 'Se încarcă…',
-      limitReachedButton: 'Limita atinsă ({{current}}/{{limit}})',
+      limitReachedButton: 'Limita atinsă',
       myGallery: 'Galeria mea',
-      myGallerySubtitle:
-        'Folosit pe pagina meșterului (până la 15). Avatarul este folosit pe carduri.',
+      myGallerySubtitle: 'Afișat în profil și pe carduri.',
       loadingGallery: 'Se încarcă galeria...',
       noPhotosYet: 'Încă nu sunt poze',
-      noPhotosDescription:
-        'Încarcă până la {{limit}} imagini pentru a le afișa în profilul tău.',
+      noPhotosDescription: 'Încarcă imagini pentru profil.',
       maxPhotos: 'max',
       setAsAvatar: 'Setează ca avatar',
       removeFromGallery: 'Șterge din galerie',
+      removedAndAvatarAutoSet: 'Fotografia ștearsă. Prima fotografie rămasă a fost setată ca avatar.',
       avatar: 'Avatar',
       uploadedSuccess: 'Încărcat',
       uploadFailed: 'Încărcare eșuată',

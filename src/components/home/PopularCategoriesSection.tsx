@@ -8,6 +8,7 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ErrorState } from '@/components/common/States';
 import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesApi';
 import { useUserCity } from '@/hooks/useUserCity';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import type { CategoryDto } from '@/types';
 import {
@@ -77,14 +78,12 @@ const CATEGORY_META: Record<string, { icon: LucideIcon; gradient: string }> = {
 
 const DEFAULT_META = { icon: LayoutGrid, gradient: 'from-primary to-primary/70' };
 
-const INITIAL_VISIBLE = 12;
-
 function CategoryCardSkeleton() {
     return (
-        <div className="rounded-2xl bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20 p-5 flex flex-col items-center justify-center gap-3">
-            <Skeleton className="h-14 w-14 rounded-2xl" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-3 w-16" />
+        <div className="rounded-xl sm:rounded-2xl bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20 p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center gap-1.5 sm:gap-2 lg:gap-3">
+            <Skeleton className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-xl sm:rounded-2xl" />
+            <Skeleton className="h-3 w-16 sm:h-3.5 sm:w-20 lg:h-4 lg:w-24" />
+            <Skeleton className="h-2.5 w-12 sm:h-3 sm:w-14 lg:h-3 lg:w-16" />
         </div>
     );
 }
@@ -94,10 +93,12 @@ export const PopularCategoriesSection = () => {
     const { data, isLoading, isError, error, refetch } = useCategoriesWithCountsQuery();
     const { citySlug } = useUserCity();
     const [expanded, setExpanded] = useState(false);
+    const isLg = useMediaQuery('(min-width: 1024px)');
+    const initialVisible = isLg ? 12 : 6;
 
     const categories = (data ?? []) as CategoryDto[];
-    const visibleCategories = expanded ? categories : categories.slice(0, INITIAL_VISIBLE);
-    const hasMore = categories.length > INITIAL_VISIBLE;
+    const visibleCategories = expanded ? categories : categories.slice(0, initialVisible);
+    const hasMore = categories.length > initialVisible;
 
     if (isLoading) {
         return (
@@ -106,8 +107,8 @@ export const PopularCategoriesSection = () => {
                     <Skeleton className="h-8 w-72 mx-auto mb-2" />
                     <Skeleton className="h-4 w-60 mx-auto" />
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {Array.from({ length: 12 }).map((_, i) => (
+                <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-4">
+                    {Array.from({ length: initialVisible }).map((_, i) => (
                         <CategoryCardSkeleton key={i} />
                     ))}
                 </div>
@@ -144,7 +145,7 @@ export const PopularCategoriesSection = () => {
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-4">
                 {visibleCategories.map((cat: CategoryDto, index: number) => {
                     const meta = CATEGORY_META[cat.slug] ?? DEFAULT_META;
                     const Icon = meta.icon;
@@ -171,7 +172,7 @@ export const PopularCategoriesSection = () => {
                             <RouterLink
                                 to={`/masters?category=${cat.slug}${citySlug ? `&city=${citySlug}` : ''}`}
                                 className={cn(
-                                    'group flex flex-col items-center justify-center gap-2 sm:gap-3 rounded-2xl p-4 sm:p-5 h-full',
+                                    'group flex flex-col items-center justify-center gap-1.5 sm:gap-2 lg:gap-3 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 h-full min-h-0',
                                     'bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20',
                                     'hover:-translate-y-1 hover:shadow-lg hover:shadow-black/8',
                                     'transition-all duration-300 cursor-pointer'
@@ -179,20 +180,20 @@ export const PopularCategoriesSection = () => {
                             >
                                 <div
                                     className={cn(
-                                        'flex items-center justify-center w-14 h-14 rounded-2xl',
+                                        'flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl sm:rounded-2xl shrink-0',
                                         'bg-gradient-to-br shadow-md',
                                         'group-hover:scale-110 transition-transform duration-300',
                                         meta.gradient,
                                     )}
                                 >
-                                    <Icon className="h-6 w-6 text-white" />
+                                    <Icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                                 </div>
 
-                                <div className="text-center min-w-0">
-                                    <p className="text-sm font-medium text-foreground leading-tight line-clamp-2">
+                                <div className="text-center min-w-0 w-full flex flex-col items-center gap-0.5">
+                                    <p className="text-[10px] sm:text-xs lg:text-sm font-medium text-foreground leading-tight line-clamp-2">
                                         {translatedName}
                                     </p>
-                                    <p className="text-xs text-muted-foreground mt-1">
+                                    <p className="text-[9px] sm:text-[10px] lg:text-xs text-muted-foreground">
                                         {mastersLabel}
                                     </p>
                                 </div>

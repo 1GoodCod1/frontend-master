@@ -32,10 +32,10 @@ export default function ChatList({
 
   if (isLoading) {
     return (
-      <div className="space-y-4 p-4">
+      <div className="space-y-3 sm:space-y-4 p-3 sm:p-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="flex gap-3">
-            <div className="size-12 shrink-0 animate-pulse rounded-full bg-muted" />
+          <div key={i} className="flex gap-2 sm:gap-3">
+            <div className="size-10 sm:size-12 shrink-0 animate-pulse rounded-full bg-muted" />
             <div className="flex-1 space-y-2">
               <div className="h-5 w-[60%] animate-pulse rounded bg-muted" />
               <div className="h-4 w-[80%] animate-pulse rounded bg-muted" />
@@ -48,32 +48,32 @@ export default function ChatList({
 
   if (conversations.length === 0) {
     return (
-      <div className="flex h-full min-h-[200px] flex-col items-center justify-center p-6 text-center">
-        <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-amber-500/10 dark:bg-amber-500/20">
-          <MessageCircle className="size-8 text-amber-600 dark:text-amber-400" />
+      <div className="flex h-full min-h-[160px] sm:min-h-[200px] flex-col items-center justify-center p-4 sm:p-6 text-center">
+        <div className="mb-3 sm:mb-4 flex size-12 sm:size-16 items-center justify-center rounded-xl sm:rounded-2xl bg-amber-500/10 dark:bg-amber-500/20">
+          <MessageCircle className="size-6 sm:size-8 text-amber-600 dark:text-amber-400" />
         </div>
-        <h3 className="text-sm font-semibold text-foreground">{t(`${ns}.noActiveChats`)}</h3>
-        <p className="mt-1 text-xs text-muted-foreground">{t(`${ns}.noActiveChatsHint`)}</p>
+        <h3 className="text-xs sm:text-sm font-semibold text-foreground">{t(`${ns}.noActiveChats`)}</h3>
+        <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground">{t(`${ns}.noActiveChatsHint`)}</p>
       </div>
     );
   }
 
   return (
-    <ul className="divide-y divide-border py-1">
+    <ul className="space-y-1 py-1">
       {conversations.map((conv: Conversation) => {
         const isSelected = conv.id === selectedConversationId;
         const otherParty = getOtherPartyFromConversation(conv, userRole);
 
         return (
-          <li key={conv.id} className="px-2 first:pt-0 last:pb-0">
+          <li key={conv.id} className="px-1.5 sm:px-2 first:pt-0 last:pb-0">
             <button
               type="button"
               className={cn(
-                'flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all',
+                'flex w-full items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl px-2.5 sm:px-3 py-2.5 sm:py-3 text-left transition-all border',
                 'hover:bg-muted/50 dark:hover:bg-white/[0.05]',
                 isSelected
-                  ? 'border-amber-500/40 bg-amber-500/10 dark:border-amber-500/30 dark:bg-amber-500/15'
-                  : 'border-transparent',
+                  ? 'bg-amber-500/20 dark:bg-amber-500/25 border-amber-500/40 dark:border-amber-500/50 border-l-4 border-l-amber-500 dark:border-l-amber-400'
+                  : 'bg-slate-50/70 dark:bg-white/[0.04] border-slate-200/80 dark:border-white/[0.06]',
               )}
               onClick={() => onSelectConversation(conv.id)}
             >
@@ -88,7 +88,7 @@ export default function ChatList({
                 )}
                 <Avatar
                   className={cn(
-                    'size-12 border-2 bg-muted text-foreground dark:bg-white/10',
+                    'size-10 sm:size-12 border-2 bg-muted text-foreground dark:bg-white/10',
                     isSelected ? 'border-amber-500/50' : 'border-transparent',
                   )}
                 >

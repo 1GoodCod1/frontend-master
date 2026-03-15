@@ -145,14 +145,14 @@ export default function ChatWindow({
   if (loadingConversation) {
     return (
       <div className="flex h-full flex-col">
-        <div className="flex items-center gap-3 border-b border-border p-4">
-          <div className="size-10 animate-pulse rounded-full bg-muted" />
+        <div className="flex items-center gap-2 sm:gap-3 border-b border-border p-3 sm:p-4">
+          <div className="size-9 sm:size-10 animate-pulse rounded-full bg-muted" />
           <div className="space-y-2">
             <div className="h-5 w-32 animate-pulse rounded bg-muted" />
             <div className="h-4 w-20 animate-pulse rounded bg-muted" />
           </div>
         </div>
-        <div className="flex-1 space-y-4 p-4">
+        <div className="flex-1 space-y-3 sm:space-y-4 p-3 sm:p-4">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
@@ -171,21 +171,21 @@ export default function ChatWindow({
   return (
     <div className="flex h-full flex-col bg-background">
       {/* Header */}
-      <div className="border-b border-border/60 bg-muted/20 px-4 py-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
-        <div className="flex items-center gap-3">
+      <div className="border-b border-border/60 bg-muted/20 px-3 sm:px-4 py-2.5 sm:py-3 dark:border-white/[0.06] dark:bg-white/[0.03]">
+        <div className="flex items-center gap-2 sm:gap-3">
           {onBack && (
-            <Button variant="ghost" size="icon" className="shrink-0 rounded-full" onClick={onBack}>
-              <ArrowLeft className="size-5" />
+            <Button variant="ghost" size="icon" className="shrink-0 size-9 sm:size-10 rounded-full" onClick={onBack}>
+              <ArrowLeft className="size-4 sm:size-5" />
             </Button>
           )}
 
-          <Avatar className="size-11 shrink-0 border-2 border-amber-500/20 bg-amber-500/10 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-300">
+          <Avatar className="size-9 sm:size-11 shrink-0 border-2 border-amber-500/20 bg-amber-500/10 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/20 dark:text-amber-300">
             <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
             <AvatarFallback className="font-semibold">{otherParty?.name?.[0]?.toUpperCase() ?? '?'}</AvatarFallback>
           </Avatar>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate font-semibold text-foreground">{otherParty?.name ?? '—'}</p>
+            <p className="truncate text-sm sm:text-base font-semibold text-foreground">{otherParty?.name ?? '—'}</p>
             {typingUsers.length > 0 ? (
               <p className="text-xs italic text-primary">{t('common.typing')}</p>
             ) : conversation?.closedAt ? (
@@ -220,7 +220,7 @@ export default function ChatWindow({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-auto bg-muted/10 py-4 dark:bg-white/[0.02]">
+      <div className="flex-1 overflow-auto bg-muted/10 py-3 sm:py-4 dark:bg-white/[0.02]">
         {loadingMessages ? (
           <div className="space-y-4 p-4">
             {[1, 2, 3, 4].map((i) => (
@@ -235,8 +235,8 @@ export default function ChatWindow({
             ))}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex h-full items-center justify-center p-6">
-            <p className="text-center text-sm text-muted-foreground">
+          <div className="flex h-full items-center justify-center p-4 sm:p-6">
+            <p className="text-center text-xs sm:text-sm text-muted-foreground">
               {t('common.firstMessage')}
             </p>
           </div>
@@ -293,13 +293,13 @@ export default function ChatWindow({
       )}
 
       {!canSendMessages && conversation?.closedAt && (
-        <div className="border-t border-border bg-warning/10 p-4 text-center text-sm text-muted-foreground">
+        <div className="border-t border-border bg-warning/10 p-3 sm:p-4 text-center text-xs sm:text-sm text-muted-foreground">
           {t('common.chatClosed')}
         </div>
       )}
 
       {!canSendMessages && !conversation?.closedAt && !isLeadActive && (
-        <Alert variant="default" className="mx-4 border-t border-border">
+        <Alert variant="default" className="mx-3 sm:mx-4 border-t border-border">
           <AlertTitle className="font-semibold">
             {currentUserRole === 'MASTER'
               ? t('common.chatNoActiveLeadMaster')

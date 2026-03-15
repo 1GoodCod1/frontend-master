@@ -21,6 +21,11 @@ export const reportsApi = api.injectEndpoints({
       providesTags: ['Reports'],
     }),
 
+    reportsAgainstMeCount: build.query<{ count: number }, void>({
+      query: () => ({ url: '/reports/reports-against-me', method: 'GET' }),
+      providesTags: ['Reports'],
+    }),
+
     reportsList: build.query<unknown, { status?: string } | void>({
       query: (params) => ({ url: '/reports', method: 'GET', params: params ?? {} }),
       providesTags: ['Reports'],
@@ -41,4 +46,5 @@ export const {
   useReportsMyQuery,
   useReportsListQuery,
   useReportsUpdateStatusMutation,
+  useReportsAgainstMeCountQuery,
 } = reportsApi;

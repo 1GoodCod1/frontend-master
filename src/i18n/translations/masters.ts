@@ -4,8 +4,6 @@ export const masters = {
       title: 'Masters',
       subtitle: 'Find verified specialists by category, city, and rating.',
       searchAndFilters: 'Search & Filters',
-      searchAndFiltersSubtitle:
-        'Use filters to narrow results. Pagination is server-side.',
       search: 'Search',
       searchPlaceholder: 'Name, service, keyword...',
       searchHistory: 'Recent searches',
@@ -55,8 +53,6 @@ export const masters = {
       title: 'Мастера',
       subtitle: 'Найдите проверенных специалистов по категории, городу и рейтингу.',
       searchAndFilters: 'Поиск и фильтры',
-      searchAndFiltersSubtitle:
-        'Используйте фильтры для сужения результатов. Пагинация на стороне сервера.',
       search: 'Поиск',
       searchPlaceholder: 'Имя, услуга, ключевое слово...',
       searchHistory: 'Недавние поиски',
@@ -106,8 +102,6 @@ export const masters = {
       title: 'Meșteri',
       subtitle: 'Găsiți specialiști verificați după categorie, oraș și rating.',
       searchAndFilters: 'Căutare și filtre',
-      searchAndFiltersSubtitle:
-        'Folosiți filtrele pentru a restrânge rezultatele. Paginarea este server-side.',
       search: 'Căutare',
       searchPlaceholder: 'Nume, serviciu, cuvânt cheie...',
       searchHistory: 'Căutări recente',

@@ -79,7 +79,7 @@ export default function FilesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
       <div className="mb-8">
-        <PageHeader title={t('files.title')} subtitle={t('files.subtitle', { limit })} />
+        <PageHeader title={t('files.title')} subtitle={t('files.subtitle')} />
       </div>
 
       <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
@@ -99,7 +99,7 @@ export default function FilesPage() {
               {!isVerified
                 ? t('files.uploadDisabledVerification')
                 : reached
-                  ? t('files.limitReachedButton', { current: items.length, limit })
+                  ? t('files.limitReachedButton')
                   : up.isLoading
                     ? t('files.uploadingButton')
                     : t('files.uploadImageButton')}
@@ -115,10 +115,8 @@ export default function FilesPage() {
         </div>
         <CardContent className="p-6">
           <Alert className="rounded-lg border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-white/[0.04]">
-            <AlertDescription className="space-y-1">
-              <p>• {t('files.onlyImagesRule')}</p>
-              <p>• {t('files.galleryLimitRule', { limit, current: items.length })}</p>
-              <p>• {t('files.setAnyPhotoAsAvatarRule')}</p>
+            <AlertDescription>
+              <p>{t('files.rulesHint', { limit, current: items.length })}</p>
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -140,7 +138,7 @@ export default function FilesPage() {
           {!items.length ? (
             <EmptyState
               title={t('files.noPhotosYet')}
-              description={t('files.noPhotosDescription', { limit })}
+              description={t('files.noPhotosDescription')}
               icon="🖼️"
             />
           ) : (
@@ -148,6 +146,7 @@ export default function FilesPage() {
               items={normalizedItems}
               avatarFileId={avatarFileId}
               busyId={busy ? busyId : null}
+              variant="gallery"
               onSetAvatar={async (fileId) => {
                 try {
                   await setAvatar({ fileId }).unwrap();
@@ -161,9 +160,17 @@ export default function FilesPage() {
               }}
               onRemove={async (fileId) => {
                 try {
+                  const wasAvatar = avatarFileId === fileId;
+                  const remainingCount = items.filter((i) => i.id !== fileId).length;
+
                   await removePhoto({ fileId }).unwrap();
-                  toast.success(t('files.removeFromGallery'));
                   photos.refetch();
+
+                  if (wasAvatar && remainingCount > 0) {
+                    toast.success(t('files.removedAndAvatarAutoSet'));
+                  } else {
+                    toast.success(t('files.removeFromGallery'));
+                  }
                 } catch (e: unknown) {
                   const msg =
                     e && typeof e === 'object' && 'data' in e && (e as { data?: { message?: string } }).data?.message;

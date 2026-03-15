@@ -100,6 +100,10 @@ export const dashboard = {
         empty: 'No views history yet',
         showHistory: 'History',
       },
+      reportsWarning: {
+        title: 'Multiple reports received',
+        message: 'You have {{count}} report(s) from clients. Please review your service quality and communication. Continued reports may result in account restrictions.',
+      },
     },
   },
   ru: {
@@ -203,6 +207,10 @@ export const dashboard = {
         empty: 'Истории просмотров пока нет',
         showHistory: 'История',
       },
+      reportsWarning: {
+        title: 'Много жалоб от клиентов',
+        message: 'На вас поступило {{count}} жалоб(ы). Пожалуйста, обратите внимание на качество услуг и общение. Дальнейшие жалобы могут привести к ограничениям аккаунта.',
+      },
     },
   },
   ro: {
@@ -305,6 +313,10 @@ export const dashboard = {
         error: 'Nu s-a putut încărca istoricul',
         empty: 'Încă nu există istoric de vizualizări',
         showHistory: 'Istoric',
+      },
+      reportsWarning: {
+        title: 'Multe raportări de la clienți',
+        message: 'Aveți {{count}} raportări de la clienți. Vă rugăm să verificați calitatea serviciilor și comunicarea. Raportări ulterioare pot duce la restricții ale contului.',
       },
     },
   },
