@@ -43,6 +43,8 @@ package-lock.json
 /build
 /playwright-report
 
+tsconfig.tsbuildinfo
+
 # Testing
 coverage/
 test-results/
