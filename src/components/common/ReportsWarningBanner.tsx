@@ -2,8 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { AlertTriangle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useReportsAgainstMeCountQuery } from '@/features/reports/reportsApi';
-
-const REPORTS_WARNING_THRESHOLD = 2;
+import { REPORTS_WARNING_THRESHOLD } from '@/constants';
 
 export function ReportsWarningBanner() {
   const { t } = useTranslation();

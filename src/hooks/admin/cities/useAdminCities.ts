@@ -9,14 +9,7 @@ import {
   useCitiesUpdateMutation,
 } from '@/features/cities/citiesApi';
 import type { CreateCityDto, UpdateCityDto } from '@/types';
-
-type Row = {
-  id: string;
-  name?: string;
-  slug?: string;
-  isActive?: boolean;
-  [k: string]: unknown;
-};
+import type { AdminCityRow } from '.';
 
 export function useAdminCities() {
   const q = useCitiesListQuery();
@@ -27,7 +20,7 @@ export function useAdminCities() {
 
   const [selection, setSelection] = useState<GridRowSelectionModel>([]);
   const [createOpen, setCreateOpen] = useState(false);
-  const [editRow, setEditRow] = useState<Row | null>(null);
+  const [editRow, setEditRow] = useState<AdminCityRow | null>(null);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState('');
@@ -80,7 +73,7 @@ export function useAdminCities() {
     }
   };
 
-  const handleDelete = (row: Row) => {
+  const handleDelete = (row: AdminCityRow) => {
     openConfirm({
       title: `Delete city "${String(row?.name ?? row.id)}"?`,
       description: 'This action cannot be undone.',

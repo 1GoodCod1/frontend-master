@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
 import { safeStorage } from '@/utils/safeStorage';
 import { hasSearchHistoryConsent } from '@/features/cookie-consent/storage';
-
-const STORAGE_KEY = 'mastersSearchHistory';
-const MAX_ITEMS = 12;
+import { SEARCH_HISTORY_STORAGE_KEY, SEARCH_HISTORY_MAX_ITEMS } from './constants';
+const STORAGE_KEY = SEARCH_HISTORY_STORAGE_KEY;
+const MAX_ITEMS = SEARCH_HISTORY_MAX_ITEMS;
 
 function loadHistory(): string[] {
   if (!hasSearchHistoryConsent()) return [];

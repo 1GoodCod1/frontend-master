@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Formik } from 'formik';
@@ -8,7 +8,7 @@ import { selectIsAuthed } from '@/features/auth/selectors';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import LoginHeader from '@/features/auth/components/login/LoginHeader';
 import LoginForm from '@/features/auth/components/login/LoginForm';
-import { useLoginForm, type LoginFormValues } from '@/hooks/auth/login/useLoginForm';
+import { useLoginForm, type LoginFormValues } from '@/hooks/auth/login';
 import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {

@@ -1,43 +1,17 @@
 import { useState } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
 import toast from 'react-hot-toast';
 import { useLeadsCreateMutation } from '@/features/leads/leadsApi';
 import { useFilesUploadManyMutation } from '@/features/files/filesApi';
 import { useNavigate } from 'react-router-dom';
 import type { CreateLeadDto } from '@/types';
-
-export type LeadSubmissionFormData = {
-    message: string;
-    clientName?: string;
-};
-
-export type LeadSubmissionState = {
-    attach: File[];
-    setAttach: Dispatch<SetStateAction<File[]>>;
-    handleSendLead: (formData: LeadSubmissionFormData) => Promise<void>;
-    isLoading: boolean;
-    submittedLeadId: string | null;
-    resetSubmittedLead: () => void;
-};
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-    return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(e: unknown): string {
-    if (!isRecord(e)) return 'Failed to send lead';
-    const data = isRecord(e.data) ? e.data : undefined;
-    const msg =
-        (typeof data?.message === 'string' ? data.message : undefined) ??
-        (typeof e.message === 'string' ? e.message : undefined);
-    return msg ?? 'Failed to send lead';
-}
+import { toErrorMessage } from '@/utils/errors';
+import type { LeadSubmissionFormData, LeadSubmissionState } from '.';
 
 export function useLeadSubmission(masterId: string | undefined, isAuthed: boolean, role: string | null): LeadSubmissionState {
     const navigate = useNavigate();
     const [attach, setAttach] = useState<File[]>([]);
     const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
-    // const [premiumSessionId, setPremiumSessionId] = useState<string | null>(null); // PREMIUM LEAD: commented out
+
 
     const [uploadMany] = useFilesUploadManyMutation();
     const [createLead, { isLoading }] = useLeadsCreateMutation();
@@ -73,7 +47,6 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
                 clientName: formData.clientName?.trim() || undefined,
                 message: formData.message || '',
                 fileIds,
-                // premiumPaymentSessionId: premiumSessionId || undefined, // PREMIUM LEAD: commented out
             };
 
             const result = await createLead(payload).unwrap();
@@ -84,14 +57,12 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
             toast.success('Lead sent');
 
             setAttach([]);
-            // setPremiumSessionId(null); // PREMIUM LEAD: commented out
-
             // Navigate to the lead success page for full post-lead UX
             if (resolvedLeadId) {
                 navigate(`/client-dashboard/lead-success/${resolvedLeadId}`);
             }
         } catch (e: unknown) {
-            toast.error(toErrorMessage(e));
+            toast.error(toErrorMessage(e) ?? 'Failed to send lead');
         }
     };
 
@@ -102,7 +73,6 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
     return {
         attach,
         setAttach,
-        // premiumSessionId, setPremiumSessionId, // PREMIUM LEAD: commented out
         handleSendLead,
         isLoading,
         submittedLeadId,

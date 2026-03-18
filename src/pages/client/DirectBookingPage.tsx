@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { toErrorMessage } from '@/utils/errors';
+import { formatSlotTime } from '@/utils/date';
 
 interface SlotData {
   start?: string;
@@ -26,15 +27,7 @@ interface SlotData {
   available?: boolean;
 }
 
-function formatSlotTime(slot: SlotData): string {
-  if (!slot.start) return '--:--';
-  const d = new Date(slot.start);
-  const h = d.getHours().toString().padStart(2, '0');
-  const m = d.getMinutes().toString().padStart(2, '0');
-  return `${h}:${m}`;
-}
-
-/** Direct booking by master slug — requires ClientRoute. Not in router by default. */
+/** Direct booking by master slug — requires ClientRoute. */
 export default function DirectBookingPage() {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();

@@ -1,7 +1,7 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { LoadingState, ErrorState } from '@/components/common/States';
-import { useClientProfile } from '@/hooks/client/profile/useClientProfile';
+import { useClientProfile } from '@/hooks/client/profile';
 import AvatarSection from '@/features/clients/components/profile/AvatarSection';
 import AccountInfoSection from '@/features/clients/components/profile/AccountInfoSection';
 

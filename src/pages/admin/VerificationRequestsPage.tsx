@@ -1,10 +1,10 @@
-﻿import type { GridColDef } from '@/types/dataGrid';
+import type { GridColDef } from '@/types/dataGrid';
 import { ShieldCheck } from 'lucide-react';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAdminVerificationRequests } from '@/hooks/admin/verification/useAdminVerificationRequests';
+import { useAdminVerificationRequests } from '@/hooks/admin/verification';
 import ReviewDialog from '@/features/admin/components/verification/ReviewDialog';
 import MasterCell from '@/features/admin/components/verification/MasterCell';
 import EmailCell from '@/features/admin/components/verification/EmailCell';
@@ -16,10 +16,7 @@ import ActionsCell from '@/features/admin/components/verification/ActionsCell';
 import { useGetVerificationStatsQuery } from '@/features/verification/verificationApi';
 import { useTranslation } from 'react-i18next';
 import type { VerificationDetail, VerificationStats } from '@/features/verification/verificationApi';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
 
 export default function VerificationRequestsPage() {
   const { t } = useTranslation();

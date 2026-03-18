@@ -8,12 +8,13 @@ import {
 } from '@/features/cookie-consent/storage';
 import { CookiePreferencesModal } from '@/features/cookie-consent/CookiePreferencesModal';
 import { prefsCookies } from '@/utils/prefsCookies';
-import { store } from '@/app/store';
+import { useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export function CookieConsentBanner() {
   const { t, i18n } = useTranslation();
+  const colorMode = useAppSelector((s) => s.ui?.colorMode ?? 'light');
   const [prefsModalOpen, setPrefsModalOpen] = useState(false);
   const [prefsOpenKey, setPrefsOpenKey] = useState(0);
   const [consentGiven, setConsentGiven] = useState(false);
@@ -25,8 +26,7 @@ export function CookieConsentBanner() {
       window.dispatchEvent(new CustomEvent('mh:cityConsentChanged'));
       const lang = i18n.language || 'ro';
       if (['en', 'ru', 'ro'].includes(lang)) prefsCookies.lang.set(lang);
-      const theme = store.getState().ui?.colorMode || 'light';
-      prefsCookies.theme.set(theme);
+      prefsCookies.theme.set(colorMode);
     } else {
       setPrefsOpenKey((k) => k + 1);
       setPrefsModalOpen(true);

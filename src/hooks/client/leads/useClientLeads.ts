@@ -1,17 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useLeadsMyListQuery } from '@/features/leads/leadsApi';
 import { extractItems } from '@/utils/data';
-import {
-  LEAD_STATUS_OPTIONS,
-  type LeadStatus,
-  type LeadFilterStatus,
-} from '@/types/leads';
-
-export const STATUS_OPTIONS = LEAD_STATUS_OPTIONS;
-export type Status = LeadStatus;
-export type FilterStatus = LeadFilterStatus;
-
-export type ClientLeadListItem = { id: string } & Record<string, unknown>;
+import type { ClientLeadListItem, FilterStatus } from '.';
 
 export function useClientLeads() {
   const [status, setStatus] = useState<FilterStatus>('ALL');

@@ -1,10 +1,9 @@
 import { type ImgHTMLAttributes } from 'react';
-
-const CDN_BASE = (import.meta.env.VITE_CDN_BASE_URL as string) || '';
+import { CDN_BASE_URL } from '@/constants';
 
 function assetUrl(path: string): string {
-  if (!CDN_BASE) return path;
-  return `${CDN_BASE.replace(/\/+$/, '')}${path}`;
+  if (!CDN_BASE_URL) return path;
+  return `${CDN_BASE_URL.replace(/\/+$/, '')}${path}`;
 }
 
 interface OptimizedImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {

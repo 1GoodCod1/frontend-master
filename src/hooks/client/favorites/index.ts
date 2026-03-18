@@ -1,0 +1,1 @@
+export { useClientFavorites } from './useClientFavorites';

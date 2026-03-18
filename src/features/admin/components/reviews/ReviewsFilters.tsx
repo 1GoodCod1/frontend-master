@@ -1,5 +1,5 @@
 import { Download } from 'lucide-react';
-import { STATUS_OPTIONS } from '@/hooks/admin/reviews/useAdminReviews';
+import { STATUS_OPTIONS } from '@/hooks/admin/reviews';
 import {
   Select,
   SelectContent,

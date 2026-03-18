@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import i18n from 'i18next';
 import { loadNotifications, loadNotificationSettings, saveNotificationSettings, clearNotificationsStorage } from './persist';
 import { clearAuth } from '@/features/auth/authSlice';
+import { isRecord } from '@/utils/guards';
 
 export type SocketEventType =
   | 'new_lead'
@@ -81,10 +82,6 @@ function makeId() {
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function isNotificationIdFromBackend(id: unknown): id is string {
   return typeof id === 'string' && UUID_REGEX.test(id);
-}
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
 }
 
 function pickId(payload: unknown): string | undefined {

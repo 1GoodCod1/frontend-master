@@ -1,4 +1,4 @@
-import { STATUS_OPTIONS, type StatusOption } from '@/hooks/admin/leads/useAdminLeads';
+import { STATUS_OPTIONS, type StatusOption } from '@/hooks/admin/leads';
 import {
   Select,
   SelectContent,

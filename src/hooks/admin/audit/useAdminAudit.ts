@@ -1,26 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useAuditLogsQuery, useAuditStatsQuery, useAuditStreamQuery } from '@/features/audit/auditApi';
 import { formatDateTimeString } from '@/utils/date';
-import toast from 'react-hot-toast';
-
-export type AuditLogRow = {
-  id?: string;
-  action?: string | null;
-  entity?: string | null;
-  entityId?: string | null;
-  actorId?: string | null;
-  ip?: string | null;
-  ua?: string | null;
-  createdAt?: string | number | null;
-} & Record<string, unknown>;
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
-}
+import { parseAdminPaginatedResponse } from '@/utils/data';
+import { exportToCSV } from '@/utils/csvExport';
+import type { AuditLogRow } from '.';
 
 export function useAdminAudit() {
   const [tab, setTab] = useState(0);
@@ -34,44 +17,36 @@ export function useAdminAudit() {
   const logs = useAuditLogsQuery({ page, limit });
   const stream = useAuditStreamQuery({ limit: streamLimit }, { pollingInterval: 5000 });
 
-  const responseData = unwrapEnvelope(logs.data);
-  const allLogs: AuditLogRow[] = useMemo(() => {
-    if (isRecord(responseData) && Array.isArray(responseData.items)) {
-      return responseData.items.filter(isRecord) as AuditLogRow[];
-    }
-    if (isRecord(responseData) && Array.isArray(responseData.logs)) {
-      return responseData.logs.filter(isRecord) as AuditLogRow[];
-    }
-    return Array.isArray(responseData) ? (responseData.filter(isRecord) as AuditLogRow[]) : [];
-  }, [responseData]);
+  const { items: allLogs, meta } = useMemo(
+    () =>
+      parseAdminPaginatedResponse<AuditLogRow>(logs.data, {
+        page,
+        limit,
+        total: 0,
+      }),
+    [logs.data, page, limit],
+  );
+
   const totalLogs = allLogs.length;
 
   const logsData = useMemo(
     () => ({
       items: allLogs,
-      meta: (isRecord(responseData) && (responseData.pagination || responseData.meta) ? (responseData.pagination ?? responseData.meta) : undefined) || { 
-        total: allLogs.length, 
-        page, 
-        limit 
-      },
+      meta,
     }),
-    [allLogs, responseData, page, limit],
+    [allLogs, meta],
   );
 
   const streamData = useMemo(() => {
-    const raw = unwrapEnvelope(stream.data);
-    const data: AuditLogRow[] =
-      isRecord(raw) && Array.isArray(raw.items)
-        ? (raw.items.filter(isRecord) as AuditLogRow[])
-        : isRecord(raw) && Array.isArray(raw.logs)
-          ? (raw.logs.filter(isRecord) as AuditLogRow[])
-          : Array.isArray(raw)
-            ? (raw.filter(isRecord) as AuditLogRow[])
-            : [];
-    return data.slice(0, streamLimit);
+    const { items } = parseAdminPaginatedResponse<AuditLogRow>(stream.data, {
+      page: 1,
+      limit: streamLimit,
+      total: 0,
+    });
+    return items.slice(0, streamLimit);
   }, [stream.data, streamLimit]);
 
-  const exportToCSV = () => {
+  const doExportToCSV = () => {
     const headers = ['ID', 'Action', 'Entity', 'Entity ID', 'Actor ID', 'IP', 'User Agent', 'Created At'];
     const rows = allLogs.map((log) => [
       log.id ?? '',
@@ -83,18 +58,7 @@ export function useAdminAudit() {
       log.ua || '-',
       log.createdAt ? formatDateTimeString(String(log.createdAt)) : '',
     ]);
-    
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
-    ].join('\n');
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `audit_logs_export_${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    toast.success('Audit logs exported to CSV');
+    exportToCSV(headers, rows, 'audit_logs_export', 'Audit logs exported to CSV');
   };
 
   return {
@@ -117,6 +81,6 @@ export function useAdminAudit() {
     allLogs,
     totalLogs,
     streamData,
-    exportToCSV,
+    exportToCSV: doExportToCSV,
   };
 }

@@ -1,4 +1,4 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Shield, History, Radio, Download } from 'lucide-react';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
-import { useAdminAudit, type AuditLogRow } from '@/hooks/admin/audit/useAdminAudit';
+import { useAdminAudit, type AuditLogRow } from '@/hooks/admin/audit';
 import StatisticsCards from '@/features/admin/components/audit/StatisticsCards';
 import AuditLogDetailsDialog from '@/features/admin/components/audit/AuditLogDetailsDialog';
 import AuditEmptyState from '@/features/admin/components/audit/AuditEmptyState';

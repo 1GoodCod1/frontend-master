@@ -5,48 +5,15 @@ import toast from 'react-hot-toast';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole, selectIsVerified } from '@/features/auth/selectors';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
-import {
-  usePaymentsCreateMiaCheckoutMutation,
-} from '@/features/payments/paymentsApi';
+import { usePaymentsCreateMiaCheckoutMutation } from '@/features/payments/paymentsApi';
 import type { PaidTariff } from '@/features/auth/plan';
-
-const VALID_PLANS: PaidTariff[] = ['VIP', 'PREMIUM'];
-
-function getPlanFromSearchParams(searchParams: URLSearchParams): PaidTariff | null {
-  const plan = searchParams.get('plan')?.toUpperCase();
-  if (plan === 'VIP' || plan === 'PREMIUM') return plan;
-  return null;
-}
-
-function getIsPendingFromSearchParams(searchParams: URLSearchParams): boolean {
-  return searchParams.get('pending') === '1';
-}
-
-function getMyMasterIdFromProfile(raw: unknown): string | null {
-  if (!raw || typeof raw !== 'object') return null;
-  const root = raw as Record<string, unknown>;
-  const unwrapped =
-    root.data && typeof root.data === 'object' ? (root.data as Record<string, unknown>) : root;
-  const id = unwrapped.id ?? (unwrapped.master && typeof unwrapped.master === 'object' ? (unwrapped.master as Record<string, unknown>).id : null);
-  return typeof id === 'string' && id ? id : null;
-}
-
-function getErrorMessage(e: unknown): string | null {
-  if (!e) return null;
-  if (typeof e === 'string') return e;
-  if (e instanceof Error) return e.message;
-  if (typeof e === 'object' && 'data' in e) {
-    const data = (e as { data?: unknown }).data;
-    if (data && typeof data === 'object' && 'message' in data) {
-      const msg = (data as { message?: unknown }).message;
-      if (typeof msg === 'string') return msg;
-    }
-  }
-  if (typeof e === 'object' && 'message' in e && typeof (e as { message?: unknown }).message === 'string') {
-    return (e as { message: string }).message;
-  }
-  return null;
-}
+import {
+  getPlanFromSearchParams,
+  getIsPendingFromSearchParams,
+  getMasterIdFromProfile,
+  getPaymentErrorMessage,
+  VALID_PLANS,
+} from './utils';
 
 export function usePaymentOptionsPage() {
   const { t } = useTranslation();
@@ -62,7 +29,7 @@ export function usePaymentOptionsPage() {
   const isPendingUpgrade = getIsPendingFromSearchParams(searchParams);
 
   const myProfile = useMastersMyProfileQuery(undefined, { skip: !isMaster });
-  const myMasterId: string | null = getMyMasterIdFromProfile(myProfile.data);
+  const myMasterId: string | null = getMasterIdFromProfile(myProfile.data);
 
   const [createMiaCheckout, miaCheckoutState] = usePaymentsCreateMiaCheckoutMutation();
 
@@ -111,7 +78,7 @@ export function usePaymentOptionsPage() {
       toast.error(t('plans.noCheckoutUrl'));
       return null;
     } catch (e: unknown) {
-      toast.error(getErrorMessage(e) ?? t('plans.checkoutFailed'));
+      toast.error(getPaymentErrorMessage(e) ?? t('plans.checkoutFailed'));
       return null;
     }
   };

@@ -12,17 +12,11 @@ import type {
   ReviewVoteHelpfulResponse,
 } from '@/types';
 import { patchInListResponse, idMatches } from '@/services/cacheUtils';
+import { isRecord } from '@/utils/guards';
+import { unwrapEnvelope } from '@/utils/data';
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope<T>(raw: ApiEnvelope<T> | unknown): T {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: T }).data;
-    return (d ?? (raw as unknown as T)) as T;
-  }
-  return raw as T;
+function unwrap<T>(raw: ApiEnvelope<T> | unknown): T {
+  return unwrapEnvelope(raw) as T;
 }
 
 export const reviewsApi = api.injectEndpoints({
@@ -33,7 +27,7 @@ export const reviewsApi = api.injectEndpoints({
     >({
       query: (masterId) => ({ url: `/reviews/can-create/${masterId}`, method: 'GET' }),
       transformResponse: (response: unknown): ReviewCanCreateResponse => {
-        const data = unwrapEnvelope<unknown>(response);
+        const data = unwrap<unknown>(response);
         const root = isRecord(data) ? data : {};
         return {
           canCreate: root.canCreate === true,
@@ -56,7 +50,7 @@ export const reviewsApi = api.injectEndpoints({
     reviewsForMaster: build.query<ReviewDto[], { masterId: string; status?: 'VISIBLE' | 'PENDING' | 'HIDDEN' | 'REPORTED' }>({
       query: ({ masterId, status }) => ({ url: `/reviews/master/${masterId}`, method: 'GET', params: status ? { status } : {} }),
       transformResponse: (raw: unknown): ReviewDto[] => {
-        const inner = unwrapEnvelope<unknown>(raw);
+        const inner = unwrap<unknown>(raw);
         if (Array.isArray(inner)) return inner as ReviewDto[];
         const paginated = isRecord(inner) && 'items' in inner ? (inner as { items?: unknown[] }).items : undefined;
         return Array.isArray(paginated) ? (paginated as ReviewDto[]) : [];
@@ -65,7 +59,7 @@ export const reviewsApi = api.injectEndpoints({
     }),
     reviewsStats: build.query<ReviewStatsResponse, { masterId: string }>({
       query: ({ masterId }) => ({ url: `/reviews/stats/${masterId}`, method: 'GET' }),
-      transformResponse: (raw: unknown) => unwrapEnvelope<ReviewStatsResponse>(raw),
+      transformResponse: (raw: unknown) => unwrap<ReviewStatsResponse>(raw),
     }),
     reviewsUpdateStatus: build.mutation<ReviewDto, { id: string; body: UpdateReviewStatusDto }>({
       query: ({ id, body }) => ({ url: `/reviews/${id}/status`, method: 'PUT', data: body }),
@@ -90,7 +84,7 @@ export const reviewsApi = api.injectEndpoints({
     reviewsMy: build.query<ReviewDto[], void>({
       query: () => ({ url: '/reviews/my-reviews', method: 'GET' }),
       transformResponse: (raw: unknown): ReviewDto[] => {
-        const inner = unwrapEnvelope<unknown>(raw);
+        const inner = unwrap<unknown>(raw);
         if (Array.isArray(inner)) return inner as ReviewDto[];
         const paginated = isRecord(inner) && 'items' in inner ? (inner as { items?: unknown[] }).items : undefined;
         return Array.isArray(paginated) ? (paginated as ReviewDto[]) : [];

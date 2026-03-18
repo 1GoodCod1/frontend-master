@@ -3,21 +3,9 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { useReviewsCreateMutation } from '@/features/reviews/reviewsApi';
 import { useFilesUploadManyMutation } from '@/features/files/filesApi';
-
-type ReviewModalMaster = { id: string; user?: { firstName?: string; lastName?: string } } | null;
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
+import { toErrorMessage } from '@/utils/errors';
+import { isRecord } from '@/utils/guards';
+import type { ReviewModalMaster } from '.';
 
 export function useReviewModal() {
   const { t } = useTranslation();

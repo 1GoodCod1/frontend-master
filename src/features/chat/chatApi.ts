@@ -12,6 +12,7 @@ import type {
   SendMessageDto,
   CreateConversationDto,
 } from '@/types/chat';
+import { unwrapEnvelope } from '@/utils/data';
 
 export type {
   ChatFile,
@@ -27,16 +28,9 @@ export type {
   CreateConversationDto,
 };
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
 
 function unwrap<T>(response: unknown): T {
-  if (isRecord(response) && 'data' in response) {
-    const d = (response as { data?: unknown }).data;
-    if (d !== undefined) return d as T;
-  }
-  return response as T;
+  return unwrapEnvelope(response) as T;
 }
 
 export const chatApi = api.injectEndpoints({

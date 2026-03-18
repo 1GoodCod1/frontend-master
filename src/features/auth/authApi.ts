@@ -6,14 +6,8 @@ import { persistRefreshToken, setLogoutFlag } from './persist';
 import type { RootState } from '@/app/store';
 import { usersApi } from '@/features/users/usersApi';
 import i18n from '@/i18n';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
-}
+import { isRecord } from '@/utils/guards';
+import { unwrapEnvelope } from '@/utils/data';
 
 function isRole(v: unknown): v is NonNullable<MeResponse['role']> {
   return v === 'CLIENT' || v === 'MASTER' || v === 'ADMIN';

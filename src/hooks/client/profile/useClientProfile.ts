@@ -7,21 +7,10 @@ import { useClientsMyPhotosQuery, useClientsRemovePhotoMutation } from '@/featur
 import { mediaUrl } from '@/utils/media';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { toErrorMessage } from '@/utils/errors';
+import { isRecord } from '@/utils/guards';
 
 const CLIENT_PHOTO_LIMIT = 1;
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
 
 export function useClientProfile() {
   const { t } = useTranslation();

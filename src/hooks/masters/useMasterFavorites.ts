@@ -6,19 +6,7 @@ import {
     useFavoritesRemoveMutation,
     useFavoritesCheckQuery
 } from '@/features/favorites/favoritesApi';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-    return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(error: unknown): string | undefined {
-    if (!isRecord(error)) return undefined;
-    const data = isRecord(error.data) ? error.data : undefined;
-    return (
-        (typeof data?.message === 'string' ? data.message : undefined) ??
-        (typeof error.message === 'string' ? error.message : undefined)
-    );
-}
+import { toErrorMessage } from '@/utils/errors';
 
 export function useMasterFavorites(masterId: string | undefined, isClient: boolean) {
     const { t } = useTranslation();

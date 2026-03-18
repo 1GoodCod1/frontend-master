@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { FilterStatus, STATUS_OPTIONS } from '@/hooks/client/leads/useClientLeads';
+import { FilterStatus, STATUS_OPTIONS } from '@/hooks/client/leads';
 
 interface LeadsStatusFilterProps {
   status: FilterStatus;

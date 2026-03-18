@@ -5,16 +5,12 @@ import {
   useDeleteTariffMutation,
   useCreateTariffMutation,
   useUpdateTariffMutation,
-  type Tariff,
   type CreateTariffDto,
   type UpdateTariffDto,
 } from '@/features/tariffs/tariffsApi';
 import { useAdminInvalidateTariffsCacheMutation } from '@/features/admin/adminApi';
 import toast from 'react-hot-toast';
-
-type Row = Tariff & {
-  [k: string]: unknown;
-};
+import type { AdminTariffRow } from '.';
 
 export function useAdminTariffs() {
   const q = useGetTariffsQuery();
@@ -25,7 +21,7 @@ export function useAdminTariffs() {
 
   const [selection, setSelection] = useState<GridRowSelectionModel>([]);
   const [createOpen, setCreateOpen] = useState(false);
-  const [editRow, setEditRow] = useState<Row | null>(null);
+  const [editRow, setEditRow] = useState<AdminTariffRow | null>(null);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState('');

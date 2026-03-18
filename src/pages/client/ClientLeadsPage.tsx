@@ -1,9 +1,8 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
-import { useClientLeads } from '@/hooks/client/leads/useClientLeads';
-import { useReviewModal } from '@/hooks/client/leads/useReviewModal';
+import { useClientLeads, useReviewModal } from '@/hooks/client/leads';
 import LeadsStatusFilter from '@/features/clients/components/leads/LeadsStatusFilter';
 import LeadsEmptyState from '@/features/clients/components/leads/LeadsEmptyState';
 import LeadCard from '@/features/clients/components/leads/LeadCard';

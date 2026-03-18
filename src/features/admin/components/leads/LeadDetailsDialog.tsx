@@ -38,10 +38,7 @@ import {
 import { LEAD_STATUS_OPTIONS, type LeadStatus } from '@/types/leads';
 import { Card } from '@/components/ui/card';
 import type { LeadDto } from '@/types/leads';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
 
 function pickDateLikeField(obj: unknown, key: string): string | number | undefined {
   if (!isRecord(obj)) return undefined;

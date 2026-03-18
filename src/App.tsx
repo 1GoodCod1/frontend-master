@@ -3,10 +3,9 @@ import { RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import toast from 'react-hot-toast';
 import { router } from '@/app/router';
-import { useAppSelector } from '@/app/hooks';
+import { useAppSelector, useAppStore } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { useAuthMeQuery } from '@/features/auth/authApi';
-import { store } from '@/app/store';
 import { api } from '@/services/api';
 import { connectSocket, disconnectSocket } from '@/services/socket';
 
@@ -16,6 +15,7 @@ const REFETCH_TAGS_ON_RECONNECT: readonly string[] = [
 ];
 
 export function App() {
+  const store = useAppStore();
   const isAuthed = useAppSelector(selectIsAuthed);
   const wasOfflineRef = useRef(false);
 
@@ -27,7 +27,7 @@ export function App() {
   useEffect(() => {
     if (isAuthed) connectSocket(store);
     else disconnectSocket();
-  }, [isAuthed]);
+  }, [isAuthed, store]);
 
   useEffect(() => {
     const onOffline = () => { wasOfflineRef.current = true; };
@@ -44,7 +44,7 @@ export function App() {
       window.removeEventListener('offline', onOffline);
       window.removeEventListener('online', onOnline);
     };
-  }, []);
+  }, [store]);
 
   return (
     <HelmetProvider>

@@ -1,12 +1,11 @@
 import { createTransform, type PersistedState } from 'redux-persist';
 
-const PERSISTED_ENDPOINT_PREFIXES = [
-  'categoriesList',
-  'categoriesWithCounts',
-  'categoriesById',
-  'citiesList',
-  'citiesById',
-] as const;
+export { API_CACHE_PERSIST_VERSION } from '@/constants';
+import {
+  PERSISTED_ENDPOINT_PREFIXES,
+  API_CACHE_PERSIST_VERSION,
+  PURGE_QUERY_PREFIXES,
+} from '@/constants';
 
 function isPersistedQueryKey(key: string): boolean {
   return PERSISTED_ENDPOINT_PREFIXES.some((prefix) => key.startsWith(prefix));
@@ -35,16 +34,6 @@ export const persistApiCacheTransform = createTransform(
   null
 );
 
-export const API_CACHE_PERSIST_VERSION = 3;
-
-/** Keys to purge on migration (stale data in normal browser) */
-const PURGE_QUERY_PREFIXES = [
-  'categoriesList',
-  'categoriesWithCounts',
-  'categoriesById',
-  'mastersPopular',
-  'mastersNew',
-];
 
 function purgeQueries(queries: Record<string, unknown>): Record<string, unknown> {
   const filtered: Record<string, unknown> = {};

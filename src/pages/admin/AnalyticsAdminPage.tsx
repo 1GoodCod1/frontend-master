@@ -15,10 +15,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
 
 export default function AnalyticsAdminPage() {
   const { t } = useTranslation();

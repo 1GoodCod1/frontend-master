@@ -6,24 +6,7 @@ import type {
   BookingStatus,
   BookingsCalendarResponse,
 } from '@/types';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapObject<T>(raw: unknown): T {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: T }).data;
-    if (d !== undefined) return d;
-  }
-  return raw as T;
-}
-
-function unwrapArray<T>(raw: unknown): T[] {
-  const inner = unwrapObject<unknown>(raw);
-  if (Array.isArray(inner)) return inner as T[];
-  return [];
-}
+import { unwrapObject, extractItems } from '@/utils/data';
 
 export const bookingsApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -41,7 +24,7 @@ export const bookingsApi = api.injectEndpoints({
         method: 'GET',
         params: status ? { status } : {},
       }),
-      transformResponse: (raw: unknown) => unwrapArray<BookingDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<BookingDto>(raw),
       providesTags: ['Bookings'],
     }),
 
@@ -60,7 +43,7 @@ export const bookingsApi = api.injectEndpoints({
 
     bookingsMyBookings: build.query<BookingDto[], void>({
       query: () => ({ url: '/bookings/my-bookings', method: 'GET' }),
-      transformResponse: (raw: unknown) => unwrapArray<BookingDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<BookingDto>(raw),
       providesTags: ['Bookings'],
     }),
 

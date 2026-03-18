@@ -57,12 +57,17 @@ export default function LoginForm({ isSubmitting }: LoginFormProps) {
         <p className="mb-3 text-[0.82rem] text-muted-foreground">
           {t('auth.login.noAccount')}
         </p>
-        <RouterLink
-          to="/register"
-          className="auth-outline-btn inline-flex"
-        >
-          {t('nav.register')}
-        </RouterLink>
+        <div className="flex flex-col gap-2">
+          <RouterLink to="/register" className="auth-outline-btn inline-flex">
+            {t('nav.register')}
+          </RouterLink>
+          <RouterLink
+            to="/register-client"
+            className="text-[0.82rem] text-muted-foreground hover:text-primary transition-colors"
+          >
+            {t('auth.registerClient.title', 'Register as client')}
+          </RouterLink>
+        </div>
       </div>
     </div>
   );

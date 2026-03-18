@@ -14,9 +14,7 @@ import {
 } from '@/components/ui/tooltip';
 import { mediaUrl } from '@/utils/media';
 import type { RecommendedMasterDto } from '@/types';
-
-const AVATAR_SIZE = 36;
-const ACCENT = '#E97525';
+import { RECENTLY_VIEWED_AVATAR_SIZE, RECENTLY_VIEWED_ACCENT } from '@/constants';
 
 interface RecentlyViewedProps {
   limit?: number;
@@ -47,11 +45,11 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({ limit = 8 }) => 
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg"
           style={{
-            background: `linear-gradient(135deg, ${ACCENT}20, ${ACCENT}10)`,
-            border: `1px solid ${ACCENT}40`,
+            background: `linear-gradient(135deg, ${RECENTLY_VIEWED_ACCENT}20, ${RECENTLY_VIEWED_ACCENT}10)`,
+            border: `1px solid ${RECENTLY_VIEWED_ACCENT}40`,
           }}
         >
-          <Eye className="h-4 w-4" style={{ color: ACCENT }} />
+          <Eye className="h-4 w-4" style={{ color: RECENTLY_VIEWED_ACCENT }} />
         </div>
         <div>
           <h3 className="text-sm font-semibold text-foreground">
@@ -87,7 +85,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({ limit = 8 }) => 
                       }
                       className="relative h-9 w-9 shrink-0 rounded-full p-[2.5px] transition-all duration-200 hover:scale-105 hover:shadow-[0_4px_16px_rgba(233,117,37,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                       style={{
-                        background: `linear-gradient(135deg, ${ACCENT}, #f08a3d)`,
+                        background: `linear-gradient(135deg, ${RECENTLY_VIEWED_ACCENT}, #f08a3d)`,
                         boxShadow: '0 2px 8px rgba(233,117,37,0.25)',
                       }}
                     >
@@ -97,15 +95,15 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({ limit = 8 }) => 
                             src={src}
                             alt={displayName(m)}
                             objectFit="cover"
-                            skeletonHeight={AVATAR_SIZE}
-                            skeletonWidth={AVATAR_SIZE}
+                            skeletonHeight={RECENTLY_VIEWED_AVATAR_SIZE}
+                            skeletonWidth={RECENTLY_VIEWED_AVATAR_SIZE}
                             className="h-full w-full"
                             style={{ borderRadius: '9999px' }}
                           />
                         ) : (
                           <AvatarPlaceholder
                             role="master"
-                            height={AVATAR_SIZE}
+                            height={RECENTLY_VIEWED_AVATAR_SIZE}
                             variant="default"
                           />
                         )}

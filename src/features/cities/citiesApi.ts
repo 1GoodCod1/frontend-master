@@ -8,30 +8,13 @@ import type {
   UpdateCityDto,
 } from '@/types';
 import { patchInListResponse, idMatches } from '@/services/cacheUtils';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapObject<T>(raw: unknown): T {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: T }).data;
-    if (d !== undefined) return d;
-  }
-  return raw as T;
-}
-
-function unwrapArray<T>(raw: unknown): T[] {
-  const inner = unwrapObject<unknown>(raw);
-  if (Array.isArray(inner)) return inner as T[];
-  return [];
-}
+import { unwrapObject, extractItems } from '@/utils/data';
 
 export const citiesApi = api.injectEndpoints({
   endpoints: (build) => ({
     citiesList: build.query<CityDto[], { isActive?: boolean } | void>({
       query: (params) => ({ url: '/cities', method: 'GET', params: params ?? {} }),
-      transformResponse: (raw: unknown) => unwrapArray<CityDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<CityDto>(raw),
       providesTags: ['Cities'],
       keepUnusedDataFor: 7200, // 2h - cities rarely change
     }),
@@ -78,7 +61,7 @@ export const citiesApi = api.injectEndpoints({
     }),
     citiesStats: build.query<CityOverviewStatDto[], void>({
       query: () => ({ url: '/cities/stats/overview', method: 'GET' }),
-      transformResponse: (raw: unknown) => unwrapArray<CityOverviewStatDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<CityOverviewStatDto>(raw),
     }),
   }),
 });

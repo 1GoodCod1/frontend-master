@@ -5,24 +5,8 @@ import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { FormikHelpers } from 'formik';
 import { useResetPasswordMutation } from '@/features/auth/authApi';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
-
-export interface ResetPasswordFormValues {
-  password: string;
-  confirmPassword: string;
-}
+import { toErrorMessage } from '@/utils/errors';
+import type { ResetPasswordFormValues } from '.';
 
 export function useResetPasswordForm(token: string) {
   const { t } = useTranslation();

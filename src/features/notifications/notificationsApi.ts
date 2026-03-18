@@ -1,6 +1,7 @@
 import { api } from '@/services/api';
 import type { NotificationItem } from '@/features/socket/socketSlice';
 import type { SocketEventType } from '@/features/socket/socketSlice';
+import { extractItems } from '@/utils/data';
 
 const CATEGORY_TO_TYPE: Record<string, SocketEventType> = {
   NEW_LEAD: 'new_lead',
@@ -65,17 +66,6 @@ function mapApiToItem(raw: ApiNotification): NotificationItem {
   };
 }
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function extractItems(raw: unknown): ApiNotification[] {
-  if (!isRecord(raw)) return [];
-  const data = raw.data;
-  if (Array.isArray(data)) return data as ApiNotification[];
-  return [];
-}
-
 export const notificationsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getNotifications: build.query<NotificationItem[], { limit?: number } | void>({
@@ -86,7 +76,7 @@ export const notificationsApi = api.injectEndpoints({
       }),
       providesTags: ['Notifications'],
       transformResponse: (raw: unknown) => {
-        const items = extractItems(raw);
+        const items = extractItems<ApiNotification>(raw);
         return items.map(mapApiToItem);
       },
     }),

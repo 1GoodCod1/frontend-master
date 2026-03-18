@@ -1,3 +1,6 @@
+import { isRecord } from '@/utils/guards';
+import { toNumber } from '@/utils/data';
+
 export type PaginationMeta = {
   page: number;
   limit: number;
@@ -10,15 +13,6 @@ export type Paginated<T> =
   | { data: T[]; meta: PaginationMeta }
   | { items: T[]; page: number; limit: number; total: number }
   | { data: T[]; page: number; limit: number; total: number };
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toNumber(v: unknown, fallback: number): number {
-  const n = typeof v === 'number' ? v : typeof v === 'string' ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
-}
 
 export function pickPagination<T>(
   input: unknown,

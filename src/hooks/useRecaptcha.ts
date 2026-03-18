@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+import { RECAPTCHA_SITE_KEY } from './constants';
 
 export const useRecaptcha = () => {
   const [isLoaded, setIsLoaded] = useState(false);

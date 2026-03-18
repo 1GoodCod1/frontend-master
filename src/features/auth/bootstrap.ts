@@ -3,10 +3,7 @@ import { loadPersistedRefreshToken, persistRefreshToken, takeLogoutFlag } from '
 import { setTokens, clearAuth, setRestoring } from './authSlice';
 import { authApi } from './authApi';
 import type { AppDispatch, RootState } from '@/app/store';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
 
 export async function bootstrapAuth(store: { dispatch: AppDispatch; getState: () => RootState }) {
   const useHttpOnly = env.useHttpOnly;

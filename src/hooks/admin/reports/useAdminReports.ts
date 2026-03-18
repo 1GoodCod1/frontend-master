@@ -2,30 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReportsListQuery, useReportsUpdateStatusMutation } from '@/features/reports/reportsApi';
 import { formatDateTimeString } from '@/utils/date';
+import { isRecord } from '@/utils/guards';
+import { toErrorMessage } from '@/utils/errors';
 import toast from 'react-hot-toast';
-
-type ReportRow = {
-  id: string;
-  status?: string | null;
-  reason?: string | null;
-  description?: string | null;
-  createdAt?: string | null;
-  client?: { email?: string | null } | null;
-  master?: { user?: { firstName?: string | null; lastName?: string | null } | null } | null;
-} & Record<string, unknown>;
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(error: unknown): string | undefined {
-  if (!isRecord(error)) return undefined;
-  const data = isRecord(error.data) ? error.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof error.message === 'string' ? error.message : undefined)
-  );
-}
+import type { ReportRow } from '.';
 
 export function useAdminReports() {
   const { t } = useTranslation();

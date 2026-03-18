@@ -19,10 +19,7 @@ import {
 import { useFilesUploadManyMutation } from '@/features/files/filesApi';
 import { TYPING_DEBOUNCE_MS, MAX_ATTACH_FILES } from '@/features/chat/constants';
 import type { ChatInputProps } from '@/types/chat';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
 
 export default function ChatInput({
   onSend,

@@ -6,19 +6,7 @@ import type {
     ReorderPortfolioRequest,
     UpdatePortfolioItemRequest,
 } from '@/types';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-    return typeof v === 'object' && v !== null;
-}
-
-function unwrapArray<T>(raw: unknown): T[] {
-    if (isRecord(raw) && 'data' in raw) {
-        const d = (raw as { data?: unknown }).data;
-        if (Array.isArray(d)) return d as T[];
-    }
-    if (Array.isArray(raw)) return raw as T[];
-    return [];
-}
+import { extractItems } from '@/utils/data';
 
 export const portfolioApi = api.injectEndpoints({
     endpoints: (build) => ({
@@ -28,7 +16,7 @@ export const portfolioApi = api.injectEndpoints({
                 method: 'GET',
                 params: serviceTag ? { serviceTag } : {},
             }),
-            transformResponse: (raw: unknown) => unwrapArray<PortfolioItemDto>(raw),
+            transformResponse: (raw: unknown) => extractItems<PortfolioItemDto>(raw),
             providesTags: ['Portfolio'],
         }),
 
@@ -37,7 +25,7 @@ export const portfolioApi = api.injectEndpoints({
                 url: `/portfolio/master/${masterId}/tags`,
                 method: 'GET',
             }),
-            transformResponse: (raw: unknown) => unwrapArray<string>(raw),
+            transformResponse: (raw: unknown) => extractItems<string>(raw),
         }),
 
         portfolioCreate: build.mutation<PortfolioItemDto, CreatePortfolioItemRequest>({

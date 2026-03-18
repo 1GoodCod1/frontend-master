@@ -1,4 +1,4 @@
-import { STATUS_OPTIONS, type StatusOption } from '@/hooks/admin/reviews/useAdminReviews';
+import { STATUS_OPTIONS, type StatusOption } from '@/hooks/admin/reviews';
 import {
   Select,
   SelectContent,

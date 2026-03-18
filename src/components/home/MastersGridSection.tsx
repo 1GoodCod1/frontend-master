@@ -19,7 +19,6 @@ interface MastersGridSectionProps {
   horizontalScroll?: boolean;
   sectionBg?: boolean;
   sectionBadge?: 'popular' | 'new';
-  /** Map masterId -> discount % for promotion badge on card */
   promotionDiscountByMasterId?: Map<string, number>;
 }
 

@@ -7,30 +7,8 @@ import type {
   UpdateLeadStatusDto,
 } from '@/types';
 import { patchInListResponse, idMatches } from '@/services/cacheUtils';
-
-function isObject(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope<T>(raw: unknown): T {
-  if (isObject(raw) && 'data' in raw) {
-    const d = (raw as Record<string, unknown>).data;
-    if (d !== undefined) return d as T;
-  }
-  return raw as T;
-}
-
-function extractList<T>(raw: unknown): T[] {
-  const unwrapped = unwrapEnvelope<unknown>(raw);
-  if (Array.isArray(unwrapped)) return unwrapped as T[];
-  if (!isObject(unwrapped)) return [];
-  const root = unwrapped as Record<string, unknown>;
-  const candidates = [root.items, root.rows, root.results, root.data];
-  for (const c of candidates) {
-    if (Array.isArray(c)) return c as T[];
-  }
-  return [];
-}
+import { isRecord } from '@/utils/guards';
+import { unwrapObject, extractItems } from '@/utils/data';
 
 export const leadsApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -38,8 +16,8 @@ export const leadsApi = api.injectEndpoints({
       query: (body) => ({ url: '/leads', method: 'POST', data: body }),
       invalidatesTags: ['Leads'],
       transformResponse: (raw: unknown) => {
-        const lead = unwrapEnvelope<unknown>(raw);
-        return (isObject(lead) ? lead : { id: '' }) as LeadDto;
+        const lead = unwrapObject<unknown>(raw);
+        return (isRecord(lead) ? lead : { id: '' }) as LeadDto;
       },
     }),
 
@@ -49,22 +27,22 @@ export const leadsApi = api.injectEndpoints({
     >({
       query: (params) => ({ url: '/leads', method: 'GET', params: params ?? {} }),
       providesTags: ['Leads'],
-      transformResponse: (raw: unknown) => extractList<LeadDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<LeadDto>(raw),
     }),
 
     leadsById: build.query<LeadDto | null, { id: string }>({
       query: ({ id }) => ({ url: `/leads/${id}`, method: 'GET' }),
       providesTags: (_r, _e, a) => [{ type: 'Leads', id: a.id }],
       transformResponse: (raw: unknown) => {
-        const lead = unwrapEnvelope<unknown>(raw);
-        if (isObject(lead) && typeof lead.id === 'string') return lead as LeadDto;
+        const lead = unwrapObject<unknown>(raw);
+        if (isRecord(lead) && typeof lead.id === 'string') return lead as LeadDto;
         return null;
       },
     }),
 
     leadsStats: build.query<LeadStatsResponse, void>({
       query: () => ({ url: '/leads/stats', method: 'GET' }),
-      transformResponse: (raw: unknown) => unwrapEnvelope<LeadStatsResponse>(raw),
+      transformResponse: (raw: unknown) => unwrapObject<LeadStatsResponse>(raw),
       providesTags: ['Leads'],
     }),
 
@@ -122,8 +100,8 @@ export const leadsApi = api.injectEndpoints({
       query: ({ masterId }) => ({ url: `/leads/active-to-master/${masterId}`, method: 'GET' }),
       providesTags: ['Leads'],
       transformResponse: (raw: unknown) => {
-        const lead = unwrapEnvelope<unknown>(raw);
-        if (isObject(lead) && typeof lead.id === 'string') return lead as LeadDto;
+        const lead = unwrapObject<unknown>(raw);
+        if (isRecord(lead) && typeof lead.id === 'string') return lead as LeadDto;
         return null;
       },
     }),

@@ -1,11 +1,11 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminPayments, type AdminPaymentRow } from '@/hooks/admin/payments/useAdminPayments';
+import { useAdminPayments, type AdminPaymentRow } from '@/hooks/admin/payments';
 import StatisticsCards from '@/features/admin/components/payments/StatisticsCards';
 import PaymentsFilters from '@/features/admin/components/payments/PaymentsFilters';
 import PaymentsEmptyState from '@/features/admin/components/payments/PaymentsEmptyState';

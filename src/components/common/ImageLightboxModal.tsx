@@ -5,17 +5,13 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-
-const SWIPE_THRESHOLD = 50;
+import { IMAGE_LIGHTBOX_SWIPE_THRESHOLD } from '@/constants';
 
 export interface ImageLightboxModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Array of image URLs to display */
   images: string[];
-  /** Initial index when opening (0-based) */
   initialIndex?: number;
-  /** Current index (controlled mode) — if provided, use with onIndexChange for controlled navigation */
   currentIndex?: number;
   onIndexChange?: (index: number) => void;
   className?: string;
@@ -91,7 +87,7 @@ export function ImageLightboxModal({
   }, []);
   const handleTouchEnd = useCallback(() => {
     const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > SWIPE_THRESHOLD) {
+    if (Math.abs(diff) > IMAGE_LIGHTBOX_SWIPE_THRESHOLD) {
       if (diff > 0) goNext();
       else goPrev();
     }

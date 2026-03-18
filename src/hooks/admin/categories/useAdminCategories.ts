@@ -9,17 +9,7 @@ import {
   useCategoriesUpdateMutation,
 } from '@/features/categories/categoriesApi';
 import type { CreateCategoryDto, UpdateCategoryDto } from '@/types';
-
-type Row = {
-  id: string;
-  name?: string;
-  slug?: string;
-  description?: string;
-  icon?: string;
-  isActive?: boolean;
-  sortOrder?: number;
-  [k: string]: unknown;
-};
+import type { AdminCategoryRow } from '.';
 
 export function useAdminCategories() {
   const q = useCategoriesListQuery();
@@ -30,7 +20,7 @@ export function useAdminCategories() {
 
   const [selection, setSelection] = useState<GridRowSelectionModel>([]);
   const [createOpen, setCreateOpen] = useState(false);
-  const [editRow, setEditRow] = useState<Row | null>(null);
+  const [editRow, setEditRow] = useState<AdminCategoryRow | null>(null);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmTitle, setConfirmTitle] = useState('');
@@ -83,7 +73,7 @@ export function useAdminCategories() {
     }
   };
 
-  const handleDelete = (row: Row) => {
+  const handleDelete = (row: AdminCategoryRow) => {
     openConfirm({
       title: `Delete category "${String(row?.name ?? row.id)}"?`,
       description: 'This action cannot be undone.',

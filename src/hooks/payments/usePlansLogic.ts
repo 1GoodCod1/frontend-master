@@ -4,39 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useMastersMyProfileQuery, useMastersMyTariffQuery, useMastersClaimFreePlanMutation } from '@/features/masters/mastersApi';
 import {
-    usePaymentsCancelPendingUpgradeMutation,
-    usePaymentsCancelTariffAtPeriodEndMutation,
+  usePaymentsCancelPendingUpgradeMutation,
+  usePaymentsCancelTariffAtPeriodEndMutation,
 } from '@/features/payments/paymentsApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole, selectIsVerified } from '@/features/auth/selectors';
 import { PaidTariff, TariffPlan, effectivePlanFromMasterProfile, isPlan } from '@/features/auth/plan';
 import { useGetActiveTariffsQuery } from '@/features/tariffs/tariffsApi';
 import { plans, type PlanUI } from '@/types/plans';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-    return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-    return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-    if (!isRecord(e)) return undefined;
-    const data = isRecord(e.data) ? e.data : undefined;
-    return (
-        (typeof data?.message === 'string' ? data.message : undefined) ??
-        (typeof e.message === 'string' ? e.message : undefined)
-    );
-}
-
-function pickMasterId(raw: unknown): string | null {
-    const u = unwrapEnvelope(raw);
-    if (!isRecord(u)) return null;
-    if (typeof u.id === 'string') return u.id;
-    if (isRecord(u.master) && typeof u.master.id === 'string') return u.master.id;
-    return null;
-}
+import { isRecord } from '@/utils/guards';
+import { unwrapEnvelope } from '@/utils/data';
+import { toErrorMessage } from '@/utils/errors';
+import { getMasterIdFromProfile } from './utils';
 
 export function usePlansLogic() {
     const { t } = useTranslation();
@@ -57,7 +36,7 @@ export function usePlansLogic() {
     const myTariff = useMastersMyTariffQuery(undefined, { skip: !isMaster });
     const { data: tariffsData, isLoading: tariffsLoading } = useGetActiveTariffsQuery();
 
-    const myMasterId = pickMasterId(myProfile.data);
+    const myMasterId = getMasterIdFromProfile(myProfile.data);
 
     const rawTariff = unwrapEnvelope(myTariff.data);
     const tariff = isRecord(rawTariff) ? rawTariff : {};

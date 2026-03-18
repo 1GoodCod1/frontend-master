@@ -4,7 +4,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Wallet, Building2, ArrowLeft } from 'lucide-react';
-import { usePaymentOptionsPage } from '@/hooks/payments/usePaymentOptionsPage';
+import { usePaymentOptionsPage } from '@/hooks/payments';
 import { toErrorMessage } from '@/utils/errors';
 import { usePaymentsSimulateMiaSandboxMutation } from '@/features/payments/paymentsApi';
 import { LoadingState } from '@/components/common/States';

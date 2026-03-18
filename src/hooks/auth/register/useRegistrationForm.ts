@@ -4,40 +4,12 @@ import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { FormikHelpers } from 'formik';
-
 import { useAuthRegisterMutation, useAuthRegistrationOptionsQuery } from '@/features/auth/authApi';
 import { useReferralsValidateCodeQuery, useConfigReferralsEnabledQuery } from '@/features/referrals/referralsApi';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
-}
-
-export type RegisterRole = 'CLIENT' | 'MASTER';
-
-export interface RegisterFormValues {
-  email: string;
-  phone: string;
-  password: string;
-  role: RegisterRole;
-  firstName?: string;
-  lastName?: string;
-  city?: string;
-  category?: string;
-  description?: string;
-}
+import { isRecord } from '@/utils/guards';
+import { unwrapEnvelope } from '@/utils/data';
+import { toErrorMessage } from '@/utils/errors';
+import type { RegisterFormValues, RegisterRole } from '.';
 
 export function useRegistrationForm(selectedRole: RegisterRole) {
   const { t } = useTranslation();

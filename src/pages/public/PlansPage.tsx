@@ -5,7 +5,7 @@ import { CreditCard } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectRole } from '@/features/auth/selectors';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { usePlansLogic } from '@/hooks/payments/usePlansLogic';
+import { usePlansLogic } from '@/hooks/payments';
 import { LoadingState } from '@/components/common/States';
 import { PlanCard } from '@/features/payments/components/PlanCard';
 import { PlansAlerts } from '@/features/payments/components/PlansAlerts';
@@ -13,10 +13,7 @@ import { PlansComparisonTable } from '@/features/payments/components/PlansCompar
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
 
 export default function PlansPage() {
   const { t } = useTranslation();

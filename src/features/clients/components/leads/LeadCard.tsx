@@ -5,12 +5,10 @@ import { Mail, Clock, Phone, AtSign } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useIsDark } from '@/hooks/useIsDark';
 import { formatDateShort, formatTimeOnly, getLocaleFromLanguage } from '@/utils/date';
 import type { LeadCardProps } from '@/types/leads';
-import { getLeadStatusColor, getLeadStatusBgColor } from '@/utils/statusColors';
+import { LeadStatusBadge } from '@/features/leads/components/LeadStatusBadge';
 import LeaveReviewButton from './LeaveReviewButton';
-import { cn } from '@/lib/utils';
 import { LeadStatusProgress } from '@/features/leads/components/LeadStatusProgress';
 
 const LeadCard = React.memo(function LeadCard({
@@ -19,13 +17,10 @@ const LeadCard = React.memo(function LeadCard({
   reviewsSubmittedMasterIds,
 }: LeadCardProps) {
   const { t, i18n } = useTranslation();
-  const isDark = useIsDark();
   const locale = getLocaleFromLanguage(i18n.language);
 
   const createdAt = lead.createdAt ? new Date(lead.createdAt) : null;
   const status = String((lead.status ?? 'NEW')).toUpperCase();
-  const statusColor = getLeadStatusColor(status, isDark);
-  const statusBgColor = getLeadStatusBgColor(status, isDark);
   const masterSlugOrId =
     lead.master?.slug ||
     (lead.master as { encodedId?: string })?.encodedId ||
@@ -43,16 +38,7 @@ const LeadCard = React.memo(function LeadCard({
                 <span className="text-lg font-semibold">
                   {lead.master?.user?.firstName} {lead.master?.user?.lastName}
                 </span>
-                <span
-                  className={cn('rounded-md border px-2 py-0.5 text-xs font-semibold')}
-                  style={{
-                    backgroundColor: statusBgColor,
-                    color: statusColor,
-                    borderColor: statusColor,
-                  }}
-                >
-                  {t(`leads.${status.toLowerCase()}`)}
-                </span>
+                <LeadStatusBadge status={status} />
               </div>
               <p className="mb-4 leading-relaxed text-foreground">{lead.message ?? '—'}</p>
             </div>

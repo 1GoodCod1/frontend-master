@@ -1,3 +1,33 @@
+import { isRecord } from '@/utils/guards';
+
+/**
+ * Unwraps API envelope { data: T } to T. Returns raw if no envelope.
+ */
+export function unwrapEnvelope(raw: unknown): unknown {
+  if (isRecord(raw) && 'data' in raw) {
+    const d = (raw as { data?: unknown }).data;
+    return d !== undefined ? d : raw;
+  }
+  return raw;
+}
+
+/**
+ * Typed wrapper: unwrapEnvelope + cast to T.
+ */
+export function unwrapObject<T>(raw: unknown): T {
+  return unwrapEnvelope(raw) as T;
+}
+
+/**
+ * Unwraps single value from envelope. Returns null for null/undefined input or empty envelope.
+ */
+export function unwrapOne<T>(raw: unknown): T | null {
+  if (raw == null) return null;
+  const d = unwrapEnvelope(raw);
+  if (d === undefined || d === null) return null;
+  return d as T;
+}
+
 /**
  * Extracts items array from various API response formats
  * Handles TransformInterceptor and typical wrapper formats like { data: T }
@@ -15,8 +45,10 @@ export function extractItems<T = unknown>(resp: unknown): T[] {
   if (!root || typeof root !== 'object') return [];
 
   const r = root as Record<string, unknown>;
-  if (Array.isArray(r.items)) return r.items as T[];
-  if (Array.isArray(r.rows)) return r.rows as T[];
+  const arrayKeys = ['items', 'rows', 'leads', 'masters', 'reviews', 'payments', 'logs', 'users'];
+  for (const key of arrayKeys) {
+    if (Array.isArray(r[key])) return r[key] as T[];
+  }
 
   const nested = (r.data ?? r.result ?? null) as unknown;
   if (Array.isArray(nested)) return nested as T[];
@@ -25,6 +57,49 @@ export function extractItems<T = unknown>(resp: unknown): T[] {
     if (Array.isArray(n.items)) return n.items as T[];
   }
   return [];
+}
+
+/**
+ * Coerces unknown to number. Returns fallback when invalid.
+ */
+export function toNumber(v: unknown, fallback: number = 0): number {
+  const n = typeof v === 'number' ? v : typeof v === 'string' ? Number(v) : NaN;
+  return Number.isFinite(n) ? n : fallback;
+}
+
+/**
+ * Admin API response meta (pagination + nextCursor).
+ */
+export type AdminPaginationMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages?: number;
+  nextCursor?: string | null;
+};
+
+/**
+ * Parses admin paginated API response: unwraps envelope, extracts items, builds meta.
+ * Single source of truth for admin hooks.
+ */
+export function parseAdminPaginatedResponse<T = unknown>(
+  raw: unknown,
+  fallback: { page: number; limit: number; total: number },
+): { items: T[]; meta: AdminPaginationMeta } {
+  const data = unwrapEnvelope(raw);
+  const items = (extractItems(data) as unknown[]).filter(isRecord) as T[];
+  const metaRaw = isRecord(data) ? (data.pagination ?? data.meta) : undefined;
+  const meta: AdminPaginationMeta = isRecord(metaRaw)
+    ? {
+        page: toNumber(metaRaw.page, fallback.page),
+        limit: toNumber(metaRaw.limit, fallback.limit),
+        total: toNumber(metaRaw.total ?? metaRaw.count, fallback.total),
+        totalPages: typeof metaRaw.totalPages === 'number' ? metaRaw.totalPages : undefined,
+        nextCursor:
+          typeof metaRaw.nextCursor === 'string' ? metaRaw.nextCursor : undefined,
+      }
+    : { ...fallback };
+  return { items, meta };
 }
 
 export function unwrapList<T = unknown>(payload: unknown): T[] {

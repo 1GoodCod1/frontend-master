@@ -9,27 +9,13 @@ import type {
   CategoryWithStatsDto,
 } from '@/types';
 import { patchInListResponse, idMatches } from '@/services/cacheUtils';
-
-function unwrapArray<T>(raw: unknown): T[] {
-  if (raw && typeof raw === 'object' && 'data' in (raw as object)) {
-    const envelope = raw as { data?: T[] };
-    return Array.isArray(envelope.data) ? envelope.data : [];
-  }
-  return Array.isArray(raw) ? (raw as T[]) : [];
-}
-
-function unwrapObject<T>(raw: ApiEnvelope<T> | T): T {
-  if (raw && typeof raw === 'object' && 'data' in (raw as object)) {
-    return (raw as { data: T }).data;
-  }
-  return raw as T;
-}
+import { unwrapObject, extractItems } from '@/utils/data';
 
 export const categoriesApi = api.injectEndpoints({
   endpoints: (build) => ({
     categoriesList: build.query<CategoryDto[], { isActive?: boolean } | void>({
       query: (params) => ({ url: '/categories', method: 'GET', params: params ?? {} }),
-      transformResponse: (raw: unknown) => unwrapArray<CategoryDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<CategoryDto>(raw),
       providesTags: ['Categories'],
       keepUnusedDataFor: 3600, // 1h - categories rarely change
     }),
@@ -81,13 +67,13 @@ export const categoriesApi = api.injectEndpoints({
     }),
     categoriesWithCounts: build.query<CategoryDto[], void>({
       query: () => ({ url: '/categories', method: 'GET', params: { isActive: true } }),
-      transformResponse: (raw: unknown) => unwrapArray<CategoryDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<CategoryDto>(raw),
       providesTags: ['Categories'],
       keepUnusedDataFor: 3600, // 1h - categories rarely change
     }),
     categoriesStats: build.query<CategoryOverviewStatDto[], void>({
       query: () => ({ url: '/categories/stats/overview', method: 'GET' }),
-      transformResponse: (raw: unknown) => unwrapArray<CategoryOverviewStatDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<CategoryOverviewStatDto>(raw),
     }),
   }),
 });

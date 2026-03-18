@@ -3,6 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { toErrorMessage } from '@/utils/errors';
 
 export function LoadingState({
   label,
@@ -45,7 +46,12 @@ export function ErrorState({
 }) {
   const { t } = useTranslation();
   const message =
-    typeof error === 'string' ? error : error ? JSON.stringify(error) : '';
+    typeof error === 'string'
+      ? error
+      : error
+        ? toErrorMessage(error) ??
+          (error instanceof Error ? error.message : JSON.stringify(error))
+        : '';
 
   return (
     <div className="py-8 text-center">

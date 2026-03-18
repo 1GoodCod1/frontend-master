@@ -1,8 +1,8 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
-import { useAdminReports } from '@/hooks/admin/reports/useAdminReports';
+import { useAdminReports } from '@/hooks/admin/reports';
 import StatisticsCards from '@/features/admin/components/reports/StatisticsCards';
 import ReportsFilters from '@/features/admin/components/reports/ReportsFilters';
 import ReportCard, { type ReportLike } from '@/features/admin/components/reports/ReportCard';

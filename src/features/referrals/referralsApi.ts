@@ -1,11 +1,5 @@
 import { api } from '@/services/api';
-
-function unwrapEnvelope(raw: unknown): unknown {
-    if (raw && typeof raw === 'object' && 'data' in raw) {
-        return (raw as { data: unknown }).data;
-    }
-    return raw;
-}
+import { unwrapEnvelope } from '@/utils/data';
 
 interface ReferralInfo {
     code: string;

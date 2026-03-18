@@ -5,30 +5,13 @@ import type {
   FavoritesCountResponse,
   FavoritesRemoveResponse,
 } from '@/types';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapObject<T>(raw: unknown): T {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: T }).data;
-    if (d !== undefined) return d;
-  }
-  return raw as T;
-}
-
-function unwrapArray<T>(raw: unknown): T[] {
-  const inner = unwrapObject<unknown>(raw);
-  if (Array.isArray(inner)) return inner as T[];
-  return [];
-}
+import { unwrapObject, extractItems } from '@/utils/data';
 
 export const favoritesApi = api.injectEndpoints({
   endpoints: (build) => ({
     favorites: build.query<FavoriteDto[], void>({
       query: () => ({ url: '/favorites', method: 'GET' }),
-      transformResponse: (raw: unknown) => unwrapArray<FavoriteDto>(raw),
+      transformResponse: (raw: unknown) => extractItems<FavoriteDto>(raw),
       providesTags: ['Favorites'],
     }),
 

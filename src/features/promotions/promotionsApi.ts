@@ -6,34 +6,18 @@ import type {
   PromotionDto,
   UpdatePromotionRequest,
 } from '@/types';
-
-function unwrapArray<T>(raw: ApiEnvelope<T[]> | T[]): T[] {
-    if (raw && typeof raw === 'object' && 'data' in (raw as object)) {
-        const envelope = raw as { data?: T[] };
-        return Array.isArray(envelope.data) ? envelope.data : [];
-    }
-    return Array.isArray(raw) ? raw : [];
-}
-
-function unwrapOne<T>(raw: ApiEnvelope<T> | T | null): T | null {
-    if (raw == null) return null;
-    if (typeof raw === 'object' && 'data' in (raw as object)) {
-        const d = (raw as { data?: T }).data;
-        return d !== undefined && d !== null ? d : null;
-    }
-    return raw as T;
-}
+import { extractItems, unwrapOne } from '@/utils/data';
 
 export const promotionsApi = api.injectEndpoints({
     endpoints: (build) => ({
         promotionsActive: build.query<PromotionDto[], { limit?: number } | void>({
             query: (params) => ({ url: '/promotions/active', method: 'GET', params: params ?? {} }),
-            transformResponse: (raw: ApiEnvelope<PromotionDto[]> | PromotionDto[]) => unwrapArray(raw),
+            transformResponse: (raw: ApiEnvelope<PromotionDto[]> | PromotionDto[]) => extractItems<PromotionDto>(raw),
             providesTags: ['Promotions'],
         }),
         promotionsMy: build.query<PromotionDto[], void>({
             query: () => ({ url: '/promotions/my', method: 'GET' }),
-            transformResponse: (raw: ApiEnvelope<PromotionDto[]> | PromotionDto[]) => unwrapArray(raw),
+            transformResponse: (raw: ApiEnvelope<PromotionDto[]> | PromotionDto[]) => extractItems<PromotionDto>(raw),
             providesTags: ['Promotions'],
         }),
         promotionsCreate: build.mutation<PromotionDto, CreatePromotionRequest>({
@@ -51,7 +35,7 @@ export const promotionsApi = api.injectEndpoints({
         promotionForMaster: build.query<PromotionDto[], { masterId: string }>({
             query: ({ masterId }) => ({ url: `/promotions/master/${masterId}`, method: 'GET' }),
             transformResponse: (raw: ApiEnvelope<PromotionDto[]> | PromotionDto[] | null): PromotionDto[] => {
-                const arr = Array.isArray(raw) ? raw : unwrapOne(raw as ApiEnvelope<PromotionDto[]>);
+                const arr = Array.isArray(raw) ? raw : unwrapOne<PromotionDto[]>(raw);
                 if (!Array.isArray(arr)) return [];
                 return arr.filter((d) => d && typeof d.discount === 'number');
             },

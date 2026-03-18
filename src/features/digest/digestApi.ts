@@ -1,14 +1,8 @@
 import { api } from '@/services/api';
+import { unwrapEnvelope } from '@/utils/data';
 
 export interface DigestStatusResponse {
   subscribed: boolean;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  if (raw && typeof raw === 'object' && 'data' in (raw as Record<string, unknown>)) {
-    return (raw as { data: unknown }).data;
-  }
-  return raw;
 }
 
 export const digestApi = api.injectEndpoints({

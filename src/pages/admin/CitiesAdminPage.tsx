@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { GridColDef } from '@/types/dataGrid';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -7,7 +7,7 @@ import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAdminCities } from '@/hooks/admin/cities/useAdminCities';
+import { useAdminCities } from '@/hooks/admin/cities';
 import CityUpsertDialog from '@/features/admin/components/cities/CityUpsertDialog';
 import BulkActions from '@/features/admin/components/common/BulkActions';
 import ActiveCell from '@/features/admin/components/common/ActiveCell';

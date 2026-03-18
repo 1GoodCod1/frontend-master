@@ -1,4 +1,5 @@
 import { api } from '@/services/api';
+import { unwrapObject } from '@/utils/data';
 
 export interface SubmitVerificationDto {
   documentType: string;
@@ -78,17 +79,6 @@ export interface ReviewVerificationDto {
   notes?: string;
 }
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapObject<T>(raw: unknown): T {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: T }).data;
-    if (d !== undefined) return d;
-  }
-  return raw as T;
-}
 
 export const verificationApi = api.injectEndpoints({
   endpoints: (build) => ({

@@ -28,14 +28,6 @@ export interface EmptyStateProps {
   action?: ReactNode;
 }
 
-export interface StatCardProps {
-  title: string;
-  value: string | number;
-  subtitle?: string;
-  icon?: ReactNode;
-  trend?: 'up' | 'down' | 'neutral';
-}
-
 export interface SectionCardProps {
   title?: string;
   children: ReactNode;

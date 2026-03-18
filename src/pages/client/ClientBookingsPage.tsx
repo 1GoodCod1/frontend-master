@@ -1,8 +1,8 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
-import { useClientBookings } from '@/hooks/client/bookings/useClientBookings';
+import { useClientBookings } from '@/hooks/client/bookings';
 import BookingsEmptyState from '@/features/clients/components/bookings/BookingsEmptyState';
 import BookingCard from '@/features/clients/components/bookings/BookingCard';
 

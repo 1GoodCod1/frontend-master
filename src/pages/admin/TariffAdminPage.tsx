@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAdminTariffs } from '@/hooks/admin/tariffs/useAdminTariffs';
+import { useAdminTariffs } from '@/hooks/admin/tariffs';
 import UpsertDialog from '@/features/admin/components/tariffs/UpsertDialog';
 import BulkActions from '@/features/admin/components/tariffs/BulkActions';
 import TypeCell from '@/features/admin/components/tariffs/TypeCell';

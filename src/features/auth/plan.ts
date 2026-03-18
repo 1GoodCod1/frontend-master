@@ -1,3 +1,5 @@
+import { isRecord } from '@/utils/guards';
+
 export type TariffPlan = 'BASIC' | 'VIP' | 'PREMIUM';
 export type PaidTariff = Exclude<TariffPlan, 'BASIC'>; // 'VIP' | 'PREMIUM'
 
@@ -13,10 +15,6 @@ export function isPlan(x: unknown): x is TariffPlan {
 
 export function hasMinPlan(current: TariffPlan, min: TariffPlan): boolean {
   return PLAN_RANK[current] >= PLAN_RANK[min];
-}
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
 }
 
 export function effectivePlanFromMasterProfile(mp: unknown): TariffPlan {

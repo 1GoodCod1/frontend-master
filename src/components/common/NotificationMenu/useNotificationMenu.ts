@@ -12,14 +12,13 @@ import { isNotificationIdFromBackend } from '@/features/socket/socketSlice';
 import type { NotificationItem } from '@/features/socket/socketSlice';
 import type { TabKey } from './types';
 import { filterByTab } from './utils';
+import { NOTIFICATION_MENU_MAX_VISIBLE } from '@/constants';
 import {
   useGetNotificationsQuery,
   useMarkNotificationAsReadMutation,
   useMarkAllNotificationsAsReadMutation,
   useDeleteAllNotificationsMutation,
 } from '@/features/notifications/notificationsApi';
-
-const MAX_VISIBLE = 80;
 
 export function useNotificationMenu() {
   const dispatch = useAppDispatch();
@@ -66,7 +65,7 @@ export function useNotificationMenu() {
       if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
       return b.createdAt - a.createdAt;
     });
-    return base.slice(0, MAX_VISIBLE);
+    return base.slice(0, NOTIFICATION_MENU_MAX_VISIBLE);
   }, [notifications, effectiveTab]);
 
   const grouped = useMemo(() => {

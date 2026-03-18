@@ -1,41 +1,15 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { useAppDispatch } from '@/app/hooks';
 import { clearUnreadReviews } from '@/features/socket/socketSlice';
 import { useAdminReviewsQuery, useAdminModerateReviewMutation } from '@/features/admin/adminApi';
 import { useReviewsUpdateStatusMutation } from '@/features/reviews/reviewsApi';
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
-import { REVIEW_STATUS_OPTIONS, type ReviewStatus } from '@/types/reviews';
-
-export const STATUS_OPTIONS = REVIEW_STATUS_OPTIONS;
-export type StatusOption = ReviewStatus;
-
-export type AdminReviewRow = {
-  id: string;
-  status?: string | null;
-  clientName?: string | null;
-  rating?: number | null;
-  comment?: string | null;
-  createdAt?: string | null;
-  master?: { user?: { firstName?: string | null; lastName?: string | null } | null } | null;
-} & Record<string, unknown>;
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
+import { parseAdminPaginatedResponse } from '@/utils/data';
+import { exportToCSV } from '@/utils/csvExport';
+import { toErrorMessage } from '@/utils/errors';
+import { useIsRecent } from '../useIsRecent';
+import type { AdminReviewRow, StatusOption } from '.';
 
 export function useAdminReviews() {
   const dispatch = useAppDispatch();
@@ -53,27 +27,20 @@ export function useAdminReviews() {
   const actionRef = useRef<null | (() => Promise<void>)>(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const recent = useAppSelector((s) => s.socket.recent.reviews);
-  const isRecent = useCallback(
-    (id: unknown) => {
-      const key = String(id ?? '');
-      const ts = recent[key];
-      if (!ts) return false;
-      return Date.now() - ts < 2 * 60 * 1000;
-    },
-    [recent],
-  );
+  const isRecent = useIsRecent('reviews');
 
   useEffect(() => {
     dispatch(clearUnreadReviews());
   }, [dispatch]);
 
-  const cursorForPage = pageCursors[page];
-  const cursor = typeof cursorForPage === 'string' && cursorForPage ? cursorForPage : undefined;
+  const cursor =
+    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
 
   useEffect(() => {
-    setPage(1);
-    setPageCursors({ 1: undefined });
+    queueMicrotask(() => {
+      setPage(1);
+      setPageCursors({ 1: undefined });
+    });
   }, [limit, statusFilter]);
 
   const q = useAdminReviewsQuery({
@@ -85,35 +52,36 @@ export function useAdminReviews() {
   const [updateStatus, upd] = useReviewsUpdateStatusMutation();
   const [moderate, mod] = useAdminModerateReviewMutation();
 
-  // Calculate statistics - handle different data structures
-  const responseData = unwrapEnvelope(q.data);
-  const allReviews: AdminReviewRow[] =
-    isRecord(responseData) && Array.isArray(responseData.items)
-      ? (responseData.items.filter(isRecord) as AdminReviewRow[])
-      : isRecord(responseData) && Array.isArray(responseData.reviews)
-        ? (responseData.reviews.filter(isRecord) as AdminReviewRow[])
-        : Array.isArray(responseData)
-          ? (responseData.filter(isRecord) as AdminReviewRow[])
-          : [];
+  const { items: allReviews, meta } = useMemo(
+    () =>
+      parseAdminPaginatedResponse<AdminReviewRow>(q.data, {
+        page,
+        limit,
+        total: 0,
+      }),
+    [q.data, page, limit],
+  );
+
   const totalReviews = allReviews.length;
   const pendingReviews = allReviews.filter((r) => r.status === 'PENDING').length;
   const visibleReviews = allReviews.filter((r) => r.status === 'VISIBLE').length;
   const hiddenReviews = allReviews.filter((r) => r.status === 'HIDDEN').length;
   const reportedReviews = allReviews.filter((r) => r.status === 'REPORTED').length;
 
-  const reviewsData = {
-    items: allReviews,
-    meta:
-      (isRecord(responseData) ? (responseData.pagination ?? responseData.meta) : undefined) ||
-      { total: allReviews.length, page, limit },
-  };
+  const reviewsData = useMemo(
+    () => ({
+      items: allReviews,
+      meta,
+    }),
+    [allReviews, meta],
+  );
 
   useEffect(() => {
-    const meta = isRecord(responseData) ? (responseData.pagination ?? responseData.meta) : undefined;
-    const next = isRecord(meta) && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
+    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
     if (!next) return;
-    setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }));
-  }, [page, responseData]);
+    queueMicrotask(() =>
+      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next })));
+  }, [page, meta]);
 
   const openConfirm = (title: string, description: string | undefined, action: () => Promise<void>) => {
     setConfirmTitle(title);
@@ -185,7 +153,7 @@ export function useAdminReviews() {
     }
   };
 
-  const exportToCSV = () => {
+  const doExportToCSV = () => {
     const headers = ['ID', 'Client Name', 'Master', 'Rating', 'Status', 'Comment', 'Created At'];
     const rows = allReviews.map((review) => [
       review.id,
@@ -196,18 +164,7 @@ export function useAdminReviews() {
       review.comment || '-',
       review.createdAt ? formatDateTimeString(review.createdAt) : '',
     ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')),
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `reviews_export_${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    toast.success('Reviews exported to CSV');
+    exportToCSV(headers, rows, 'reviews_export', 'Reviews exported to CSV');
   };
 
   return {
@@ -249,6 +206,6 @@ export function useAdminReviews() {
     applyBulkStatus,
     applyBulkModerate,
     handleToggleVisibility,
-    exportToCSV,
+    exportToCSV: doExportToCSV,
   };
 }

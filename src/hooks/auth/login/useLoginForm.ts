@@ -4,24 +4,8 @@ import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { FormikHelpers } from 'formik';
 import { useAuthLoginMutation } from '@/features/auth/authApi';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
-
-export interface LoginFormValues {
-  email: string;
-  password: string;
-}
+import { toErrorMessage } from '@/utils/errors';
+import type { LoginFormValues } from '.';
 
 export function useLoginForm() {
   const { t } = useTranslation();

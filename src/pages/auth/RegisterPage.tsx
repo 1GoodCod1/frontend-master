@@ -10,7 +10,7 @@ import RegisterHeader from '@/features/auth/components/register/RegisterHeader';
 import RoleTabs from '@/features/auth/components/register/RoleTabs';
 import RegisterForm from '@/features/auth/components/register/RegisterForm';
 import PremiumAfterVerificationBanner from '@/features/auth/components/register/PremiumAfterVerificationBanner';
-import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '../../hooks/auth/register/useRegistrationForm';
+import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '@/hooks/auth/register';
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();

@@ -19,26 +19,11 @@ import type {
   UpdateAvailabilityStatusResponse,
   UpdateScheduleSettingsResponse,
 } from '@/types';
-
-function unwrapEnvelope<T>(raw: ApiEnvelope<T>): T {
-  if (raw && typeof raw === 'object' && 'data' in raw) {
-    const r = raw as { data?: T };
-    return (r.data ?? (raw as unknown as T)) as T;
-  }
-  return raw as T;
-}
-
-function isObject(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
+import { isRecord } from '@/utils/guards';
+import { unwrapObject, toNumber } from '@/utils/data';
 
 function get(obj: Record<string, unknown>, key: string): unknown {
   return obj[key];
-}
-
-function toNumber(v: unknown, fallback: number): number {
-  const n = typeof v === 'number' ? v : typeof v === 'string' ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
 }
 
 export type MastersQuery = {
@@ -67,14 +52,14 @@ export const mastersApi = api.injectEndpoints({
     mastersSearch: build.query<MastersSearchResponse, MastersQuery | void>({
       query: (params) => ({ url: '/masters', method: 'GET', params: params ?? {} }),
       transformResponse: (raw: unknown, _meta, arg): MastersSearchResponse => {
-        const unwrapped = unwrapEnvelope(raw as ApiEnvelope<unknown>);
-        const root = isObject(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        const unwrapped = unwrapObject<unknown>(raw);
+        const root = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
         const itemsRaw = get(root, 'items');
         const items = Array.isArray(itemsRaw) ? (itemsRaw as PublicMaster[]) : [];
-        const metaRaw = isObject(get(root, 'meta'))
+        const metaRaw = isRecord(get(root, 'meta'))
           ? (get(root, 'meta') as Record<string, unknown>)
           : {};
-        const argObj = isObject(arg) ? (arg as Record<string, unknown>) : {};
+        const argObj = isRecord(arg) ? (arg as Record<string, unknown>) : {};
         const page = toNumber(get(metaRaw, 'page'), toNumber(get(argObj, 'page'), 1));
         const limit = toNumber(get(metaRaw, 'limit'), toNumber(get(argObj, 'limit'), 20));
         const total = toNumber(metaRaw.total, items.length);
@@ -86,12 +71,12 @@ export const mastersApi = api.injectEndpoints({
     mastersFilters: build.query<MastersFiltersResponse, void>({
       query: () => ({ url: '/masters/filters', method: 'GET' }),
       transformResponse: (raw: unknown): MastersFiltersResponse => {
-        const unwrapped = unwrapEnvelope(raw as ApiEnvelope<unknown>);
-        const root = isObject(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
-        const ratingRangeRaw = isObject(get(root, 'ratingRange'))
+        const unwrapped = unwrapObject<unknown>(raw);
+        const root = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        const ratingRangeRaw = isRecord(get(root, 'ratingRange'))
           ? (get(root, 'ratingRange') as Record<string, unknown>)
           : null;
-        const experienceRangeRaw = isObject(get(root, 'experienceRange'))
+        const experienceRangeRaw = isRecord(get(root, 'experienceRange'))
           ? (get(root, 'experienceRange') as Record<string, unknown>)
           : null;
         return {
@@ -118,7 +103,7 @@ export const mastersApi = api.injectEndpoints({
               }
             : { min: 0, max: 50 },
           priceRange: (() => {
-            const pr = isObject(get(root, 'priceRange'))
+            const pr = isRecord(get(root, 'priceRange'))
               ? (get(root, 'priceRange') as Record<string, unknown>)
               : null;
             if (!pr) return { min: 0, max: 5000 };
@@ -133,9 +118,9 @@ export const mastersApi = api.injectEndpoints({
     mastersPopular: build.query<PublicMaster[], { limit?: number } | void>({
       query: (params) => ({ url: '/masters/popular', method: 'GET', params: params ?? {} }),
       transformResponse: (raw: unknown): PublicMaster[] => {
-        const unwrapped = unwrapEnvelope(raw as ApiEnvelope<unknown>);
+        const unwrapped = unwrapObject<unknown>(raw);
         if (Array.isArray(unwrapped)) return unwrapped as PublicMaster[];
-        const root = isObject(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        const root = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
         const items =
           get(root, 'items') ?? get(root, 'data') ?? get(root, 'rows');
         return Array.isArray(items) ? (items as PublicMaster[]) : [];
@@ -145,9 +130,9 @@ export const mastersApi = api.injectEndpoints({
     mastersNew: build.query<PublicMaster[], { limit?: number } | void>({
       query: (params) => ({ url: '/masters/new', method: 'GET', params: params ?? {} }),
       transformResponse: (raw: unknown): PublicMaster[] => {
-        const unwrapped = unwrapEnvelope(raw as ApiEnvelope<unknown>);
+        const unwrapped = unwrapObject<unknown>(raw);
         if (Array.isArray(unwrapped)) return unwrapped as PublicMaster[];
-        const root = isObject(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        const root = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
         const items =
           get(root, 'items') ?? get(root, 'data') ?? get(root, 'rows');
         return Array.isArray(items) ? (items as PublicMaster[]) : [];
@@ -160,8 +145,8 @@ export const mastersApi = api.injectEndpoints({
     >({
       query: () => ({ url: '/masters/landing-stats', method: 'GET' }),
       transformResponse: (raw: unknown) => {
-        const unwrapped = unwrapEnvelope(raw as ApiEnvelope<unknown>);
-        const r = isObject(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        const unwrapped = unwrapObject<unknown>(raw);
+        const r = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
         return {
           verifiedMastersCount: toNumber(r.verifiedMastersCount, 0),
           verifiedOnlineMastersCount: toNumber(r.verifiedOnlineMastersCount, 0),
@@ -175,9 +160,9 @@ export const mastersApi = api.injectEndpoints({
     mastersById: build.query<PublicMaster | null, { id: string }>({
       query: ({ id }) => ({ url: `/masters/${id}`, method: 'GET' }),
       transformResponse: (raw: ApiEnvelope<PublicMaster | null>): PublicMaster | null => {
-        const data = unwrapEnvelope(raw);
+        const data = unwrapObject<PublicMaster | null>(raw);
         if (!data || typeof data !== 'object') return null;
-        return data;
+        return data as PublicMaster | null;
       },
       providesTags: (_r, _e, a) => [{ type: 'Master', id: a.id }],
     }),

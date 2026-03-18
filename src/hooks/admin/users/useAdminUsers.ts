@@ -1,43 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAdminUsersQuery } from '@/features/admin/adminApi';
 import { useUsersToggleVerifyMutation, useUsersToggleBanMutation } from '@/features/users/usersApi';
 import { formatDateTimeString } from '@/utils/date';
+import { parseAdminPaginatedResponse } from '@/utils/data';
+import { exportToCSV } from '@/utils/csvExport';
+import { toErrorMessage } from '@/utils/errors';
 import toast from 'react-hot-toast';
-
-type AdminUserRow = {
-  id: string;
-  email?: string | null;
-  role?: string | null;
-  isVerified?: boolean | null;
-  isBanned?: boolean | null;
-  createdAt?: string | null;
-  lastLoginAt?: string | null;
-} & Record<string, unknown>;
-
-type PaginationMeta = {
-  total?: number;
-  page?: number;
-  limit?: number;
-  totalPages?: number;
-  nextCursor?: string | null;
-} & Record<string, unknown>;
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  return isRecord(raw) && 'data' in raw ? (raw as { data: unknown }).data : raw;
-}
-
-function toErrorMessage(e: unknown): string | undefined {
-  if (!isRecord(e)) return undefined;
-  const data = isRecord(e.data) ? e.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof e.message === 'string' ? e.message : undefined)
-  );
-}
+import type { AdminUserRow } from '.';
 
 export function useAdminUsers() {
   const [page, setPage] = useState(1);
@@ -48,8 +17,8 @@ export function useAdminUsers() {
   const [qText, setQText] = useState<string>('');
   const [pageCursors, setPageCursors] = useState<Record<number, string | undefined>>({ 1: undefined });
 
-  const cursorForPage = pageCursors[page];
-  const cursor = typeof cursorForPage === 'string' && cursorForPage ? cursorForPage : undefined;
+  const cursor =
+    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -76,39 +45,31 @@ export function useAdminUsers() {
   const [verify] = useUsersToggleVerifyMutation();
   const [ban] = useUsersToggleBanMutation();
 
-  // Преобразуем данные для PaginatedDataGrid
-  const responseData = unwrapEnvelope(q.data);
-  const users =
-    isRecord(responseData) && Array.isArray(responseData.users)
-      ? responseData.users.filter(isRecord)
-      : [];
-  const pagination =
-    isRecord(responseData) && isRecord(responseData.pagination) ? responseData.pagination : null;
+  const { items: allUsers, meta } = useMemo(
+    () =>
+      parseAdminPaginatedResponse<AdminUserRow>(q.data, {
+        page,
+        limit,
+        total: 0,
+      }),
+    [q.data, page, limit],
+  );
+
+  const usersData = useMemo(
+    () => ({
+      items: allUsers,
+      meta,
+    }),
+    [allUsers, meta],
+  );
 
   useEffect(() => {
-    const next =
-      pagination && typeof pagination.nextCursor === 'string' ? pagination.nextCursor : undefined;
+    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
     if (!next) return;
     queueMicrotask(() =>
-      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next }))
-    );
-  }, [page, pagination]);
+      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next })));
+  }, [page, meta]);
 
-  const usersData:
-    | { items: AdminUserRow[]; meta: PaginationMeta }
-    | unknown = users.length
-    ? {
-        items: users as AdminUserRow[],
-        meta:
-          (pagination as PaginationMeta) ??
-          ({ total: users.length, page, limit } as PaginationMeta),
-      }
-    : responseData;
-
-  // Calculate statistics
-  const allUsers = isRecord(usersData) && Array.isArray(usersData.items)
-    ? (usersData.items.filter(isRecord) as AdminUserRow[])
-    : [];
   const totalUsers = allUsers.length;
   const activeUsers = allUsers.filter((u) => u.isVerified && !u.isBanned).length;
   const pendingUsers = allUsers.filter((u) => !u.isVerified && !u.isBanned).length;
@@ -134,7 +95,7 @@ export function useAdminUsers() {
     }
   };
 
-  const exportToCSV = () => {
+  const doExportToCSV = () => {
     const headers = ['ID', 'Email', 'Role', 'Status', 'Created At', 'Last Login'];
     const rows = allUsers.map((user) => [
       user.id,
@@ -144,18 +105,7 @@ export function useAdminUsers() {
       user.createdAt ? formatDateTimeString(user.createdAt) : '',
       user.lastLoginAt ? formatDateTimeString(user.lastLoginAt) : 'Never',
     ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map((row) => row.map((cell) => `"${String(cell)}"`).join(',')),
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `users_export_${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    toast.success('Users exported to CSV');
+    exportToCSV(headers, rows, 'users_export', 'Users exported to CSV');
   };
 
   return {
@@ -185,6 +135,6 @@ export function useAdminUsers() {
     },
     handleVerify,
     handleBan,
-    exportToCSV,
+    exportToCSV: doExportToCSV,
   };
 }

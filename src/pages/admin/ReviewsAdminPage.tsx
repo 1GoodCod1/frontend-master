@@ -1,4 +1,4 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -6,7 +6,7 @@ import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminReviews, type AdminReviewRow } from '@/hooks/admin/reviews/useAdminReviews';
+import { useAdminReviews, type AdminReviewRow } from '@/hooks/admin/reviews';
 import StatisticsCards from '@/features/admin/components/reviews/StatisticsCards';
 import ReviewsFilters from '@/features/admin/components/reviews/ReviewsFilters';
 import BulkActions from '@/features/admin/components/reviews/BulkActions';

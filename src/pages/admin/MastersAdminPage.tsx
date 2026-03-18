@@ -1,11 +1,11 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminMasters, type AdminMasterRow } from '@/hooks/admin/masters/useAdminMasters';
+import { useAdminMasters, type AdminMasterRow } from '@/hooks/admin/masters';
 import StatisticsCards from '@/features/admin/components/masters/StatisticsCards';
 import MastersFilters from '@/features/admin/components/masters/MastersFilters';
 import MastersEmptyState from '@/features/admin/components/masters/MastersEmptyState';

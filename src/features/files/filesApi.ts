@@ -1,14 +1,8 @@
 import { api } from '@/services/api';
 import type { FileDto } from '@/types';
+import { unwrapEnvelope } from '@/utils/data';
 
 export type UploadManyResponse = { items: FileDto[] };
-
-function unwrapEnvelope(raw: unknown): unknown {
-  if (raw && typeof raw === 'object' && 'data' in (raw as Record<string, unknown>)) {
-    return (raw as { data: unknown }).data;
-  }
-  return raw;
-}
 
 export const filesApi = api.injectEndpoints({
   endpoints: (build) => ({

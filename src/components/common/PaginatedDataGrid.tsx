@@ -23,6 +23,7 @@ import {
 import { DataGridToolbar } from './DataGridToolbar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { isRecord } from '@/utils/guards';
 
 type Extracted = {
   rows: Record<string, unknown>[];
@@ -31,9 +32,6 @@ type Extracted = {
   limit?: number;
 };
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
 
 function firstArrayInObject(obj: unknown): unknown[] | undefined {
   if (!isRecord(obj)) return undefined;

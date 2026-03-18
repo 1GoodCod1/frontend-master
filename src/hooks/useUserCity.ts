@@ -6,8 +6,8 @@ import { hasUserCityConsent } from '@/features/cookie-consent/storage';
 import {
   findNearestCityByCoords,
 } from '@/utils/moldovaCityCoords';
+import { USER_CITY_STORAGE_KEY } from './constants';
 
-export const USER_CITY_STORAGE_KEY = 'userCityName';
 const STORAGE_KEY = USER_CITY_STORAGE_KEY;
 
 function normalizeForMatch(s: string): string {

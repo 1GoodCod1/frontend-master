@@ -8,17 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-
-const HOME_FAQS = [
-  { q: 'faq.q1.question', a: 'faq.q1.answer' },
-  { q: 'faq.q2.question', a: 'faq.q2.answer' },
-  { q: 'faq.q3.question', a: 'faq.q3.answer' },
-  { q: 'faq.q4.question', a: 'faq.q4.answer' },
-  { q: 'faq.q5.question', a: 'faq.q5.answer' },
-  { q: 'faq.q6.question', a: 'faq.q6.answer' },
-  { q: 'faq.q7.question', a: 'faq.q7.answer' },
-  { q: 'faq.q12.question', a: 'faq.q12.answer', linkSuffix: 'faq.q12.linkSuffix' },
-];
+import { HOME_FAQS } from '@/constants';
 
 export const FAQSection = () => {
   const { t } = useTranslation();

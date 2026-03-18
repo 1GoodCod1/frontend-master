@@ -1,35 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { Search, MessageCircle, ThumbsUp } from 'lucide-react';
 import { useIsDark } from '@/hooks/useIsDark';
 import OptimizedImage from '@/components/common/OptimizedImage';
 import { cn } from '@/lib/utils';
-
-const steps = [
-  {
-    icon: Search,
-    titleKey: 'home.howItWorks.step1Title',
-    descKey: 'home.howItWorks.step1Desc',
-    accent: 'text-orange-600 dark:text-orange-400',
-    bg: 'bg-orange-500/10 dark:bg-orange-400/10',
-    ring: 'ring-orange-500/20 dark:ring-orange-400/20',
-  },
-  {
-    icon: MessageCircle,
-    titleKey: 'home.howItWorks.step2Title',
-    descKey: 'home.howItWorks.step2Desc',
-    accent: 'text-blue-600 dark:text-blue-400',
-    bg: 'bg-blue-500/10 dark:bg-blue-400/10',
-    ring: 'ring-blue-500/20 dark:ring-blue-400/20',
-  },
-  {
-    icon: ThumbsUp,
-    titleKey: 'home.howItWorks.step3Title',
-    descKey: 'home.howItWorks.step3Desc',
-    accent: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-500/10 dark:bg-emerald-400/10',
-    ring: 'ring-emerald-500/20 dark:ring-emerald-400/20',
-  },
-] as const;
+import { HOW_IT_WORKS_STEPS } from '@/constants';
 
 export const HowItWorksSection = () => {
   const { t } = useTranslation();
@@ -67,7 +40,7 @@ export const HowItWorksSection = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 max-w-3xl mx-auto">
-        {steps.map(({ icon: Icon, titleKey, descKey, accent, bg, ring }, i) => (
+        {HOW_IT_WORKS_STEPS.map(({ icon: Icon, titleKey, descKey, accent, bg, ring }, i) => (
           <div
             key={titleKey}
             className={cn(

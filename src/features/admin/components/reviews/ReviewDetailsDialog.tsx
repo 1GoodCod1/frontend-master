@@ -1,4 +1,4 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { User, MessageSquare, Paperclip, Eye, EyeOff } from 'lucide-react';
 import {
   Dialog,
@@ -15,13 +15,11 @@ import { StarRatingDisplay } from '@/features/admin/components/common/StarRating
 import { mediaUrl } from '@/utils/media';
 import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
 import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
+import { isRecord } from '@/utils/guards';
 import type { ReviewCriteriaDto, ReviewFileDto } from '@/types/reviews';
 
 type WithSlugAndName = { slug?: string | null; name?: string | null } | null | undefined;
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
 
 function isWithSlugAndName(v: unknown): v is WithSlugAndName {
   if (!isRecord(v)) return v === null || v === undefined;

@@ -26,23 +26,7 @@ import {
 import { cn } from '@/lib/utils';
 import { getLocaleFromLanguage } from '@/utils/date';
 import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus, type LeadDto } from '@/types/leads';
-
-function extractItems(resp: unknown): unknown[] {
-  const root = (resp as { data?: unknown })?.data ?? resp;
-  if (!root || typeof root !== 'object') return [];
-
-  if (Array.isArray(root)) return root;
-  const r = root as { items?: unknown[]; rows?: unknown[] };
-  if (Array.isArray(r.items)) return r.items;
-  if (Array.isArray(r.rows)) return r.rows;
-
-  const nested = (root as { data?: unknown; result?: unknown }).data ?? (root as { result?: unknown }).result ?? null;
-  if (Array.isArray(nested)) return nested;
-  if (nested && typeof nested === 'object' && Array.isArray((nested as { items?: unknown[] }).items)) {
-    return (nested as { items: unknown[] }).items;
-  }
-  return [];
-}
+import { extractItems } from '@/utils/data';
 
 const ITEMS_PER_PAGE = 3;
 

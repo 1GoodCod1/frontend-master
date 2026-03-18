@@ -1,16 +1,15 @@
-﻿import { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Calendar, Heart, Mail, AlertTriangle, Star } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { RecentlyViewed } from '@/components/home/recommendations/RecentlyViewed';
 import { RecommendedMasters } from '@/components/home/recommendations/RecommendedMasters';
-import { useClientDashboard } from '@/hooks/client/dashboard/useClientDashboard';
+import { useClientDashboard, type ClientBooking } from '@/hooks/client/dashboard';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useNow } from '@/hooks/useNow';
 import DashboardMetricCard from '@/features/clients/components/dashboard/DashboardMetricCard';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { ClientBooking } from '@/hooks/client/dashboard/useClientDashboard';
 
 import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
 

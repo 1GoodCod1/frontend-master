@@ -21,7 +21,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { LeadSubmissionState } from '@/hooks/leads/useLeadSubmission';
+import type { LeadSubmissionState } from '@/hooks/leads';
+import { toErrorMessage } from '@/utils/errors';
 
 interface MasterDetailsLeadFormProps {
   isAuthed: boolean;
@@ -31,19 +32,6 @@ interface MasterDetailsLeadFormProps {
   leadSubmission: LeadSubmissionState;
   isMasterAvailable: boolean;
   availabilityStatus: string;
-}
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(error: unknown): string | undefined {
-  if (!isRecord(error)) return undefined;
-  const data = isRecord(error.data) ? error.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof error.message === 'string' ? error.message : undefined)
-  );
 }
 
 export const MasterDetailsLeadForm = ({

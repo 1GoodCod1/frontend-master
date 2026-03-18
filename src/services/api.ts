@@ -7,23 +7,15 @@ import type { RootState } from '@/app/store';
 import { clearAuth, setTokens } from '@/features/auth/authSlice';
 import { persistRefreshToken, setLogoutFlag } from '@/features/auth/persist';
 import { getSessionId } from '@/utils/sessionId';
+import { isRecord } from '@/utils/guards';
+import { unwrapEnvelope } from '@/utils/data';
 
 const isNetworkOr5xx = (status: number | undefined) =>
   status == null || status === 0 || (status >= 500 && status < 600);
 
 type ApiErrorLike = { status?: number; data?: unknown };
 
-export function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: unknown }).data;
-    return d !== undefined ? d : raw;
-  }
-  return raw;
-}
+export { isRecord };
 
 type RefreshTokens = { accessToken: string; refreshToken?: string };
 

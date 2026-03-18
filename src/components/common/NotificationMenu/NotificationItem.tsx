@@ -5,12 +5,9 @@ import type { NotificationItem as NotificationItemType } from '@/features/socket
 import { NotificationIcon } from './NotificationIcon';
 import { routeFor } from './utils';
 import { cn } from '@/lib/utils';
+import { isRecord } from '@/utils/guards';
 
 type RoutePayload = { conversationId?: string; masterId?: string; data?: { masterId?: string } };
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
 
 function getConversationId(p: Record<string, unknown>): string | undefined {
   if (typeof p.conversationId === 'string') return p.conversationId;

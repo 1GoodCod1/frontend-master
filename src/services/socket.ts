@@ -5,6 +5,7 @@ import { setConnected, pushEvent } from '@/features/socket/socketSlice';
 import { selectAccessToken } from '@/features/auth/selectors';
 import { api } from '@/services/api';
 import { playNotificationSound } from '@/utils/audio';
+import { isRecord } from '@/utils/guards';
 import type { RootState } from '@/app/store';
 
 let socket: Socket | null = null;
@@ -13,9 +14,6 @@ export function getSocket() {
   return socket;
 }
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
 
 export function connectSocket(store: Store<RootState>) {
   // Если socket уже существует и подключен, возвращаем его

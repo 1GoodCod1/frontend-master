@@ -77,6 +77,15 @@ export function formatDateShort(
   });
 }
 
+/** Format slot start time as HH:MM (for booking slots). */
+export function formatSlotTime(slot: { start?: string }): string {
+  if (!slot?.start) return '--:--';
+  const d = new Date(slot.start);
+  const h = d.getHours().toString().padStart(2, '0');
+  const m = d.getMinutes().toString().padStart(2, '0');
+  return `${h}:${m}`;
+}
+
 /** Time only (HH:MM). */
 export function formatTimeOnly(
   dateInput: string | Date | null | undefined,

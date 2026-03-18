@@ -2,19 +2,7 @@ import { useFavoritesQuery, useFavoritesRemoveMutation } from '@/features/favori
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import type { FavoriteDto } from '@/types';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function toErrorMessage(error: unknown): string | undefined {
-  if (!isRecord(error)) return undefined;
-  const data = isRecord(error.data) ? error.data : undefined;
-  return (
-    (typeof data?.message === 'string' ? data.message : undefined) ??
-    (typeof error.message === 'string' ? error.message : undefined)
-  );
-}
+import { toErrorMessage } from '@/utils/errors';
 
 export function useClientFavorites() {
   const { t } = useTranslation();

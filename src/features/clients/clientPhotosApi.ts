@@ -1,5 +1,7 @@
 import { api } from '@/services/api';
 import { FileDto } from '@/types';
+import { isRecord } from '@/utils/guards';
+import { unwrapEnvelope } from '@/utils/data';
 
 export type MyPhotosResponse = {
   avatarFileId: string | null;
@@ -7,18 +9,6 @@ export type MyPhotosResponse = {
 };
 
 type OkResponse = { ok: true };
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-
-function unwrapEnvelope(raw: unknown): unknown {
-  if (isRecord(raw) && 'data' in raw) {
-    const d = (raw as { data?: unknown }).data;
-    return d !== undefined ? d : raw;
-  }
-  return raw;
-}
 
 export const clientPhotosApi = api.injectEndpoints({
   endpoints: (build) => ({
