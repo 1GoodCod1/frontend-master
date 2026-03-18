@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { Mail, Phone, Send } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,13 @@ export default function ContactsPage() {
   ];
 
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={t('contact.title')}
+        description={t('contact.subtitle')}
+        keywords="контакты Master-Hub, поддержка Moldova"
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -106,5 +113,6 @@ export default function ContactsPage() {
         </motion.div>
       </div>
     </motion.div>
+    </>
   );
 }

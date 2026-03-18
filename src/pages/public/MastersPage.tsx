@@ -14,6 +14,7 @@ import {
   DollarSign,
   Tag,
 } from 'lucide-react';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import {
   useMastersFiltersQuery,
@@ -323,7 +324,13 @@ export default function MastersPage() {
   ].filter(Boolean).length;
 
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={t('masters.title')}
+        description={t('masters.subtitle')}
+        keywords="мастера Молдовы, специалисты Кишинёв, маникюр, ремонт, уборка, поиск мастеров Moldova"
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -892,5 +899,6 @@ export default function MastersPage() {
         />
       )}
     </motion.div>
+    </>
   );
 }

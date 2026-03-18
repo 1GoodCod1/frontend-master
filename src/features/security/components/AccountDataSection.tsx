@@ -21,7 +21,7 @@ import {
 } from '@/features/users/usersApi';
 
 export function AccountDataSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   const [deleteSelf, { isLoading: isDeleting }] = useUsersDeleteSelfMutation();
@@ -32,14 +32,16 @@ export function AccountDataSection() {
 
   const handleExport = useCallback(async () => {
     try {
-      const result = await triggerExport().unwrap();
-      const blob = new Blob([JSON.stringify(result, null, 2)], {
-        type: 'application/json',
-      });
+      const locale = i18n.language?.toLowerCase().startsWith('ru')
+        ? 'ru'
+        : i18n.language?.toLowerCase().startsWith('ro')
+          ? 'ro'
+          : 'en';
+      const blob = await triggerExport({ locale }).unwrap();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `my-data-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `my-data-${new Date().toISOString().split('T')[0]}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -48,7 +50,7 @@ export function AccountDataSection() {
     } catch {
       toast.error(t('security.exportError'));
     }
-  }, [triggerExport, t]);
+  }, [triggerExport, t, i18n]);
 
   const handleDelete = useCallback(async () => {
     try {

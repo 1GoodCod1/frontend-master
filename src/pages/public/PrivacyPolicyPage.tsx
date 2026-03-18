@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -23,7 +24,13 @@ export default function PrivacyPolicyPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 md:py-8">
+    <>
+      <SEOHead
+        title={t('privacy.title')}
+        description={t('privacy.subtitle')}
+        noindex
+      />
+      <div className="mx-auto max-w-3xl px-4 py-6 md:py-8">
       <PageHeader
         title={t('privacy.title')}
         subtitle={t('privacy.subtitle')}
@@ -76,5 +83,6 @@ export default function PrivacyPolicyPage() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }

@@ -3,30 +3,6 @@ import { clearAuth } from '@/features/auth/authSlice';
 import { persistRefreshToken, setLogoutFlag } from '@/features/auth/persist';
 import type { UpdateUserDto } from '@/types';
 
-export interface PersonalDataExport {
-  exportDate: string;
-  user: {
-    id: string;
-    email: string;
-    phone: string;
-    firstName: string | null;
-    lastName: string | null;
-    role: string;
-    isVerified: boolean;
-    preferredLanguage: string | null;
-    createdAt: string;
-    updatedAt: string;
-    lastLoginAt: string | null;
-  };
-  masterProfile: unknown | null;
-  leads: unknown[];
-  reviews: unknown[];
-  bookings: unknown[];
-  loginHistory: unknown[];
-  favorites: unknown[];
-  notifications: unknown[];
-}
-
 export const usersApi = api.injectEndpoints({
   endpoints: (build) => ({
     usersById: build.query<unknown, { id: string }>({
@@ -82,8 +58,13 @@ export const usersApi = api.injectEndpoints({
       },
     }),
 
-    usersExportPersonalData: build.query<PersonalDataExport, void>({
-      query: () => ({ url: '/users/me/export', method: 'GET' }),
+    usersExportPersonalData: build.query<Blob, { locale?: string } | void>({
+      query: (arg) => ({
+        url: '/users/me/export',
+        method: 'GET',
+        params: arg?.locale ? { locale: arg.locale } : undefined,
+        responseType: 'blob',
+      }),
     }),
   }),
 });

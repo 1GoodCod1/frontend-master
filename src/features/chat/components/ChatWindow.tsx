@@ -27,7 +27,6 @@ import type { ChatWindowProps } from '@/types/chat';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
@@ -417,18 +416,25 @@ export default function ChatWindow({
       )}
 
       {!canSendMessages && !conversation?.closedAt && !isLeadActive && (
-        <Alert variant="default" className="mx-3 sm:mx-4 border-t border-border">
-          <AlertTitle className="font-semibold">
+        <div
+          className={cn(
+            'mx-3 sm:mx-4 mt-3 rounded-xl px-4 py-3.5 text-sm',
+            'bg-slate-100/90 dark:bg-white/[0.04]',
+            'border border-slate-200/70 dark:border-white/[0.06]',
+            'text-slate-700 dark:text-slate-300'
+          )}
+        >
+          <p className="font-medium">
             {currentUserRole === 'MASTER'
               ? t('common.chatNoActiveLeadMaster')
               : t('common.chatNoActiveLead')}
-          </AlertTitle>
-          <AlertDescription>
+          </p>
+          <p className="mt-1.5 text-slate-600 dark:text-slate-400">
             {currentUserRole === 'MASTER'
               ? t('common.chatNoActiveLeadHintMaster')
               : t('common.chatNoActiveLeadHint')}
-          </AlertDescription>
-        </Alert>
+          </p>
+        </div>
       )}
     </div>
   );

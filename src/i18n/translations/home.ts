@@ -101,6 +101,10 @@ export const home = {
         popular: 'Popular',
         interesting_category: 'Interesting category',
       },
+      seoKeywords:
+        'masters Moldova, specialists Chisinau, manicure, haircuts, repairs, cleaning, plumbing, electrical, construction, beauty services, verified craftsmen, handyman, marketplace Moldova, find master, home repair, auto repair, furniture, moving services',
+      seoDefaultDescription:
+        'Master-Hub — marketplace of verified specialists in Moldova. Manicure, haircuts, repairs, cleaning, plumbing, electrical, construction and more. Find trusted masters in Chisinau, Balti and across Moldova.',
     },
   },
   ru: {
@@ -205,6 +209,10 @@ export const home = {
         popular: 'Популярный',
         interesting_category: 'Интересная категория',
       },
+      seoKeywords:
+        'мастера Молдовы, специалисты Кишинёв, маникюр, стрижки, ремонт, уборка, сантехник, электрик, строительство, услуги красоты, проверенные мастера, ремонт техники, ремонт авто, мебель, переезды, Бэлць, Тирасполь, Бендеры, поиск мастера, маркетплейс Молдова',
+      seoDefaultDescription:
+        'Master-Hub — платформа для поиска лучших мастеров Молдовы. Маникюр, стрижки, ремонт, уборка, сантехника, электрика, строительство и многое другое. Найдите проверенных специалистов в Кишинёве, Бэлць и по всей Молдове.',
     },
   },
   ro: {
@@ -309,6 +317,10 @@ export const home = {
         popular: 'Popular',
         interesting_category: 'Categorie interesantă',
       },
+      seoKeywords:
+        'meșteri Moldova, specialiști Chișinău, manichiură, tunsoare, reparații, curățenie, instalator, electrician, construcții, servicii frumusețe, meșteri verificați, reparații electrocasnice, reparații auto, mobilier, mutări, Bălți, Tiraspol, Bender, căutare meșter, piață Moldova',
+      seoDefaultDescription:
+        'Master-Hub — piața specialiștilor verificați din Moldova. Manichiură, tunsoare, reparații, curățenie, instalații sanitare, electricitate, construcții și multe altele. Găsiți meșteri de încredere în Chișinău, Bălți și în toată Moldova.',
     },
   },
 };

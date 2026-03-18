@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { CreditCard } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectRole } from '@/features/auth/selectors';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { usePlansLogic } from '@/hooks/payments/usePlansLogic';
 import { LoadingState } from '@/components/common/States';
 import { PlanCard } from '@/features/payments/components/PlanCard';
@@ -52,7 +53,9 @@ export default function PlansPage() {
 
   if (role === 'ADMIN') {
     return (
-      <div className="w-full max-w-md mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
+      <>
+        <SEOHead title={t('plans.adminView.title')} noindex />
+        <div className="w-full max-w-md mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,12 +82,15 @@ export default function PlansPage() {
           </Card>
         </motion.div>
       </div>
+      </>
     );
   }
 
   if (isClient) {
     return (
-      <div className="w-full max-w-2xl mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
+      <>
+        <SEOHead title={t('plans.becomeMaster.title')} noindex />
+        <div className="w-full max-w-2xl mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -119,6 +125,7 @@ export default function PlansPage() {
           </Card>
         </motion.div>
       </div>
+      </>
     );
   }
 
@@ -127,7 +134,13 @@ export default function PlansPage() {
   }
 
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={t('plans.title')}
+        description={t('plans.subtitle')}
+        keywords="тарифы Master-Hub, планы для мастеров, Moldova"
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -202,5 +215,6 @@ export default function PlansPage() {
         <PlansComparisonTable />
       </div>
     </motion.div>
+    </>
   );
 }

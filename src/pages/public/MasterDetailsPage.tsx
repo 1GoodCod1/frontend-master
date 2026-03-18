@@ -12,6 +12,7 @@ import { useLeadsActiveToMasterQuery } from '@/features/leads/leadsApi';
 import { useMasterFavorites } from '@/hooks/masters/useMasterFavorites';
 import { useReviewSubmission } from '@/hooks/reviews/useReviewSubmission';
 import { useLeadSubmission } from '@/hooks/leads/useLeadSubmission';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { ErrorState } from '@/components/common/States';
 import { DetailSkeleton } from '@/components/common/Skeletons';
 import { MasterProfileHero } from '@/features/masters/components/MasterProfileHero';
@@ -162,8 +163,23 @@ export default function MasterDetailsPage() {
 
   const cardCls = 'bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-3xl shadow-sm transition-colors duration-300';
 
+  const seoDescription =
+    description?.slice(0, 160) ||
+    t('masterDetails.becomeClientSubtitle');
+  const categoryName = m?.category ? getTranslatedCategoryName(t, m.category) : '';
+  const cityName = m?.city ? getTranslatedCityName(t, m.city) : '';
+  const seoKeywords = [fullName, categoryName, cityName, 'Master-Hub Moldova'].filter(Boolean).join(', ');
+
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={title}
+        description={seoDescription}
+        keywords={seoKeywords}
+        ogType="profile"
+        ogImage={avatarUrl?.startsWith('http') ? avatarUrl : undefined}
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -346,5 +362,6 @@ export default function MasterDetailsPage() {
         </div>
       </div>
     </motion.div>
+    </>
   );
 }

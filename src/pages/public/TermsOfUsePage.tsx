@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
-const LAST_UPDATED = Date.now();
+const LAST_UPDATED = '2026-03-09';
 
 export default function TermsOfUsePage() {
   const { t } = useTranslation();
@@ -24,7 +25,13 @@ export default function TermsOfUsePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 md:py-8">
+    <>
+      <SEOHead
+        title={t('terms.title')}
+        description={t('terms.subtitle')}
+        noindex
+      />
+      <div className="mx-auto max-w-3xl px-4 py-6 md:py-8">
       <PageHeader
         title={t('terms.title')}
         subtitle={t('terms.subtitle')}
@@ -74,5 +81,6 @@ export default function TermsOfUsePage() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }

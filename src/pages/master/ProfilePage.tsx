@@ -63,24 +63,41 @@ export default function ProfilePage() {
   const categories = unwrapList(categoriesQuery.data);
   const cities = unwrapList(citiesQuery.data);
 
+  const profileCategory = profileData?.category as Record<string, unknown> | null | undefined;
+  const profileCity = profileData?.city as Record<string, unknown> | null | undefined;
+  const profileCityId = (profileData?.cityId ?? profileCity?.id) as string | undefined;
+  const profileCategoryId = (profileData?.categoryId ?? profileCategory?.id) as string | undefined;
+
   const categoryOptions = (categories as Record<string, unknown>[]).map((cat) => ({
     value: String(cat.id ?? ''),
     label: getTranslatedCategoryName(t, cat) || String(cat.name ?? cat.id ?? ''),
   }));
+  if (profileCategory && profileCategoryId && !categoryOptions.some((o) => o.value === String(profileCategoryId))) {
+    categoryOptions.unshift({
+      value: String(profileCategoryId),
+      label: getTranslatedCategoryName(t, profileCategory) || String(profileCategory.name ?? profileCategoryId),
+    });
+  }
 
   const cityOptions = (cities as Record<string, unknown>[]).map((city) => ({
     value: String(city.id ?? ''),
     label: getTranslatedCityName(t, city) || String(city.name ?? city.id ?? ''),
   }));
+  if (profileCity && profileCityId && !cityOptions.some((o) => o.value === String(profileCityId))) {
+    cityOptions.unshift({
+      value: String(profileCityId),
+      label: getTranslatedCityName(t, profileCity) || String(profileCity.name ?? profileCityId),
+    });
+  }
 
   const profileUser = profileData?.user as { firstName?: string; lastName?: string } | undefined;
   const initial = {
     firstName: profileUser?.firstName || '',
     lastName: profileUser?.lastName || '',
-    cityId: profileData?.cityId || '',
-    categoryId: profileData?.categoryId || '',
-    experienceYears: profileData?.experienceYears || '',
-    description: profileData?.description || '',
+    cityId: profileCityId ?? '',
+    categoryId: profileCategoryId ?? '',
+    experienceYears: profileData?.experienceYears ?? '',
+    description: profileData?.description ?? '',
   };
 
   return (

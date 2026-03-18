@@ -3,6 +3,9 @@ import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import type { CityDto } from '@/types';
 import { safeStorage } from '@/utils/safeStorage';
 import { hasUserCityConsent } from '@/features/cookie-consent/storage';
+import {
+  findNearestCityByCoords,
+} from '@/utils/moldovaCityCoords';
 
 export const USER_CITY_STORAGE_KEY = 'userCityName';
 const STORAGE_KEY = USER_CITY_STORAGE_KEY;
@@ -39,6 +42,24 @@ function matchCityToId(
   return null;
 }
 
+function findCityBySlug(
+  slug: string,
+  cities: CityDto[]
+): { id: string; name: string } | null {
+  if (!slug?.trim() || !cities?.length) return null;
+  const normalized = normalizeForMatch(slug);
+  const found = cities.find(
+    (c) =>
+      normalizeForMatch((c.slug ?? '').toString()) === normalized ||
+      normalizeForMatch((c.name ?? '').toString()) === normalized
+  );
+  if (!found) return null;
+  return {
+    id: found.id,
+    name: (found.name ?? found.slug ?? '').toString(),
+  };
+}
+
 export function useUserCity() {
   const citiesQuery = useCitiesListQuery({ isActive: true });
   const cities = useMemo(
@@ -57,7 +78,20 @@ export function useUserCity() {
   }, []);
 
   const resolveAndStore = useCallback(
-    (apiCity: string) => {
+    (apiCity: string, coords?: { lat: number; lon: number }) => {
+      // Prefer coordinates: IP APIs often return wrong city name but correct lat/lng
+      if (coords?.lat != null && coords?.lon != null) {
+        const nearestSlug = findNearestCityByCoords(coords.lat, coords.lon);
+        if (nearestSlug) {
+          const byCoords = findCityBySlug(nearestSlug, cities);
+          if (byCoords) {
+            setCityId(byCoords.id);
+            setCityName(byCoords.name);
+            safeStorage.setItem(STORAGE_KEY, byCoords.name);
+            return;
+          }
+        }
+      }
       const matched = matchCityToId(apiCity, cities);
       if (matched) {
         setCityId(matched.id);
@@ -107,34 +141,82 @@ export function useUserCity() {
     let cancelled = false;
     const controller = new AbortController();
 
-    fetch('https://ipapi.co/json/?fields=city', {
-      signal: controller.signal,
-    })
-      .then((r) => r.json())
-      .then((data: { city?: string }) => {
-        if (cancelled) return;
-        const apiCity = data?.city;
-        if (apiCity) resolveAndStore(apiCity);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        try {
-          fetch('http://ip-api.com/json/?fields=city', {
-            signal: controller.signal,
-          })
+    const tryIPFallback = (): Promise<void> => {
+      if (cancelled) return Promise.resolve();
+      return fetch(
+        'https://ipapi.co/json/?fields=city,latitude,longitude',
+        { signal: controller.signal }
+      )
+        .then((r) => r.json())
+        .then(
+          (data: {
+            city?: string;
+            latitude?: number;
+            longitude?: number;
+          }) => {
+            if (cancelled) return;
+            const apiCity = data?.city;
+            const lat = data?.latitude;
+            const lon = data?.longitude;
+            if (apiCity || (lat != null && lon != null)) {
+              resolveAndStore(
+                apiCity ?? '',
+                lat != null && lon != null ? { lat, lon } : undefined
+              );
+            }
+          }
+        )
+        .catch(() => {
+          if (cancelled) return;
+          return fetch(
+            'http://ip-api.com/json/?fields=city,lat,lon',
+            { signal: controller.signal }
+          )
             .then((r) => r.json())
-            .then((data: { city?: string }) => {
-              if (cancelled) return;
-              if (data?.city) resolveAndStore(data.city);
-            })
-            .catch(() => {})
-            .finally(() => {
-              if (!cancelled) setIsLoading(false);
-            });
-        } catch {
+            .then(
+              (data: { city?: string; lat?: number; lon?: number }) => {
+                if (cancelled) return;
+                const apiCity = data?.city;
+                const lat = data?.lat;
+                const lon = data?.lon;
+                if (apiCity || (lat != null && lon != null)) {
+                  resolveAndStore(
+                    apiCity ?? '',
+                    lat != null && lon != null ? { lat, lon } : undefined
+                  );
+                }
+              }
+            )
+            .catch(() => {});
+        })
+        .finally(() => {
           if (!cancelled) setIsLoading(false);
+        });
+    };
+
+    const attemptBrowserGeolocation = (): Promise<void> =>
+      new Promise((resolve, reject) => {
+        if (typeof navigator === 'undefined' || !navigator.geolocation) {
+          reject(new Error('Geolocation not supported'));
+          return;
         }
-      })
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            if (cancelled) return;
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            if (lat != null && lon != null && !Number.isNaN(lat) && !Number.isNaN(lon)) {
+              resolveAndStore('', { lat, lon });
+            }
+            resolve();
+          },
+          () => reject(new Error('Geolocation denied or failed')),
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 300000 }
+        );
+      });
+
+    attemptBrowserGeolocation()
+      .catch(() => tryIPFallback())
       .finally(() => {
         if (!cancelled) setIsLoading(false);
       });

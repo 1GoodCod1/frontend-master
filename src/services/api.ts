@@ -55,6 +55,7 @@ export type AxiosBaseQueryArgs = {
   data?: AxiosRequestConfig['data'];
   params?: AxiosRequestConfig['params'];
   headers?: AxiosRequestConfig['headers'];
+  responseType?: AxiosRequestConfig['responseType'];
 };
 
 type AxiosBaseQueryError = {
@@ -109,6 +110,7 @@ export const axiosBaseQuery =
           data: args.data,
           params: args.params,
           headers,
+          responseType: args.responseType,
         });
 
         return { data: res.data };

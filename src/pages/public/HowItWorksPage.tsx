@@ -12,6 +12,7 @@ import {
   TrendingUp,
   ArrowRight,
 } from 'lucide-react';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -70,7 +71,13 @@ export default function HowItWorksPage() {
   const { t } = useTranslation();
 
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={t('howItWorks.title')}
+        description={t('howItWorks.subtitle')}
+        keywords="как работает Master-Hub, найти мастера Moldova"
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -144,5 +151,6 @@ export default function HowItWorksPage() {
         </Button>
       </motion.div>
     </motion.div>
+    </>
   );
 }

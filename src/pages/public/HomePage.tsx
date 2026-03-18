@@ -6,6 +6,7 @@ import { useMastersPopularQuery } from '@/features/masters/mastersApi';
 import { usePromotionsActiveQuery } from '@/features/promotions/promotionsApi';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { useIsDark } from '@/hooks/useIsDark';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { HeroSection } from '@/components/home/HeroSection';
 import { PopularCategoriesSection } from '@/components/home/PopularCategoriesSection';
 import { MastersGridSection } from '@/components/home/MastersGridSection';
@@ -33,7 +34,13 @@ export default function HomePage() {
   }, [activePromotions]);
 
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={t('home.title')}
+        description={t('home.subtitle')}
+        keywords={t('home.seoKeywords')}
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -88,5 +95,6 @@ export default function HomePage() {
         </div>
       </section>
     </motion.div>
+    </>
   );
 }

@@ -15,9 +15,11 @@ const routesToPrerender = [
     '/',
     '/masters',
     '/plans',
-    '/referral-program',
-    '/auth/login',
-    '/auth/register'
+    '/faq',
+    '/how-it-works',
+    '/contact',
+    '/login',
+    '/register',
 ];
 
 async function prerender() {

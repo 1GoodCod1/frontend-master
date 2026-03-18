@@ -34,7 +34,8 @@ function formatSlotTime(slot: SlotData): string {
   return `${h}:${m}`;
 }
 
-export default function BookingPage() {
+/** Direct booking by master slug — requires ClientRoute. Not in router by default. */
+export default function DirectBookingPage() {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -222,7 +223,7 @@ export default function BookingPage() {
                     <Button
                       variant="link"
                       className="mt-2 h-auto p-0 text-primary"
-                      onClick={() => navigate('/client-dashboard/settings')}
+                      onClick={() => navigate('/client-dashboard/profile')}
                     >
                       {t('common.settings', 'Settings')} →
                     </Button>

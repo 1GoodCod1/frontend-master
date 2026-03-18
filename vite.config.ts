@@ -17,11 +17,15 @@ export default defineConfig(({ mode }) => ({
       open: true,
     }),
     Sitemap({
-      hostname: 'https://master-hub.md', // Update with actual domain
+      hostname: 'https://master-hub.md',
       dynamicRoutes: [
         '/masters',
         '/plans',
-        '/referral-program'
+        '/faq',
+        '/how-it-works',
+        '/contact',
+        '/privacy',
+        '/terms',
       ],
       robots: [{
         userAgent: '*',

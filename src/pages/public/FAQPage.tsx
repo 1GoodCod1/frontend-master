@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { cn } from '@/lib/utils';
@@ -55,7 +56,13 @@ export default function FAQPage() {
   const { t } = useTranslation();
 
   return (
-    <motion.div
+    <>
+      <SEOHead
+        title={t('faq.title')}
+        description={t('faq.subtitle')}
+        keywords="FAQ Master-Hub, вопросы, Moldova мастера"
+      />
+      <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -117,5 +124,6 @@ export default function FAQPage() {
         })}
       </div>
     </motion.div>
+    </>
   );
 }

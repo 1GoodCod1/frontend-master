@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "prerender": "node scripts/prerender.mjs",
     "build:prerender": "npm run build && npm run prerender",
+    "build:seo": "npm run build && npm run prerender",
+    "sitemap:masters": "node scripts/generate-sitemap-masters.mjs",
     "prepare": "husky",
     "preview": "vite preview",
     "lint": "eslint .",
