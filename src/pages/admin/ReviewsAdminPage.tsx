@@ -135,22 +135,22 @@ export default function ReviewsAdminPage() {
             moderateLoading={moderateLoading}
             onBulkStatusChange={setBulkStatus}
             onApplyBulkStatus={() =>
-              openConfirm(
-                t('admin.reviews.applyBulkStatusConfirm', { count: selection.length || 0 }),
-                t('admin.reviews.applyBulkStatusDesc', { status: bulkStatus }),
-                async () => {
+              openConfirm({
+                title: t('admin.reviews.applyBulkStatusConfirm', { count: selection.length || 0 }),
+                description: t('admin.reviews.applyBulkStatusDesc', { status: bulkStatus }),
+                action: async () => {
                   await applyBulkStatus();
                 },
-              )
+              })
             }
             onApplyBulkModerate={() =>
-              openConfirm(
-                t('admin.reviews.moderateBulkConfirm', { count: selection.length || 0 }),
-                t('admin.reviews.moderateBulkDesc'),
-                async () => {
+              openConfirm({
+                title: t('admin.reviews.moderateBulkConfirm', { count: selection.length || 0 }),
+                description: t('admin.reviews.moderateBulkDesc'),
+                action: async () => {
                   await applyBulkModerate();
                 },
-              )
+              })
             }
             onClearSelection={() => setSelection([])}
           />

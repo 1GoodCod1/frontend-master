@@ -36,7 +36,7 @@ export default function TariffAdminPage() {
     confirmDesc,
     confirmColor,
     confirmLoading,
-    setConfirmOpen,
+    handleCloseConfirm,
     bulkIds,
     handleCreate,
     handleUpdate,
@@ -206,10 +206,7 @@ export default function TariffAdminPage() {
           confirmColor={confirmColor}
           confirmText={confirmColor === 'error' ? t('common.delete') : t('common.confirm')}
           isLoading={confirmLoading}
-          onClose={() => {
-            if (confirmLoading) return;
-            setConfirmOpen(false);
-          }}
+          onClose={handleCloseConfirm}
           onConfirm={handleConfirm}
         />
       </SectionCard>

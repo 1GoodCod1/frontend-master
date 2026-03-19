@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   type GridColDef,
   type GridRenderCellParams,
@@ -138,6 +139,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
     dataGridProps,
   } = props;
 
+  const { t } = useTranslation();
   const [quickFilter, setQuickFilter] = useState('');
 
   const extracted = useMemo(() => extractPaged(data, page, limit), [data, page, limit]);
@@ -207,7 +209,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
     return (
       <Alert className="border-primary/30 bg-primary/5">
         <AlertDescription>
-          Не удалось определить колонки для таблицы (неизвестная форма ответа). Открой JSON view ниже.
+          {t('dataGrid.noColumns')}
         </AlertDescription>
       </Alert>
     );
@@ -221,7 +223,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
         exportDisabled={dataGridProps?.exportDisabled}
         quickFilterValue={quickFilter}
         onQuickFilterChange={setQuickFilter}
-        quickFilterPlaceholder="Search…"
+        quickFilterPlaceholder={t('common.search')}
       />
 
       <div className="relative min-w-0 overflow-auto overscroll-x-contain" style={{ height: height - 52 }}>
@@ -322,7 +324,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
 
         {filteredRows.length === 0 && !loading && (
           <div className="flex items-center justify-center py-12 text-muted-foreground">
-            No rows
+            {t('dataGrid.noRows')}
           </div>
         )}
       </div>
@@ -347,7 +349,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
               ))}
             </SelectContent>
           </Select>
-          <span>per page</span>
+          <span>{t('dataGrid.perPage')}</span>
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -356,10 +358,10 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
             disabled={currentPage <= 1}
             onClick={() => onPageChange(currentPage - 1, limit)}
           >
-            Previous
+            {t('common.prev')}
           </button>
           <span className="px-2 text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
+            {t('common.page')} {currentPage} {t('common.pageOf', { total: totalPages })}
           </span>
           <button
             type="button"
@@ -367,14 +369,14 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
             disabled={currentPage >= totalPages}
             onClick={() => onPageChange(currentPage + 1, limit)}
           >
-            Next
+            {t('common.next')}
           </button>
         </div>
       </div>
 
       {error ? (
         <Alert variant="destructive" className="mt-2 mx-2">
-          <AlertDescription>Ошибка загрузки данных</AlertDescription>
+          <AlertDescription>{t('dataGrid.loadError')}</AlertDescription>
         </Alert>
       ) : null}
     </div>

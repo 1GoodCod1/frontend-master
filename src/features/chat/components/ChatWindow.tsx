@@ -92,6 +92,7 @@ export default function ChatWindow({
     let cancelled = false;
     let retryCount = 0;
     const maxRetries = 8;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
     const tryJoin = () => {
       if (cancelled) return;
@@ -100,7 +101,7 @@ export default function ChatWindow({
         if (res.success) return;
         if (res.error === 'Not connected' && retryCount < maxRetries) {
           retryCount += 1;
-          setTimeout(tryJoin, 800);
+          retryTimer = setTimeout(tryJoin, 800);
         }
       });
     };
@@ -108,6 +109,7 @@ export default function ChatWindow({
 
     return () => {
       cancelled = true;
+      if (retryTimer !== null) clearTimeout(retryTimer);
       dispatch(setActiveConversation(null));
       leaveConversation(validConversationId);
     };

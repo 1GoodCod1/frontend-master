@@ -3,6 +3,7 @@ import { useAdminPaymentsQuery } from '@/features/admin/adminApi';
 import { formatDateTimeString } from '@/utils/date';
 import { parseAdminPaginatedResponse, toNumber } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
+import { useAdminCursors } from '../useAdminCursors';
 import type { AdminPaymentRow } from '.';
 
 export function useAdminPayments() {
@@ -10,17 +11,15 @@ export function useAdminPayments() {
   const [limit, setLimit] = useState(20);
   const [status, setStatus] = useState<string>('');
   const [selectedPayment, setSelectedPayment] = useState<AdminPaymentRow | null>(null);
-  const [pageCursors, setPageCursors] = useState<Record<number, string | undefined>>({ 1: undefined });
 
-  const cursor =
-    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
+  const { cursor, resetCursors, updateMeta } = useAdminCursors(page);
 
   useEffect(() => {
     queueMicrotask(() => {
       setPage(1);
-      setPageCursors({ 1: undefined });
+      resetCursors();
     });
-  }, [limit, status]);
+  }, [limit, status, resetCursors]);
 
   const q = useAdminPaymentsQuery({
     page,
@@ -32,12 +31,12 @@ export function useAdminPayments() {
   const { items: allPayments, meta } = useMemo(
     () =>
       parseAdminPaginatedResponse<AdminPaymentRow>(q.data, {
-        page,
-        limit,
-        total: 0,
+        page, limit, total: 0,
       }),
     [q.data, page, limit],
   );
+
+  useEffect(() => { updateMeta(meta); }, [meta, updateMeta]);
 
   const totalPayments = allPayments.length;
   const paidPayments = allPayments.filter((p) => p.status === 'PAID' || p.status === 'COMPLETED').length;
@@ -47,20 +46,7 @@ export function useAdminPayments() {
     .filter((p) => p.status === 'PAID' || p.status === 'COMPLETED')
     .reduce((sum, p) => sum + toNumber(p.amount), 0);
 
-  const paymentsData = useMemo(
-    () => ({
-      items: allPayments,
-      meta,
-    }),
-    [allPayments, meta],
-  );
-
-  useEffect(() => {
-    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
-    if (!next) return;
-    queueMicrotask(() =>
-      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next })));
-  }, [page, meta]);
+  const paymentsData = useMemo(() => ({ items: allPayments, meta }), [allPayments, meta]);
 
   const doExportToCSV = () => {
     const headers = ['ID', 'Status', 'Master', 'Tariff', 'Amount', 'Currency', 'Created At'];
@@ -81,27 +67,15 @@ export function useAdminPayments() {
   };
 
   return {
-    page,
-    setPage,
-    limit,
-    setLimit,
-    status,
-    setStatus,
-    selectedPayment,
-    setSelectedPayment,
+    page, setPage, limit, setLimit,
+    status, setStatus,
+    selectedPayment, setSelectedPayment,
     isLoading: q.isLoading,
     isError: q.isError,
     error: q.error,
     refetch: q.refetch,
-    paymentsData,
-    allPayments,
-    statistics: {
-      totalPayments,
-      paidPayments,
-      pendingPayments,
-      failedPayments,
-      totalRevenue,
-    },
+    paymentsData, allPayments,
+    statistics: { totalPayments, paidPayments, pendingPayments, failedPayments, totalRevenue },
     exportToCSV: doExportToCSV,
     clearFilters,
   };

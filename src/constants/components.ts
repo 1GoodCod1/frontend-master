@@ -13,5 +13,5 @@ export const NOTIFICATION_MENU_MAX_VISIBLE = 80;
 /** Размер аватара в RecentlyViewed */
 export const RECENTLY_VIEWED_AVATAR_SIZE = 36;
 
-/** Акцентный цвет RecentlyViewed */
-export const RECENTLY_VIEWED_ACCENT = '#E97525';
+/** Акцентный цвет RecentlyViewed — re-export shared accent */
+export { ACCENT as RECENTLY_VIEWED_ACCENT } from './theme';

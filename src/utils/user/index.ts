@@ -1,3 +1,5 @@
+export { getCurrentUserMasterId } from './getCurrentUserMasterId';
+
 export const getRoleColor = (role: string, isDark: boolean) => {
   switch (role?.toUpperCase()) {
     case 'ADMIN':

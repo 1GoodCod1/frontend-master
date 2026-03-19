@@ -9,35 +9,20 @@ import {
   DollarSign,
   HandCoins,
   Save,
-  X,
 } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsVerified } from '@/features/auth/selectors';
+import { toErrorMessage } from '@/utils/errors';
 import { useMastersMyProfileQuery, useMastersUpdateServicesMutation } from '@/features/masters/mastersApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { VerificationGate } from '@/components/common/VerificationGate';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
+import { ServiceForm, type ServiceItem } from '@/features/services/components/ServiceForm';
 import type { MasterServiceItem } from '@/types';
-
-type ServiceItem = {
-  title: string;
-  priceType: 'FIXED' | 'NEGOTIABLE';
-  price: number | '';
-  currency: 'MDL' | 'EUR' | 'USD';
-};
 
 const defaultService = (): ServiceItem => ({
   title: '',
@@ -183,8 +168,7 @@ export default function ServicesPage() {
       if (updated !== undefined) setList(normalizeServices(updated));
       await refetch();
     } catch (e: unknown) {
-      const msg = e && typeof e === 'object' && 'data' in e && (e as { data?: { message?: string } }).data?.message;
-      toast.error((msg as string) || t('servicesPage.saveFailed'));
+      toast.error(toErrorMessage(e) ?? t('servicesPage.saveFailed'));
     }
   };
 
@@ -242,76 +226,16 @@ export default function ServicesPage() {
             >
               <CardContent className="p-0">
                 {editingIndex === idx && formService ? (
-                  <div className="p-4 space-y-4 bg-muted/30">
-                    <Label className="text-xs font-medium">{t('servicesPage.serviceName')}</Label>
-                    <Input
-                      value={formService.title}
-                      onChange={(e) => setFormService((s) => ({ ...s, title: e.target.value }))}
-                      placeholder={t('servicesPage.serviceNamePlaceholder')}
-                      className="rounded-lg bg-background"
+                  <div className="p-4 bg-muted/30">
+                    <ServiceForm
+                      service={formService}
+                      onChange={setFormService}
+                      onSave={saveEdit}
+                      onCancel={cancelForm}
+                      saving={saving}
+                      saveIcon={<Save className="size-3" />}
+                      saveLabel={t('common.save')}
                     />
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <Label className="text-xs">{t('servicesPage.priceType')}</Label>
-                        <Select
-                          value={formService.priceType}
-                          onValueChange={(v: 'FIXED' | 'NEGOTIABLE') =>
-                            setFormService((s) => ({ ...s, priceType: v, price: v === 'NEGOTIABLE' ? '' : s.price }))
-                          }
-                        >
-                          <SelectTrigger className="mt-1 rounded-lg bg-background">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="NEGOTIABLE">{t('servicesPage.priceNegotiable')}</SelectItem>
-                            <SelectItem value="FIXED">{t('servicesPage.priceFixed')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      {formService.priceType === 'FIXED' && (
-                        <>
-                          <div>
-                            <Label className="text-xs">{t('servicesPage.price')}</Label>
-                            <Input
-                              type="number"
-                              min={0}
-                              value={formService.price === '' ? '' : formService.price}
-                              onChange={(e) => {
-                                const v = e.target.value;
-                                if (v === '') return setFormService((s) => ({ ...s, price: '' }));
-                                const n = Number(v);
-                                if (Number.isFinite(n) && n >= 0) setFormService((s) => ({ ...s, price: n }));
-                              }}
-                              className="mt-1 rounded-lg bg-background"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">{t('servicesPage.currency')}</Label>
-                            <Select
-                              value={formService.currency}
-                              onValueChange={(v: 'MDL' | 'EUR' | 'USD') => setFormService((s) => ({ ...s, currency: v }))}
-                            >
-                              <SelectTrigger className="mt-1 rounded-lg bg-background">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="MDL">MDL</SelectItem>
-                                <SelectItem value="EUR">EUR</SelectItem>
-                                <SelectItem value="USD">USD</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex gap-2 pt-2">
-                      <Button type="button" size="sm" onClick={saveEdit} disabled={saving} className="gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700">
-                        <Save className="size-3" /> {t('common.save')}
-                      </Button>
-                      <Button type="button" size="sm" variant="outline" onClick={cancelForm} className="gap-1 rounded-lg">
-                        <X className="size-3" /> {t('common.cancel')}
-                      </Button>
-                    </div>
                   </div>
                 ) : (
                   <div className="flex items-start justify-between gap-3 p-4">
@@ -364,77 +288,15 @@ export default function ServicesPage() {
           <Card className="overflow-hidden border-2 border-dashed border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-950/20">
             <CardContent className="p-4 space-y-4">
               <h3 className="font-semibold text-foreground">{t('servicesPage.newService')}</h3>
-              <div>
-                <Label className="text-xs font-medium">{t('servicesPage.serviceName')}</Label>
-                <Input
-                  value={formService.title}
-                  onChange={(e) => setFormService((s) => ({ ...s, title: e.target.value }))}
-                  placeholder={t('servicesPage.serviceNamePlaceholder')}
-                  className="mt-1 rounded-lg bg-background"
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <Label className="text-xs">{t('servicesPage.priceType')}</Label>
-                  <Select
-                    value={formService.priceType}
-                    onValueChange={(v: 'FIXED' | 'NEGOTIABLE') =>
-                      setFormService((s) => ({ ...s, priceType: v, price: v === 'NEGOTIABLE' ? '' : s.price }))
-                    }
-                  >
-                    <SelectTrigger className="mt-1 rounded-lg bg-background">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NEGOTIABLE">{t('servicesPage.priceNegotiable')}</SelectItem>
-                      <SelectItem value="FIXED">{t('servicesPage.priceFixed')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {formService.priceType === 'FIXED' && (
-                  <>
-                    <div>
-                      <Label className="text-xs">{t('servicesPage.price')}</Label>
-                      <Input
-                        type="number"
-                        min={0}
-                        value={formService.price === '' ? '' : formService.price}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          if (v === '') return setFormService((s) => ({ ...s, price: '' }));
-                          const n = Number(v);
-                          if (Number.isFinite(n) && n >= 0) setFormService((s) => ({ ...s, price: n }));
-                        }}
-                        className="mt-1 rounded-lg bg-background"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">{t('servicesPage.currency')}</Label>
-                      <Select
-                        value={formService.currency}
-                        onValueChange={(v: 'MDL' | 'EUR' | 'USD') => setFormService((s) => ({ ...s, currency: v }))}
-                      >
-                        <SelectTrigger className="mt-1 rounded-lg bg-background">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="MDL">MDL</SelectItem>
-                          <SelectItem value="EUR">EUR</SelectItem>
-                          <SelectItem value="USD">USD</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button type="button" size="sm" onClick={saveAdd} disabled={saving} className="gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700">
-                  <Plus className="size-3" /> {t('servicesPage.addService')}
-                </Button>
-                <Button type="button" size="sm" variant="outline" onClick={cancelForm} className="gap-1 rounded-lg">
-                  <X className="size-3" /> {t('common.cancel')}
-                </Button>
-              </div>
+              <ServiceForm
+                service={formService}
+                onChange={setFormService}
+                onSave={saveAdd}
+                onCancel={cancelForm}
+                saving={saving}
+                saveIcon={<Plus className="size-3" />}
+                saveLabel={t('servicesPage.addService')}
+              />
             </CardContent>
           </Card>
         )}

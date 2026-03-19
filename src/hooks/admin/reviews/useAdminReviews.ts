@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { clearUnreadReviews } from '@/features/socket/socketSlice';
 import { useAdminReviewsQuery, useAdminModerateReviewMutation } from '@/features/admin/adminApi';
@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 import { parseAdminPaginatedResponse } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
+import { useAdminCursors } from '../useAdminCursors';
+import { useAdminConfirm } from '../useAdminConfirm';
 import { useIsRecent } from '../useIsRecent';
 import type { AdminReviewRow, StatusOption } from '.';
 
@@ -16,32 +18,24 @@ export function useAdminReviews() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [statusFilter, setStatusFilter] = useState<string>('');
-  const [pageCursors, setPageCursors] = useState<Record<number, string | undefined>>({ 1: undefined });
   const [selection, setSelection] = useState<string[]>([]);
   const [bulkStatus, setBulkStatus] = useState<StatusOption>('VISIBLE');
   const [selectedReview, setSelectedReview] = useState<AdminReviewRow | null>(null);
 
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [confirmTitle, setConfirmTitle] = useState('');
-  const [confirmDesc, setConfirmDesc] = useState<string | undefined>(undefined);
-  const actionRef = useRef<null | (() => Promise<void>)>(null);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
   const isRecent = useIsRecent('reviews');
+  const { cursor, resetCursors, updateMeta } = useAdminCursors(page);
+  const confirm = useAdminConfirm();
 
   useEffect(() => {
     dispatch(clearUnreadReviews());
   }, [dispatch]);
 
-  const cursor =
-    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
-
   useEffect(() => {
     queueMicrotask(() => {
       setPage(1);
-      setPageCursors({ 1: undefined });
+      resetCursors();
     });
-  }, [limit, statusFilter]);
+  }, [limit, statusFilter, resetCursors]);
 
   const q = useAdminReviewsQuery({
     page,
@@ -55,12 +49,12 @@ export function useAdminReviews() {
   const { items: allReviews, meta } = useMemo(
     () =>
       parseAdminPaginatedResponse<AdminReviewRow>(q.data, {
-        page,
-        limit,
-        total: 0,
+        page, limit, total: 0,
       }),
     [q.data, page, limit],
   );
+
+  useEffect(() => { updateMeta(meta); }, [meta, updateMeta]);
 
   const totalReviews = allReviews.length;
   const pendingReviews = allReviews.filter((r) => r.status === 'PENDING').length;
@@ -68,46 +62,7 @@ export function useAdminReviews() {
   const hiddenReviews = allReviews.filter((r) => r.status === 'HIDDEN').length;
   const reportedReviews = allReviews.filter((r) => r.status === 'REPORTED').length;
 
-  const reviewsData = useMemo(
-    () => ({
-      items: allReviews,
-      meta,
-    }),
-    [allReviews, meta],
-  );
-
-  useEffect(() => {
-    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
-    if (!next) return;
-    queueMicrotask(() =>
-      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next })));
-  }, [page, meta]);
-
-  const openConfirm = (title: string, description: string | undefined, action: () => Promise<void>) => {
-    setConfirmTitle(title);
-    setConfirmDesc(description);
-    actionRef.current = action;
-    setConfirmOpen(true);
-  };
-
-  const handleConfirm = async () => {
-    const act = actionRef.current;
-    if (!act) return;
-    setConfirmLoading(true);
-    try {
-      await act();
-      setConfirmOpen(false);
-    } finally {
-      setConfirmLoading(false);
-    }
-  };
-
-  const handleCloseConfirm = () => {
-    setConfirmOpen(false);
-    setConfirmTitle('');
-    setConfirmDesc(undefined);
-    actionRef.current = null;
-  };
+  const reviewsData = useMemo(() => ({ items: allReviews, meta }), [allReviews, meta]);
 
   const applyBulkStatus = async () => {
     if (!selection.length) return toast.error('Select rows first');
@@ -168,43 +123,21 @@ export function useAdminReviews() {
   };
 
   return {
-    page,
-    setPage,
-    limit,
-    setLimit,
-    statusFilter,
-    setStatusFilter,
-    selection,
-    setSelection,
-    bulkStatus,
-    setBulkStatus,
-    selectedReview,
-    setSelectedReview,
-    confirmOpen,
-    confirmTitle,
-    confirmDesc,
-    confirmLoading,
+    page, setPage, limit, setLimit,
+    statusFilter, setStatusFilter,
+    selection, setSelection, bulkStatus, setBulkStatus,
+    selectedReview, setSelectedReview,
+    ...confirm,
     isLoading: q.isLoading,
     isError: q.isError,
     error: q.error,
     refetch: q.refetch,
-    reviewsData,
-    allReviews,
-    statistics: {
-      totalReviews,
-      pendingReviews,
-      visibleReviews,
-      hiddenReviews,
-      reportedReviews,
-    },
+    reviewsData, allReviews,
+    statistics: { totalReviews, pendingReviews, visibleReviews, hiddenReviews, reportedReviews },
     isRecent,
     updateStatusLoading: upd.isLoading,
     moderateLoading: mod.isLoading,
-    openConfirm,
-    handleConfirm,
-    handleCloseConfirm,
-    applyBulkStatus,
-    applyBulkModerate,
+    applyBulkStatus, applyBulkModerate,
     handleToggleVisibility,
     exportToCSV: doExportToCSV,
   };

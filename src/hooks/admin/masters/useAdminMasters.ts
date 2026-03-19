@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { parseAdminPaginatedResponse, toNumber } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
+import { useAdminCursors } from '../useAdminCursors';
 import type { AdminMasterRow } from '.';
 
 export function useAdminMasters() {
@@ -14,17 +15,15 @@ export function useAdminMasters() {
   const [featured, setFeatured] = useState(false);
   const [qText, setQText] = useState('');
   const [selectedMaster, setSelectedMaster] = useState<AdminMasterRow | null>(null);
-  const [pageCursors, setPageCursors] = useState<Record<number, string | undefined>>({ 1: undefined });
 
-  const cursor =
-    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
+  const { cursor, resetCursors, updateMeta } = useAdminCursors(page);
 
   useEffect(() => {
     queueMicrotask(() => {
       setPage(1);
-      setPageCursors({ 1: undefined });
+      resetCursors();
     });
-  }, [limit, verified, featured, qText]);
+  }, [limit, verified, featured, qText, resetCursors]);
 
   const q = useAdminMastersQuery({
     page,
@@ -46,6 +45,8 @@ export function useAdminMasters() {
     [q.data, page, limit],
   );
 
+  useEffect(() => { updateMeta(meta); }, [meta, updateMeta]);
+
   const totalMasters = allMasters.length;
   const verifiedMasters = allMasters.filter((m) => m.user?.isVerified || m.isVerified).length;
   const featuredMasters = allMasters.filter((m) => m.isFeatured).length;
@@ -58,22 +59,9 @@ export function useAdminMasters() {
       : '0.0';
 
   const mastersData = useMemo(
-    () => ({
-      items: allMasters,
-      meta,
-    }),
+    () => ({ items: allMasters, meta }),
     [allMasters, meta],
   );
-
-  useEffect(() => {
-    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
-    if (!next) return;
-    queueMicrotask(() =>
-      setPageCursors((prev) =>
-        prev[page + 1] === next ? prev : { ...prev, [page + 1]: next },
-      ),
-    );
-  }, [page, meta]);
 
   const doExportToCSV = () => {
     const headers = ['ID', 'Name', 'Email', 'Phone', 'Category', 'City', 'Tariff', 'Rating', 'Views', 'Verified', 'Created At'];
@@ -112,33 +100,20 @@ export function useAdminMasters() {
   };
 
   return {
-    page,
-    setPage,
-    limit,
-    setLimit,
-    verified,
-    setVerified,
-    featured,
-    setFeatured,
-    qText,
-    setQText,
-    selectedMaster,
-    setSelectedMaster,
+    page, setPage,
+    limit, setLimit,
+    verified, setVerified,
+    featured, setFeatured,
+    qText, setQText,
+    selectedMaster, setSelectedMaster,
     isLoading: q.isLoading,
     isError: q.isError,
     error: q.error,
     refetch: q.refetch,
-    mastersData,
-    allMasters,
-    statistics: {
-      totalMasters,
-      verifiedMasters,
-      featuredMasters,
-      avgRating,
-    },
+    mastersData, allMasters,
+    statistics: { totalMasters, verifiedMasters, featuredMasters, avgRating },
     updateLoading: updState.isLoading,
     exportToCSV: doExportToCSV,
-    doUpdate,
-    clearFilters,
+    doUpdate, clearFilters,
   };
 }

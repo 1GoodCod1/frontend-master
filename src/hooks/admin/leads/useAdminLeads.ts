@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { parseAdminPaginatedResponse } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
+import { useAdminCursors } from '../useAdminCursors';
 import { useIsRecent } from '../useIsRecent';
 import type { AdminLeadRow, StatusOption } from '.';
 
@@ -22,17 +23,15 @@ export function useAdminLeads() {
   const [bulkStatus, setBulkStatus] = useState<StatusOption>('IN_PROGRESS');
   const [selectedLead, setSelectedLead] = useState<AdminLeadRow | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pageCursors, setPageCursors] = useState<Record<number, string | undefined>>({ 1: undefined });
 
-  const cursor =
-    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
+  const { cursor, resetCursors, updateMeta } = useAdminCursors(page);
 
   useEffect(() => {
     queueMicrotask(() => {
       setPage(1);
-      setPageCursors({ 1: undefined });
+      resetCursors();
     });
-  }, [limit, status, dateFrom, dateTo]);
+  }, [limit, status, dateFrom, dateTo, resetCursors]);
 
   const q = useAdminLeadsQuery({
     page,
@@ -46,34 +45,18 @@ export function useAdminLeads() {
   const { items: allLeads, meta } = useMemo(
     () =>
       parseAdminPaginatedResponse<AdminLeadRow>(q.data, {
-        page,
-        limit,
-        total: 0,
+        page, limit, total: 0,
       }),
     [q.data, page, limit],
   );
 
-  useEffect(() => {
-    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
-    if (!next) return;
-    queueMicrotask(() =>
-      setPageCursors((prev) =>
-        prev[page + 1] === next ? prev : { ...prev, [page + 1]: next },
-      ),
-    );
-  }, [page, meta]);
+  useEffect(() => { updateMeta(meta); }, [meta, updateMeta]);
 
   useEffect(() => {
     dispatch(clearUnreadLeads());
   }, [dispatch]);
 
-  const leadsData = useMemo(
-    () => ({
-      items: allLeads,
-      meta,
-    }),
-    [allLeads, meta],
-  );
+  const leadsData = useMemo(() => ({ items: allLeads, meta }), [allLeads, meta]);
 
   const totalLeads = allLeads.length;
   const newLeads = allLeads.filter((l) => l.status === 'NEW').length;
@@ -122,41 +105,19 @@ export function useAdminLeads() {
   const isRecent = useIsRecent('leads');
 
   return {
-    page,
-    setPage,
-    limit,
-    setLimit,
-    status,
-    setStatus,
-    dateFrom,
-    setDateFrom,
-    dateTo,
-    setDateTo,
-    selection,
-    setSelection,
-    bulkStatus,
-    setBulkStatus,
-    selectedLead,
-    setSelectedLead,
-    confirmOpen,
-    setConfirmOpen,
+    page, setPage, limit, setLimit,
+    status, setStatus, dateFrom, setDateFrom, dateTo, setDateTo,
+    selection, setSelection, bulkStatus, setBulkStatus,
+    selectedLead, setSelectedLead, confirmOpen, setConfirmOpen,
     isLoading: q.isLoading,
     isError: q.isError,
     error: q.error,
     refetch: q.refetch,
-    leadsData,
-    allLeads,
-    statistics: {
-      totalLeads,
-      newLeads,
-      inProgressLeads,
-      closedLeads,
-      premiumLeads,
-    },
+    leadsData, allLeads,
+    statistics: { totalLeads, newLeads, inProgressLeads, closedLeads, premiumLeads },
     isRecent,
     updateStatusLoading: upd.isLoading,
     exportToCSV: doExportToCSV,
-    applyBulkStatus,
-    clearFilters,
+    applyBulkStatus, clearFilters,
   };
 }

@@ -6,6 +6,7 @@ import { parseAdminPaginatedResponse } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
 import toast from 'react-hot-toast';
+import { useAdminCursors } from '../useAdminCursors';
 import type { AdminUserRow } from '.';
 
 export function useAdminUsers() {
@@ -15,17 +16,15 @@ export function useAdminUsers() {
   const [verified, setVerified] = useState<boolean | null>(null);
   const [banned, setBanned] = useState<boolean | null>(null);
   const [qText, setQText] = useState<string>('');
-  const [pageCursors, setPageCursors] = useState<Record<number, string | undefined>>({ 1: undefined });
 
-  const cursor =
-    typeof pageCursors[page] === 'string' && pageCursors[page] ? pageCursors[page] : undefined;
+  const { cursor, resetCursors, updateMeta } = useAdminCursors(page);
 
   useEffect(() => {
     queueMicrotask(() => {
       setPage(1);
-      setPageCursors({ 1: undefined });
+      resetCursors();
     });
-  }, [limit, role, verified, banned, qText]);
+  }, [limit, role, verified, banned, qText, resetCursors]);
 
   const q = useAdminUsersQuery(
     {
@@ -37,9 +36,7 @@ export function useAdminUsers() {
       ...(banned !== null ? { banned } : {}),
       ...(qText ? { q: qText } : {}),
     },
-    {
-      refetchOnMountOrArgChange: true,
-    },
+    { refetchOnMountOrArgChange: true },
   );
 
   const [verify] = useUsersToggleVerifyMutation();
@@ -48,27 +45,14 @@ export function useAdminUsers() {
   const { items: allUsers, meta } = useMemo(
     () =>
       parseAdminPaginatedResponse<AdminUserRow>(q.data, {
-        page,
-        limit,
-        total: 0,
+        page, limit, total: 0,
       }),
     [q.data, page, limit],
   );
 
-  const usersData = useMemo(
-    () => ({
-      items: allUsers,
-      meta,
-    }),
-    [allUsers, meta],
-  );
+  useEffect(() => { updateMeta(meta); }, [meta, updateMeta]);
 
-  useEffect(() => {
-    const next = meta?.nextCursor && typeof meta.nextCursor === 'string' ? meta.nextCursor : undefined;
-    if (!next) return;
-    queueMicrotask(() =>
-      setPageCursors((prev) => (prev[page + 1] === next ? prev : { ...prev, [page + 1]: next })));
-  }, [page, meta]);
+  const usersData = useMemo(() => ({ items: allUsers, meta }), [allUsers, meta]);
 
   const totalUsers = allUsers.length;
   const activeUsers = allUsers.filter((u) => u.isVerified && !u.isBanned).length;
@@ -109,32 +93,16 @@ export function useAdminUsers() {
   };
 
   return {
-    page,
-    setPage,
-    limit,
-    setLimit,
-    role,
-    setRole,
-    verified,
-    setVerified,
-    banned,
-    setBanned,
-    qText,
-    setQText,
+    page, setPage, limit, setLimit,
+    role, setRole, verified, setVerified,
+    banned, setBanned, qText, setQText,
     isLoading: q.isLoading,
     isError: q.isError,
     error: q.error,
     refetch: q.refetch,
-    usersData,
-    allUsers,
-    statistics: {
-      totalUsers,
-      activeUsers,
-      pendingUsers,
-      blockedUsers,
-    },
-    handleVerify,
-    handleBan,
+    usersData, allUsers,
+    statistics: { totalUsers, activeUsers, pendingUsers, blockedUsers },
+    handleVerify, handleBan,
     exportToCSV: doExportToCSV,
   };
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { GridRowSelectionModel } from '@/types/dataGrid';
 import toast from 'react-hot-toast';
 import {
@@ -8,6 +8,7 @@ import {
   useCitiesCreateMutation,
   useCitiesUpdateMutation,
 } from '@/features/cities/citiesApi';
+import { useAdminConfirm } from '../useAdminConfirm';
 import type { CreateCityDto, UpdateCityDto } from '@/types';
 import type { AdminCityRow } from '.';
 
@@ -22,46 +23,8 @@ export function useAdminCities() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editRow, setEditRow] = useState<AdminCityRow | null>(null);
 
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [confirmTitle, setConfirmTitle] = useState('');
-  const [confirmDesc, setConfirmDesc] = useState<string | undefined>(undefined);
-  const [confirmColor, setConfirmColor] = useState<'primary' | 'error'>('primary');
-  const confirmActionRef = useRef<null | (() => Promise<void>)>(null);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
+  const confirm = useAdminConfirm();
   const bulkIds = useMemo(() => selection.map((x) => String(x)), [selection]);
-
-  const openConfirm = (opts: {
-    title: string;
-    description?: string;
-    color?: 'primary' | 'error';
-    action: () => Promise<void>;
-  }) => {
-    setConfirmTitle(opts.title);
-    setConfirmDesc(opts.description);
-    setConfirmColor(opts.color ?? 'primary');
-    confirmActionRef.current = opts.action;
-    setConfirmOpen(true);
-  };
-
-  const handleCloseConfirm = () => {
-    if (confirmLoading) return;
-    setConfirmOpen(false);
-  };
-
-  const handleConfirm = async () => {
-    const act = confirmActionRef.current;
-    if (!act) return;
-    setConfirmLoading(true);
-    try {
-      await act();
-      setConfirmOpen(false);
-    } catch {
-      // errors toasted in action
-    } finally {
-      setConfirmLoading(false);
-    }
-  };
 
   const handleToggle = async (id: string) => {
     try {
@@ -74,7 +37,7 @@ export function useAdminCities() {
   };
 
   const handleDelete = (row: AdminCityRow) => {
-    openConfirm({
+    confirm.openConfirm({
       title: `Delete city "${String(row?.name ?? row.id)}"?`,
       description: 'This action cannot be undone.',
       color: 'error',
@@ -116,7 +79,7 @@ export function useAdminCities() {
 
   const bulkDelete = () => {
     if (!bulkIds.length) return;
-    openConfirm({
+    confirm.openConfirm({
       title: `Delete ${bulkIds.length} cities?`,
       description: 'This action cannot be undone.',
       color: 'error',
@@ -142,26 +105,13 @@ export function useAdminCities() {
     error: q.error,
     isFetching: q.isFetching,
     refetch: q.refetch,
-    selection,
-    setSelection,
-    createOpen,
-    setCreateOpen,
-    editRow,
-    setEditRow,
-    confirmOpen,
-    confirmTitle,
-    confirmDesc,
-    confirmColor,
-    confirmLoading,
+    selection, setSelection,
+    createOpen, setCreateOpen,
+    editRow, setEditRow,
+    ...confirm,
     bulkIds,
-    openConfirm,
-    handleCloseConfirm,
-    handleConfirm,
-    handleToggle,
-    handleDelete,
-    handleCreate,
-    handleUpdate,
-    bulkToggle,
-    bulkDelete,
+    handleToggle, handleDelete,
+    handleCreate, handleUpdate,
+    bulkToggle, bulkDelete,
   };
 }
