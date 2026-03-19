@@ -54,7 +54,6 @@ export default function HomePage() {
   return (
     <>
       <SEOHead
-        title={t('home.title')}
         description={t('home.subtitle')}
         keywords={t('home.seoKeywords')}
       />

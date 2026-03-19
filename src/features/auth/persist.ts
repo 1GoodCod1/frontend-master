@@ -1,16 +1,16 @@
 import { safeStorage } from '@/utils/safeStorage';
 
-const KEY = 'master-hub.refreshToken';
+export const REFRESH_TOKEN_KEY = 'master-hub.refreshToken';
 const LOGOUT_FLAG_KEY = 'master-hub.logout';
 
 export function loadPersistedRefreshToken(): string | null {
-  const v = safeStorage.getItem(KEY);
+  const v = safeStorage.getItem(REFRESH_TOKEN_KEY);
   return v && v.trim() ? v : null;
 }
 
 export function persistRefreshToken(refreshToken: string | null) {
-  if (refreshToken && refreshToken.trim()) safeStorage.setItem(KEY, refreshToken);
-  else safeStorage.removeItem(KEY);
+  if (refreshToken && refreshToken.trim()) safeStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  else safeStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
 export function setLogoutFlag() {

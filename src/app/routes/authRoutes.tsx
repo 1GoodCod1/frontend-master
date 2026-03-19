@@ -7,7 +7,6 @@ export const authRoutes = {
   children: [
     { path: 'login', element: <LazyPage><P.LoginPage /></LazyPage> },
     { path: 'register', element: <LazyPage><P.RegisterPage /></LazyPage> },
-    { path: 'register-client', element: <LazyPage><P.RegisterClientPage /></LazyPage> },
     { path: 'forgot-password', element: <LazyPage><P.ForgotPasswordPage /></LazyPage> },
     { path: 'reset-password', element: <LazyPage><P.ResetPasswordPage /></LazyPage> },
   ],

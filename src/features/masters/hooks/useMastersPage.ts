@@ -94,10 +94,17 @@ export function useMastersPage() {
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [priceMinLocal, setPriceMinLocal] = useState(query.minPrice);
   const [priceMaxLocal, setPriceMaxLocal] = useState(query.maxPrice);
-  const [prevPrice, setPrevPrice] = useState({ min: query.minPrice, max: query.maxPrice });
+  /** Snapshot of query-driven prices; when they change (reset, URL commit), sync slider locals. */
+  const [prevQueryPrices, setPrevQueryPrices] = useState({
+    min: query.minPrice,
+    max: query.maxPrice,
+  });
 
-  if (query.minPrice !== prevPrice.min || query.maxPrice !== prevPrice.max) {
-    setPrevPrice({ min: query.minPrice, max: query.maxPrice });
+  if (
+    query.minPrice !== prevQueryPrices.min ||
+    query.maxPrice !== prevQueryPrices.max
+  ) {
+    setPrevQueryPrices({ min: query.minPrice, max: query.maxPrice });
     setPriceMinLocal(query.minPrice);
     setPriceMaxLocal(query.maxPrice);
   }

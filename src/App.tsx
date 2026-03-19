@@ -7,6 +7,8 @@ import { selectIsAuthed } from '@/features/auth/selectors';
 import { useAuthMeQuery } from '@/features/auth/authApi';
 import { api } from '@/services/api';
 import { connectSocket, disconnectSocket } from '@/services/socket';
+import { clearAuth } from '@/features/auth/authSlice';
+import { REFRESH_TOKEN_KEY } from '@/features/auth/persist';
 
 const REFETCH_TAGS_ON_RECONNECT: readonly string[] = [
   'Me', 'Masters', 'Master', 'Leads', 'Reviews', 'Payments', 'Categories', 'Cities',
@@ -42,6 +44,19 @@ export function App() {
       window.removeEventListener('pageshow', onPageShow);
     };
   }, [isAuthed, store]);
+
+  // Logout in another tab → clear auth state in this tab
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === REFRESH_TOKEN_KEY && e.newValue === null) {
+        store.dispatch(api.util.resetApiState());
+        store.dispatch(clearAuth());
+        import('react-hot-toast').then((m) => m.default('Вы вышли из системы'));
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [store]);
 
   useEffect(() => {
     const onOffline = () => { wasOfflineRef.current = true; };

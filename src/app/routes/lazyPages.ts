@@ -17,7 +17,6 @@ export const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 export const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
 export const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
 export const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
-export const RegisterClientPage = lazy(() => import('@/pages/auth/RegisterClientPage'));
 
 export const DashboardPage = lazy(() => import('@/pages/master/DashboardPage'));
 export const ProfilePage = lazy(() => import('@/pages/master/ProfilePage'));

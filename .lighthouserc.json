@@ -15,7 +15,6 @@
         "http://localhost:3000/terms",
         "http://localhost:3000/login",
         "http://localhost:3000/register",
-        "http://localhost:3000/register-client",
         "http://localhost:3000/forgot-password"
       ]
     },
