@@ -17,6 +17,8 @@ export default function OptimizedImage({
   basePath,
   fallbackExt = 'png',
   alt = '',
+  loading = 'lazy',
+  decoding = 'async',
   ...rest
 }: OptimizedImageProps) {
   return (
@@ -25,8 +27,8 @@ export default function OptimizedImage({
       <img
         src={assetUrl(`${basePath}.${fallbackExt}`)}
         alt={alt}
-        loading="lazy"
-        decoding="async"
+        loading={loading}
+        decoding={decoding}
         {...rest}
       />
     </picture>

@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import toast from 'react-hot-toast';
 import { env } from '@/services/env';
 import type { RootState } from '@/app/store';
 import { clearAuth, setTokens } from '@/features/auth/authSlice';
@@ -187,7 +186,7 @@ export const baseQueryWithReauth =
 
       // Единая обработка 5xx и сетевых ошибок: тост с опцией повтора через refetch на экране
       if (result.error && isNetworkOr5xx(result.error.status)) {
-        toast.error(toErrorMessage(result.error), { duration: 6000, id: 'api-error-toast' });
+        import('react-hot-toast').then((m) => m.default.error(toErrorMessage(result.error!), { duration: 6000, id: 'api-error-toast' }));
       }
 
       return result;

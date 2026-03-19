@@ -9,9 +9,14 @@ export function ScrollToTopOnNavigate() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTo(0, 0);
-    document.querySelectorAll('main').forEach((el) => el.scrollTo(0, 0));
+    // requestAnimationFrame avoids forced reflow by deferring scroll
+    // until after the browser has finished layout/paint for the new route
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTo(0, 0);
+      document.querySelectorAll('main').forEach((el) => el.scrollTo(0, 0));
+    });
+    return () => cancelAnimationFrame(raf);
   }, [pathname]);
 
   return null;

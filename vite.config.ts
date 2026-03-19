@@ -4,17 +4,52 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import Sitemap from 'vite-plugin-sitemap';
+import { VitePWA } from 'vite-plugin-pwa';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tailwindcss(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
+      manifest: {
+        name: 'Master-Hub',
+        short_name: 'Master-Hub',
+        description: 'Master-Hub — piața specialiștilor verificați din Moldova. Găsiți meșteri pentru manichiură, reparații, curățenie și multe altele.',
+        theme_color: '#000000',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '/',
+        icons: [
+          { src: '/brand/pwa-64x64.png', sizes: '64x64', type: 'image/png', purpose: 'any' },
+          { src: '/brand/pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/brand/pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/brand/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      devOptions: {
+        enabled: false,
+      },
+    }),
     mode === 'analyze' &&
     visualizer({
       filename: 'dist/stats.html',
       gzipSize: true,
       brotliSize: true,
       open: true,
+    }),
+    viteCompression({
+      algorithm: 'gzip',
+      threshold: 256,
+    }),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 256,
     }),
     Sitemap({
       hostname: 'https://master-hub.md',
@@ -47,9 +82,13 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     // Оптимизация для production build
-    target: 'es2015',
+    target: 'es2020',
     minify: 'esbuild',
     sourcemap: false,
+    // Strip console/debugger in production
+    ...(mode !== 'development' && {
+      esbuild: { drop: ['console', 'debugger'] },
+    }),
     rollupOptions: {
       output: {
         manualChunks: {
@@ -82,7 +121,6 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    // Увеличиваем лимит предупреждений для больших чанков
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 300,
   },
 }));

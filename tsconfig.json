@@ -5,7 +5,8 @@
     "lib": [
       "ES2022",
       "DOM",
-      "DOM.Iterable"
+      "DOM.Iterable",
+      "WebWorker"
     ],
     "module": "ESNext",
     "skipLibCheck": true,
@@ -20,6 +21,7 @@
     "noFallthroughCasesInSwitch": true,
     "types": [
       "vite/client",
+      "vite-plugin-pwa/client",
       "node"
     ],
     "baseUrl": ".",
@@ -32,6 +34,7 @@
   "include": [
     "src",
     "tailwind.config.ts",
+    "pwa-assets.config.ts",
     "e2e/**/*.ts",
     "playwright.config.ts",
     "../analytics"

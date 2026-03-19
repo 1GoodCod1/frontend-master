@@ -24,8 +24,8 @@ COPY . .
 # Build application
 RUN npm run build
 
-# Production stage with Nginx
-FROM nginx:1.27-alpine AS production
+# Production stage with Nginx (brotli module included)
+FROM fholzer/nginx-brotli:v1.27.3 AS production
 
 # Security: Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init

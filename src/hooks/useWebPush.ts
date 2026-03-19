@@ -78,8 +78,7 @@ export function useWebPush() {
 
         setIsLoading(true);
         try {
-            const registration = await navigator.serviceWorker.register('/sw.js');
-            await navigator.serviceWorker.ready;
+            const registration = await navigator.serviceWorker.ready;
 
             registration.active?.postMessage({ type: 'SET_API_URL', apiUrl: env.apiUrl });
 

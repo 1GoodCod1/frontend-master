@@ -6,6 +6,7 @@ dist
 .gitignore
 README.md
 .env
+.env.docker
 .env.local
 .env.*.local
 *.log

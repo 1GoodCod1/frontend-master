@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +23,7 @@ type Props = {
   onClose: () => void;
 };
 
-export function NotificationItem({ item, role, onMarkRead, onClose }: Props) {
+export const NotificationItem = memo(function NotificationItem({ item, role, onMarkRead, onClose }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -80,4 +81,4 @@ export function NotificationItem({ item, role, onMarkRead, onClose }: Props) {
       </div>
     </button>
   );
-}
+});

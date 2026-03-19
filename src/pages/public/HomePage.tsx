@@ -1,5 +1,4 @@
-import { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo, useEffect, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { useMastersPopularQuery } from '@/features/masters/mastersApi';
@@ -8,15 +7,34 @@ import { selectIsAuthed } from '@/features/auth/selectors';
 import { useIsDark } from '@/hooks/useIsDark';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { HeroSection } from '@/components/home/HeroSection';
-import { PopularCategoriesSection } from '@/components/home/PopularCategoriesSection';
-import { MastersGridSection } from '@/components/home/MastersGridSection';
-import { HowItWorksSection } from '@/components/home/HowItWorksSection';
 import { Flame } from 'lucide-react';
+
+const MastersGridSection = lazy(() =>
+  import('@/components/home/MastersGridSection').then((m) => ({ default: m.MastersGridSection }))
+);
+const PopularCategoriesSection = lazy(() =>
+  import('@/components/home/PopularCategoriesSection').then((m) => ({ default: m.PopularCategoriesSection }))
+);
+const HowItWorksSection = lazy(() =>
+  import('@/components/home/HowItWorksSection').then((m) => ({ default: m.HowItWorksSection }))
+);
+
+// Prefetch MastersPage chunk on idle — most likely next navigation
+const prefetchMasters = () => import('@/pages/public/MastersPage');
 
 export default function HomePage() {
   const { t } = useTranslation();
   const isAuthed = useAppSelector(selectIsAuthed);
   const isDark = useIsDark();
+
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(prefetchMasters);
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(prefetchMasters, 2000);
+    return () => clearTimeout(id);
+  }, []);
   const popular = useMastersPopularQuery({ limit: 5 });
   const { data: activePromotions = [] } = usePromotionsActiveQuery({ limit: 50 });
 
@@ -40,12 +58,9 @@ export default function HomePage() {
         description={t('home.subtitle')}
         keywords={t('home.seoKeywords')}
       />
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="relative min-h-screen w-full"
-    >
+      <div
+        className="relative min-h-screen w-full animate-fade-in"
+      >
       {/* Background effects - applied to entire HomePage */}
       <div className="absolute inset-0 pointer-events-none">
         <div
@@ -76,25 +91,31 @@ export default function HomePage() {
 
       <section className="relative min-w-0">
         <div className="container mx-auto min-w-0 max-w-7xl px-4 pt-4 pb-6 md:pt-6 md:pb-12">
-          <MastersGridSection
-            title={t('home.popularMasters')}
-            masters={popularList}
-            isLoading={popular.isLoading}
-            isError={popular.isError}
-            error={popular.error}
-            onRetry={popular.refetch}
-            icon={Flame}
-            horizontalScroll
-            sectionBadge="popular"
-            promotionDiscountByMasterId={promotionDiscountByMasterId}
-          />
+          <Suspense fallback={null}>
+            <MastersGridSection
+              title={t('home.popularMasters')}
+              masters={popularList}
+              isLoading={popular.isLoading}
+              isError={popular.isError}
+              error={popular.error}
+              onRetry={popular.refetch}
+              icon={Flame}
+              horizontalScroll
+              sectionBadge="popular"
+              promotionDiscountByMasterId={promotionDiscountByMasterId}
+            />
+          </Suspense>
 
-          <PopularCategoriesSection />
+          <Suspense fallback={null}>
+            <PopularCategoriesSection />
+          </Suspense>
 
-          <HowItWorksSection />
+          <Suspense fallback={null}>
+            <HowItWorksSection />
+          </Suspense>
         </div>
       </section>
-    </motion.div>
+    </div>
     </>
   );
 }

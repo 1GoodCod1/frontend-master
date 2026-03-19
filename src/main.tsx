@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from '@/app/store';
+import { store } from '@/app/store';
 import { App } from '@/App';
 import { env } from '@/services/env';
-import { LoadingState } from '@/components/common/States';
 import '@/i18n';
-import { Toaster } from 'react-hot-toast';
 import { AppProviders } from '@/app/AppProviders';
 import '@/styles/index.css';
 import { bootstrapAuth } from '@/features/auth/bootstrap';
+import { reportWebVitals } from '@/utils/reportWebVitals';
+import { registerSW } from 'virtual:pwa-register';
+import { LazyToaster } from '@/components/common/LazyToaster';
 
 // Preconnect to API for faster first request
 try {
@@ -29,15 +29,26 @@ try {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate loading={<LoadingState fullScreen />} persistor={persistor}>
-        <AppProviders>
-          <App />
-          <Toaster position="top-right" />
-        </AppProviders>
-      </PersistGate>
+      <AppProviders>
+        <App />
+        <React.Suspense fallback={null}>
+          <LazyToaster position="top-right" />
+        </React.Suspense>
+      </AppProviders>
     </Provider>
   </React.StrictMode>
 );
 
 // Run auth bootstrap in background (refresh token if present)
 void bootstrapAuth(store);
+
+// Collect Core Web Vitals (CLS, INP, LCP, FCP, TTFB)
+reportWebVitals();
+
+// Register service worker for PWA (offline, install)
+registerSW({
+  immediate: true,
+  onOfflineReady() {
+    console.warn('App ready to work offline');
+  },
+});

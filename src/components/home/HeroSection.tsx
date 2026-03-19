@@ -242,6 +242,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                   }}
                   >
                     <SelectTrigger
+                      aria-label={t('home.locationPlaceholder')}
                       className={cn(
                         'flex-1 min-w-0 w-full border-0 bg-transparent shadow-none focus:ring-0',
                         'h-auto py-2 text-sm font-medium [&>span]:truncate [&>span]:max-w-full'
@@ -429,6 +430,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                     alt=""
                     className="w-full h-full object-contain object-bottom transition-opacity duration-500"
                     loading="eager"
+                    fetchPriority="high"
                     draggable={false}
                   />
                   <div

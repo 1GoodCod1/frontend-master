@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import toast from 'react-hot-toast';
 import { router } from '@/app/router';
 import { useAppSelector, useAppStore } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
@@ -25,8 +24,23 @@ export function App() {
   });
 
   useEffect(() => {
-    if (isAuthed) connectSocket(store);
+    if (isAuthed) void connectSocket(store);
     else disconnectSocket();
+  }, [isAuthed, store]);
+
+  // Disconnect WebSocket on pagehide so the page is eligible for bfcache,
+  // and reconnect on pageshow when restored from bfcache.
+  useEffect(() => {
+    const onPageHide = () => { disconnectSocket(); };
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted && isAuthed) void connectSocket(store);
+    };
+    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      window.removeEventListener('pagehide', onPageHide);
+      window.removeEventListener('pageshow', onPageShow);
+    };
   }, [isAuthed, store]);
 
   useEffect(() => {
@@ -34,7 +48,7 @@ export function App() {
     const onOnline = () => {
       if (wasOfflineRef.current) {
         wasOfflineRef.current = false;
-        toast.success('Соединение восстановлено', { duration: 4000 });
+        import('react-hot-toast').then((m) => m.default.success('Соединение восстановлено', { duration: 4000 }));
         store.dispatch(api.util.invalidateTags(REFETCH_TAGS_ON_RECONNECT as Parameters<typeof api.util.invalidateTags>[0]));
       }
     };

@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 import { env } from '@/services/env';
 import type { Store } from '@reduxjs/toolkit';
 import { setConnected, pushEvent } from '@/features/socket/socketSlice';
@@ -15,7 +15,7 @@ export function getSocket() {
 }
 
 
-export function connectSocket(store: Store<RootState>) {
+export async function connectSocket(store: Store<RootState>) {
   // Если socket уже существует и подключен, возвращаем его
   if (socket?.connected) return socket;
 
@@ -25,6 +25,9 @@ export function connectSocket(store: Store<RootState>) {
     socket.disconnect();
     socket = null;
   }
+
+  // Dynamic import — socket.io-client (~74 KiB) loads only when user authenticates
+  const { io } = await import('socket.io-client');
 
   const wsBase = (env.wsUrl || '').replace(/\/$/, '');
   const notificationsUrl = wsBase ? `${wsBase}/notifications` : '/notifications';

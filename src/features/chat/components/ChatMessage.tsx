@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Paperclip, Download } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,7 +13,7 @@ import type { ChatMessageProps as Props, MessageFile } from '@/types/chat';
 import { getFileUrl, formatMessageTime, formatFileSize, isImageFile } from '@/utils/chat';
 import { cn } from '@/lib/utils';
 
-export default function ChatMessage({
+export default memo(function ChatMessage({
   message,
   isOwn,
   showAvatar = true,
@@ -110,4 +111,4 @@ export default function ChatMessage({
       </div>
     </div>
   );
-}
+});

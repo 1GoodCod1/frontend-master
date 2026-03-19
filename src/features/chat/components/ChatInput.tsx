@@ -1,8 +1,12 @@
-import { useState, useRef, useCallback, useEffect, KeyboardEvent } from 'react';
+import { useState, useRef, useCallback, useEffect, lazy, Suspense, KeyboardEvent } from 'react';
 import { Send, Paperclip, X, Smile } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import EmojiPicker, { type EmojiClickData, Theme } from 'emoji-picker-react';
+import type { EmojiClickData } from 'emoji-picker-react';
+
+const LazyEmojiPicker = lazy(() => import('emoji-picker-react'));
+const THEME_DARK = 'dark' as unknown as import('emoji-picker-react').Theme;
+const THEME_LIGHT = 'light' as unknown as import('emoji-picker-react').Theme;
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -212,12 +216,14 @@ export default function ChatInput({
             </Tooltip>
           </TooltipProvider>
           <PopoverContent className="w-auto p-0 border-0 shadow-none" align="start" side="top">
-            <EmojiPicker
-              onEmojiClick={handleEmojiClick}
-              theme={typeof document !== 'undefined' && document.documentElement?.classList?.contains('dark') ? Theme.DARK : Theme.LIGHT}
-              width={320}
-              height={360}
-            />
+            <Suspense fallback={<div className="w-[320px] h-[360px] flex items-center justify-center"><span className="size-6 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" /></div>}>
+              <LazyEmojiPicker
+                onEmojiClick={handleEmojiClick}
+                theme={typeof document !== 'undefined' && document.documentElement?.classList?.contains('dark') ? THEME_DARK : THEME_LIGHT}
+                width={320}
+                height={360}
+              />
+            </Suspense>
           </PopoverContent>
         </Popover>
 
