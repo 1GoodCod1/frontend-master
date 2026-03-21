@@ -54,7 +54,7 @@ export function BarChartCard({
 }) {
   if (!Array.isArray(data) || data.length === 0) {
     return (
-      <Card className="overflow-hidden border-0 bg-card shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
+      <Card className="min-w-0 overflow-hidden border-0 bg-card shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
         <CardContent className="flex h-[300px] flex-col p-5">
           <p className="mb-3 text-sm font-semibold text-foreground">{title}</p>
           <div className="flex flex-1 flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
@@ -73,11 +73,11 @@ export function BarChartCard({
         .slice(0, 3);
 
   return (
-    <Card className="group overflow-hidden border-0 bg-card shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_4px_16px_rgba(0,0,0,0.35)]">
+    <Card className="group min-w-0 overflow-hidden border-0 bg-card shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_4px_16px_rgba(0,0,0,0.35)]">
       <CardContent className="flex h-[300px] flex-col p-5">
         <p className="mb-3 text-sm font-semibold text-foreground">{title}</p>
-        <div className="min-w-0 flex-1">
-          <ResponsiveContainer width="100%" height={230}>
+        <div className="min-h-[230px] min-w-0 flex-1">
+          <ResponsiveContainer width="100%" height={230} minWidth={0} minHeight={200}>
             <BarChart data={data} margin={{ top: 8, right: 8, left: -12, bottom: 4 }}>
               <CartesianGrid
                 strokeDasharray="3 3"

@@ -2,14 +2,14 @@ export const notificationSettings = {
   en: {
     notificationSettings: {
       title: 'Notifications',
-      subtitle: 'Link Telegram and WhatsApp to receive alerts about new leads',
+      subtitle: 'Link Telegram and WhatsApp to receive alerts about new requests',
       premiumRequired: 'Premium feature',
-      premiumRequiredDesc: 'Upgrade to VIP or PREMIUM to link Telegram and WhatsApp for instant notifications about new leads.',
+      premiumRequiredDesc: 'Upgrade to VIP or PREMIUM to link Telegram and WhatsApp for instant notifications about new requests.',
       viewPlans: 'View plans',
 
       telegram: {
         title: 'Telegram',
-        description: 'Receive new lead alerts in Telegram',
+        description: 'Receive new request alerts in Telegram',
         status: 'Status',
         connected: 'Connected',
         notConnected: 'Not connected',
@@ -26,7 +26,7 @@ export const notificationSettings = {
 
       whatsapp: {
         title: 'WhatsApp',
-        description: 'Receive new lead alerts in WhatsApp',
+        description: 'Receive new request alerts in WhatsApp',
         status: 'Status',
         connected: 'Connected',
         notConnected: 'Not connected',
@@ -38,8 +38,8 @@ export const notificationSettings = {
       },
 
       leadChannel: {
-        label: 'Channel for lead notifications',
-        description: 'SMS is always sent. Choose one additional channel for leads.',
+        label: 'Channel for request notifications',
+        description: 'SMS is always sent. Choose one additional channel for requests.',
         telegram: 'Telegram only',
         whatsapp: 'WhatsApp only',
         both: 'Both (Telegram + WhatsApp)',

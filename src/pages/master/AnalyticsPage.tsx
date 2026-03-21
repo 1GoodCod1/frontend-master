@@ -149,7 +149,7 @@ export default function AnalyticsPage() {
         <CardContent className="pt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <StatCard
-              title={t('analyticsPage.totalLeads', 'Всего лидов')}
+              title={t('analyticsPage.totalLeads', 'Всего заявок')}
               value={readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}
               trend={trends?.leadsTrend as 'up' | 'down' | 'stable' | undefined}
               changePercent={trends?.leadsChangePercent as number | undefined}
@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
                 </span>
               </div>
               <div className="flex flex-col items-center justify-center flex-shrink-0 w-[100px] sm:w-auto sm:flex-1 p-4 rounded-xl bg-background/80 dark:bg-background/50 border-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
-                <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.leads', 'Лиды')}</span>
+                <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">{t('analyticsPage.leads', 'Заявки')}</span>
                 <span className="text-2xl font-bold">{readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}</span>
               </div>
               <div className="flex flex-shrink-0 items-center">

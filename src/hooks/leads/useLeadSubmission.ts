@@ -3,12 +3,14 @@ import toast from 'react-hot-toast';
 import { useLeadsCreateMutation } from '@/features/leads/leadsApi';
 import { useFilesUploadManyMutation } from '@/features/files/filesApi';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { CreateLeadDto } from '@/types';
 import { toErrorMessage } from '@/utils/errors';
 import type { LeadSubmissionFormData, LeadSubmissionState } from '.';
 
 export function useLeadSubmission(masterId: string | undefined, isAuthed: boolean, role: string | null): LeadSubmissionState {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [attach, setAttach] = useState<File[]>([]);
     const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
 
@@ -18,7 +20,7 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
 
     const handleSendLead = async (formData: LeadSubmissionFormData) => {
         if (!isAuthed || role !== 'CLIENT') {
-            toast.error('Only authorized clients can send leads. Please register or log in.');
+            toast.error(t('common.actionRequiresClient', 'Only authorized clients can send requests. Please register or log in.'));
             navigate('/register');
             return;
         }
@@ -54,7 +56,7 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
             // Use short UUID for lead-success URL; encodedId is too long (~120+ chars)
             const resolvedLeadId = lead?.id ?? lead?.encodedId ?? null;
             setSubmittedLeadId(resolvedLeadId);
-            toast.success('Lead sent');
+            toast.success(t('notifications.types.lead_sent', 'Request sent'));
 
             setAttach([]);
             // Navigate to the lead success page for full post-lead UX
@@ -62,7 +64,7 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
                 navigate(`/client-dashboard/lead-success/${resolvedLeadId}`);
             }
         } catch (e: unknown) {
-            toast.error(toErrorMessage(e) ?? 'Failed to send lead');
+            toast.error(toErrorMessage(e) ?? t('common.errorGeneric', 'Failed to send request'));
         }
     };
 

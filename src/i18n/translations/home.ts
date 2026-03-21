@@ -116,7 +116,7 @@ export const home = {
       heroTitleLine2Masters: 'мастерами',
       heroTitleLine2From: 'из ',
       subtitle:
-        'Маркетплейс проверенных специалистов. Быстрый поиск, лиды, отзывы и продвижение.',
+        'Маркетплейс проверенных специалистов. Быстрый поиск, заявки, отзывы и продвижение.',
       searchPlaceholder: 'Поиск мастеров по услуге или специальности...',
       locationPlaceholder: 'Местоположение или город',
       searchButton: 'Поиск',
@@ -224,7 +224,7 @@ export const home = {
       heroTitleLine2Masters: '',
       heroTitleLine2From: 'din ',
       subtitle:
-        'Piața specialiștilor verificați: Căutare rapidă, lead-uri, recenzii autentice și promoții exclusive pentru proiectul tău.',
+        'Piața specialiștilor verificați: căutare rapidă, cereri, recenzii autentice și promoții exclusive pentru proiectul tău.',
       searchPlaceholder: 'Caută mesteri după serviciu sau specialitate...',
       locationPlaceholder: 'Locație sau oraș',
       searchButton: 'Căutare',

@@ -4,7 +4,11 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { env } from '@/services/env';
 import type { RootState } from '@/app/store';
 import { clearAuth, setTokens } from '@/features/auth/authSlice';
-import { persistRefreshToken, setLogoutFlag } from '@/features/auth/persist';
+import {
+  persistRefreshToken,
+  setLogoutFlag,
+  markHttpOnlySessionHint,
+} from '@/features/auth/persist';
 import { getSessionId } from '@/utils/sessionId';
 import { isRecord } from '@/utils/guards';
 import { unwrapEnvelope } from '@/utils/data';
@@ -116,6 +120,9 @@ export const axiosBaseQuery =
       }
     };
 
+// Mutex: only one refresh request at a time. Concurrent 401s share the same promise.
+let pendingRefresh: Promise<boolean> | null = null;
+
 // Wrapper that refreshes token once on 401, then retries original request
 export const baseQueryWithReauth =
   (baseQuery: ReturnType<typeof axiosBaseQuery>): BaseQueryFn<AxiosBaseQueryArgs, unknown, AxiosBaseQueryError> =>
@@ -130,57 +137,66 @@ export const baseQueryWithReauth =
           api.dispatch(clearAuth());
           persistRefreshToken(null);
           setLogoutFlag();
+          if (env.useHttpOnly) markHttpOnlySessionHint(false);
           return result;
         }
 
-        const state = api.getState() as RootState;
-        const refreshToken = state.auth.tokens?.refreshToken;
-        const useHttpOnly = env.useHttpOnly;
+        // Mutex: first 401 initiates refresh, concurrent 401s wait for same promise
+        if (!pendingRefresh) {
+          pendingRefresh = (async (): Promise<boolean> => {
+            const state = api.getState() as RootState;
+            const refreshToken = state.auth.tokens?.refreshToken;
+            const useHttpOnly = env.useHttpOnly;
 
-        if (!useHttpOnly && !refreshToken) {
-          api.dispatch(clearAuth());
-          persistRefreshToken(null);
-          setLogoutFlag();
-          return result;
-        }
+            if (!useHttpOnly && !refreshToken) {
+              api.dispatch(clearAuth());
+              persistRefreshToken(null);
+              setLogoutFlag();
+              return false;
+            }
 
-        // httpOnly: refresh via cookie (no body); else: POST /auth/refresh { refreshToken }
-        const refreshPayload = useHttpOnly ? {} : { refreshToken: refreshToken! };
-        const refreshResult = await baseQuery(
-          { url: '/auth/refresh', method: 'POST', data: refreshPayload },
-          api,
-          extraOptions
-        );
+            const refreshPayload = useHttpOnly ? {} : { refreshToken: refreshToken! };
+            const refreshResult = await baseQuery(
+              { url: '/auth/refresh', method: 'POST', data: refreshPayload },
+              api,
+              extraOptions
+            );
 
-        if (refreshResult.error) {
-          api.dispatch(clearAuth());
-          persistRefreshToken(null);
-          setLogoutFlag();
-          return result;
-        }
+            if (refreshResult.error) {
+              api.dispatch(clearAuth());
+              persistRefreshToken(null);
+              setLogoutFlag();
+              if (useHttpOnly) markHttpOnlySessionHint(false);
+              return false;
+            }
 
-        if (refreshResult.data !== undefined) {
-          const tokensFromApi = parseRefreshTokens(refreshResult.data);
-          const accessToken = tokensFromApi?.accessToken ?? null;
-          const newRefreshToken = tokensFromApi?.refreshToken ?? '';
+            if (refreshResult.data !== undefined) {
+              const tokensFromApi = parseRefreshTokens(refreshResult.data);
+              const accessToken = tokensFromApi?.accessToken ?? null;
+              const newRefreshToken = tokensFromApi?.refreshToken ?? '';
 
-          if (accessToken && typeof accessToken === 'string') {
-            const tokens = {
-              accessToken,
-              refreshToken: useHttpOnly ? newRefreshToken : (newRefreshToken || refreshToken || ''),
-            };
-            api.dispatch(setTokens(tokens));
-            if (newRefreshToken) persistRefreshToken(newRefreshToken);
-            result = await baseQuery(args, api, extraOptions);
-          } else {
+              if (accessToken && typeof accessToken === 'string') {
+                const tokens = {
+                  accessToken,
+                  refreshToken: useHttpOnly ? newRefreshToken : (newRefreshToken || refreshToken || ''),
+                };
+                api.dispatch(setTokens(tokens));
+                if (newRefreshToken) persistRefreshToken(newRefreshToken);
+                return true;
+              }
+            }
+
             api.dispatch(clearAuth());
             persistRefreshToken(null);
             setLogoutFlag();
-          }
-        } else {
-          api.dispatch(clearAuth());
-          persistRefreshToken(null);
-          setLogoutFlag();
+            if (useHttpOnly) markHttpOnlySessionHint(false);
+            return false;
+          })().finally(() => { pendingRefresh = null; });
+        }
+
+        const refreshed = await pendingRefresh;
+        if (refreshed) {
+          result = await baseQuery(args, api, extraOptions);
         }
       }
 

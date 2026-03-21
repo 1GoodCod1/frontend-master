@@ -4,7 +4,10 @@ import toast from 'react-hot-toast';
  * Escapes a cell value for CSV (handles quotes).
  */
 function escapeCsvCell(value: unknown): string {
-  return `"${String(value ?? '').replace(/"/g, '""')}"`;
+  let str = String(value ?? '');
+  // Prevent CSV formula injection (=, +, -, @, \t, \r can trigger formula execution in Excel)
+  if (/^[=+\-@\t\r]/.test(str)) str = "'" + str;
+  return `"${str.replace(/"/g, '""')}"`;
 }
 
 /**

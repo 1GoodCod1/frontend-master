@@ -46,19 +46,19 @@ function pickDateLikeField(obj: unknown, key: string): string | number | undefin
   return typeof v === 'string' || typeof v === 'number' ? v : undefined;
 }
 
-interface LeadDetailsDialogProps {
+interface RequestDetailsDialogProps {
   open: boolean;
   lead: LeadDto | null;
   onClose: () => void;
   onStatusUpdated?: () => void;
 }
 
-export default function LeadDetailsDialog({
+export default function RequestDetailsDialog({
   open,
   lead,
   onClose,
   onStatusUpdated,
-}: LeadDetailsDialogProps) {
+}: RequestDetailsDialogProps) {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
   const leadId = lead?.id ? String(lead.id) : '';

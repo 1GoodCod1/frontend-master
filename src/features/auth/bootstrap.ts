@@ -1,5 +1,11 @@
 import { env } from '@/services/env';
-import { loadPersistedRefreshToken, persistRefreshToken, takeLogoutFlag } from './persist';
+import {
+  loadPersistedRefreshToken,
+  persistRefreshToken,
+  takeLogoutFlag,
+  isHttpOnlyGuestHint,
+  markHttpOnlySessionHint,
+} from './persist';
 import { setTokens, clearAuth, setRestoring } from './authSlice';
 import { authApi } from './authApi';
 import type { AppDispatch, RootState } from '@/app/store';
@@ -12,6 +18,11 @@ export async function bootstrapAuth(store: { dispatch: AppDispatch; getState: ()
 
   // После явного разлогина не дергаем /auth/refresh при следующем F5 (нет 401 в консоли)
   if (justLoggedOut && !rt) {
+    store.dispatch(setRestoring(false));
+    return;
+  }
+
+  if (useHttpOnly && isHttpOnlyGuestHint()) {
     store.dispatch(setRestoring(false));
     return;
   }
@@ -41,11 +52,13 @@ export async function bootstrapAuth(store: { dispatch: AppDispatch; getState: ()
       if (errorStatus === 401 || errorStatus === 403) {
         store.dispatch(clearAuth());
         persistRefreshToken(null);
+        if (useHttpOnly) markHttpOnlySessionHint(false);
       } else {
         console.warn('Bootstrap auth: Temporary error', err);
       }
     } else if (useHttpOnly) {
       persistRefreshToken(null);
+      markHttpOnlySessionHint(true);
     }
   } catch (e: unknown) {
     const err = isRecord(e) ? e : {};
@@ -57,6 +70,7 @@ export async function bootstrapAuth(store: { dispatch: AppDispatch; getState: ()
     if (status === 401) {
       store.dispatch(clearAuth());
       persistRefreshToken(null);
+      if (useHttpOnly) markHttpOnlySessionHint(false);
     }
   } finally {
     store.dispatch(setRestoring(false));

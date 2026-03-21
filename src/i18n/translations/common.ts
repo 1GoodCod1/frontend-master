@@ -51,7 +51,7 @@ export const common = {
       chatClosed: 'This chat is closed. Sending messages is not available.',
       chatNoActiveLead: 'Chat is unavailable. There is no active request.',
       chatNoActiveLeadHint: 'Send a new request to this master to continue the conversation.',
-      chatNoActiveLeadMaster: 'This chat has no active lead.',
+      chatNoActiveLeadMaster: 'This chat has no active request.',
       chatNoActiveLeadHintMaster: 'The client needs to send a new request to continue the conversation.',
       attachFile: 'Attach file',
       emoji: 'Emoji',

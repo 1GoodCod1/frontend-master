@@ -31,7 +31,7 @@ function formatSlotTime(slot: SlotData): string {
   return `${h}:${m}`;
 }
 
-export default function ClientLeadBookPage() {
+export default function ClientRequestBookingPage() {
   const { t } = useTranslation();
   const { leadId } = useParams<{ leadId: string }>();
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ export default function ClientLeadBookPage() {
       }).unwrap();
 
       toast.success(t('bookings.created'));
-      navigate('/client-dashboard/bookings');
+      navigate('/client-dashboard/leads');
     } catch (error: unknown) {
       const err = error as { data?: { message?: string }; message?: string };
       const msg = err?.data?.message || err?.message || t('bookings.createFailed');

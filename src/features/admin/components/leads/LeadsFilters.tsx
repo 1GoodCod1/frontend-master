@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-interface LeadsFiltersProps {
+interface RequestsFiltersProps {
   status: string;
   dateFrom: string;
   dateTo: string;
@@ -27,7 +27,7 @@ interface LeadsFiltersProps {
   onExport: () => void;
 }
 
-export default function LeadsFilters({
+export default function RequestsFilters({
   status,
   dateFrom,
   dateTo,
@@ -36,7 +36,7 @@ export default function LeadsFilters({
   onDateFromChange,
   onDateToChange,
   onExport,
-}: LeadsFiltersProps) {
+}: RequestsFiltersProps) {
   return (
     <div className="flex flex-wrap items-center gap-4">
       <TooltipProvider>
@@ -50,19 +50,19 @@ export default function LeadsFilters({
                 className="gap-2 border-0 bg-amber-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
               >
                 <Download className="size-4" />
-                Export
+                Export requests
               </Button>
             </span>
           </TooltipTrigger>
-          <TooltipContent>Export leads to CSV</TooltipContent>
+          <TooltipContent>Export requests to CSV</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <Select value={status || 'all'} onValueChange={(v) => onStatusChange(v === 'all' ? '' : v)}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Status" />
+          <SelectValue placeholder="Request status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Statuses</SelectItem>
+          <SelectItem value="all">All statuses</SelectItem>
           {STATUS_OPTIONS.map((s) => (
             <SelectItem key={s} value={s}>
               {s.replace('_', ' ')}

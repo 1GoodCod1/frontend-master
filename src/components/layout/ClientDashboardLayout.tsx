@@ -4,7 +4,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Heart,
-  Calendar,
   Mail,
   AlertTriangle,
   Shield,
@@ -27,7 +26,6 @@ import { cn } from '@/lib/utils';
 function getItems(t: ReturnType<typeof useTranslation>['t']): CabinetNavItem[] {
   return [
     { key: 'overview', label: t('clientDashboard.overview'), to: '/client-dashboard', icon: <LayoutDashboard className="size-5" /> },
-    { key: 'bookings', label: t('clientDashboard.bookings'), to: '/client-dashboard/bookings', icon: <Calendar className="size-5" /> },
     { key: 'leads', label: t('clientDashboard.myLeads'), to: '/client-dashboard/leads', icon: <Mail className="size-5" /> },
     { key: 'chat', label: t('clientDashboard.chat', 'Чаты'), to: '/client-dashboard/chat', icon: <MessageCircle className="size-5" /> },
     { key: 'favorites', label: t('clientDashboard.favorites'), to: '/client-dashboard/favorites', icon: <Heart className="size-5" /> },

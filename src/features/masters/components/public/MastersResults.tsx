@@ -10,7 +10,6 @@ import {
 } from '@/features/masters/components/public/MastersPageSkeletons';
 import { ErrorState } from '@/components/common/States';
 import { MasterCard } from '@/components/ui/MasterCard';
-import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { EmptyState } from '@/components/ui/EmptyState';
 import type { PublicMaster } from '@/types';
 
@@ -106,20 +105,18 @@ export function MastersResults({
               itemContent={(idx) => {
                 const m: PublicMaster = items[idx];
                 return (
-                  <ScrollReveal delay={idx * 0.03} duration={0.4}>
-                    <MasterCard
-                      master={{
-                        ...m,
-                        displayName:
-                          `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim() ||
-                          'Master',
-                      }}
-                      compact
-                      promotionDiscount={
-                        m?.id ? promotionDiscountByMasterId[m.id] : undefined
-                      }
-                    />
-                  </ScrollReveal>
+                  <MasterCard
+                    master={{
+                      ...m,
+                      displayName:
+                        `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim() ||
+                        'Master',
+                    }}
+                    compact
+                    promotionDiscount={
+                      m?.id ? promotionDiscountByMasterId[m.id] : undefined
+                    }
+                  />
                 );
               }}
             />

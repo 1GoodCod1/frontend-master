@@ -78,12 +78,12 @@ export function useAdminLeads() {
       lead.isPremium ? 'Yes' : 'No',
       lead.createdAt ? formatDateTimeString(lead.createdAt) : '',
     ]);
-    exportToCSV(headers, rows, 'leads_export', 'Leads exported to CSV');
+    exportToCSV(headers, rows, 'requests_export', 'Requests exported to CSV');
   };
 
   const applyBulkStatus = async () => {
     if (!selection.length) return toast.error('Select rows first');
-    const t = toast.loading(`Updating ${selection.length} lead(s)...`);
+    const t = toast.loading(`Updating ${selection.length} request(s)...`);
     try {
       for (const id of selection) {
         await updateStatus({ id, body: { status: bulkStatus } }).unwrap();

@@ -61,6 +61,16 @@ export const bookingsApi = api.injectEndpoints({
       invalidatesTags: ['Bookings'],
     }),
 
+    bookingsClientConfirm: build.mutation<BookingDto, { id: string }>({
+      query: ({ id }) => ({ url: `/bookings/${id}/confirm`, method: 'PATCH' }),
+      invalidatesTags: ['Bookings', 'Leads'],
+    }),
+
+    bookingsClientReject: build.mutation<BookingDto, { id: string }>({
+      query: ({ id }) => ({ url: `/bookings/${id}/reject`, method: 'PATCH' }),
+      invalidatesTags: ['Bookings', 'Leads'],
+    }),
+
     bookingsRebookInfo: build.query<BookingRebookInfoResponse, { bookingId: string }>({
       query: ({ bookingId }) => ({
         url: `/bookings/${bookingId}/rebook-info`,
@@ -78,5 +88,7 @@ export const {
   useBookingsMyBookingsQuery,
   useBookingsAvailableSlotsQuery,
   useBookingsUpdateStatusMutation,
+  useBookingsClientConfirmMutation,
+  useBookingsClientRejectMutation,
   useBookingsRebookInfoQuery,
 } = bookingsApi;

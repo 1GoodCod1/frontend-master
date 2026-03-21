@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { CalendarPlus, User, Phone, MessageSquare } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CreateBookingFromLeadModal } from './CreateBookingFromLeadModal';
+import { CreateBookingFromRequestModal } from './CreateBookingFromRequestModal';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { cn } from '@/lib/utils';
 
-export interface LeadWithoutBooking {
+export interface RequestWithoutBooking {
   id: string;
   clientName?: string | null;
   clientPhone: string;
@@ -19,28 +19,28 @@ export interface LeadWithoutBooking {
   };
 }
 
-interface MasterLeadsWithoutBookingColumnProps {
-  leads: LeadWithoutBooking[];
+interface MasterRequestsWithoutBookingColumnProps {
+  leads: RequestWithoutBooking[];
   masterId: string;
   onBookingCreated?: () => void;
 }
 
-export function MasterLeadsWithoutBookingColumn({
+export function MasterRequestsWithoutBookingColumn({
   leads,
   masterId,
   onBookingCreated,
-}: MasterLeadsWithoutBookingColumnProps) {
+}: MasterRequestsWithoutBookingColumnProps) {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
-  const [modalLead, setModalLead] = useState<LeadWithoutBooking | null>(null);
+  const [modalLead, setModalLead] = useState<RequestWithoutBooking | null>(null);
 
   return (
     <div className="space-y-4">
       <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        {t('bookings.leadsWithoutBooking', 'Leads without booking')}
+        {t('bookings.leadsWithoutBooking', 'Requests without booking')}
       </h3>
       {leads.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('bookings.noLeadsWithoutBooking', 'No leads waiting for a time slot.')}</p>
+        <p className="text-sm text-muted-foreground">{t('bookings.noLeadsWithoutBooking', 'No requests waiting for a time slot.')}</p>
       ) : (
         <div className="flex flex-col gap-3">
           {leads.map((lead) => (
@@ -89,7 +89,7 @@ export function MasterLeadsWithoutBookingColumn({
       )}
 
       {modalLead && (
-        <CreateBookingFromLeadModal
+        <CreateBookingFromRequestModal
           open={!!modalLead}
           onOpenChange={(open) => !open && setModalLead(null)}
           masterId={masterId}

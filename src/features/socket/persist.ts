@@ -1,4 +1,4 @@
-import type { NotificationItem } from './socketSlice';
+import type { NotificationItem } from './types';
 import { safeStorage } from '@/utils/safeStorage';
 
 const KEY_DATA = 'mh_notifications_v1';

@@ -2,6 +2,16 @@ import { safeStorage } from '@/utils/safeStorage';
 
 export const REFRESH_TOKEN_KEY = 'master-hub.refreshToken';
 const LOGOUT_FLAG_KEY = 'master-hub.logout';
+/** httpOnly: '0' = нет сессии, не дергать /auth/refresh на bootstrap; '1' / отсутствует = можно пробовать cookie */
+const HTTPONLY_SESSION_HINT_KEY = 'master-hub.httpOnlySessionHint';
+
+export function markHttpOnlySessionHint(present: boolean): void {
+  safeStorage.setItem(HTTPONLY_SESSION_HINT_KEY, present ? '1' : '0');
+}
+
+export function isHttpOnlyGuestHint(): boolean {
+  return safeStorage.getItem(HTTPONLY_SESSION_HINT_KEY) === '0';
+}
 
 export function loadPersistedRefreshToken(): string | null {
   const v = safeStorage.getItem(REFRESH_TOKEN_KEY);

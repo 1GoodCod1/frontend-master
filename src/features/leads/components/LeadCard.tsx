@@ -42,7 +42,7 @@ const sectionHeader = (icon: React.ReactNode, title: string, subtitle: string) =
   </div>
 );
 
-type LeadCardProps = {
+type RequestCardProps = {
   lead: LeadDto & { clientName?: string; clientPhone?: string; createdAt?: string; message?: string; status?: string };
   locale: string;
   isUpdating?: boolean;
@@ -51,14 +51,14 @@ type LeadCardProps = {
   variant?: 'list' | 'detail';
 };
 
-export function LeadCard({
+export function RequestCard({
   lead,
   locale,
   isUpdating = false,
   onStatusChange,
   onOpenDetails,
   variant = 'list',
-}: LeadCardProps) {
+}: RequestCardProps) {
   const { t } = useTranslation();
   const isClosed = lead?.status === 'CLOSED' || lead?.status === 'SPAM';
   const clientName = lead?.clientName || t('leads.client');

@@ -1,3 +1,5 @@
+# Dev: Vite listens on 3000 inside the container — map host:container as 3000:3000.
+# Do NOT use 8080:80 here; that mapping is for production nginx only.
 services:
   frontend:
     build:

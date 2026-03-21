@@ -1,30 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-const defaultOptions = { rootMargin: '50px', threshold: 0.01 };
+const defaultOptions = { threshold: 0.01 };
 
-type ObserverEntry = { el: Element; cb: (visible: boolean) => void; once: boolean };
+type ObserverEntry = { el: Element; cb: (visible: boolean) => void; once: boolean; rootMargin: string };
 
-let sharedObserver: IntersectionObserver | null = null;
+const observers = new Map<string, IntersectionObserver>();
 const observed = new Map<Element, ObserverEntry>();
 
 function getObserver(rootMargin: string) {
-  if (!sharedObserver) {
-    sharedObserver = new IntersectionObserver(
+  let observer = observers.get(rootMargin);
+  if (!observer) {
+    observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const rec = observed.get(entry.target);
           if (!rec) return;
           rec.cb(entry.isIntersecting);
           if (rec.once && entry.isIntersecting) {
-            sharedObserver?.unobserve(entry.target);
+            observers.get(rec.rootMargin)?.unobserve(entry.target);
             observed.delete(entry.target);
           }
         });
       },
       { ...defaultOptions, rootMargin },
     );
+    observers.set(rootMargin, observer);
   }
-  return sharedObserver;
+  return observer;
 }
 
 /**
@@ -50,7 +52,7 @@ export function useInView(rootMargin = '50px', once = true) {
           setIsInView((prev) => prev || visible);
         };
         cbRef.current = cb;
-        observed.set(node, { el: node, cb, once });
+        observed.set(node, { el: node, cb, once, rootMargin });
         getObserver(rootMargin).observe(node);
       }
     },
@@ -60,7 +62,8 @@ export function useInView(rootMargin = '50px', once = true) {
   useEffect(
     () => () => {
       if (ref.current) {
-        sharedObserver?.unobserve(ref.current);
+        const entry = observed.get(ref.current);
+        if (entry) observers.get(entry.rootMargin)?.unobserve(ref.current);
         observed.delete(ref.current);
       }
     },

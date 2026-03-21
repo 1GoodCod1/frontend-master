@@ -2,7 +2,11 @@ import { api } from '@/services/api';
 import { env } from '@/services/env';
 import type { LoginDto, RegisterDto, RefreshTokenDto, MeResponse } from '@/types';
 import { setMe, setTokens, clearAuth } from './authSlice';
-import { persistRefreshToken, setLogoutFlag } from './persist';
+import {
+  persistRefreshToken,
+  setLogoutFlag,
+  markHttpOnlySessionHint,
+} from './persist';
 import type { RootState } from '@/app/store';
 import { usersApi } from '@/features/users/usersApi';
 import i18n from '@/i18n';
@@ -39,6 +43,7 @@ export const authApi = api.injectEndpoints({
             const refreshToken = env.useHttpOnly ? '' : (t.refreshToken ?? '');
             dispatch(setTokens({ accessToken: t.accessToken, refreshToken }));
             if (t.refreshToken) persistRefreshToken(String(t.refreshToken));
+            if (env.useHttpOnly) markHttpOnlySessionHint(true);
             await dispatch(
               authApi.endpoints.authMe.initiate(undefined, { forceRefetch: true }),
             ).unwrap();
@@ -93,6 +98,7 @@ export const authApi = api.injectEndpoints({
             const refreshToken = env.useHttpOnly ? '' : (t.refreshToken ?? '');
             dispatch(setTokens({ accessToken: t.accessToken, refreshToken }));
             if (t.refreshToken) persistRefreshToken(String(t.refreshToken));
+            if (env.useHttpOnly) markHttpOnlySessionHint(true);
             try {
               await dispatch(
                 authApi.endpoints.authMe.initiate(undefined, { forceRefetch: true }),
@@ -121,6 +127,7 @@ export const authApi = api.injectEndpoints({
             const refreshToken = env.useHttpOnly ? '' : (t.refreshToken ?? prevRefresh);
             dispatch(setTokens({ accessToken: t.accessToken, refreshToken }));
             if (t.refreshToken) persistRefreshToken(String(t.refreshToken));
+            if (env.useHttpOnly) markHttpOnlySessionHint(true);
 
             try {
               await dispatch(
@@ -134,15 +141,18 @@ export const authApi = api.injectEndpoints({
               if (errStatus === 401 || errStatus === 403) {
                 dispatch(clearAuth());
                 persistRefreshToken(null);
+                if (env.useHttpOnly) markHttpOnlySessionHint(false);
               }
             }
           } else {
             dispatch(clearAuth());
             persistRefreshToken(null);
+            if (env.useHttpOnly) markHttpOnlySessionHint(false);
           }
         } catch {
           dispatch(clearAuth());
           persistRefreshToken(null);
+          if (env.useHttpOnly) markHttpOnlySessionHint(false);
         }
       },
     }),
@@ -153,6 +163,7 @@ export const authApi = api.injectEndpoints({
         dispatch(api.util.resetApiState());
         dispatch(clearAuth());
         persistRefreshToken(null);
+        if (env.useHttpOnly) markHttpOnlySessionHint(false);
         setLogoutFlag();
         try {
           await queryFulfilled;

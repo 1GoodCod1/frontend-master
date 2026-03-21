@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBookingsCalendarQuery, useBookingsUpdateStatusMutation } from '@/features/bookings/bookingsApi';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
@@ -20,8 +20,8 @@ import { Label } from '@/components/ui/label';
 import { addDays, startOfWeek } from 'date-fns';
 import { MasterBookingsCalendar } from '@/features/masters/components/master/bookings/MasterBookingsCalendar';
 import type { BookingItem } from '@/features/masters/components/master/bookings/MasterBookingsCalendar';
-import { MasterLeadsWithoutBookingColumn } from '@/features/masters/components/master/bookings/MasterLeadsWithoutBookingColumn';
-import type { LeadWithoutBooking } from '@/features/masters/components/master/bookings/MasterLeadsWithoutBookingColumn';
+import { MasterRequestsWithoutBookingColumn } from '@/features/masters/components/master/bookings/MasterRequestsWithoutBookingColumn';
+import type { RequestWithoutBooking as LeadWithoutBooking } from '@/features/masters/components/master/bookings/MasterRequestsWithoutBookingColumn';
 import { ScheduleSettingsCard } from '@/features/masters/components/master/bookings/ScheduleSettingsCard';
 
 export default function BookingsPage() {
@@ -126,7 +126,7 @@ export default function BookingsPage() {
           </div>
           <div className="lg:col-span-1">
             <Card className="border-border dark:border-white/[0.08] p-4 sticky top-24">
-              <MasterLeadsWithoutBookingColumn
+              <MasterRequestsWithoutBookingColumn
                 leads={leadsWithoutBooking}
                 masterId={masterId}
                 onBookingCreated={() => calendarQuery.refetch()}

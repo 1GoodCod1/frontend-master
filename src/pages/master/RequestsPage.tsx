@@ -12,7 +12,7 @@ import { exportService } from '@/features/export/exportApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { LeadCard } from '@/features/leads/components/LeadCard';
+import { RequestCard } from '@/features/requests/components/RequestCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -30,7 +30,7 @@ import { extractItems } from '@/utils/data';
 
 const ITEMS_PER_PAGE = 3;
 
-export default function LeadsPage() {
+export default function RequestsPage() {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
   const nav = useNavigate();
@@ -190,7 +190,7 @@ export default function LeadsPage() {
                         }
                       }}
                     >
-                      <LeadCard
+                      <RequestCard
                         lead={{ ...lead, id: String(lead?.id ?? '') }}
                         locale={locale}
                         isUpdating={isUpdating}

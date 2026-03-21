@@ -1,4 +1,5 @@
 import { onCLS, onINP, onLCP, onFCP, onTTFB, type Metric } from 'web-vitals';
+import { env } from '@/services/env';
 
 function sendMetric(metric: Metric) {
   const body = JSON.stringify({
@@ -10,8 +11,12 @@ function sendMetric(metric: Metric) {
     navigationType: metric.navigationType,
   });
 
+  const url = `${env.apiUrl.replace(/\/api\/?$/, '')}/web-vitals`;
   if (navigator.sendBeacon) {
-    navigator.sendBeacon('/api/web-vitals', body);
+    navigator.sendBeacon(
+      url,
+      new Blob([body], { type: 'application/json' }),
+    );
   }
 }
 

@@ -18,7 +18,7 @@ export const howItWorks = {
       step3: {
         title: 'Contact',
         description:
-          'Send a lead to your chosen master with your contact details and message. They will respond quickly.',
+          'Send a request to your chosen master with your contact details and message. They will respond quickly.',
       },
       step4: {
         title: 'Review',
@@ -36,9 +36,9 @@ export const howItWorks = {
           'Submit documents for verification. Verified masters get a badge and more trust from clients.',
       },
       masterStep3: {
-        title: 'Leads & bookings',
+        title: 'Requests & bookings',
         description:
-          'Receive leads in your personal account, chat with clients, confirm bookings and manage your schedule.',
+          'Receive requests in your personal account, chat with clients, confirm bookings and manage your schedule.',
       },
       masterStep4: {
         title: 'Payments & growth',
@@ -71,7 +71,7 @@ export const howItWorks = {
       step3: {
         title: 'Связь',
         description:
-          'Отправьте лид выбранному мастеру с вашими контактными данными и сообщением. Они быстро ответят.',
+          'Отправьте заявку выбранному мастеру с вашими контактными данными и сообщением. Они быстро ответят.',
       },
       step4: {
         title: 'Отзыв',
@@ -89,9 +89,9 @@ export const howItWorks = {
           'Пройдите верификацию по документам. Проверенные мастера получают бейдж и больше доверия от клиентов.',
       },
       masterStep3: {
-        title: 'Лиды и брони',
+        title: 'Заявки и брони',
         description:
-          'Получайте лиды в личном кабинете, общайтесь с клиентами в чате, подтверждайте брони и управляйте расписанием.',
+          'Получайте заявки в личном кабинете, общайтесь с клиентами в чате, подтверждайте брони и управляйте расписанием.',
       },
       masterStep4: {
         title: 'Оплаты и рост',
@@ -124,7 +124,7 @@ export const howItWorks = {
       step3: {
         title: 'Contact',
         description:
-          'Trimiteți un lead meșterului ales cu datele dvs. de contact și mesaj. Vor răspunde rapid.',
+          'Trimiteți o cerere meșterului ales cu datele dvs. de contact și mesaj. Vor răspunde rapid.',
       },
       step4: {
         title: 'Recenzie',
@@ -142,9 +142,9 @@ export const howItWorks = {
           'Trimiteți documentele pentru verificare. Meșterii verificați primesc insignă și mai multă încredere de la clienți.',
       },
       masterStep3: {
-        title: 'Leads și rezervări',
+        title: 'Cereri și rezervări',
         description:
-          'Primiți leads în contul personal, discutați cu clienții, confirmați rezervările și gestionați programul.',
+          'Primiți cereri în contul personal, discutați cu clienții, confirmați rezervările și gestionați programul.',
       },
       masterStep4: {
         title: 'Plăți și creștere',

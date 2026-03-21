@@ -1,4 +1,5 @@
 import { useMemo, useEffect, lazy, Suspense } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { useMastersPopularQuery } from '@/features/masters/mastersApi';
@@ -57,6 +58,15 @@ export default function HomePage() {
         description={t('home.subtitle')}
         keywords={t('home.seoKeywords')}
       />
+      <Helmet>
+        <link
+          rel="preload"
+          as="image"
+          href={isDark ? '/images/hero-masters-dark.webp' : '/images/hero-masters.webp'}
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </Helmet>
       <div
         className="relative min-h-screen w-full animate-fade-in"
       >

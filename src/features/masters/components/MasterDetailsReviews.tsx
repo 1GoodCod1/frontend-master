@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Star, MessageSquare, Paperclip, Trash2, CornerDownRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -190,6 +190,15 @@ export const MasterDetailsReviews = ({
     isLoading: isSubmitting,
   } = reviewSubmission;
 
+  // Memoize blob URLs for photo previews and revoke on cleanup
+  const reviewPhotoUrls = useMemo(
+    () => reviewPhotos.map((f) => URL.createObjectURL(f)),
+    [reviewPhotos],
+  );
+  useEffect(() => () => {
+    reviewPhotoUrls.forEach((url) => URL.revokeObjectURL(url));
+  }, [reviewPhotoUrls]);
+
   const { avgRating, totalCount, distribution } = useMemo(() => {
     const arr = Array.isArray(reviews) ? reviews : [];
     const counts = [0, 0, 0, 0, 0];
@@ -275,13 +284,13 @@ export const MasterDetailsReviews = ({
                   </Button>
                   {reviewPhotos.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
-                      {reviewPhotos.map((f: File, i: number) => (
+                      {reviewPhotos.map((_f: File, i: number) => (
                         <div
                           key={i}
                           className="relative w-12 h-12 rounded-lg overflow-hidden border border-border"
                         >
                           <img
-                            src={URL.createObjectURL(f)}
+                            src={reviewPhotoUrls[i]}
                             alt=""
                             className="w-full h-full object-cover"
                           />

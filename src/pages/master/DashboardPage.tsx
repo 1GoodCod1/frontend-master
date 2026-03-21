@@ -235,9 +235,14 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="pt-4 sm:pt-6">
-              <div className="h-[260px] min-h-[200px] sm:h-[280px] w-full mt-2 sm:mt-4">
+              <div className="h-[260px] min-h-[200px] sm:h-[280px] w-full min-w-0 mt-2 sm:mt-4">
                 {chartData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height="100%" minHeight={200}>
+                  <ResponsiveContainer
+                    width="100%"
+                    height={isChartWide ? 280 : 260}
+                    minWidth={0}
+                    minHeight={200}
+                  >
                     <AreaChart
                       data={chartData}
                       margin={{

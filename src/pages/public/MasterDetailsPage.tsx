@@ -11,7 +11,7 @@ import { useMastersPhotosByIdQuery } from '@/features/masters/masterPhotosApi';
 import { useLeadsActiveToMasterQuery } from '@/features/leads/leadsApi';
 import { useMasterFavorites } from '@/hooks/masters/useMasterFavorites';
 import { useReviewSubmission } from '@/hooks/reviews/useReviewSubmission';
-import { useLeadSubmission } from '@/hooks/leads';
+import { useRequestSubmission } from '@/hooks/requests';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ErrorState } from '@/components/common/States';
 import { DetailSkeleton } from '@/components/common/Skeletons';
@@ -25,8 +25,7 @@ import { SimilarMasters } from '@/components/home/recommendations/SimilarMasters
 import { PortfolioSection } from '@/features/portfolio/components/PortfolioSection';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
-import { Link as RouterLink } from 'react-router-dom';
-import { ShieldCheck, MapPin, Briefcase, Clock, Calendar, ChevronRight, CalendarDays } from 'lucide-react';
+import { ShieldCheck, MapPin, Briefcase, Clock, Calendar, ChevronRight } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 
@@ -86,7 +85,7 @@ export default function MasterDetailsPage() {
 
   const favorites = useMasterFavorites(masterId, isClient);
   const reviewSubmission = useReviewSubmission(masterId, canCreateReviewQuery.data?.leadId);
-  const leadSubmission = useLeadSubmission(masterId, isAuthed, role);
+  const leadSubmission = useRequestSubmission(masterId, isAuthed, role);
 
   const { data: activeLeadData } = useLeadsActiveToMasterQuery(
     { masterId: masterId ?? '', userId: me?.id },
@@ -314,19 +313,6 @@ export default function MasterDetailsPage() {
             {/* Lead form / CTA */}
             {!isOwnProfile && m?.user?.isVerified && (
               <div id="lead-form" className="lg:sticky lg:top-24 space-y-3">
-                {isMasterAvailable && (
-                  <RouterLink
-                    to={
-                      isClient
-                        ? `/client-dashboard/masters/${slugOrId}/book`
-                        : `/login?redirect=${encodeURIComponent(`/client-dashboard/masters/${slugOrId}/book`)}`
-                    }
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-primary bg-primary/10 py-3 px-4 font-semibold text-primary hover:bg-primary/20 transition-colors"
-                  >
-                    <CalendarDays className="size-5" />
-                    {t('masters.bookAppointment', 'Book Appointment')}
-                  </RouterLink>
-                )}
                 <MasterDetailsLeadForm
                   isAuthed={isAuthed}
                   role={role}

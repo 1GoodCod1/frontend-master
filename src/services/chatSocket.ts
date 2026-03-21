@@ -20,7 +20,13 @@ export function getChatSocket() {
 
 export function connectChatSocket(store: { dispatch: AppDispatch; getState: () => RootState }) {
   if (chatSocket?.connected) return chatSocket;
-  if (chatSocket) return chatSocket;
+
+  // If socket exists but not connected — clean up and reconnect
+  if (chatSocket) {
+    chatSocket.removeAllListeners();
+    chatSocket.disconnect();
+    chatSocket = null;
+  }
 
   const token = selectAccessToken(store.getState());
 

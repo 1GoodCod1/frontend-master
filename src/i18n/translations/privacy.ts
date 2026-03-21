@@ -8,17 +8,17 @@ export const privacy = {
         'Master-Hub ("we", "our", "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose and safeguard your information when you use our platform, website and services. Please read this policy carefully.',
       section1Title: '1. Information We Collect',
       section1P1:
-        'We collect information that you provide directly to us, including when you register as a master or client, create a profile, send a lead, leave a review, contact support, or subscribe to communications.',
+        'We collect information that you provide directly to us, including when you register as a master or client, create a profile, send a request, leave a review, contact support, or subscribe to communications.',
       section1P2:
         'This may include: name, email address, phone number, profile photo, business description, category and city, payment and billing information (processed by secure payment providers), and any messages or content you submit.',
       section1P3:
         'We automatically collect certain technical data when you use our services: IP address, device type, browser, pages visited, time and date of access. We use cookies and similar technologies as described in our cookie notice.',
       section2Title: '2. How We Use Your Information',
       section2P1:
-        'We use the collected information to: provide, maintain and improve our services; process registrations and payments; display master profiles and leads to relevant users; send transactional and service-related notifications; respond to your requests and support; detect and prevent fraud and abuse; comply with legal obligations; and, with your consent, send marketing communications.',
+        'We use the collected information to: provide, maintain and improve our services; process registrations and payments; display master profiles and requests to relevant users; send transactional and service-related notifications; respond to your requests and support; detect and prevent fraud and abuse; comply with legal obligations; and, with your consent, send marketing communications.',
       section3Title: '3. Sharing of Information',
       section3P1:
-        'We share information only as follows: (a) with other users as necessary for the service (e.g. masters see client contact details for leads they receive; clients see master profiles and contact options according to plan visibility); (b) with service providers who process data on our behalf under strict agreements (see Section 3a); (c) when required by law or to protect rights and safety; (d) in connection with a merger, sale or restructuring, with notice where required.',
+        'We share information only as follows: (a) with other users as necessary for the service (e.g. masters see client contact details for requests they receive; clients see master profiles and contact options according to plan visibility); (b) with service providers who process data on our behalf under strict agreements (see Section 3a); (c) when required by law or to protect rights and safety; (d) in connection with a merger, sale or restructuring, with notice where required.',
       section3aTitle: '3a. Third-Party Service Providers',
       section3aP1:
         'We use the following third-party services that may process your personal data on our behalf: Twilio (SMS and WhatsApp messaging — phone number); SMTP email service (email address, name); Telegram Bot API (chat ID, messages — for masters who enable notifications); MIA/MAIB (payment processing — payment metadata, no card details stored); Backblaze B2 (file storage — uploaded files); IP geolocation services ipapi.co and ip-api.com (IP address — only with your consent, to suggest your city). All third-party providers are bound by data processing agreements and only process data as instructed by us.',
@@ -56,17 +56,17 @@ export const privacy = {
         'Master-Hub («мы», «наш», «нас») обязуется защищать вашу конфиденциальность. Настоящая Политика конфиденциальности объясняет, как мы собираем, используем, раскрываем и защищаем вашу информацию при использовании нашей платформы, сайта и услуг. Просим внимательно ознакомиться с текстом.',
       section1Title: '1. Информация, которую мы собираем',
       section1P1:
-        'Мы собираем информацию, которую вы предоставляете напрямую: при регистрации в качестве мастера или клиента, создании профиля, отправке лида, оставлении отзыва, обращении в поддержку или подписке на рассылки.',
+        'Мы собираем информацию, которую вы предоставляете напрямую: при регистрации в качестве мастера или клиента, создании профиля, отправке заявки, оставлении отзыва, обращении в поддержку или подписке на рассылки.',
       section1P2:
         'Это может включать: имя, адрес электронной почты, номер телефона, фото профиля, описание услуг, категорию и город, данные для оплаты (обрабатываются платёжными провайдерами), а также сообщения и контент, которые вы отправляете.',
       section1P3:
         'Мы автоматически собираем технические данные при использовании сервиса: IP-адрес, тип устройства, браузер, посещённые страницы, время и дата доступа. Мы используем файлы cookie и аналогичные технологии в соответствии с нашим уведомлением о cookie.',
       section2Title: '2. Как мы используем вашу информацию',
       section2P1:
-        'Мы используем собранные данные для: предоставления, поддержки и улучшения сервисов; обработки регистраций и платежей; отображения профилей мастеров и лидов соответствующим пользователям; отправки транзакционных и сервисных уведомлений; ответов на запросы и поддержку; выявления и предотвращения мошенничества; соблюдения законодательства; и, с вашего согласия, рассылки маркетинговых сообщений.',
+        'Мы используем собранные данные для: предоставления, поддержки и улучшения сервисов; обработки регистраций и платежей; отображения профилей мастеров и заявок соответствующим пользователям; отправки транзакционных и сервисных уведомлений; ответов на запросы и поддержку; выявления и предотвращения мошенничества; соблюдения законодательства; и, с вашего согласия, рассылки маркетинговых сообщений.',
       section3Title: '3. Передача информации',
       section3P1:
-        'Мы передаём информацию только: (a) другим пользователям в объёме, необходимом для сервиса (мастера видят контакты клиентов по полученным лидам; клиенты видят профили мастеров и варианты связи в соответствии с тарифом); (b) поставщикам услуг, обрабатывающим данные от нашего имени по строгим соглашениям (см. Раздел 3а); (c) когда этого требует закон или защита прав и безопасности; (d) в связи со слиянием, продажей или реорганизацией, с уведомлением, где это предусмотрено.',
+        'Мы передаём информацию только: (a) другим пользователям в объёме, необходимом для сервиса (мастера видят контакты клиентов по полученным заявкам; клиенты видят профили мастеров и варианты связи в соответствии с тарифом); (b) поставщикам услуг, обрабатывающим данные от нашего имени по строгим соглашениям (см. Раздел 3а); (c) когда этого требует закон или защита прав и безопасности; (d) в связи со слиянием, продажей или реорганизацией, с уведомлением, где это предусмотрено.',
       section3aTitle: '3а. Сторонние поставщики услуг',
       section3aP1:
         'Мы используем следующие сторонние сервисы, которые могут обрабатывать ваши персональные данные: Twilio (SMS и WhatsApp — номер телефона); SMTP-сервис электронной почты (email, имя); Telegram Bot API (ID чата, сообщения — для мастеров с включёнными уведомлениями); MIA/MAIB (обработка платежей — метаданные платежей, данные карт не хранятся); Backblaze B2 (хранение файлов — загруженные файлы); сервисы геолокации ipapi.co и ip-api.com (IP-адрес — только с вашего согласия, для определения города). Все сторонние поставщики связаны соглашениями об обработке данных.',
@@ -104,17 +104,17 @@ export const privacy = {
         'Master-Hub («noi», «nostru») suntem dedicați protejării confidențialității dvs. Această Politică de confidențialitate explică cum colectăm, utilizăm, dezvăluim și protejăm informațiile dvs. când folosiți platforma, site-ul și serviciile noastre. Vă rugăm să citiți cu atenție.',
       section1Title: '1. Informații pe care le colectăm',
       section1P1:
-        'Colectăm informații pe care ni le furnizați direct: la înregistrarea ca meșter sau client, la crearea profilului, la trimiterea unui lead, la lăsarea unei recenzii, la contactarea suportului sau la abonarea la comunicări.',
+        'Colectăm informații pe care ni le furnizați direct: la înregistrarea ca meșter sau client, la crearea profilului, la trimiterea unei cereri, la lăsarea unei recenzii, la contactarea suportului sau la abonarea la comunicări.',
       section1P2:
         'Acestea pot include: nume, adresă de email, număr de telefon, fotografie de profil, descriere activitate, categorie și oraș, informații de plată (procesate de furnizori de plăți securizați), precum și mesaje sau conținut trimis.',
       section1P3:
         'Colectăm automat anumite date tehnice la utilizarea serviciilor: adresă IP, tip dispozitiv, browser, pagini vizitate, dată și oră. Folosim cookie-uri și tehnologii similare conform informațiilor despre cookie-uri.',
       section2Title: '2. Cum utilizăm informațiile',
       section2P1:
-        'Utilizăm informațiile pentru: furnizarea, întreținerea și îmbunătățirea serviciilor; procesarea înregistrărilor și plăților; afișarea profilurilor meșterilor și a lead-urilor; trimiterea notificărilor tranzacționale; răspunsuri la solicitări și suport; detectarea și prevenirea fraudelor; respectarea obligațiilor legale; și, cu consimțământul dvs., comunicări de marketing.',
+        'Utilizăm informațiile pentru: furnizarea, întreținerea și îmbunătățirea serviciilor; procesarea înregistrărilor și plăților; afișarea profilurilor meșterilor și a cererilor; trimiterea notificărilor tranzacționale; răspunsuri la solicitări și suport; detectarea și prevenirea fraudelor; respectarea obligațiilor legale; și, cu consimțământul dvs., comunicări de marketing.',
       section3Title: '3. Partajarea informațiilor',
       section3P1:
-        'Partajăm informațiile doar: (a) cu alți utilizatori în măsura necesară pentru serviciu (meșterii văd datele de contact ale clienților pentru lead-urile primite; clienții văd profilurile și opțiunile de contact conform planului); (b) cu furnizori de servicii care procesează date în numele nostru sub acorduri stricte (vezi Secțiunea 3a); (c) când legea o impune sau pentru protejarea drepturilor și siguranței; (d) în legătură cu fuziune, vânzare sau restructurare, cu notificare unde este cazul.',
+        'Partajăm informațiile doar: (a) cu alți utilizatori în măsura necesară pentru serviciu (meșterii văd datele de contact ale clienților pentru cererile primite; clienții văd profilurile și opțiunile de contact conform planului); (b) cu furnizori de servicii care procesează date în numele nostru sub acorduri stricte (vezi Secțiunea 3a); (c) când legea o impune sau pentru protejarea drepturilor și siguranței; (d) în legătură cu fuziune, vânzare sau restructurare, cu notificare unde este cazul.',
       section3aTitle: '3a. Furnizori terți de servicii',
       section3aP1:
         'Utilizăm următorii furnizori terți care pot prelucra datele dvs. personale: Twilio (mesagerie SMS și WhatsApp — număr de telefon); serviciu SMTP de email (adresă email, nume); Telegram Bot API (ID chat, mesaje — pentru meșterii cu notificări activate); MIA/MAIB (procesare plăți — metadate de plată, datele cardului nu sunt stocate); Backblaze B2 (stocare fișiere — fișiere încărcate); servicii de geolocalizare ipapi.co și ip-api.com (adresă IP — doar cu consimțământul dvs., pentru a sugera orașul). Toți furnizorii terți sunt obligați prin acorduri de prelucrare a datelor.',

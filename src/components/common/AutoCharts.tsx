@@ -61,8 +61,8 @@ export function AutoCharts({ data, title }: { data: unknown; title?: string }) {
           <Card key={s.title} className="border-border">
             <CardContent className="p-4">
               <p className="mb-2 text-sm font-medium text-muted-foreground">{s.title}</p>
-              <div className="h-[280px] min-h-[200px] w-full">
-                <ResponsiveContainer width="100%" height={260} minHeight={200}>
+              <div className="h-[280px] min-h-[200px] w-full min-w-0">
+                <ResponsiveContainer width="100%" height={260} minWidth={0} minHeight={200}>
                   {useBar ? (
                     <BarChart data={s.rows}>
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />

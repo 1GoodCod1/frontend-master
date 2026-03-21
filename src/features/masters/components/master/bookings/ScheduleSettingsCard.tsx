@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Clock, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -28,21 +28,18 @@ export function ScheduleSettingsCard() {
     const { data, isLoading } = useMastersGetScheduleSettingsQuery();
     const [updateSettings, { isLoading: isSaving }] = useMastersUpdateScheduleSettingsMutation();
 
-    const [workStart, setWorkStart] = useState(9);
-    const [workEnd, setWorkEnd] = useState(18);
-    const [slotDuration, setSlotDuration] = useState(60);
-    const [hasChanges, setHasChanges] = useState(false);
+    // Local overrides — null means "use server value"
+    const [localStart, setLocalStart] = useState<number | null>(null);
+    const [localEnd, setLocalEnd] = useState<number | null>(null);
+    const [localSlot, setLocalSlot] = useState<number | null>(null);
 
-    useEffect(() => {
-        if (!data) return;
-        queueMicrotask(() => {
-            setWorkStart(data.workStartHour ?? 9);
-            setWorkEnd(data.workEndHour ?? 18);
-            setSlotDuration(data.slotDurationMinutes ?? 60);
-        });
-    }, [data]);
+    // Derive displayed values: local override ?? server data ?? defaults
+    const workStart = localStart ?? data?.workStartHour ?? 9;
+    const workEnd = localEnd ?? data?.workEndHour ?? 18;
+    const slotDuration = localSlot ?? data?.slotDurationMinutes ?? 60;
+    const hasChanges = localStart !== null || localEnd !== null || localSlot !== null;
 
-    const handleSave = async () => {
+    const handleSave = useCallback(async () => {
         if (workStart >= workEnd) {
             toast.error(t('bookings.schedule.saveFailed'));
             return;
@@ -54,16 +51,14 @@ export function ScheduleSettingsCard() {
                 slotDurationMinutes: slotDuration,
             }).unwrap();
             toast.success(t('bookings.schedule.saved'));
-            setHasChanges(false);
+            // Clear local overrides — server data is now the source of truth
+            setLocalStart(null);
+            setLocalEnd(null);
+            setLocalSlot(null);
         } catch {
             toast.error(t('bookings.schedule.saveFailed'));
         }
-    };
-
-    const handleChange = (setter: (v: number) => void, value: string) => {
-        setter(Number(value));
-        setHasChanges(true);
-    };
+    }, [workStart, workEnd, slotDuration, updateSettings, t]);
 
     if (isLoading) {
         return (
@@ -93,7 +88,7 @@ export function ScheduleSettingsCard() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="space-y-1.5">
                         <Label htmlFor="work-start" className="text-xs">{t('bookings.schedule.workStartHour')}</Label>
-                        <Select value={String(workStart)} onValueChange={(v) => handleChange(setWorkStart, v)}>
+                        <Select value={String(workStart)} onValueChange={(v) => setLocalStart(Number(v))}>
                             <SelectTrigger id="work-start" className="h-9">
                                 <SelectValue />
                             </SelectTrigger>
@@ -107,7 +102,7 @@ export function ScheduleSettingsCard() {
 
                     <div className="space-y-1.5">
                         <Label htmlFor="work-end" className="text-xs">{t('bookings.schedule.workEndHour')}</Label>
-                        <Select value={String(workEnd)} onValueChange={(v) => handleChange(setWorkEnd, v)}>
+                        <Select value={String(workEnd)} onValueChange={(v) => setLocalEnd(Number(v))}>
                             <SelectTrigger id="work-end" className="h-9">
                                 <SelectValue />
                             </SelectTrigger>
@@ -121,7 +116,7 @@ export function ScheduleSettingsCard() {
 
                     <div className="space-y-1.5">
                         <Label htmlFor="slot-duration" className="text-xs">{t('bookings.schedule.slotDuration')}</Label>
-                        <Select value={String(slotDuration)} onValueChange={(v) => handleChange(setSlotDuration, v)}>
+                        <Select value={String(slotDuration)} onValueChange={(v) => setLocalSlot(Number(v))}>
                             <SelectTrigger id="slot-duration" className="h-9">
                                 <SelectValue />
                             </SelectTrigger>

@@ -15,7 +15,7 @@ import { useBookingsCreateMutation, useBookingsAvailableSlotsQuery } from '@/fea
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
 
-interface CreateBookingFromLeadModalProps {
+interface CreateBookingFromRequestModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   masterId: string;
@@ -39,7 +39,7 @@ function formatSlotTime(slot: SlotData): string {
   return `${h}:${m}`;
 }
 
-export function CreateBookingFromLeadModal({
+export function CreateBookingFromRequestModal({
   open,
   onOpenChange,
   masterId,
@@ -47,7 +47,7 @@ export function CreateBookingFromLeadModal({
   leadClientName,
   leadClientPhone,
   onSuccess,
-}: CreateBookingFromLeadModalProps) {
+}: CreateBookingFromRequestModalProps) {
   const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState<string>(() =>
     new Date().toISOString().split('T')[0],
@@ -115,7 +115,6 @@ export function CreateBookingFromLeadModal({
 
         <DialogBody>
           <div className="space-y-5">
-            {/* Client info */}
             {(leadClientName || leadClientPhone) && (
               <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
@@ -130,7 +129,6 @@ export function CreateBookingFromLeadModal({
               </div>
             )}
 
-            {/* Date picker */}
             <div className="space-y-2">
               <Label htmlFor="modal-booking-date" className="text-sm font-semibold">
                 {t('bookings.selectDate')}
@@ -148,7 +146,6 @@ export function CreateBookingFromLeadModal({
               />
             </div>
 
-            {/* Available slots */}
             {selectedDate && (
               <div>
                 <Label className="mb-3 block text-sm font-semibold">
@@ -191,7 +188,6 @@ export function CreateBookingFromLeadModal({
               </div>
             )}
 
-            {/* Notes */}
             <div className="space-y-2">
               <Label htmlFor="modal-booking-notes" className="text-sm font-semibold">
                 {t('bookings.notes')}
@@ -206,7 +202,6 @@ export function CreateBookingFromLeadModal({
               />
             </div>
 
-            {/* Submit */}
             <Button
               size="lg"
               className="w-full gap-2"

@@ -10,8 +10,8 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLeadsByIdQuery, useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
 import { useCreateConversationMutation, useGetConversationByLeadIdQuery } from '@/features/chat/chatApi';
-import { LeadCard } from '@/features/leads/components/LeadCard';
-import { LeadFilesGallery } from '@/features/leads/components/LeadFilesGallery';
+import { RequestCard } from '@/features/requests/components/RequestCard';
+import { RequestFilesGallery } from '@/features/requests/components/RequestFilesGallery';
 import type { LeadStatus } from '@/types/leads';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -26,7 +26,7 @@ function unwrapLead(data: unknown): Record<string, unknown> | undefined {
   return (d?.data ?? d) as Record<string, unknown> | undefined;
 }
 
-export default function LeadDetailsPage() {
+export default function RequestDetailsPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -134,9 +134,8 @@ export default function LeadDetailsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-        {/* Main Content Column */}
         <div className="lg:col-span-8 flex flex-col gap-6 md:gap-8">
-          <LeadCard
+          <RequestCard
             lead={leadForCard}
             locale={getLocaleFromLanguage(i18n.language)}
             isUpdating={isUpdatingStatus}
@@ -144,10 +143,9 @@ export default function LeadDetailsPage() {
             variant="detail"
           />
 
-          <LeadFilesGallery files={files} sectionHeader={sectionHeader} />
+          <RequestFilesGallery files={files} sectionHeader={sectionHeader} />
         </div>
 
-        {/* Sidebar Column */}
         <div className="lg:col-span-4 flex flex-col gap-6 md:gap-8">
           <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 sticky top-6">
             {sectionHeader(

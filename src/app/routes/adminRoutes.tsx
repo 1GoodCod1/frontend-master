@@ -13,7 +13,7 @@ export const adminRoutes = {
         { index: true, element: <LazyPage><P.AdminDashboardPage /></LazyPage> },
         { path: 'users', element: <LazyPage><P.UsersPage /></LazyPage> },
         { path: 'masters', element: <LazyPage><P.MastersAdminPage /></LazyPage> },
-        { path: 'leads', element: <LazyPage><P.LeadsAdminPage /></LazyPage> },
+        { path: 'leads', element: <LazyPage><P.RequestsAdminPage /></LazyPage> },
         { path: 'reviews', element: <LazyPage><P.ReviewsAdminPage /></LazyPage> },
         { path: 'reports', element: <LazyPage><P.ReportsAdminPage /></LazyPage> },
         { path: 'payments', element: <LazyPage><P.PaymentsAdminPage /></LazyPage> },

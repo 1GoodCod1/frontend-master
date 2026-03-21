@@ -67,7 +67,7 @@ export function useMastersPage() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMastersFiltersQuery();
-  const { data: activePromotions = [] } = usePromotionsActiveQuery({ limit: 100 });
+  const { data: activePromotions = [] } = usePromotionsActiveQuery({ limit: 50 });
   const [track] = useRecommendationsTrackMutation();
   const isInitialMount = useRef(true);
 

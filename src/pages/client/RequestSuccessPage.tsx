@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { LeadStatusProgress } from '@/features/leads/components/LeadStatusProgress';
+import { RequestStatusProgress } from '@/features/requests/components/RequestStatusProgress';
 import { useLeadsByIdQuery } from '@/features/leads/leadsApi';
 import {
     useCreateConversationMutation,
@@ -37,7 +37,7 @@ function toErrorMessage(error: unknown): string | undefined {
     );
 }
 
-export default function LeadSuccessPage() {
+export default function RequestSuccessPage() {
     const { t, i18n } = useTranslation();
     const { leadId } = useParams<{ leadId: string }>();
     const navigate = useNavigate();
@@ -54,7 +54,6 @@ export default function LeadSuccessPage() {
         { skip: !leadId },
     );
 
-    // Animation state
     const [showContent, setShowContent] = useState(false);
     useEffect(() => {
         const timer = setTimeout(() => setShowContent(true), 400);
@@ -87,7 +86,6 @@ export default function LeadSuccessPage() {
         lead?.masterId;
     const createdAt = lead?.createdAt ? new Date(lead.createdAt) : null;
 
-    // Redirect if no leadId
     if (!leadId) {
         return (
             <div className="mx-auto max-w-2xl px-4 py-16 text-center">
@@ -101,14 +99,12 @@ export default function LeadSuccessPage() {
 
     return (
         <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
-            {/* Success Hero */}
             <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
                 className="text-center mb-8"
             >
-                {/* Animated checkmark */}
                 <div className="relative mx-auto mb-6 h-24 w-24">
                     <motion.div
                         initial={{ scale: 0 }}
@@ -124,7 +120,6 @@ export default function LeadSuccessPage() {
                     >
                         <CheckCircle2 className="h-12 w-12 text-white" strokeWidth={2.5} />
                     </motion.div>
-                    {/* Pulse ring */}
                     <motion.div
                         initial={{ scale: 0.8, opacity: 1 }}
                         animate={{ scale: 1.5, opacity: 0 }}
@@ -159,23 +154,20 @@ export default function LeadSuccessPage() {
                         transition={{ duration: 0.5 }}
                         className="space-y-6"
                     >
-                        {/* Lead Details Card */}
                         <Card className="overflow-hidden border-border/50 dark:border-white/[0.08] shadow-lg">
                             <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
                             <CardContent className="p-6 space-y-5">
-                                {/* Status Progress */}
                                 {!isLoading && lead && (
                                     <div>
                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                                             {t('leadSuccess.currentStatus', 'Статус заявки')}
                                         </p>
-                                        <LeadStatusProgress status={lead.status ?? 'NEW'} />
+                                        <RequestStatusProgress status={lead.status ?? 'NEW'} />
                                     </div>
                                 )}
 
                                 <Separator />
 
-                                {/* Master Info */}
                                 {!isLoading && lead && (
                                     <div className="space-y-3">
                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -256,7 +248,6 @@ export default function LeadSuccessPage() {
                             </CardContent>
                         </Card>
 
-                        {/* What's Next Card */}
                         <Card className="border-border/50 dark:border-white/[0.08] shadow-lg">
                             <CardContent className="p-6 space-y-4">
                                 <div className="flex items-center gap-2">
@@ -301,7 +292,6 @@ export default function LeadSuccessPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Action Buttons */}
                         <div className="space-y-3">
                             <Button
                                 size="lg"

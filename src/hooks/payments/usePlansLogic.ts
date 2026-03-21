@@ -158,8 +158,8 @@ export function usePlansLogic() {
             const basicPlan = plans.find((p) => p.name === 'BASIC') || {
                 name: 'BASIC' as const,
                 price: '0 MDL',
-                description: 'Start and receive first leads',
-                features: ['Public profile', 'Up to 5 photos', 'Receive leads', 'Reviews'],
+                description: 'Start and receive first requests',
+                features: ['Public profile', 'Up to 5 photos', 'Receive requests', 'Reviews'],
                 highlight: false,
                 tariffType: null,
                 icon: null,

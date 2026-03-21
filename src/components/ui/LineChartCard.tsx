@@ -82,7 +82,7 @@ export function LineChartCard({
   const hasData = series.length > 0;
 
   const renderChart = (height: number) => (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer width="100%" height={height} minWidth={0} minHeight={Math.min(height, 200)}>
       <AreaChart data={series} margin={{ top: 8, right: 8, left: -12, bottom: 4 }}>
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -154,7 +154,7 @@ export function LineChartCard({
   }
 
   return (
-    <Card className="group overflow-hidden border-0 bg-card shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_4px_16px_rgba(0,0,0,0.35)]">
+    <Card className="group min-w-0 overflow-hidden border-0 bg-card shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_4px_16px_rgba(0,0,0,0.35)]">
       <CardContent className="flex h-[300px] flex-col p-5">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-sm font-semibold text-foreground">{title}</p>
@@ -175,7 +175,7 @@ export function LineChartCard({
             );
           })()}
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="min-h-[230px] min-w-0 flex-1">
           {hasData ? renderChart(230) : (
             <div className="flex h-full flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
               <Activity className="size-8 opacity-20" />

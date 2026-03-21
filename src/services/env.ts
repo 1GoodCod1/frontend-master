@@ -23,7 +23,7 @@ const runtime = (() => {
   }
 })();
 
-export const env: AppEnv = {
+export const env: AppEnv = Object.freeze({
   apiUrl: pick(import.meta.env.VITE_API_URL, runtime?.apiUrl) || 'http://localhost:4000',
   wsUrl: pick(import.meta.env.VITE_WS_URL, runtime?.wsUrl) || 'ws://localhost:4000',
   envName: pick(import.meta.env.VITE_ENV, runtime?.envName) || 'development',
@@ -34,4 +34,4 @@ export const env: AppEnv = {
     const isProd = import.meta.env.MODE === 'production' || import.meta.env.VITE_ENV === 'production';
     return isProd;
   })(),
-};
+});

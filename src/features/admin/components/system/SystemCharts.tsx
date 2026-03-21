@@ -74,7 +74,7 @@ export function MemoryUsageChart({ data }: { data: SystemStats['system']['memory
   ];
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={200}>
       <PieChart>
         <Pie
           data={chartData}
@@ -113,12 +113,12 @@ export function DailyMetricsChart({ data }: { data: SystemStats['daily'] }) {
   const isDark = useIsDark();
   const chartData = [
     { name: 'Users', value: data.newUsers, color: isDark ? '#9e9e9e' : '#4A90E2' },
-    { name: 'Leads', value: data.newLeads, color: isDark ? '#757575' : '#6BA3E8' },
+    { name: 'Requests', value: data.newLeads, color: isDark ? '#757575' : '#6BA3E8' },
     { name: 'Reviews', value: data.newReviews, color: isDark ? '#616161' : '#357ABD' },
   ];
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={200}>
       <BarChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'} />
         <XAxis dataKey="name" stroke={isDark ? '#b0b0b0' : '#666666'} style={{ fontSize: '12px' }} />
@@ -146,13 +146,13 @@ export function DatabaseMetricsChart({ data }: { data: SystemStats['database'] }
   const chartData = [
     { name: 'Users', value: data.totalUsers },
     { name: 'Masters', value: data.totalMasters },
-    { name: 'Leads', value: data.totalLeads },
+    { name: 'Requests', value: data.totalLeads },
     { name: 'Reviews', value: data.totalReviews },
     { name: 'Payments', value: data.totalPayments },
   ];
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={200}>
       <AreaChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'} />
         <XAxis dataKey="name" stroke={isDark ? '#b0b0b0' : '#666666'} style={{ fontSize: '12px' }} />
@@ -185,7 +185,7 @@ export function CpuLoadChart({ load }: { load: number[] }) {
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={200}>
       <BarChart data={chartData} layout="horizontal">
         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'} />
         <XAxis

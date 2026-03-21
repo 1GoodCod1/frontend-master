@@ -1,3 +1,4 @@
+import { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Star, Paperclip, Trash2, MessageSquarePlus } from 'lucide-react';
 import {
@@ -55,6 +56,15 @@ export default function ReviewModal({
   const handleRemovePhoto = (index: number) => {
     onPhotosChange(photos.filter((_, i) => i !== index));
   };
+
+  // Memoize blob URLs for photo previews and revoke on cleanup
+  const photoUrls = useMemo(
+    () => photos.map((f) => URL.createObjectURL(f)),
+    [photos],
+  );
+  useEffect(() => () => {
+    photoUrls.forEach((url) => URL.revokeObjectURL(url));
+  }, [photoUrls]);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -159,13 +169,13 @@ export default function ReviewModal({
               </Button>
               {photos.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {photos.map((f, i) => (
+                  {photos.map((_f, i) => (
                     <div
                       key={i}
                       className="group relative size-16 overflow-hidden rounded-xl border-2 border-border shadow-sm"
                     >
                       <img
-                        src={URL.createObjectURL(f)}
+                        src={photoUrls[i]}
                         alt=""
                         className="size-full object-cover"
                       />

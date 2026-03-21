@@ -20,8 +20,8 @@ export const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPa
 
 export const DashboardPage = lazy(() => import('@/pages/master/DashboardPage'));
 export const ProfilePage = lazy(() => import('@/pages/master/ProfilePage'));
-export const LeadsPage = lazy(() => import('@/pages/master/LeadsPage'));
-export const LeadDetailsPage = lazy(() => import('@/pages/master/LeadDetailsPage'));
+export const RequestsPage = lazy(() => import('@/pages/master/RequestsPage'));
+export const RequestDetailsPage = lazy(() => import('@/pages/master/RequestDetailsPage'));
 export const ReviewsPage = lazy(() => import('@/pages/master/ReviewsPage'));
 export const PaymentsPage = lazy(() => import('@/pages/master/PaymentsPage'));
 export const AnalyticsPage = lazy(() => import('@/pages/master/AnalyticsPage'));
@@ -39,7 +39,7 @@ export const SubscriptionPage = lazy(() => import('@/pages/master/SubscriptionPa
 export const AdminDashboardPage = lazy(() => import('@/pages/admin/AdminDashboardPage'));
 export const UsersPage = lazy(() => import('@/pages/admin/UsersPage'));
 export const MastersAdminPage = lazy(() => import('@/pages/admin/MastersAdminPage'));
-export const LeadsAdminPage = lazy(() => import('@/pages/admin/LeadsAdminPage'));
+export const RequestsAdminPage = lazy(() => import('@/pages/admin/RequestsAdminPage'));
 export const ReviewsAdminPage = lazy(() => import('@/pages/admin/ReviewsAdminPage'));
 export const PaymentsAdminPage = lazy(() => import('@/pages/admin/PaymentsAdminPage'));
 export const CategoriesAdminPage = lazy(() => import('@/pages/admin/CategoriesAdminPage'));
@@ -54,15 +54,13 @@ export const DigestAdminPage = lazy(() => import('@/pages/admin/DigestAdminPage'
 export const ReportsAdminPage = lazy(() => import('@/pages/admin/ReportsAdminPage'));
 
 export const ClientDashboardPage = lazy(() => import('@/pages/client/ClientDashboardPage'));
-export const ClientBookingsPage = lazy(() => import('@/pages/client/ClientBookingsPage'));
-export const ClientLeadBookPage = lazy(() => import('@/pages/client/ClientLeadBookPage'));
-export const ClientLeadsPage = lazy(() => import('@/pages/client/ClientLeadsPage'));
+export const ClientRequestBookingPage = lazy(() => import('@/pages/client/ClientRequestBookingPage'));
+export const ClientRequestsPage = lazy(() => import('@/pages/client/ClientRequestsPage'));
 export const ClientFavoritesPage = lazy(() => import('@/pages/client/ClientFavoritesPage'));
 export const ClientReportsPage = lazy(() => import('@/pages/client/ClientReportsPage'));
 export const ClientProfilePage = lazy(() => import('@/pages/client/ClientProfilePage'));
 export const SecuritySettingsPage = lazy(() => import('@/pages/client/SecuritySettingsPage'));
 export const ClientChatPage = lazy(() => import('@/pages/client/ChatPage'));
-export const LeadSuccessPage = lazy(() => import('@/pages/client/LeadSuccessPage'));
-export const DirectBookingPage = lazy(() => import('@/pages/client/DirectBookingPage'));
+export const RequestSuccessPage = lazy(() => import('@/pages/client/RequestSuccessPage'));
 
 export const ReferralPage = lazy(() => import('@/pages/referrals/ReferralPage'));

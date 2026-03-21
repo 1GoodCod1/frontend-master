@@ -17,6 +17,7 @@ export function playNotificationSound() {
         gain.gain.setValueAtTime(0.1, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
 
+        osc.onended = () => { ctx.close(); };
         osc.start();
         osc.stop(ctx.currentTime + 0.1);
     } catch (e) {

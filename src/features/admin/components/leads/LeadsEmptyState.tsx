@@ -1,12 +1,12 @@
 import { Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface LeadsEmptyStateProps {
+interface RequestsEmptyStateProps {
   hasFilters: boolean;
   onClearFilters: () => void;
 }
 
-export default function LeadsEmptyState({ hasFilters, onClearFilters }: LeadsEmptyStateProps) {
+export default function RequestsEmptyState({ hasFilters, onClearFilters }: RequestsEmptyStateProps) {
   return (
     <div className="py-12 px-6 text-center">
       <Users className="mx-auto size-20 text-muted-foreground/30 mb-4" />

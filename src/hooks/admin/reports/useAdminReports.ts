@@ -54,6 +54,7 @@ export function useAdminReports() {
     link.href = URL.createObjectURL(blob);
     link.download = `reports_export_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
+    URL.revokeObjectURL(link.href);
     toast.success('Reports exported to CSV');
   };
 

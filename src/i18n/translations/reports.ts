@@ -2,17 +2,17 @@ export const reports = {
   en: {
     reports: {
       noReports: 'No reports yet',
-      noReportsDescription: 'You can report a master if you sent them a lead',
+      noReportsDescription: 'You can report a master if you sent them a request',
       createReport: 'Create Report',
       reason: 'Reason',
       description: 'Description',
       submit: 'Submit',
-      noLeadError: 'You can only report a master if you sent them a lead',
+      noLeadError: 'You can only report a master if you sent them a request',
       fillAllFields: 'Please fill in all required fields',
       created: 'Report created successfully',
       createFailed: 'Failed to create report',
       selectMaster: 'Select Master',
-      noLeads: 'No leads available. You can only report masters you have sent leads to.',
+      noLeads: 'No requests available. You can only report masters you have sent requests to.',
       reportingMaster: 'Reporting Master',
       unknownMaster: 'Unknown Master',
       status: {
@@ -27,17 +27,17 @@ export const reports = {
   ru: {
     reports: {
       noReports: 'Пока нет жалоб',
-      noReportsDescription: 'Вы можете пожаловаться на мастера, если отправили ему лид',
+      noReportsDescription: 'Вы можете пожаловаться на мастера, если отправили ему заявку',
       createReport: 'Создать жалобу',
       reason: 'Причина',
       description: 'Описание',
       submit: 'Отправить',
-      noLeadError: 'Вы можете пожаловаться на мастера только если отправили ему лид',
+      noLeadError: 'Вы можете пожаловаться на мастера только если отправили ему заявку',
       fillAllFields: 'Пожалуйста, заполните все обязательные поля',
       created: 'Жалоба успешно создана',
       createFailed: 'Не удалось создать жалобу',
       selectMaster: 'Выберите мастера',
-      noLeads: 'Нет доступных лидов. Вы можете жаловаться только на мастеров, которым отправляли лиды.',
+      noLeads: 'Нет доступных заявок. Вы можете жаловаться только на мастеров, которым отправляли заявки.',
       reportingMaster: 'Жалоба на мастера',
       unknownMaster: 'Неизвестный мастер',
       status: {
@@ -52,17 +52,17 @@ export const reports = {
   ro: {
     reports: {
       noReports: 'Încă nu sunt raportări',
-      noReportsDescription: 'Poți raporta un meșter dacă i-ai trimis un lead',
+      noReportsDescription: 'Poți raporta un meșter dacă i-ai trimis o cerere',
       createReport: 'Creează raportare',
       reason: 'Motiv',
       description: 'Descriere',
       submit: 'Trimite',
-      noLeadError: 'Poți raporta un meșter doar dacă i-ai trimis un lead',
+      noLeadError: 'Poți raporta un meșter doar dacă i-ai trimis o cerere',
       fillAllFields: 'Te rugăm să completezi toate câmpurile obligatorii',
       created: 'Raportare creată cu succes',
       createFailed: 'Creare raportare eșuată',
       selectMaster: 'Selectează meșterul',
-      noLeads: 'Nu există lead-uri. Poți raporta doar meșteri cărora le-ai trimis lead-uri.',
+      noLeads: 'Nu există cereri. Poți raporta doar meșteri cărora le-ai trimis cereri.',
       reportingMaster: 'Raportare meșter',
       unknownMaster: 'Meșter necunoscut',
       status: {

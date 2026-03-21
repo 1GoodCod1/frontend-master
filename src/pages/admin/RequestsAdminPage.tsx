@@ -6,19 +6,19 @@ import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { useAdminLeads, type AdminLeadRow } from '@/hooks/admin/leads';
-import StatisticsCards from '@/features/admin/components/leads/StatisticsCards';
-import LeadsFilters from '@/features/admin/components/leads/LeadsFilters';
-import BulkActions from '@/features/admin/components/leads/BulkActions';
-import LeadDetailsDialog from '@/features/admin/components/leads/LeadDetailsDialog';
-import LeadsEmptyState from '@/features/admin/components/leads/LeadsEmptyState';
-import ClientCell from '@/features/admin/components/leads/ClientCell';
-import MasterCell from '@/features/admin/components/leads/MasterCell';
-import StatusCell from '@/features/admin/components/leads/StatusCell';
-import MessageCell from '@/features/admin/components/leads/MessageCell';
+import { useAdminRequests, type AdminLeadRow } from '@/hooks/admin/requests';
+import RequestStatisticsCards from '@/features/admin/components/requests/RequestStatisticsCards';
+import RequestsFilters from '@/features/admin/components/requests/RequestsFilters';
+import BulkRequestActions from '@/features/admin/components/requests/BulkRequestActions';
+import RequestDetailsDialog from '@/features/admin/components/requests/RequestDetailsDialog';
+import RequestsEmptyState from '@/features/admin/components/requests/RequestsEmptyState';
+import RequestClientCell from '@/features/admin/components/requests/RequestClientCell';
+import RequestMasterCell from '@/features/admin/components/requests/RequestMasterCell';
+import RequestStatusCell from '@/features/admin/components/requests/RequestStatusCell';
+import RequestMessageCell from '@/features/admin/components/requests/RequestMessageCell';
 import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 
-export default function LeadsAdminPage() {
+export default function RequestsAdminPage() {
   const { t } = useTranslation();
   const isDark = useIsDark();
 
@@ -53,7 +53,7 @@ export default function LeadsAdminPage() {
     exportToCSV,
     applyBulkStatus,
     clearFilters,
-  } = useAdminLeads();
+  } = useAdminRequests();
 
   const columns: GridColDef[] = [
     {
@@ -61,13 +61,13 @@ export default function LeadsAdminPage() {
       headerName: t('admin.leads.client'),
       flex: 1,
       minWidth: 220,
-      renderCell: (params) => <ClientCell lead={params.row as AdminLeadRow} />,
+      renderCell: (params) => <RequestClientCell lead={params.row as AdminLeadRow} />,
     },
     {
       field: 'master',
       headerName: t('admin.leads.master'),
       width: 200,
-      renderCell: (params) => <MasterCell master={params.row?.master as { id?: string; slug?: string; user?: { firstName?: string; lastName?: string } } | null} />,
+      renderCell: (params) => <RequestMasterCell master={params.row?.master as { id?: string; slug?: string; user?: { firstName?: string; lastName?: string } } | null} />,
     },
     {
       field: 'status',
@@ -75,7 +75,7 @@ export default function LeadsAdminPage() {
       width: 140,
       cellClassName: 'status-cell',
       renderCell: (params) => (
-        <StatusCell status={params.value as string} isPremium={Boolean(params.row?.isPremium)} />
+        <RequestStatusCell status={params.value as string} isPremium={Boolean(params.row?.isPremium)} />
       ),
     },
     {
@@ -84,7 +84,7 @@ export default function LeadsAdminPage() {
       flex: 1,
       minWidth: 200,
       renderCell: (params) => (
-        <MessageCell message={(params.row?.message ?? params.row?.description) as string} />
+        <RequestMessageCell message={(params.row?.message ?? params.row?.description) as string} />
       ),
     },
     {
@@ -105,7 +105,7 @@ export default function LeadsAdminPage() {
     <div className="animate-in fade-in duration-200">
       <PageHeader title={t('admin.leads.title')} subtitle={t('admin.leads.subtitle')} />
 
-        <StatisticsCards
+        <RequestStatisticsCards
           totalLeads={statistics.totalLeads}
           newLeads={statistics.newLeads}
           inProgressLeads={statistics.inProgressLeads}
@@ -116,7 +116,7 @@ export default function LeadsAdminPage() {
         <SectionCard
           title={t('admin.leads.filtersSearch')}
           actions={
-            <LeadsFilters
+            <RequestsFilters
               status={status}
               dateFrom={dateFrom}
               dateTo={dateTo}
@@ -128,7 +128,7 @@ export default function LeadsAdminPage() {
             />
           }
         >
-          <BulkActions
+          <BulkRequestActions
             selection={selection}
             bulkStatus={bulkStatus}
             isLoading={updateStatusLoading}
@@ -226,7 +226,7 @@ export default function LeadsAdminPage() {
           />
 
           {!isLoading && allLeads.length === 0 && (
-            <LeadsEmptyState hasFilters={hasFilters} onClearFilters={clearFilters} />
+            <RequestsEmptyState hasFilters={hasFilters} onClearFilters={clearFilters} />
           )}
 
           <ConfirmDialog
@@ -242,7 +242,7 @@ export default function LeadsAdminPage() {
           />
         </SectionCard>
 
-        <LeadDetailsDialog
+        <RequestDetailsDialog
           open={Boolean(selectedLead)}
           lead={selectedLead}
           onClose={() => setSelectedLead(null)}

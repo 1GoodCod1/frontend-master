@@ -27,7 +27,7 @@ export const faq = {
       q4: {
         question: 'How do I chat with a master and book a time?',
         answer:
-          'After sending a request, you can open a chat with the master directly from the profile. In your dashboard, go to "My requests" to manage all leads and chats. After the master confirms, you can choose a time slot in the booking section.',
+          'After sending a request, you can open a chat with the master directly from the profile. In your dashboard, go to "My requests" to manage all requests and chats. After the master confirms, you can choose a time slot in the booking section.',
       },
       q5: {
         question: 'Can I save masters to favorites?',
@@ -100,7 +100,7 @@ export const faq = {
       q4: {
         question: 'Как общаться с мастером в чате и выбрать время?',
         answer:
-          'После отправки заявки вы можете открыть чат с мастером прямо из профиля. В личном кабинете перейдите в «Мои заявки» для управления всеми лидами и чатами. После подтверждения мастером вы можете выбрать слот времени в разделе бронирования.',
+          'После отправки заявки вы можете открыть чат с мастером прямо из профиля. В личном кабинете перейдите в «Мои заявки» для управления всеми заявками и чатами. После подтверждения мастером вы можете выбрать слот времени в разделе бронирования.',
       },
       q5: {
         question: 'Можно ли сохранять мастеров в избранное?',
@@ -173,7 +173,7 @@ export const faq = {
       q4: {
         question: 'Cum comunic cu meșterul în chat și aleg o oră?',
         answer:
-          'După trimiterea cererii, puteți deschide chat-ul cu meșterul direct din profil. În panoul de control, accesați „Cererile mele” pentru a gestiona toate lead-urile și chat-urile. După confirmarea meșterului, puteți alege un interval orar în secțiunea de rezervare.',
+          'După trimiterea cererii, puteți deschide chat-ul cu meșterul direct din profil. În panoul de control, accesați „Cererile mele” pentru a gestiona toate cererile și chat-urile. După confirmarea meșterului, puteți alege un interval orar în secțiunea de rezervare.',
       },
       q5: {
         question: 'Pot salva meșterii în favorite?',

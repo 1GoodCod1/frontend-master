@@ -42,6 +42,7 @@ export interface LeadCardProps {
   lead: LeadDto;
   onOpenReviewModal: (lead: LeadDto) => void;
   reviewsSubmittedMasterIds: Set<string>;
+  pendingBooking?: import('@/types/bookings').BookingDto;
 }
 
 export interface LeadDetailsDialogProps {

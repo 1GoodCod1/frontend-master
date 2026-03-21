@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import type { LeadSubmissionState } from '@/hooks/leads';
+import type { RequestSubmissionState as LeadSubmissionState } from '@/hooks/requests';
 import { toErrorMessage } from '@/utils/errors';
 
 interface MasterDetailsLeadFormProps {
@@ -137,7 +137,7 @@ export const MasterDetailsLeadForm = ({
               {t('masterDetails.goToChat', 'Go to chat with master')}
             </Button>
             <Button variant="outline" size="lg" className="w-full font-semibold dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10" onClick={() => navigate('/client-dashboard/leads')}>
-              {t('clientDashboard.myLeads', 'My leads')}
+              {t('clientDashboard.myLeads', 'My requests')}
             </Button>
           </div>
         </CardContent>
@@ -228,7 +228,7 @@ export const MasterDetailsLeadForm = ({
                   ? t('masterDetails.masterBusyAlert', 'Master is currently busy')
                   : availabilityStatus === 'OFFLINE'
                     ? t('masterDetails.masterOfflineAlert', 'Master is offline')
-                    : t('masterDetails.masterFullAlert', 'Master has reached maximum leads')}
+                    : t('masterDetails.masterFullAlert', 'Master has reached maximum requests')}
               </p>
               {!subscribed ? (
                 <Button
