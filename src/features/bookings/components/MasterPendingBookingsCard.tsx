@@ -43,15 +43,13 @@ export function MasterPendingBookingsCard() {
 
   const [updateStatus, { isLoading: isUpdating }] = useBookingsUpdateStatusMutation();
 
-  const raw = calendarQuery.data as
-    | { data?: { bookings?: BookingItem[] }; bookings?: BookingItem[] }
-    | undefined;
-  const allBookings: BookingItem[] = (raw?.data ?? raw)?.bookings ?? [];
-
-  const pending = useMemo(
-    () => allBookings.filter((b) => b.status === 'PENDING'),
-    [allBookings],
-  );
+  const pending = useMemo(() => {
+    const raw = calendarQuery.data as
+      | { data?: { bookings?: BookingItem[] }; bookings?: BookingItem[] }
+      | undefined;
+    const allBookings: BookingItem[] = (raw?.data ?? raw)?.bookings ?? [];
+    return allBookings.filter((b) => b.status === 'PENDING');
+  }, [calendarQuery.data]);
 
   const handleStatusChange = async (bookingId: string, status: BookingStatus) => {
     try {
