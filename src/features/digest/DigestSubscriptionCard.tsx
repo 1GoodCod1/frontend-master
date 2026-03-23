@@ -45,6 +45,7 @@ export function DigestSubscriptionCard() {
   const handleUnsubscribe = async () => {
     try {
       await unsubscribe().unwrap();
+      setShowSuccess(false);
       toast.success(t('digest.unsubscribed'));
     } catch {
       toast.error(t('common.error'));

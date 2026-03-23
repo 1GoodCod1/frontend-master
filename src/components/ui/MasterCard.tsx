@@ -126,133 +126,136 @@ export const MasterCard = React.memo(function MasterCard({
       onMouseEnter={handleMouseEnter}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group relative w-full rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer',
+        'group relative w-full h-full flex flex-col rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer',
         'outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-        'bg-white dark:bg-white/[0.06]',
-        'shadow-[0_12px_40px_rgba(0,0,0,0.08)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-lg dark:shadow-black/20',
-        'hover:-translate-y-0.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.1)] sm:hover:shadow-[0_24px_64px_rgba(0,0,0,0.12)] dark:hover:shadow-xl dark:hover:shadow-black/30',
+        'bg-white dark:bg-[hsl(43,16%,12%)]',
+        'shadow-[0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]',
+        'hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]',
       )}
     >
-      {/* Top colored band */}
-      <div className="relative h-12 sm:h-14 md:h-16" style={{ background: 'var(--card-accent-band)' }}>
-        <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${CARD_ACCENT}, ${CARD_ACCENT_LIGHT}, ${CARD_ACCENT})` }} />
-
-        {activePromotionDiscount !== null && (
-          <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2">
-            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-500/15 dark:bg-red-400/20 text-red-600 dark:text-red-400 border border-red-500/25 dark:border-red-400/30 text-[9px] sm:text-[10px] font-medium">
-              <TrendingDown className="w-2 h-2 shrink-0" />
-              {activePromotionDiscount}%
-            </span>
-          </div>
-        )}
-
+      {/* Header with avatar + info */}
+      <div className="flex items-start gap-1.5 min-[480px]:gap-2 sm:gap-3 p-2 min-[480px]:p-3 sm:p-4 pb-1.5 min-[480px]:pb-2 sm:pb-3">
         {/* Avatar */}
-        <div
-          className="absolute -bottom-6 sm:-bottom-7 md:-bottom-8 left-4 sm:left-5 w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center overflow-hidden border-2 sm:border-[3px]"
-          style={{
-            background: `linear-gradient(135deg, ${CARD_ACCENT}, ${CARD_ACCENT_LIGHT})`,
-            borderColor: 'var(--card-border)',
-            boxShadow: '0 4px 16px rgba(233,117,37,0.5)',
-          }}
-        >
-          {avatarSrc ? (
-            <LazyImage src={avatarSrc} alt={displayName} objectFit="cover" skeletonHeight={56} skeletonWidth={56} className="h-full w-full" style={{ borderRadius: '50%' }} />
-          ) : (
-            <AvatarPlaceholder role="master" height={56} variant={placeholderVariant} />
-          )}
-        </div>
-
-        {master?.isOnline === true && (
+        <div className="relative shrink-0">
           <div
-            className="absolute bottom-3.5 sm:bottom-4 md:bottom-5 left-[2.75rem] sm:left-[3.25rem] md:left-[3.75rem] w-3 h-3 sm:w-3.5 sm:h-3.5 bg-emerald-400 rounded-full border-2 z-10"
-            style={{ borderColor: 'var(--card-border)' }}
-            title={t('masters.availableNow')}
-          />
-        )}
-
-        {typeof rating === 'number' && (
-          <div
-            className="absolute bottom-1.5 right-2 sm:bottom-2.5 sm:right-3 flex items-center gap-0.5 sm:gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full"
-            style={{ background: 'var(--card-rating-bg)', border: '1px solid var(--card-rating-border)' }}
+            className="w-8 h-8 min-[480px]:w-10 min-[480px]:h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl overflow-hidden"
+            style={avatarSrc ? {
+              background: `linear-gradient(135deg, ${CARD_ACCENT}, ${CARD_ACCENT_LIGHT})`,
+              boxShadow: '0 4px 12px rgba(233,117,37,0.25)',
+            } : undefined}
           >
-            <Star size={10} className="sm:w-[11px] sm:h-[11px] text-amber-500 fill-amber-500 shrink-0" />
-            <span className="font-semibold text-[11px] sm:text-[12px] text-foreground">{rating.toFixed(1)}</span>
-            {totalReviews > 0 && (
-              <span className="text-[9px] sm:text-[10px] text-muted-foreground hidden sm:inline">({totalReviews})</span>
+            {avatarSrc ? (
+              <LazyImage src={avatarSrc} alt={displayName} objectFit="cover" skeletonHeight={56} skeletonWidth={56} className="h-full w-full" />
+            ) : (
+              <AvatarPlaceholder role="master" height={40} fillParent variant={placeholderVariant} />
             )}
           </div>
-        )}
-      </div>
+          {master?.isOnline === true && (
+            <div
+              className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white dark:border-[hsl(43,16%,12%)] z-10"
+              title={t('masters.availableNow')}
+            />
+          )}
+        </div>
 
-      {/* Body */}
-      <div className="pt-8 sm:pt-9 md:pt-10 px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 flex flex-col gap-2 sm:gap-3">
-        <div className="flex flex-col gap-1 sm:gap-1.5">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-              <span className="truncate text-sm sm:text-base" style={{ fontWeight: 600, letterSpacing: '-0.3px', lineHeight: 1.2, color: 'var(--foreground)' }}>
-                {displayName}
-              </span>
-              {isVerified && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="flex shrink-0"><ShieldCheck size={14} className="sm:w-4 sm:h-4 text-emerald-500" /></span>
-                    </TooltipTrigger>
-                    <TooltipContent className={badgeTooltipClass}>{t('masters.verified')}</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+        {/* Name + Category + Badges */}
+        <div className="flex-1 min-w-0 pt-0.5">
+          <div className="flex items-start justify-between gap-1.5">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="truncate text-[11px] min-[480px]:text-[13px] sm:text-sm font-semibold text-foreground leading-tight">
+                  {displayName}
+                </span>
+                {isVerified && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="flex shrink-0"><ShieldCheck size={13} className="text-emerald-500" /></span>
+                      </TooltipTrigger>
+                      <TooltipContent className={badgeTooltipClass}>{t('masters.verified')}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+              {categoryName && (
+                <div className="flex items-center gap-1 mt-1">
+                  <Briefcase size={9} className="shrink-0 text-muted-foreground/60 min-[480px]:[width:10px] min-[480px]:[height:10px]" />
+                  <span className="text-[9px] min-[480px]:text-[10px] sm:text-[11px] text-muted-foreground truncate">
+                    {categoryName}
+                  </span>
+                </div>
               )}
             </div>
-            <MasterCardBadges isVip={isVip} isPremium={isPremium} sectionBadge={sectionBadge} />
+            <MasterCardBadges
+              isVip={isVip}
+              isPremium={isPremium}
+              sectionBadge={sectionBadge === 'new' ? 'new' : undefined}
+              showTopBadge={master.topMaster === true}
+            />
           </div>
-
-          {categoryName && (
-            <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg self-start" style={{ background: 'var(--card-category-bg)' }}>
-              <Briefcase size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: 'var(--muted-foreground)' }} />
-              <span className="text-[10px] sm:text-[11px] font-semibold truncate max-w-[120px] sm:max-w-none" style={{ color: 'var(--card-category-text)' }}>
-                {categoryName}
-              </span>
-            </div>
-          )}
         </div>
-
-        <div className="h-px" style={{ background: 'var(--card-divider)' }} />
-
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-          {serviceTags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium truncate max-w-[80px] sm:max-w-[100px]"
-              style={{ background: 'var(--card-tag-bg)', color: CARD_ACCENT, border: '1px solid rgba(233,117,37,0.25)' }}
-            >
-              {tag}
-            </span>
-          ))}
-          {serviceTags.length > 0 && city && (
-            <div className="w-px self-stretch mx-0.5 sm:mx-1 shrink-0" style={{ background: 'var(--card-divider)' }} />
-          )}
-          {city && (
-            <div className="flex items-center gap-0.5 sm:gap-1 min-w-0">
-              <MapPin size={10} className="sm:w-[11px] sm:h-[11px] shrink-0" style={{ color: CARD_ACCENT }} />
-              <span className="text-[10px] sm:text-[11px] font-medium truncate" style={{ color: 'var(--card-city-text)' }}>{city}</span>
-            </div>
-          )}
-        </div>
-
-        {role !== 'MASTER' && (
-          <>
-            <div className="h-px" style={{ background: 'var(--card-divider)' }} />
-            <button
-              onClick={handleContactClick}
-              className="w-full h-8 sm:h-9 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 active:scale-[0.98] text-white font-medium text-[11px] sm:text-[12px] hover:opacity-90"
-              style={{ background: 'var(--card-button-bg)', boxShadow: 'var(--card-button-shadow)' }}
-            >
-              <Phone size={12} strokeWidth={2} />
-              {t('common.masterCard.contact')}
-            </button>
-          </>
-        )}
       </div>
+
+      {/* Rating + Discount row */}
+      {(typeof rating === 'number' || activePromotionDiscount !== null) && (
+        <div className="flex items-center gap-1 min-[480px]:gap-1.5 sm:gap-2 px-2 min-[480px]:px-3 sm:px-4 pb-1.5 min-[480px]:pb-2 sm:pb-2.5">
+          {typeof rating === 'number' && (
+            <div className="flex items-center gap-0.5 min-[480px]:gap-1 px-1.5 min-[480px]:px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-500/10">
+              <Star size={9} className="text-amber-500 fill-amber-500 shrink-0 min-[480px]:[width:11px] min-[480px]:[height:11px]" />
+              <span className="font-semibold text-[10px] min-[480px]:text-[11px] text-amber-700 dark:text-amber-400">{rating.toFixed(1)}</span>
+              {totalReviews > 0 && (
+                <span className="text-[9px] min-[480px]:text-[10px] text-amber-600/60 dark:text-amber-400/50">({totalReviews})</span>
+              )}
+            </div>
+          )}
+          {activePromotionDiscount !== null && (
+            <span className="inline-flex items-center gap-0.5 px-1.5 min-[480px]:px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 text-[9px] min-[480px]:text-[10px] font-semibold">
+              <TrendingDown className="w-2.5 h-2.5 shrink-0" />
+              -{activePromotionDiscount}%
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Service tags + City */}
+      {(serviceTags.length > 0 || city) && (
+        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-2.5 sm:pb-3">
+          <div className="flex items-center gap-0.5 min-[480px]:gap-1 sm:gap-1.5 flex-wrap">
+            {serviceTags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="px-1 min-[480px]:px-1.5 sm:px-2 py-0.5 rounded-full text-[8px] min-[480px]:text-[9px] sm:text-[10px] font-medium truncate max-w-[42%] min-[480px]:max-w-[45%] sm:max-w-[100px] bg-orange-50 dark:bg-orange-500/8 text-orange-700 dark:text-orange-400/90 border border-orange-200/60 dark:border-orange-500/15"
+              >
+                {tag}
+              </span>
+            ))}
+            {city && (
+              <span className="flex items-center gap-0.5 text-[8px] min-[480px]:text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground/70 ml-auto">
+                <MapPin size={10} className="shrink-0" />
+                <span className="truncate">{city}</span>
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Contact button */}
+      {role !== 'MASTER' && (
+        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-3 sm:pb-4 pt-0.5 mt-auto">
+          <button
+            onClick={handleContactClick}
+            className={cn(
+              'w-full h-7 min-[480px]:h-8 sm:h-9 rounded-xl flex items-center justify-center gap-1 min-[480px]:gap-1.5 transition-all duration-200 active:scale-[0.98] font-medium text-[10px] min-[480px]:text-[11px] sm:text-[12px]',
+              'bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]',
+              'dark:bg-[#E97525] dark:hover:bg-[#d4691f]',
+              'shadow-sm hover:shadow-md',
+            )}
+          >
+            <Phone size={11} strokeWidth={2} className="min-[480px]:[width:13px] min-[480px]:[height:13px]" />
+            {t('common.masterCard.contact')}
+          </button>
+        </div>
+      )}
     </div>
   );
 });

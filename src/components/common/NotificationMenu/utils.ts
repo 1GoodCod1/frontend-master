@@ -40,7 +40,7 @@ export function routeFor(
   if (type === 'admin_new_payment') return '/admin/payments';
   if (type === 'admin_new_user' || type === 'admin_new_master') return '/admin/users';
   if (type === 'booking_pending' || type === 'booking_confirmed' || type === 'booking_cancelled') {
-    return role === 'CLIENT' ? '/client-dashboard/leads' : '/dashboard/bookings';
+    return role === 'CLIENT' ? '/client-dashboard/bookings' : '/dashboard/bookings';
   }
   if (type === 'master_available') {
     const masterId = payload?.data?.masterId ?? payload?.masterId;

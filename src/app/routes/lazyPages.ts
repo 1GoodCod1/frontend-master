@@ -54,6 +54,7 @@ export const DigestAdminPage = lazy(() => import('@/pages/admin/DigestAdminPage'
 export const ReportsAdminPage = lazy(() => import('@/pages/admin/ReportsAdminPage'));
 
 export const ClientDashboardPage = lazy(() => import('@/pages/client/ClientDashboardPage'));
+export const ClientBookingsPage = lazy(() => import('@/pages/client/ClientBookingsPage'));
 export const ClientRequestBookingPage = lazy(() => import('@/pages/client/ClientRequestBookingPage'));
 export const ClientRequestsPage = lazy(() => import('@/pages/client/ClientRequestsPage'));
 export const ClientFavoritesPage = lazy(() => import('@/pages/client/ClientFavoritesPage'));
@@ -62,5 +63,6 @@ export const ClientProfilePage = lazy(() => import('@/pages/client/ClientProfile
 export const SecuritySettingsPage = lazy(() => import('@/pages/client/SecuritySettingsPage'));
 export const ClientChatPage = lazy(() => import('@/pages/client/ChatPage'));
 export const RequestSuccessPage = lazy(() => import('@/pages/client/RequestSuccessPage'));
+export const BookingSuccessPage = lazy(() => import('@/pages/client/BookingSuccessPage'));
 
 export const ReferralPage = lazy(() => import('@/pages/referrals/ReferralPage'));

@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
+import { PendingBookingsBanner } from '@/features/bookings/components/PendingBookingsBanner';
 
 const iconClass = 'size-7';
 
@@ -126,7 +127,7 @@ export default function ClientDashboardPage() {
         return Number.isFinite(when) ? ({ ...b, _when: when } as BookingWithWhen) : null;
       })
       .filter((b): b is BookingWithWhen => Boolean(b))
-      .filter((b) => b._when > now && b._when < horizon)
+      .filter((b) => b._when > now && b._when < horizon && b.status === 'CONFIRMED')
       .slice(0, 3);
   }, [bookingsList, now]);
 
@@ -137,12 +138,13 @@ export default function ClientDashboardPage() {
         subtitle={t('clientDashboard.subtitle')}
       />
       <PushPermissionBanner />
+      <PendingBookingsBanner />
 
       {/* Metrics */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
         {/* ... (Metrics stay same) */}
         <DashboardMetricCard
-          to="/client-dashboard-bookings"
+          to="/client-dashboard/bookings"
           icon={<Calendar className={iconClass} />}
           value={bookingsCount}
           label={t('clientDashboard.bookings')}
@@ -154,7 +156,7 @@ export default function ClientDashboardPage() {
           hoverBoxShadow={primaryHoverShadow}
         />
         <DashboardMetricCard
-          to="/client-dashboard-favorites"
+          to="/client-dashboard/favorites"
           icon={<Heart className={iconClass} />}
           value={favoritesCount}
           label={t('clientDashboard.favorites')}
@@ -166,7 +168,7 @@ export default function ClientDashboardPage() {
           hoverBoxShadow="0 12px 32px rgba(220, 20, 60, 0.25)"
         />
         <DashboardMetricCard
-          to="/client-dashboard-leads"
+          to="/client-dashboard/leads"
           icon={<Mail className={iconClass} />}
           value={leadsCount}
           label={t('clientDashboard.myLeads')}
@@ -178,7 +180,7 @@ export default function ClientDashboardPage() {
           hoverBoxShadow={primaryHoverShadow}
         />
         <DashboardMetricCard
-          to="/client-dashboard-reports"
+          to="/client-dashboard/reports"
           icon={<AlertTriangle className={iconClass} />}
           value="—"
           label={t('clientDashboard.reports')}
@@ -195,47 +197,59 @@ export default function ClientDashboardPage() {
         {/* Timeline */}
         <div className="md:col-span-2 space-y-6">
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold">{t('clientDashboard.timeline', 'История действий')}</h3>
+            <h3 className="text-xl font-bold">{t('clientDashboard.timeline')}</h3>
           </div>
-          <div className="relative space-y-4 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border/50 before:to-transparent">
-            {timelineItems.length > 0 ? timelineItems.map((item) => (
-              <div key={item.id} className="relative flex items-start gap-6 pl-2">
-                <div className={cn(
-                  "absolute left-5 -translate-x-1/2 flex h-3 w-3 items-center justify-center rounded-full ring-4 ring-background",
-                  item.type === 'BOOKING' ? "bg-primary" : item.type === 'LEAD' ? "bg-amber-500" : "bg-violet-500"
-                )} />
-                <div className="flex-1 rounded-xl border border-border/50 bg-card p-4 shadow-sm">
-                  <div className="flex justify-between items-start mb-1">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      {item.type === 'BOOKING'
-                        ? t('clientDashboard.booking', 'Запись')
-                        : item.type === 'LEAD'
-                          ? t('clientDashboard.leadSource', 'Запрос')
-                          : t('clientDashboard.review', 'Отзыв')}
-                    </span>
-                    <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full">
-                      {new Date(item.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-sm font-medium">
-                    {item.type === 'BOOKING'
-                      ? t('clientDashboard.recordedTo', 'Вы записаны к')
-                      : item.type === 'LEAD'
-                        ? t('clientDashboard.sentLeadTo', 'Вы отправили запрос')
-                        : t('clientDashboard.leftReviewFor', 'Вы оставили отзыв')}
-                    {' '}
-                    <span className="text-primary">{item.masterName}</span>
-                    {item.type === 'REVIEW' && typeof item.rating === 'number' && (
-                      <span className="ml-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                        <Star className="size-3.5 text-amber-500" />
-                        {item.rating.toFixed(1)}
+          <div className="relative space-y-3 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border/30 before:to-transparent">
+            {timelineItems.length > 0 ? timelineItems.map((item) => {
+              const dotColor = item.type === 'BOOKING'
+                ? 'bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.4)]'
+                : item.type === 'LEAD'
+                  ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]'
+                  : 'bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.4)]';
+              const labelColor = item.type === 'BOOKING'
+                ? 'text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-500/10'
+                : item.type === 'LEAD'
+                  ? 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10'
+                  : 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10';
+              return (
+                <div key={item.id} className="relative flex items-start gap-6 pl-2">
+                  <div className={cn(
+                    "absolute left-5 top-5 -translate-x-1/2 flex h-2.5 w-2.5 items-center justify-center rounded-full ring-[3px] ring-background",
+                    dotColor
+                  )} />
+                  <div className="flex-1 rounded-xl border-0 bg-white dark:bg-white/[0.04] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:hover:bg-white/[0.07]">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className={cn('text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md', labelColor)}>
+                        {item.type === 'BOOKING'
+                          ? t('clientDashboard.booking')
+                          : item.type === 'LEAD'
+                            ? t('clientDashboard.leadSource')
+                            : t('clientDashboard.review')}
                       </span>
-                    )}
-                  </p>
+                      <span className="text-[11px] text-muted-foreground/70 tabular-nums">
+                        {new Date(item.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm text-foreground/80 dark:text-foreground/70">
+                      {item.type === 'BOOKING'
+                        ? t('clientDashboard.recordedTo')
+                        : item.type === 'LEAD'
+                          ? t('clientDashboard.sentLeadTo')
+                          : t('clientDashboard.leftReviewFor')}
+                      {' '}
+                      <span className="font-semibold text-foreground/90 dark:text-foreground/85">{item.masterName}</span>
+                      {item.type === 'REVIEW' && typeof item.rating === 'number' && (
+                        <span className="ml-2 inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400/80">
+                          <Star className="size-3.5 fill-amber-500 text-amber-500" />
+                          {item.rating.toFixed(1)}
+                        </span>
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )) : (
-              <p className="text-muted-foreground text-sm italic py-4">{t('clientDashboard.noHistory', 'История пока пуста')}</p>
+              );
+            }) : (
+              <p className="text-muted-foreground text-sm italic py-4">{t('clientDashboard.noHistory')}</p>
             )}
           </div>
         </div>
@@ -247,13 +261,14 @@ export default function ClientDashboardPage() {
             <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 animate-pulse-slow">
               <div className="flex items-center gap-2 mb-4 text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="size-5" />
-                <h4 className="font-bold">{t('clientDashboard.reminders', 'Напоминания')}</h4>
+                <h4 className="font-bold">{t('clientDashboard.reminders')}</h4>
               </div>
               <div className="space-y-4">
                 {upcomingBookings.map((b) => (
                   <div key={b.id} className="text-sm">
                     <p className="leading-relaxed">
-                      {t('clientDashboard.upcomingBooking', 'У вас скоро запись к ')}
+                      {t('clientDashboard.upcomingBooking')}
+                      {' '}
                       <span className="font-bold">{displayMasterName(b.master ?? null)}</span>
                       {' '}
                       {b.startTime && (
@@ -264,7 +279,7 @@ export default function ClientDashboardPage() {
                       .
                     </p>
                     <Button variant="link" className="p-0 h-auto text-amber-600 dark:text-amber-400 font-bold mt-2 h-7" asChild>
-                      <a href="/client-dashboard-bookings">{t('clientDashboard.viewBookings', 'Открыть записи →')}</a>
+                      <a href="/client-dashboard/bookings">{t('clientDashboard.viewBookings')}</a>
                     </Button>
                   </div>
                 ))}
@@ -272,11 +287,12 @@ export default function ClientDashboardPage() {
                 {pendingReviews.map((b) => (
                   <div key={b.id} className="text-sm">
                     <p className="leading-relaxed">
-                      {t('clientDashboard.leaveReviewText', 'Вы еще не оставили отзыв мастеру ')}
+                      {t('clientDashboard.leaveReviewText')}
+                      {' '}
                       <span className="font-bold">{displayMasterName(b.master ?? null)}</span>.
                     </p>
                     <Button variant="link" className="p-0 h-auto text-amber-600 dark:text-amber-400 font-bold mt-2 h-7" asChild>
-                      <a href={b.masterId ? `/masters/${b.masterId}#reviews` : '/'}>{t('clientDashboard.leaveReviewNow', 'Оставить отзыв →')}</a>
+                      <a href={b.masterId ? `/masters/${b.masterId}#reviews` : '/'}>{t('clientDashboard.leaveReviewNow')}</a>
                     </Button>
                   </div>
                 ))}
@@ -286,13 +302,17 @@ export default function ClientDashboardPage() {
 
           {/* Recently Viewed */}
           <div className="space-y-4">
-            <RecentlyViewed limit={3} />
+            <RecentlyViewed
+              limit={3}
+              title={t('clientDashboard.recentlyViewed')}
+              subtitle={t('clientDashboard.recentlyViewedSubtitle')}
+            />
           </div>
         </div>
       </div>
 
       <div className="pt-4">
-        <RecommendedMasters limit={4} title={t('clientDashboard.recommendedForYou', 'Рекомендовано для вас')} />
+        <RecommendedMasters limit={4} title={t('clientDashboard.recommendedForYou')} />
       </div>
     </div>
   );

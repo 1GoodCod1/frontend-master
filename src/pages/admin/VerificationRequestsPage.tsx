@@ -13,23 +13,13 @@ import DocumentTypeCell from '@/features/admin/components/verification/DocumentT
 import DocumentNumberCell from '@/features/admin/components/verification/DocumentNumberCell';
 import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
 import ActionsCell from '@/features/admin/components/verification/ActionsCell';
-import { useGetVerificationStatsQuery } from '@/features/verification/verificationApi';
 import { useTranslation } from 'react-i18next';
-import type { VerificationDetail, VerificationStats } from '@/features/verification/verificationApi';
-import { isRecord } from '@/utils/guards';
+import type { VerificationDetail } from '@/features/verification/verificationApi';
 
 export default function VerificationRequestsPage() {
   const { t } = useTranslation();
-  const { data: statsData } = useGetVerificationStatsQuery();
-  const stats: VerificationStats | null = (() => {
-    const raw = statsData as unknown;
-    if (isRecord(raw) && isRecord(raw.data)) return raw.data as unknown as VerificationStats;
-    if (isRecord(raw)) return raw as unknown as VerificationStats;
-    return null;
-  })();
-  const approvedCount = stats?.approvedCount ?? 0;
-
   const {
+    approvedCount,
     page,
     setPage,
     limit,

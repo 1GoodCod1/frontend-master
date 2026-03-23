@@ -1,22 +1,24 @@
 import { getInitials } from '@/utils/initials';
 import { gradientFromId } from '@/utils/avatarTheme';
-import { cn } from '@/lib/utils';
 
 const ROLE_GRADIENT =
-  'linear-gradient(145deg, #2d2d2d 0%, #1a1a1a 35%, #0d0d0d 70%, #1a1a1a 100%)';
+  'linear-gradient(145deg, #3a3a3a 0%, #262626 35%, #1a1a1a 70%, #262626 100%)';
 const ROLE_SHINE =
-  'radial-gradient(ellipse 80% 50% at 35% 25%, rgba(255,255,255,0.08) 0%, transparent 55%)';
+  'radial-gradient(ellipse 80% 50% at 35% 25%, rgba(255,255,255,0.12) 0%, transparent 55%)';
 
 export function AvatarPlaceholder({
   id,
   name,
   height = 200,
+  fillParent = false,
   variant = 'default',
   role,
 }: {
   id?: string;
   name?: string;
   height?: number;
+  /** When true, don't set inline height — the component fills its parent via CSS h-full. height is still used for font-size calculation. */
+  fillParent?: boolean;
   variant?: 'default' | 'vip' | 'premium';
   /** When set, shows a black gradient with "M" (master) or "C" (client) instead of initials */
   role?: 'master' | 'client';
@@ -44,19 +46,25 @@ export function AvatarPlaceholder({
 
   return (
     <div
-      className={cn(
-        'relative flex h-full w-full select-none items-center justify-center overflow-hidden text-white',
-        useRoleStyle && 'rounded-full'
-      )}
-      style={{ height, background: gradient }}
+      className="relative flex h-full w-full select-none items-center justify-center overflow-hidden text-white"
+      style={{ ...(!fillParent && height != null && { height }), background: gradient }}
     >
-      <div className="absolute inset-0 rounded-none" style={{ background: shine }} />
+      <div className="absolute inset-0" style={{ background: shine }} />
+      {useRoleStyle && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, rgba(233,117,37,0.15) 0%, transparent 70%)',
+          }}
+        />
+      )}
       <span
-        className="relative font-black tracking-widest text-white"
+        className="relative font-bold tracking-wider"
         style={{
           fontSize,
+          color: useRoleStyle ? 'rgba(255,255,255,0.85)' : '#fff',
           textShadow: useRoleStyle
-            ? '0 2px 12px rgba(0,0,0,0.5)'
+            ? '0 1px 8px rgba(0,0,0,0.4)'
             : '0 6px 18px rgba(0,0,0,0.25)',
         }}
       >

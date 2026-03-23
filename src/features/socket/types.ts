@@ -24,6 +24,7 @@ export type SocketEventType =
   // Client
   | 'master_responded'
   | 'master_available'
+  | 'booking_pending'
   | 'booking_confirmed'
   | 'booking_cancelled'
   // System

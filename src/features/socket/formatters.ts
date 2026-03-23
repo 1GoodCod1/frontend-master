@@ -46,6 +46,8 @@ export function makeTitle(type: SocketEventType): string {
       return 'Мастер ответил';
     case 'master_available':
       return 'Мастер доступен';
+    case 'booking_pending':
+      return 'Новое бронирование';
     case 'booking_confirmed':
       return 'Бронирование подтверждено';
     case 'booking_cancelled':
@@ -166,6 +168,28 @@ export function makeMessage(type: SocketEventType, payload: unknown): string | u
   if (type === 'admin_new_report') return (typeof p.reason === 'string' ? p.reason : undefined) ?? 'Новая жалоба';
   if (type === 'admin_new_payment') {
     return p.amount ? `${String(p.amount)} MDL` : 'Новый платёж';
+  }
+  if (type === 'booking_confirmed') {
+    const masterName = p.masterName ?? data.masterName;
+    const startTime = p.startTime ?? data.startTime;
+    if (masterName && startTime) {
+      const dateStr = new Date(String(startTime)).toLocaleString();
+      return `${String(masterName)} — ${dateStr}`;
+    }
+    return masterName ? String(masterName) : undefined;
+  }
+  if (type === 'booking_cancelled') {
+    const masterName = p.masterName ?? data.masterName;
+    return masterName ? String(masterName) : undefined;
+  }
+  if (type === 'booking_pending') {
+    const clientName = p.clientName ?? data.clientName;
+    const startTime = p.startTime ?? data.startTime;
+    if (clientName && startTime) {
+      const dateStr = new Date(String(startTime)).toLocaleString();
+      return `${String(clientName)} — ${dateStr}`;
+    }
+    return clientName ? String(clientName) : undefined;
   }
   return undefined;
 }

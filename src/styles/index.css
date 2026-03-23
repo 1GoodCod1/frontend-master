@@ -241,7 +241,8 @@ body {
   }
 }
 
-[role="dialog"] {
+/* Полноэкранная галерея (ImageLightboxModal) — без сплошного фона, только оверлей под контентом */
+[role="dialog"]:not([data-image-lightbox]) {
   background-color: hsl(var(--card)) !important;
   color: hsl(var(--foreground));
 }

@@ -16,11 +16,7 @@ const VALID_SORT_VALUES: SortBy[] = [
   'all',
   'createdAt',
   'rating',
-  'views',
-  'leadsCount',
   'price',
-  'totalReviews',
-  'updatedAt',
 ];
 
 export type MastersPageQuery = {
@@ -35,6 +31,7 @@ export type MastersPageQuery = {
   hasPromotion: boolean;
   minPrice: number;
   maxPrice: number;
+  minRating: number;
 };
 
 function parseQueryFromUrl(searchParams: URLSearchParams): Partial<MastersPageQuery> {
@@ -47,6 +44,7 @@ function parseQueryFromUrl(searchParams: URLSearchParams): Partial<MastersPageQu
   const urlHasPromotion = searchParams.get('hasPromotion');
   const urlMinPrice = searchParams.get('minPrice');
   const urlMaxPrice = searchParams.get('maxPrice');
+  const urlMinRating = searchParams.get('minRating');
 
   return {
     q: urlQ || '',
@@ -60,6 +58,7 @@ function parseQueryFromUrl(searchParams: URLSearchParams): Partial<MastersPageQu
     hasPromotion: urlHasPromotion === 'true',
     minPrice: urlMinPrice ? Number(urlMinPrice) : 0,
     maxPrice: urlMaxPrice ? Number(urlMaxPrice) : 5000,
+    minRating: urlMinRating ? Number(urlMinRating) : 0,
   };
 }
 
@@ -75,7 +74,7 @@ export function useMastersPage() {
     const parsed = parseQueryFromUrl(searchParams);
     return {
       page: 1,
-      limit: 30,
+      limit: 20,
       q: parsed.q ?? '',
       categoryValue: parsed.categoryValue ?? '',
       cityValue: parsed.cityValue ?? '',
@@ -85,11 +84,12 @@ export function useMastersPage() {
       hasPromotion: parsed.hasPromotion ?? false,
       minPrice: parsed.minPrice ?? 0,
       maxPrice: parsed.maxPrice ?? 5000,
+      minRating: parsed.minRating ?? 0,
     };
   });
 
   const [showAdvanced, setShowAdvanced] = useState(
-    query.availableNow || query.hasPromotion || query.minPrice > 0 || query.maxPrice < 5000,
+    query.availableNow || query.hasPromotion || query.minPrice > 0 || query.maxPrice < 5000 || query.minRating > 0,
   );
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [priceMinLocal, setPriceMinLocal] = useState(query.minPrice);
@@ -126,6 +126,7 @@ export function useMastersPage() {
     if (query.hasPromotion) params.set('hasPromotion', 'true');
     if (query.minPrice > 0) params.set('minPrice', String(query.minPrice));
     if (query.maxPrice < 5000) params.set('maxPrice', String(query.maxPrice));
+    if (query.minRating > 0) params.set('minRating', String(query.minRating));
     setSearchParams(params, { replace: true });
   }, [
     query.q,
@@ -137,6 +138,7 @@ export function useMastersPage() {
     query.hasPromotion,
     query.minPrice,
     query.maxPrice,
+    query.minRating,
     setSearchParams,
   ]);
 
@@ -156,6 +158,8 @@ export function useMastersPage() {
   const categories = filters.data?.categories ?? [];
   const cities = filters.data?.cities ?? [];
   const filtersPriceRange = filters.data?.priceRange;
+  const availableNowCount = filters.data?.availableNowCount ?? 0;
+  const hasPromotionCount = filters.data?.hasPromotionCount ?? 0;
 
   const priceRange = useMemo(() => {
     const raw = filtersPriceRange ?? { min: 0, max: 5000 };
@@ -224,6 +228,7 @@ export function useMastersPage() {
     if (query.hasPromotion) a.hasPromotion = true;
     if (debouncedMinPrice > priceRange.min) a.minPrice = debouncedMinPrice;
     if (debouncedMaxPrice < priceRange.max) a.maxPrice = debouncedMaxPrice;
+    if (query.minRating > 0) a.minRating = query.minRating;
     return a;
   }, [
     query.page,
@@ -234,6 +239,7 @@ export function useMastersPage() {
     query.cityValue,
     query.availableNow,
     query.hasPromotion,
+    query.minRating,
     debouncedQ,
     debouncedMinPrice,
     debouncedMaxPrice,
@@ -261,6 +267,7 @@ export function useMastersPage() {
       hasPromotion: false,
       minPrice: priceRange.min,
       maxPrice: priceRange.max,
+      minRating: 0,
     }));
     setShowAdvanced(false);
   };
@@ -272,6 +279,7 @@ export function useMastersPage() {
     query.hasPromotion,
     query.minPrice > priceRange.min,
     query.maxPrice < priceRange.max,
+    query.minRating > 0,
     query.q.trim(),
     query.sortBy !== 'all',
   ].filter(Boolean).length;
@@ -287,6 +295,7 @@ export function useMastersPage() {
       hasPromotion: false,
       minPrice: 0,
       maxPrice: 5000,
+      minRating: 0,
     }));
   };
 
@@ -311,6 +320,8 @@ export function useMastersPage() {
     thumbPrimaryClass,
     categories,
     cities,
+    availableNowCount,
+    hasPromotionCount,
     getCategoryLabel,
     getCityLabel,
     getCategoryValue,

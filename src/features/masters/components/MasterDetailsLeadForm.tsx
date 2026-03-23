@@ -22,6 +22,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RequestSubmissionState as LeadSubmissionState } from '@/hooks/requests';
+import { partitionLeadImageFiles } from '@/utils/leadImageUpload';
 import { toErrorMessage } from '@/utils/errors';
 
 interface MasterDetailsLeadFormProps {
@@ -263,22 +264,32 @@ export const MasterDetailsLeadForm = ({
         <Button variant="outline" size="sm" className="w-full gap-2 border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40" disabled={!isMasterAvailable} asChild>
           <label>
             <Paperclip className="h-4 w-4" />
-            {t('masterDetails.attachFiles', 'Attach files (max 10)')}
+            {t('masterDetails.attachPhotos', 'Attach photos (max 10)')}
             <input
               type="file"
               multiple
+              accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
               className="hidden"
               onChange={(e) => {
                 const list = Array.from(e.target.files ?? []);
+                const { accepted, rejected } = partitionLeadImageFiles(list);
+                if (rejected > 0) {
+                  toast.error(t('masterDetails.imagesOnlyError'));
+                }
+                if (accepted.length === 0) {
+                  e.target.value = '';
+                  return;
+                }
                 const remaining = 10 - attach.length;
                 if (remaining <= 0) {
                   toast.error(t('masterDetails.maxFilesError', 'Maximum 10 files allowed'));
+                  e.target.value = '';
                   return;
                 }
-                if (list.length > remaining) {
+                if (accepted.length > remaining) {
                   toast(t('masterDetails.filesLimitWarning', { count: remaining }), { icon: '⚠️', duration: 4000 });
                 }
-                setAttach([...attach, ...list.slice(0, remaining)]);
+                setAttach([...attach, ...accepted.slice(0, remaining)]);
                 e.target.value = '';
               }}
             />
@@ -287,7 +298,9 @@ export const MasterDetailsLeadForm = ({
 
         {attach.length > 0 && (
           <div className="rounded-xl border border-[#f5f4eb] dark:border-amber-500/20 bg-amber-50/80 dark:bg-amber-900/15 p-3 space-y-2">
-            <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">{attach.length} file(s) selected</p>
+            <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+              {t('masterDetails.photosSelectedCount', { count: attach.length })}
+            </p>
             <ul className="space-y-1">
               {attach.map((file, index) => (
                 <li

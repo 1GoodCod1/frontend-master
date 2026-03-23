@@ -83,7 +83,24 @@ export default function ReviewDialog({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground">{t('verification.name')}</p>
-                    <p className="text-sm font-medium">{detail.master?.user?.firstName} {detail.master?.user?.lastName}</p>
+                    {(() => {
+                      const u = detail.master?.user;
+                      if (!u) {
+                        return <p className="text-sm font-medium">—</p>;
+                      }
+                      const full = [u.firstName, u.lastName].filter(Boolean).join(' ').trim();
+                      if (full) {
+                        return <p className="text-sm font-medium">{full}</p>;
+                      }
+                      if (u.email) {
+                        return (
+                          <p className="text-sm text-muted-foreground leading-snug">
+                            {t('verification.nameNotInProfile')} {t('verification.nameSeeEmailBelow')}
+                          </p>
+                        );
+                      }
+                      return <p className="text-sm font-medium">—</p>;
+                    })()}
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">{t('verification.email')}</p>
@@ -222,11 +239,7 @@ export default function ReviewDialog({
             className={decision === 'APPROVE' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
             disabled={isReviewing || (decision === 'REJECT' && !notes.trim())}
           >
-            {isReviewing
-              ? t('verification.reviewing')
-              : decision === 'APPROVE'
-                ? t('verification.approve')
-                : t('verification.reject')}
+            {isReviewing ? t('verification.reviewing') : t('common.confirm')}
           </Button>
         </DialogFooter>
       </DialogContent>

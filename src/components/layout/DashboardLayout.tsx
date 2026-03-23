@@ -94,7 +94,7 @@ export function DashboardLayout() {
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);
   const { data: referralsConfig } = useConfigReferralsEnabledQuery();
-  const referralsEnabled = referralsConfig?.enabled ?? true;
+  const referralsEnabled = referralsConfig?.enabled ?? false;
   const baseItems = getItems(t, plan).filter((it) => it.key !== 'referrals' || referralsEnabled);
 
   const badgeFor = (key: string) => {

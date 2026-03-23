@@ -1,8 +1,15 @@
 import { useState } from 'react';
-import { useGetPendingVerificationsQuery, useGetVerificationDetailsQuery, useGetVerificationStatsQuery, useReviewVerificationMutation } from '@/features/verification/verificationApi';
+import {
+  useGetPendingVerificationsQuery,
+  useGetVerificationDetailsQuery,
+  useGetVerificationStatsQuery,
+  useReviewVerificationMutation,
+} from '@/features/verification/verificationApi';
+import type { VerificationStats } from '@/features/verification/verificationApi';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { toErrorMessage } from '@/utils/errors';
+import { isRecord } from '@/utils/guards';
 
 export function useAdminVerificationRequests() {
   const { t } = useTranslation();
@@ -13,8 +20,11 @@ export function useAdminVerificationRequests() {
   const [decision, setDecision] = useState<'APPROVE' | 'REJECT'>('APPROVE');
   const [notes, setNotes] = useState('');
 
-  const q = useGetPendingVerificationsQuery({ page, limit });
-  const statsQuery = useGetVerificationStatsQuery();
+  const q = useGetPendingVerificationsQuery(
+    { page, limit },
+    { pollingInterval: 30_000 },
+  );
+  const statsQuery = useGetVerificationStatsQuery(undefined, { pollingInterval: 30_000 });
   const detailQuery = useGetVerificationDetailsQuery(selectedId!, { skip: !selectedId });
   const [reviewVerification, { isLoading: isReviewing }] = useReviewVerificationMutation();
 
@@ -24,6 +34,16 @@ export function useAdminVerificationRequests() {
 
   const detail = detailQuery.data ?? null;
   const isLoadingDetail = Boolean(detailQuery.isLoading && selectedId);
+
+  const statsData = statsQuery.data as unknown;
+  const verificationStats: VerificationStats | null = (() => {
+    if (isRecord(statsData) && isRecord(statsData.data)) {
+      return statsData.data as unknown as VerificationStats;
+    }
+    if (isRecord(statsData)) return statsData as unknown as VerificationStats;
+    return null;
+  })();
+  const approvedCount = verificationStats?.approvedCount ?? 0;
 
   const handleReview = async () => {
     if (!selectedId) return;
@@ -82,5 +102,6 @@ export function useAdminVerificationRequests() {
         detailQuery.refetch();
       }
     },
+    approvedCount,
   };
 }

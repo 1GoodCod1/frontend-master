@@ -141,7 +141,7 @@ npm run dev
 
 | Переменная | Обязательна | Описание | По умолчанию |
 |---|:---:|---|---|
-| `VITE_API_URL` | ✅ | URL REST API | `http://localhost:4000` |
+| `VITE_API_URL` | ✅ | Базовый URL REST (с префиксом `/api/v1`, как на бэкенде) | `http://localhost:4000/api/v1` |
 | `VITE_WS_URL` | ✅ | URL WebSocket | `ws://localhost:4000` |
 | `VITE_ENV` | — | `development` или `production` | `development` |
 | `VITE_USE_HTTPONLY` | — | HttpOnly cookies для токенов | `true` |

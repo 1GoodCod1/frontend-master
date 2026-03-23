@@ -11,7 +11,12 @@ export function useClientLeads() {
     return { status };
   }, [status]);
 
-  const { data, isLoading, isError, error, refetch } = useLeadsMyListQuery(params);
+  const { data, isLoading, isError, error, refetch } = useLeadsMyListQuery(params, {
+    // Status is updated by the master in their app; this client has no mutation → stale RTK cache.
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: 30,
+    pollingInterval: 30_000,
+  });
   const items = extractItems<ClientLeadListItem>(data);
 
   return {

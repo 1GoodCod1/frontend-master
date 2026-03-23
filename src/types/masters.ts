@@ -5,14 +5,16 @@ export type WithSlugAndName = {
   name?: string | null;
 } | null;
 
+export type PublicFileRef = {
+  path?: string | null;
+} | null;
+
 export type PublicUserRef = {
   firstName?: string | null;
   lastName?: string | null;
   isVerified?: boolean | null;
-} | null;
-
-export type PublicFileRef = {
-  path?: string | null;
+  /** Account-level avatar (fallback when master.avatarFile is empty) */
+  avatarFile?: PublicFileRef;
 } | null;
 
 /**
@@ -59,6 +61,11 @@ export type PublicMaster = {
   promotions?: Array<{ discount?: number | null }> | null;
   activePromotion?: { discount?: number | null } | null;
 
+  /** Скор популярности (только выдача /masters/popular) */
+  popularityScore?: number | null;
+  /** Бейдж «Топ» — для выдачи /masters/popular true у всей подборки */
+  topMaster?: boolean | null;
+
   // misc
   isVerified?: boolean | null;
   latitude?: number | null;
@@ -102,6 +109,8 @@ export type MastersFiltersResponse = {
   ratingRange: { min: number; max: number; avg: number };
   experienceRange: { min: number; max: number };
   priceRange?: { min: number; max: number };
+  availableNowCount?: number;
+  hasPromotionCount?: number;
 };
 
 // ====================

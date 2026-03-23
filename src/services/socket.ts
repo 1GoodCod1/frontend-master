@@ -77,6 +77,7 @@ export async function connectSocket(store: Store<RootState>) {
     // Client
     MASTER_RESPONDED: 'master_responded',
     MASTER_AVAILABLE: 'master_available',
+    BOOKING_PENDING: 'booking_pending',
     BOOKING_CONFIRMED: 'booking_confirmed',
     BOOKING_CANCELLED: 'booking_cancelled',
     // System
@@ -114,11 +115,14 @@ export async function connectSocket(store: Store<RootState>) {
     } else if (mapped === 'verification_approved' || mapped === 'verification_rejected') {
       store.dispatch(api.util.invalidateTags(['Me', 'Verification']));
     } else if (mapped === 'admin_new_verification') {
-      store.dispatch(api.util.invalidateTags(['Verification']));
+      // Pending list uses tag 'Admin'; stats use 'VerificationStats'
+      store.dispatch(api.util.invalidateTags(['Admin', 'Verification', 'VerificationStats']));
     } else if (mapped === 'admin_new_report') {
       store.dispatch(api.util.invalidateTags(['Reports']));
     } else if (mapped === 'admin_new_user' || mapped === 'admin_new_master') {
       store.dispatch(api.util.invalidateTags(['Users']));
+    } else if (mapped === 'booking_pending' || mapped === 'booking_confirmed' || mapped === 'booking_cancelled') {
+      store.dispatch(api.util.invalidateTags(['Bookings', 'Leads']));
     }
 
     // Play sound for all notifications except system maintenance (optional)

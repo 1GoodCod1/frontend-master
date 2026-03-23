@@ -60,8 +60,8 @@ export interface VerificationDetail {
     id: string;
     user: {
       id: string;
-      firstName: string;
-      lastName: string;
+      firstName?: string | null;
+      lastName?: string | null;
       email: string;
       phone: string;
       phoneVerified: boolean;

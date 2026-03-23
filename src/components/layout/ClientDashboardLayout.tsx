@@ -11,6 +11,7 @@ import {
   User,
   MessageCircle,
   Gift,
+  Calendar,
 } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectRole, selectIsVerified } from '@/features/auth/selectors';
@@ -26,6 +27,7 @@ import { cn } from '@/lib/utils';
 function getItems(t: ReturnType<typeof useTranslation>['t']): CabinetNavItem[] {
   return [
     { key: 'overview', label: t('clientDashboard.overview'), to: '/client-dashboard', icon: <LayoutDashboard className="size-5" /> },
+    { key: 'bookings', label: t('clientDashboard.myBookings'), to: '/client-dashboard/bookings', icon: <Calendar className="size-5" /> },
     { key: 'leads', label: t('clientDashboard.myLeads'), to: '/client-dashboard/leads', icon: <Mail className="size-5" /> },
     { key: 'chat', label: t('clientDashboard.chat', 'Чаты'), to: '/client-dashboard/chat', icon: <MessageCircle className="size-5" /> },
     { key: 'favorites', label: t('clientDashboard.favorites'), to: '/client-dashboard/favorites', icon: <Heart className="size-5" /> },
@@ -43,7 +45,7 @@ export function ClientDashboardLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const { data: referralsConfig } = useConfigReferralsEnabledQuery();
-  const referralsEnabled = referralsConfig?.enabled ?? true;
+  const referralsEnabled = referralsConfig?.enabled ?? false;
   const items = getItems(t).filter((it) => it.key !== 'referrals' || referralsEnabled);
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);

@@ -21,7 +21,7 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
   const [register, registerState] = useAuthRegisterMutation();
   const { data: optionsData, isLoading: optionsLoading } = useAuthRegistrationOptionsQuery();
   const { data: referralsConfig } = useConfigReferralsEnabledQuery();
-  const referralsEnabled = referralsConfig?.enabled ?? true;
+  const referralsEnabled = referralsConfig?.enabled ?? false;
   const effectiveRefCode = referralsEnabled ? refCode : undefined;
   const { data: validateData } = useReferralsValidateCodeQuery(effectiveRefCode ?? '', {
     skip: !effectiveRefCode,

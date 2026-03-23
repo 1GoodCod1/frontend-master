@@ -14,6 +14,8 @@ function pick(...vals: Array<string | undefined | null>): string | undefined {
 }
 
 // Vite: use VITE_*
+// apiUrl = REST base (must include /api/v1 — same as Nest global prefix in api-master).
+// wsUrl = Socket.IO origin only (no /api/v1).
 // Fallback: allow injecting values at runtime (optional) by setting window.__MASTER_HUB_ENV__ = { apiUrl, wsUrl, envName }
 const runtime = (() => {
   try {
@@ -24,7 +26,9 @@ const runtime = (() => {
 })();
 
 export const env: AppEnv = Object.freeze({
-  apiUrl: pick(import.meta.env.VITE_API_URL, runtime?.apiUrl) || 'http://localhost:4000',
+  apiUrl:
+    pick(import.meta.env.VITE_API_URL, runtime?.apiUrl) ||
+    'http://localhost:4000/api/v1',
   wsUrl: pick(import.meta.env.VITE_WS_URL, runtime?.wsUrl) || 'ws://localhost:4000',
   envName: pick(import.meta.env.VITE_ENV, runtime?.envName) || 'development',
   useHttpOnly: (() => {

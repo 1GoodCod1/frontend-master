@@ -54,7 +54,7 @@ export function MasterRequestsWithoutBookingColumn({
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <span className="text-xs font-mono font-medium text-amber-600 dark:text-amber-500">
-                    {t('bookings.fromLead')} #{String(lead.id).slice(0, 8)}
+                    {t('bookings.fromLead')} #{String(lead.id)}
                   </span>
                   <span className="text-xs text-muted-foreground">{formatDateShort(lead.createdAt, locale)}</span>
                 </div>

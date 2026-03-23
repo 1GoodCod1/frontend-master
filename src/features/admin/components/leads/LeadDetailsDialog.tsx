@@ -106,7 +106,7 @@ export default function RequestDetailsDialog({
               <MessageSquare className="size-4" />
             </div>
             <div className="flex items-center gap-2 min-w-0">
-              {t('leads.leadDetailsTitle', { id: String(leadId).slice(0, 8) })}
+              {t('leads.leadDetailsTitle', { id: String(leadId) })}
               {displayLead?.isPremium && (
                 <Badge className="bg-amber-600 hover:bg-amber-600 text-white gap-1 shrink-0">
                   <Star className="size-3.5" />
@@ -206,14 +206,14 @@ export default function RequestDetailsDialog({
               )}
 
               {displayLead?.message && (
-                <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03] p-4 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-200 fill-mode-backwards">
+                <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03] p-4 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-200 fill-mode-backwards">
                   <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="size-5 text-amber-600 dark:text-amber-400" />
+                    <MessageSquare className="size-5 text-amber-600 dark:text-amber-400 shrink-0" />
                     <p className="text-sm font-semibold text-foreground">
                       {t('leads.message')}
                     </p>
                   </div>
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                  <p className="min-w-0 max-w-full text-sm text-muted-foreground whitespace-pre-wrap break-words [overflow-wrap:anywhere] leading-relaxed">
                     {String(displayLead.message)}
                   </p>
                 </div>

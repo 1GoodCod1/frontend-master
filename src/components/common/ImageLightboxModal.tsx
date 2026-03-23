@@ -101,13 +101,18 @@ export function ImageLightboxModal({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
+        {/* Лёгкое затемнение: сайт виден, но зона галереи визуально отделена */}
         <DialogPrimitive.Overlay
-          className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-200"
+          className={cn(
+            'fixed inset-0 z-[60] bg-black/18 backdrop-blur-sm dark:bg-black/35',
+            'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-200',
+          )}
           onPointerDown={() => onOpenChange(false)}
         />
         <DialogPrimitive.Content
+          data-image-lightbox=""
           className={cn(
-            'fixed inset-0 z-[61] flex items-center justify-center overflow-hidden outline-none',
+            'fixed inset-0 z-[61] flex items-center justify-center overflow-hidden outline-none bg-transparent',
             'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-200',
             className
           )}

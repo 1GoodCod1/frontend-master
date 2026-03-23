@@ -43,8 +43,8 @@ export default function RequestDetailsPage() {
   const lead = unwrapLead(q.data);
   const status = lead?.status;
 
-  const onChangeStatus = async (next: LeadStatus, leadRef?: { id?: string; encodedId?: string | null }) => {
-    const id = leadRef ? (leadRef.encodedId ?? leadRef.id) ?? leadId : leadId;
+  const onChangeStatus = async (next: LeadStatus, leadRef?: { id?: string }) => {
+    const id = leadRef ? leadRef.id ?? leadId : leadId;
     if (!id) return;
     try {
       await updateStatus({ id, body: { status: next } }).unwrap();
@@ -110,7 +110,7 @@ export default function RequestDetailsPage() {
     <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
       <div className="mb-8">
         <PageHeader
-          title={t('leads.leadDetailsTitle', { id: String(lead?.id ?? '').slice(0, 8) })}
+          title={t('leads.leadDetailsTitle', { id: String(lead?.id ?? '') })}
           subtitle={lead?.createdAt ? formatDateTimeString(lead.createdAt as string, getLocaleFromLanguage(i18n.language)) : ''}
           actions={
             <div className="flex flex-wrap items-center gap-3">
@@ -133,8 +133,8 @@ export default function RequestDetailsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-        <div className="lg:col-span-8 flex flex-col gap-6 md:gap-8">
+      <div className="grid min-w-0 grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
+        <div className="min-w-0 lg:col-span-8 flex flex-col gap-6 md:gap-8">
           <RequestCard
             lead={leadForCard}
             locale={getLocaleFromLanguage(i18n.language)}

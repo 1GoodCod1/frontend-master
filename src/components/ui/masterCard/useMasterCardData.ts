@@ -32,7 +32,12 @@ export function useMasterCardData(
   const totalReviews = master?.totalReviews ?? 0;
   const categoryName = getTranslatedCategoryName(t, master?.category) || master?.category?.name;
 
-  const avatarSrc = mediaUrl(master?.avatarUrl || master?.avatarFile?.path || null);
+  const avatarSrc = mediaUrl(
+    master?.avatarUrl ||
+      master?.avatarFile?.path ||
+      master?.user?.avatarFile?.path ||
+      null,
+  );
 
   const rawTariff = normalizeTariffType(
     master?.effectiveTariffType ??

@@ -46,8 +46,8 @@ type RequestCardProps = {
   lead: LeadDto & { clientName?: string; clientPhone?: string; createdAt?: string; message?: string; status?: string };
   locale: string;
   isUpdating?: boolean;
-  onStatusChange?: (lead: { id: string; encodedId?: string | null }, status: LeadStatus) => void;
-  onOpenDetails?: (lead: { id: string; encodedId?: string | null }) => void;
+  onStatusChange?: (lead: { id: string }, status: LeadStatus) => void;
+  onOpenDetails?: (lead: { id: string }) => void;
   variant?: 'list' | 'detail';
 };
 
@@ -64,7 +64,7 @@ export function RequestCard({
   const clientName = lead?.clientName || t('leads.client');
 
   const cardClass = cn(
-    'overflow-hidden transition-all duration-300',
+    'overflow-hidden min-w-0 w-full transition-all duration-300',
     'rounded-xl border border-slate-200 dark:border-white/[0.08]',
     'bg-white dark:bg-black/40 dark:backdrop-blur-xl',
     'shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none',
@@ -79,7 +79,7 @@ export function RequestCard({
         t('leads.client'),
         t('leads.contactDetails')
       )}
-      <CardContent className="space-y-4 sm:space-y-5 px-4 py-4 sm:px-6 sm:py-6 md:px-8">
+      <CardContent className="min-w-0 space-y-4 sm:space-y-5 px-4 py-4 sm:px-6 sm:py-6 md:px-8">
         <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <h3 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-1 sm:mb-2 break-words">
@@ -132,12 +132,12 @@ export function RequestCard({
         </div>
 
         {lead?.message && variant === 'detail' && (
-          <div className="rounded-xl border border-slate-100 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.04] p-5">
+          <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-100 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.04] p-5">
             <div className="flex items-center gap-2 mb-2">
               <MessageSquare className="size-5 text-amber-600 dark:text-amber-400 shrink-0" />
               <p className="text-sm font-semibold text-foreground">{t('leads.message')}</p>
             </div>
-            <p className="whitespace-pre-wrap font-medium leading-relaxed text-slate-700 dark:text-slate-300 text-lg">
+            <p className="min-w-0 max-w-full whitespace-pre-wrap break-words [overflow-wrap:anywhere] font-medium leading-relaxed text-slate-700 dark:text-slate-300 text-lg">
               {String(lead.message)}
             </p>
           </div>

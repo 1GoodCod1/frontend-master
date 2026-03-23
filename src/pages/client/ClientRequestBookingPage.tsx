@@ -78,8 +78,8 @@ export default function ClientRequestBookingPage() {
         notes: notes || undefined,
       }).unwrap();
 
-      toast.success(t('bookings.created'));
-      navigate('/client-dashboard/leads');
+      const bookedTime = formatSlotTime(slot);
+      navigate(`/client-dashboard/booking-success/${leadId}?date=${selectedDate}&time=${bookedTime}`);
     } catch (error: unknown) {
       const err = error as { data?: { message?: string }; message?: string };
       const msg = err?.data?.message || err?.message || t('bookings.createFailed');
@@ -122,7 +122,7 @@ export default function ClientRequestBookingPage() {
                 <Button
                   variant="link"
                   className="mt-2 h-auto p-0 text-primary"
-                  onClick={() => navigate('/client-dashboard/settings')}
+                  onClick={() => navigate('/client-dashboard/security')}
                 >
                   {t('common.settings', 'Settings')} →
                 </Button>

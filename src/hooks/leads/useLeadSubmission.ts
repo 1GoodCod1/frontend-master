@@ -52,9 +52,8 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
             };
 
             const result = await createLead(payload).unwrap();
-            const lead = result as { encodedId?: string; id?: string };
-            // Use short UUID for lead-success URL; encodedId is too long (~120+ chars)
-            const resolvedLeadId = lead?.id ?? lead?.encodedId ?? null;
+            const lead = result as { id?: string };
+            const resolvedLeadId = lead?.id ?? null;
             setSubmittedLeadId(resolvedLeadId);
             toast.success(t('notifications.types.lead_sent', 'Request sent'));
 

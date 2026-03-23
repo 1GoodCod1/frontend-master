@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { getLocaleFromLanguage } from '@/utils/date';
-import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus, type LeadDto } from '@/types/leads';
+import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus } from '@/types/leads';
 import { extractItems } from '@/utils/data';
 
 const ITEMS_PER_PAGE = 3;
@@ -78,8 +78,8 @@ export default function RequestsPage() {
     [recentMap],
   );
 
-  const onChangeStatus = async (lead: { id: string; encodedId?: string | null }, next: LeadStatus) => {
-    const id = (lead as LeadDto).encodedId ?? lead.id;
+  const onChangeStatus = async (lead: { id: string }, next: LeadStatus) => {
+    const id = lead.id;
     try {
       await updateStatus({ id, body: { status: next } }).unwrap();
       toast.success(t('leads.statusUpdated'));
@@ -128,6 +128,7 @@ export default function RequestsPage() {
             {isPremium && masterId && (
               <div className="flex gap-2 flex-wrap">
                 <Button
+                  type="button"
                   size="sm"
                   onClick={async () => {
                     try {
@@ -144,14 +145,18 @@ export default function RequestsPage() {
                   <span className="hidden sm:inline">{t('export.exportCSV')}</span>
                 </Button>
                 <Button
+                  type="button"
                   size="sm"
-                  onClick={async () => {
-                    try {
-                      await exportService.exportLeadsExcel(masterId, accessToken ?? undefined);
-                      toast.success(t('export.leadsExcelSuccess'));
-                    } catch (err: unknown) {
-                      toast.error(err instanceof Error ? err.message : t('export.exportFailed'));
-                    }
+                  onClick={() => {
+                    void toast.promise(
+                      exportService.exportLeadsExcel(masterId, accessToken ?? undefined),
+                      {
+                        loading: t('export.excelPreparing'),
+                        success: t('export.leadsExcelSuccess'),
+                        error: (e) =>
+                          e instanceof Error ? e.message : t('export.exportFailed'),
+                      },
+                    );
                   }}
                   aria-label={t('export.exportExcel')}
                   className="h-9 sm:h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 flex-1 sm:flex-initial min-w-0"
@@ -171,7 +176,7 @@ export default function RequestsPage() {
             <>
               <div className="space-y-0">
                 {displayedItems.map((lead, index) => {
-                  const leadId = (lead as LeadDto).encodedId ?? lead.id;
+                  const leadId = lead.id;
                   return (
                     <div
                       key={lead.id}
@@ -195,7 +200,7 @@ export default function RequestsPage() {
                         locale={locale}
                         isUpdating={isUpdating}
                         onStatusChange={onChangeStatus}
-                        onOpenDetails={(l) => nav(`/dashboard/leads/${(l as LeadDto).encodedId ?? l.id}`)}
+                        onOpenDetails={(l) => nav(`/dashboard/leads/${l.id}`)}
                         variant="list"
                       />
                     </div>

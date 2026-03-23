@@ -141,7 +141,8 @@ export default function MasterDetailsPage() {
       : typeof m?.avgRating === 'number'
         ? m.avgRating
         : undefined;
-  const avatarUrl = m?.avatarUrl ?? m?.avatarFile?.path ?? undefined;
+  const avatarUrl =
+    m?.avatarUrl ?? m?.avatarFile?.path ?? m?.user?.avatarFile?.path ?? undefined;
   const isOnline = typeof m?.isOnline === 'boolean' ? m.isOnline : undefined;
   const lastActivityAt = m?.lastActivityAt ?? undefined;
   const services = Array.isArray(m?.services) ? m.services : undefined;

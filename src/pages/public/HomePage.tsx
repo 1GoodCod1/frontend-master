@@ -1,9 +1,8 @@
-import { useMemo, useEffect, lazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { useMastersPopularQuery } from '@/features/masters/mastersApi';
-import { usePromotionsActiveQuery } from '@/features/promotions/promotionsApi';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { useIsDark } from '@/hooks/useIsDark';
 import { SEOHead } from '@/components/seo/SEOHead';
@@ -37,20 +36,8 @@ export default function HomePage() {
     return () => clearTimeout(id);
   }, []);
   const popular = useMastersPopularQuery({ limit: 5 });
-  const { data: activePromotions = [] } = usePromotionsActiveQuery({ limit: 50 });
 
   const popularList = (popular.data ?? []).slice(0, 5);
-
-  const promotionDiscountByMasterId = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const p of activePromotions) {
-      const id = p.masterId ?? (p.master as { id?: string })?.id;
-      if (id && typeof p.discount === 'number' && !map.has(id)) {
-        map.set(id, p.discount);
-      }
-    }
-    return map;
-  }, [activePromotions]);
 
   return (
     <>
@@ -111,7 +98,6 @@ export default function HomePage() {
               icon={Flame}
               horizontalScroll
               sectionBadge="popular"
-              promotionDiscountByMasterId={promotionDiscountByMasterId}
             />
           </Suspense>
 

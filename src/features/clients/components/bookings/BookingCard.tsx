@@ -28,7 +28,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
       : 0;
 
   return (
-    <Card className="border-border dark:border-white/[0.08] bg-card transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/50">
+    <Card className="border-border/50 dark:border-white/[0.06] bg-card dark:bg-white/[0.03] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-amber-500/30 dark:hover:border-amber-500/20">
       <CardContent className="p-6">
         <div className="flex flex-col gap-4">
           <div className="flex flex-row flex-wrap items-center justify-between gap-2">

@@ -112,7 +112,9 @@ export const SimilarMasters: React.FC<SimilarMastersProps> = ({
             const name = [master?.user?.firstName, master?.user?.lastName].filter(Boolean).join(' ').trim() || master?.displayName || master?.name || t('masterDetails.masterLabel');
             const r = master?.rating ?? master?.avgRating ?? 0;
             const city = master?.city ? getTranslatedCityName(t, master.city) : '';
-            const avatarSrc = mediaUrl(master?.avatarUrl ?? master?.avatarFile?.path);
+            const avatarSrc = mediaUrl(
+              master?.avatarUrl ?? master?.avatarFile?.path ?? master?.user?.avatarFile?.path,
+            );
             return (
               <button
                 key={master.id}

@@ -31,6 +31,8 @@ export default function MastersPage() {
     thumbPrimaryClass,
     categories,
     cities,
+    availableNowCount,
+    hasPromotionCount,
     getCategoryLabel,
     getCityLabel,
     getCategoryValue,
@@ -90,6 +92,8 @@ export default function MastersPage() {
           getCityLabel={getCityLabel}
           getCategoryValue={getCategoryValue}
           getCityValue={getCityValue}
+          availableNowCount={availableNowCount}
+          hasPromotionCount={hasPromotionCount}
           filters={filters}
         />
 

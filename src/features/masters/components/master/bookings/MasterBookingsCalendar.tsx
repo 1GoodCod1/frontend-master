@@ -125,7 +125,7 @@ export function MasterBookingsCalendar({
                     const start = new Date(booking.startTime);
                     const end = new Date(booking.endTime);
                     const leadId = booking.lead?.id ?? booking.leadId;
-                    const leadShortId = leadId ? String(leadId).slice(0, 8) : null;
+                    const leadShortId = leadId ? String(leadId) : null;
                     const bookedAt = booking.createdAt ? new Date(booking.createdAt) : null;
                     return (
                       <li

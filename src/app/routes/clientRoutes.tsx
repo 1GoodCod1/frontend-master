@@ -11,8 +11,10 @@ export const clientRoutes = {
       element: <ClientDashboardLayout />,
       children: [
         { index: true, element: <LazyPage><P.ClientDashboardPage /></LazyPage> },
+        { path: 'bookings', element: <LazyPage><P.ClientBookingsPage /></LazyPage> },
         { path: 'leads/:leadId/book', element: <LazyPage><P.ClientRequestBookingPage /></LazyPage> },
         { path: 'lead-success/:leadId', element: <LazyPage><P.RequestSuccessPage /></LazyPage> },
+        { path: 'booking-success/:leadId', element: <LazyPage><P.BookingSuccessPage /></LazyPage> },
         { path: 'leads', element: <LazyPage><P.ClientRequestsPage /></LazyPage> },
         { path: 'favorites', element: <LazyPage><P.ClientFavoritesPage /></LazyPage> },
         { path: 'reports', element: <LazyPage><P.ClientReportsPage /></LazyPage> },

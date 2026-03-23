@@ -36,10 +36,10 @@ export function MastersMapSkeleton() {
 export const MastersVirtualizedGridList = (props: ComponentProps<'div'>) => (
   <div
     {...props}
-    className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]"
+    className="grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]"
   />
 );
 
 export const MastersVirtualizedGridItem = (props: ComponentProps<'div'>) => (
-  <div {...props} className="min-w-0" />
+  <div {...props} className="min-w-0 h-full" />
 );

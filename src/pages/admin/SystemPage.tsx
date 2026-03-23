@@ -57,7 +57,7 @@ export default function SystemPage() {
   const [createBackup, { isLoading: isCreatingBackup }] = useAdminCreateBackupMutation();
   const { data: referralsData } = useAdminReferralsEnabledQuery();
   const [setReferralsEnabled, { isLoading: isSavingReferrals }] = useAdminSetReferralsEnabledMutation();
-  const referralsEnabled = referralsData?.enabled ?? true;
+  const referralsEnabled = referralsData?.enabled ?? false;
 
   const infoRaw = info.data as unknown;
   const infoObj = isRecord(infoRaw) ? infoRaw : undefined;

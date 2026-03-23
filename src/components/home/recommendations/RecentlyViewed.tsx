@@ -18,9 +18,17 @@ import { RECENTLY_VIEWED_AVATAR_SIZE, RECENTLY_VIEWED_ACCENT } from '@/constants
 
 interface RecentlyViewedProps {
   limit?: number;
+  /** Override section title (default: home.recentlyViewed) */
+  title?: string;
+  /** Override subtitle (default: home.recentlyViewedSubtitle) */
+  subtitle?: string;
 }
 
-export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({ limit = 8 }) => {
+export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
+  limit = 8,
+  title,
+  subtitle,
+}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data, isLoading } = useRecommendationsRecentlyViewedQuery({ limit });
@@ -53,10 +61,10 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({ limit = 8 }) => 
         </div>
         <div>
           <h3 className="text-sm font-semibold text-foreground">
-            {t('home.recentlyViewed')}
+            {title ?? t('home.recentlyViewed')}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {t('home.recentlyViewedSubtitle')}
+            {subtitle ?? t('home.recentlyViewedSubtitle')}
           </p>
         </div>
       </div>
@@ -73,7 +81,9 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({ limit = 8 }) => 
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-1 -mx-1">
           {masters.slice(0, limit).map((m) => {
-            const src = mediaUrl(m.avatarUrl || m.avatarFile?.path || null);
+            const src = mediaUrl(
+              m.avatarUrl || m.avatarFile?.path || m.user?.avatarFile?.path || null,
+            );
             return (
               <TooltipProvider key={m.id} delayDuration={300}>
                 <Tooltip>

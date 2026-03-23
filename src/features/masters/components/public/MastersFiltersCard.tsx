@@ -40,6 +40,8 @@ interface MastersFiltersCardProps {
   getCityLabel: (c: MastersFilterItem) => string;
   getCategoryValue: (c: MastersFilterItem) => string;
   getCityValue: (c: MastersFilterItem) => string;
+  availableNowCount: number;
+  hasPromotionCount: number;
   filters: {
     isLoading: boolean;
     isError: boolean;
@@ -70,6 +72,8 @@ export function MastersFiltersCard({
   getCityLabel,
   getCategoryValue,
   getCityValue,
+  availableNowCount,
+  hasPromotionCount,
   filters,
 }: MastersFiltersCardProps) {
   const { t } = useTranslation();
@@ -185,10 +189,6 @@ export function MastersFiltersCard({
                     <SelectItem value="createdAt">{t('masters.sortNewest')}</SelectItem>
                     <SelectItem value="rating">{t('masters.sortRating')}</SelectItem>
                     <SelectItem value="price">{t('masters.sortPrice')}</SelectItem>
-                    <SelectItem value="totalReviews">{t('masters.sortReviews')}</SelectItem>
-                    <SelectItem value="updatedAt">{t('masters.sortUpdated')}</SelectItem>
-                    <SelectItem value="views">{t('masters.sortViews')}</SelectItem>
-                    <SelectItem value="leadsCount">{t('masters.sortLeads')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -223,6 +223,8 @@ export function MastersFiltersCard({
                   thumbPrimaryClass={thumbPrimaryClass}
                   priceMinClamp={priceMinClamp}
                   priceMaxClamp={priceMaxClamp}
+                  availableNowCount={availableNowCount}
+                  hasPromotionCount={hasPromotionCount}
                   onQueryChange={setQuery}
                   onPriceMinLocalChange={setPriceMinLocal}
                   onPriceMaxLocalChange={setPriceMaxLocal}

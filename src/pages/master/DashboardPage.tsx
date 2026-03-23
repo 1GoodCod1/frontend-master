@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { ProfileViewsHistoryModal } from '@/features/masters/components/master/ProfileViewsHistoryModal';
 import { Progress } from '@/components/ui/progress';
 import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
+import { MasterPendingBookingsCard } from '@/features/bookings/components/MasterPendingBookingsCard';
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ color?: string; name?: string; value?: number }>; label?: string }) {
   if (active && payload && payload.length) {
@@ -364,6 +365,9 @@ export default function DashboardPage() {
 
         {/* Right Column (Controls & Settings) - 1/3 width */}
         <div className="space-y-6">
+
+          {/* Pending Bookings */}
+          <MasterPendingBookingsCard />
 
           {/* Status Control Card */}
           <Card className={cn(

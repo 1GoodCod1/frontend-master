@@ -40,7 +40,7 @@ export type MastersQuery = {
   cursor?: number;
   page?: number;
   limit?: number;
-  sortBy?: 'rating' | 'createdAt' | 'views' | 'leadsCount' | 'price' | 'totalReviews' | 'updatedAt';
+  sortBy?: 'rating' | 'createdAt' | 'price';
   sortOrder?: 'asc' | 'desc';
 };
 
@@ -112,6 +112,8 @@ export const mastersApi = api.injectEndpoints({
               max: Math.max(100, toNumber(get(pr, 'max'), 5000)),
             };
           })(),
+          availableNowCount: toNumber(get(root, 'availableNowCount'), 0),
+          hasPromotionCount: toNumber(get(root, 'hasPromotionCount'), 0),
         };
       },
     }),

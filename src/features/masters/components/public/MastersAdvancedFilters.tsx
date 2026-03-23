@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { CircleDot, Tag } from 'lucide-react';
+import { CircleDot, Tag, Star } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { MastersPriceRangeFilter } from './MastersPriceRangeFilter';
 import type { MastersPageQuery } from '@/features/masters/hooks/useMastersPage';
 
@@ -16,6 +23,8 @@ interface MastersAdvancedFiltersProps {
   thumbPrimaryClass: string;
   priceMinClamp: (v: number) => number;
   priceMaxClamp: (v: number) => number;
+  availableNowCount: number;
+  hasPromotionCount: number;
   onQueryChange: (updater: (s: MastersPageQuery) => MastersPageQuery) => void;
   onPriceMinLocalChange: (v: number) => void;
   onPriceMaxLocalChange: (v: number) => void;
@@ -32,6 +41,8 @@ export function MastersAdvancedFilters({
   thumbPrimaryClass,
   priceMinClamp,
   priceMaxClamp,
+  availableNowCount,
+  hasPromotionCount,
   onQueryChange,
   onPriceMinLocalChange,
   onPriceMaxLocalChange,
@@ -57,7 +68,7 @@ export function MastersAdvancedFilters({
                 {t('masters.availableNow')}
               </p>
               <p className="text-xs text-muted-foreground">
-                {t('masters.availableNowHint')}
+                {t('masters.availableNowHint')} ({availableNowCount})
               </p>
             </div>
           </div>
@@ -90,7 +101,7 @@ export function MastersAdvancedFilters({
                 {t('masters.withPromotion')}
               </p>
               <p className="text-xs text-muted-foreground">
-                {t('masters.withPromotionHint')}
+                {t('masters.withPromotionHint')} ({hasPromotionCount})
               </p>
             </div>
           </div>
@@ -111,6 +122,44 @@ export function MastersAdvancedFilters({
               }
             />
           </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06]">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-amber-500/15 dark:bg-amber-400/15">
+              <Star className="h-4.5 w-4.5 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                {t('masters.minRating')}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {t('masters.minRatingHint')}
+              </p>
+            </div>
+          </div>
+          <Select
+            value={String(query.minRating)}
+            onValueChange={(v) =>
+              onQueryChange((s) => ({
+                ...s,
+                page: 1,
+                minRating: Number(v),
+              }))
+            }
+          >
+            <SelectTrigger className="w-28 border-gray-200 dark:border-white/10 bg-background">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">{t('common.all')}</SelectItem>
+              <SelectItem value="3">3.0+</SelectItem>
+              <SelectItem value="3.5">3.5+</SelectItem>
+              <SelectItem value="4">4.0+</SelectItem>
+              <SelectItem value="4.5">4.5+</SelectItem>
+              <SelectItem value="4.8">4.8+</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <MastersPriceRangeFilter

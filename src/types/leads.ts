@@ -4,8 +4,6 @@ export type LeadFilterStatus = LeadStatus | 'ALL';
 
 export type LeadDto = {
   id: string;
-  /** URL-safe encoded ID from API (use for links instead of raw id) */
-  encodedId?: string;
   status?: LeadStatus | string | null;
   createdAt?: string | null;
   message?: string | null;

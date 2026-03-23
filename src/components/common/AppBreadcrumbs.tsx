@@ -131,6 +131,10 @@ const pathToCrumbs: Record<
     { label: t('nav.clientDashboard'), to: '/client-dashboard' },
     { label: t('clientDashboard.profile') },
   ],
+  '/client-dashboard/bookings': (t) => [
+    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+    { label: t('clientDashboard.myBookings') },
+  ],
   '/client-dashboard/security': (t) => [
     { label: t('nav.clientDashboard'), to: '/client-dashboard' },
     { label: t('dashboard.security') },

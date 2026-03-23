@@ -1,12 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { VirtuosoGrid } from 'react-virtuoso';
 import {
   MastersCardSkeleton,
   MastersMapSkeleton,
-  MastersVirtualizedGridList,
-  MastersVirtualizedGridItem,
 } from '@/features/masters/components/public/MastersPageSkeletons';
 import { ErrorState } from '@/components/common/States';
 import { MasterCard } from '@/components/ui/MasterCard';
@@ -46,7 +43,7 @@ export function MastersResults({
 
   if (list.isLoading) {
     return viewMode === 'list' ? (
-      <div className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 grid-cols-2 md:grid-cols-3 lg:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
+      <div className="grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
         {Array.from({ length: 12 }).map((_, i) => (
           <MastersCardSkeleton key={i} />
         ))}
@@ -95,16 +92,9 @@ export function MastersResults({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
           >
-            <VirtuosoGrid
-              useWindowScroll
-              totalCount={items.length}
-              components={{
-                List: MastersVirtualizedGridList,
-                Item: MastersVirtualizedGridItem,
-              }}
-              itemContent={(idx) => {
-                const m: PublicMaster = items[idx];
-                return (
+            <div className="grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
+              {items.map((m) => (
+                <div key={m.id} className="min-w-0 h-full">
                   <MasterCard
                     master={{
                       ...m,
@@ -117,9 +107,9 @@ export function MastersResults({
                       m?.id ? promotionDiscountByMasterId[m.id] : undefined
                     }
                   />
-                );
-              }}
-            />
+                </div>
+              ))}
+            </div>
           </motion.div>
         ) : (
           <motion.div

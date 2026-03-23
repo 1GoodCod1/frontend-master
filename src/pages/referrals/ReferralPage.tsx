@@ -19,7 +19,7 @@ export default function ReferralPage() {
     const { data: referralInfo, isLoading, isError, error, refetch } = useReferralsGetMyQuery();
 
     const { code = '', referrals = [], stats } = referralInfo ?? {};
-    const referralsEnabled = referralsConfig?.enabled ?? true;
+    const referralsEnabled = referralsConfig?.enabled ?? false;
 
     if (isLoading) return <LoadingState label={t('referrals.loading')} />;
     if (isError) return <ErrorState error={error as Error} onRetry={refetch} />;

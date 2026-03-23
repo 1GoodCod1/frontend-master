@@ -55,6 +55,5 @@ export function idMatches(item: unknown, id: string): boolean {
   const idStr = String(id);
   const v = item.id ?? item._id ?? item.uuid;
   if (v != null && String(v) === idStr) return true;
-  const enc = item.encodedId;
-  return enc != null && String(enc) === idStr;
+  return false;
 }
