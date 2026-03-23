@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useAdminMastersQuery, useAdminUpdateMasterMutation } from '@/features/admin/adminApi';
+import {
+  useAdminMastersQuery,
+  useAdminMastersStatsQuery,
+  useAdminUpdateMasterMutation,
+} from '@/features/admin/adminApi';
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
-import { parseAdminPaginatedResponse, toNumber } from '@/utils/data';
+import { parseAdminPaginatedResponse, parseAdminMastersStatsSummary } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
 import { useAdminCursors } from '../useAdminCursors';
@@ -25,14 +29,24 @@ export function useAdminMasters() {
     });
   }, [limit, verified, featured, qText, resetCursors]);
 
+  const filterParams = {
+    ...(verified ? { verified: true as const } : {}),
+    ...(featured ? { featured: true as const } : {}),
+  };
+
   const q = useAdminMastersQuery({
     page,
     limit,
     ...(cursor ? { cursor } : {}),
-    ...(verified ? { verified } : {}),
-    ...(featured ? { featured } : {}),
+    ...filterParams,
     ...(qText ? { q: qText } : {}),
   });
+
+  const statsQ = useAdminMastersStatsQuery(filterParams, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 60_000,
+  });
+
   const [update, updState] = useAdminUpdateMasterMutation();
 
   const { items: allMasters, meta } = useMemo(
@@ -47,16 +61,17 @@ export function useAdminMasters() {
 
   useEffect(() => { updateMeta(meta); }, [meta, updateMeta]);
 
-  const totalMasters = allMasters.length;
-  const verifiedMasters = allMasters.filter((m) => m.user?.isVerified || m.isVerified).length;
-  const featuredMasters = allMasters.filter((m) => m.isFeatured).length;
-  const avgRating =
-    allMasters.length > 0
-      ? (
-          allMasters.reduce((sum, m) => sum + toNumber(m.avgRating ?? m.rating), 0) /
-          allMasters.length
-        ).toFixed(1)
-      : '0.0';
+  const summary = useMemo(
+    () => parseAdminMastersStatsSummary(statsQ.data),
+    [statsQ.data],
+  );
+
+  const statistics = {
+    totalMasters: summary.total,
+    verifiedMasters: summary.verified,
+    featuredMasters: summary.featured,
+    avgRating: summary.avgRating.toFixed(1),
+  };
 
   const mastersData = useMemo(
     () => ({ items: allMasters, meta }),
@@ -86,7 +101,7 @@ export function useAdminMasters() {
     try {
       await update({ id: selectedMaster.id }).unwrap();
       toast.success('Master updated successfully');
-      q.refetch();
+      await Promise.all([q.refetch(), statsQ.refetch()]);
       setSelectedMaster(null);
     } catch (e: unknown) {
       toast.error(toErrorMessage(e) ?? 'Update failed');
@@ -111,7 +126,7 @@ export function useAdminMasters() {
     error: q.error,
     refetch: q.refetch,
     mastersData, allMasters,
-    statistics: { totalMasters, verifiedMasters, featuredMasters, avgRating },
+    statistics,
     updateLoading: updState.isLoading,
     exportToCSV: doExportToCSV,
     doUpdate, clearFilters,

@@ -5,12 +5,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogBody,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { mediaUrl } from '@/utils/media';
 import { getRoleGradient, getRoleColor } from '@/utils/user';
 import { useIsDark } from '@/hooks/useIsDark';
+import { cn } from '@/lib/utils';
 
 type ConfirmUser = {
   role?: string | null;
@@ -71,73 +73,77 @@ export default function ConfirmationDialog({
 
   const title =
     isVerify
-      ? (isUnverify ? 'Unverify User' : 'Verify User')
-      : (isUnban ? 'Unban User' : 'Ban User');
+      ? (isUnverify ? 'Unverify user' : 'Verify user')
+      : (isUnban ? 'Unban user' : 'Ban user');
 
   const confirmLabel =
     isVerify
-      ? (isUnverify ? 'Yes, Unverify' : 'Yes, Verify')
-      : (isUnban ? 'Yes, Unban' : 'Yes, Ban');
+      ? (isUnverify ? 'Yes, unverify' : 'Yes, verify')
+      : (isUnban ? 'Yes, unban' : 'Yes, ban');
 
   const message =
     isVerify
       ? isUnverify
-        ? '⚠️ This will remove verification status from this user. They will need to be verified again.'
-        : '✅ This will verify the user and grant them full access to the platform.'
+        ? 'This will remove verification status from this user. They will need to be verified again.'
+        : 'This will verify the user and grant them full access to the platform.'
       : isUnban
-        ? '✅ This will unban the user and restore their access to the platform.'
-        : '⚠️ This will ban the user and prevent them from accessing the platform.';
+        ? 'This will unban the user and restore their access to the platform.'
+        : 'This will ban the user and prevent them from accessing the platform.';
 
   const isBanAction = !isUnverify && !isUnban;
   const confirmVariant = isBanAction ? 'destructive' : 'default';
   const confirmClassName =
     isUnverify
-      ? 'bg-amber-600 hover:bg-amber-700'
+      ? 'bg-amber-600 hover:bg-amber-700 dark:hover:bg-amber-500'
       : (isUnban || (isVerify && !isUnverify))
-        ? 'bg-emerald-600 hover:bg-emerald-700'
+        ? 'bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500'
         : '';
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-sm">
-        <DialogHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
-          <div
-            className="size-14 rounded-lg flex items-center justify-center shrink-0"
-            style={{ background: iconBg }}
-          >
-            <Icon className="size-8 text-white" />
-          </div>
-          <div>
-            <DialogTitle className="text-lg font-bold mb-0.5">{title}</DialogTitle>
-            <p className="text-sm text-muted-foreground">Please confirm your action</p>
+      <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-2rem)] max-w-md flex-col gap-0 p-0 sm:max-w-md">
+        <DialogHeader>
+          <div className="flex flex-row items-start gap-4">
+            <div
+              className="flex size-14 shrink-0 items-center justify-center rounded-xl shadow-md"
+              style={{ background: iconBg }}
+            >
+              <Icon className="size-8 text-white" />
+            </div>
+            <div className="min-w-0 flex-1 pt-0.5">
+              <DialogTitle className="text-xl font-bold tracking-tight">{title}</DialogTitle>
+              <p className="mt-1 text-sm text-muted-foreground">Please confirm this action.</p>
+            </div>
           </div>
         </DialogHeader>
 
-        <div className="rounded-lg border border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03] p-4 space-y-4">
-          <div className="flex items-center gap-4">
-            <Avatar
-              className="size-12 rounded-lg shrink-0"
-              style={{
-                background: getRoleGradient(role, isDark) || getRoleColor(role, isDark),
-              }}
-            >
-              {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
-              <AvatarFallback className="rounded-lg text-lg font-semibold bg-transparent text-white">
-                {user?.email?.[0]?.toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold text-foreground truncate">
-                {user?.firstName && user?.lastName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user?.email || '—'}
-              </p>
-              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+        <DialogBody className="space-y-4 py-5">
+          <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 p-4 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
+            <div className="flex items-center gap-4">
+              <Avatar
+                className="size-12 shrink-0 rounded-xl"
+                style={{
+                  background: getRoleGradient(role, isDark) || getRoleColor(role, isDark),
+                }}
+              >
+                {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
+                <AvatarFallback className="rounded-xl bg-transparent text-lg font-semibold text-white">
+                  {user?.email?.[0]?.toUpperCase() || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-foreground">
+                  {user?.firstName && user?.lastName
+                    ? `${user.firstName} ${user.lastName}`
+                    : user?.email || '—'}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+              </div>
             </div>
           </div>
 
           <div
-            className="rounded-lg p-4 border text-sm font-medium text-foreground"
+            className="rounded-xl border p-4 text-sm font-medium leading-relaxed text-foreground"
             style={{
               backgroundColor: isUnverify
                 ? 'rgba(243, 156, 18, 0.1)'
@@ -145,24 +151,35 @@ export default function ConfirmationDialog({
                   ? 'rgba(39, 174, 96, 0.1)'
                   : 'rgba(220, 20, 60, 0.1)',
               borderColor: isUnverify
-                ? 'rgba(243, 156, 18, 0.3)'
+                ? 'rgba(243, 156, 18, 0.35)'
                 : (isUnban || (isVerify && !isUnverify))
-                  ? 'rgba(39, 174, 96, 0.3)'
-                  : 'rgba(220, 20, 60, 0.3)',
+                  ? 'rgba(39, 174, 96, 0.35)'
+                  : 'rgba(220, 20, 60, 0.35)',
             }}
           >
             {message}
           </div>
-        </div>
+        </DialogBody>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 sm:gap-2.5">
           <Button
+            type="button"
+            variant="outline"
             onClick={onClose}
-            className="border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40"
+            className="min-w-[7rem] border-amber-500/50 bg-transparent text-amber-800 hover:bg-amber-50 dark:border-amber-500/40 dark:text-amber-300 dark:hover:bg-amber-950/40"
           >
             Cancel
           </Button>
-          <Button variant={confirmVariant} className={confirmClassName} onClick={onConfirm}>
+          <Button
+            type="button"
+            variant={confirmVariant}
+            className={cn(
+              'min-w-[7rem] shadow-md transition-all hover:shadow-lg',
+              confirmVariant === 'default' && confirmClassName && 'border-0 text-white',
+              confirmClassName,
+            )}
+            onClick={onConfirm}
+          >
             {confirmLabel}
           </Button>
         </DialogFooter>

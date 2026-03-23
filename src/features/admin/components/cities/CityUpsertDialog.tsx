@@ -4,12 +4,14 @@ import { FormikTextField } from '@/components/ui/FormikTextField';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogBody,
 } from '@/components/ui/dialog';
 import type { CreateCityDto } from '@/types';
 
@@ -62,11 +64,14 @@ export default function CityUpsertDialog({
 }: CityUpsertDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-2rem)] max-w-xl flex-col gap-0 p-0 sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="font-extrabold">
+          <DialogTitle className="text-xl font-bold tracking-tight">
             {mode === 'create' ? 'Create city' : 'Edit city'}
           </DialogTitle>
+          <p className="text-sm text-muted-foreground pr-2">
+            Names are stored per locale; the slug is used in URLs.
+          </p>
         </DialogHeader>
         <Formik
           initialValues={initial}
@@ -84,29 +89,59 @@ export default function CityUpsertDialog({
         >
           {({ values, isSubmitting, submitForm, setFieldValue }) => (
             <>
-              <div className="flex flex-col gap-3 py-2">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-                  Names (API translations)
-                </p>
-                <FormikTextField label="Name (RO) *" name="nameRo" placeholder="Chișinău" />
-                <FormikTextField label="Name (RU)" name="nameRu" placeholder="Кишинёв" />
-                <FormikTextField label="Name (EN)" name="nameEn" placeholder="Chișinău" />
-                <FormikTextField label="Slug *" name="slug" placeholder="chisinau" />
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="city-active"
-                    checked={Boolean(values.isActive)}
-                    onCheckedChange={(checked) => setFieldValue('isActive', checked)}
-                  />
-                  <Label htmlFor="city-active">Active</Label>
-                </div>
-              </div>
-              <DialogFooter className="gap-2">
+              <DialogBody className="space-y-6 py-5">
+                <section className="space-y-4">
+                  <div>
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                      Names &amp; slug
+                    </h3>
+                    <p className="mt-1 text-xs text-muted-foreground/90">
+                      API translations (RO required; RU/EN fall back to RO if empty).
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <FormikTextField label="Name (RO) *" name="nameRo" placeholder="Chișinău" />
+                    <FormikTextField label="Name (RU)" name="nameRu" placeholder="Кишинёв" />
+                    <FormikTextField label="Name (EN)" name="nameEn" placeholder="Chișinău" />
+                    <FormikTextField label="Slug *" name="slug" placeholder="chisinau" />
+                  </div>
+                </section>
+
+                <Separator className="bg-border/60" />
+
+                <section className="space-y-3">
+                  <div>
+                    <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                      Visibility
+                    </h3>
+                    <p className="mt-1 text-xs text-muted-foreground/90">
+                      Inactive cities can be hidden from selection lists depending on app rules.
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0 space-y-0.5">
+                        <Label htmlFor="city-active" className="text-sm font-medium">
+                          Active
+                        </Label>
+                        <p className="text-xs text-muted-foreground">Shown in listings when on.</p>
+                      </div>
+                      <Switch
+                        id="city-active"
+                        checked={Boolean(values.isActive)}
+                        onCheckedChange={(checked) => setFieldValue('isActive', checked)}
+                      />
+                    </div>
+                  </div>
+                </section>
+              </DialogBody>
+              <DialogFooter className="gap-2 sm:gap-2.5">
                 <Button
                   type="button"
+                  variant="outline"
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40"
+                  className="min-w-[7rem] border-amber-500/50 bg-transparent text-amber-800 hover:bg-amber-50 dark:border-amber-500/40 dark:text-amber-300 dark:hover:bg-amber-950/40"
                 >
                   Cancel
                 </Button>
@@ -114,7 +149,7 @@ export default function CityUpsertDialog({
                   type="button"
                   onClick={() => submitForm()}
                   disabled={isSubmitting}
-                  className="border-0 bg-amber-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
+                  className="min-w-[7rem] border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
                 >
                   {mode === 'create' ? 'Create' : 'Save'}
                 </Button>

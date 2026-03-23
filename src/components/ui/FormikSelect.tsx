@@ -20,10 +20,22 @@ type Props = Omit<React.ComponentProps<typeof SelectTrigger>, 'name'> & {
   label?: string;
   placeholder?: string;
   fullWidth?: boolean;
+  /** Merged into Radix SelectContent (e.g. z-index above dialogs). */
+  selectContentClassName?: string;
 };
 
 export function FormikSelect(props: Props) {
-  const { name, options, label, placeholder, fullWidth = true, className, id: idProp, disabled } = props;
+  const {
+    name,
+    options,
+    label,
+    placeholder,
+    fullWidth = true,
+    className,
+    id: idProp,
+    disabled,
+    selectContentClassName,
+  } = props;
   const [field, meta, helpers] = useField<string>(name);
   const showError = Boolean(meta.touched && meta.error);
   const id = idProp ?? `field-${name}`;
@@ -54,7 +66,7 @@ export function FormikSelect(props: Props) {
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className={cn('z-[70]', selectContentClassName)}>
           {options.map((opt) => (
             <SelectItem key={opt.value} value={opt.value}>
               {opt.label}

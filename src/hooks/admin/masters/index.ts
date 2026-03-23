@@ -28,6 +28,8 @@ export type AdminMasterRow = {
   } | null;
   category?: { name?: string | null } | null;
   city?: { name?: string | null } | null;
+  slug?: string | null;
+  photos?: Array<{ id?: string; file?: { path?: string | null } | null }> | null;
 } & Record<string, unknown>;
 
 export { useAdminMasters } from './useAdminMasters';

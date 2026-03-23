@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useAdminUsersQuery } from '@/features/admin/adminApi';
+import { useAdminUsersQuery, useAdminUsersStatsQuery } from '@/features/admin/adminApi';
 import { useUsersToggleVerifyMutation, useUsersToggleBanMutation } from '@/features/users/usersApi';
 import { formatDateTimeString } from '@/utils/date';
-import { parseAdminPaginatedResponse } from '@/utils/data';
+import { parseAdminPaginatedResponse, parseAdminUsersStatsSummary } from '@/utils/data';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
 import toast from 'react-hot-toast';
@@ -26,18 +26,26 @@ export function useAdminUsers() {
     });
   }, [limit, role, verified, banned, qText, resetCursors]);
 
+  const filterParams = {
+    ...(role ? { role } : {}),
+    ...(verified === true ? { verified: true as const } : {}),
+    ...(banned === true ? { banned: true as const } : {}),
+  };
+
   const q = useAdminUsersQuery(
     {
       page,
       limit,
       ...(cursor ? { cursor } : {}),
-      ...(role ? { role } : {}),
-      ...(verified !== null ? { verified } : {}),
-      ...(banned !== null ? { banned } : {}),
+      ...filterParams,
       ...(qText ? { q: qText } : {}),
     },
     { refetchOnMountOrArgChange: true },
   );
+
+  const statsQ = useAdminUsersStatsQuery(filterParams, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const [verify] = useUsersToggleVerifyMutation();
   const [ban] = useUsersToggleBanMutation();
@@ -54,16 +62,23 @@ export function useAdminUsers() {
 
   const usersData = useMemo(() => ({ items: allUsers, meta }), [allUsers, meta]);
 
-  const totalUsers = allUsers.length;
-  const activeUsers = allUsers.filter((u) => u.isVerified && !u.isBanned).length;
-  const pendingUsers = allUsers.filter((u) => !u.isVerified && !u.isBanned).length;
-  const blockedUsers = allUsers.filter((u) => u.isBanned).length;
+  const summary = useMemo(
+    () => parseAdminUsersStatsSummary(statsQ.data),
+    [statsQ.data],
+  );
+
+  const statistics = {
+    totalUsers: summary.total,
+    activeUsers: summary.active,
+    pendingUsers: summary.pending,
+    blockedUsers: summary.blocked,
+  };
 
   const handleVerify = async (userId: string, isVerified: boolean) => {
     try {
       await verify({ id: userId }).unwrap();
       toast.success(isVerified ? 'User unverified successfully' : 'User verified successfully');
-      await q.refetch();
+      await Promise.all([q.refetch(), statsQ.refetch()]);
     } catch (err: unknown) {
       toast.error(toErrorMessage(err) ?? 'Action failed');
     }
@@ -73,7 +88,7 @@ export function useAdminUsers() {
     try {
       await ban({ id: userId }).unwrap();
       toast.success(isBanned ? 'User unbanned successfully' : 'User banned successfully');
-      await q.refetch();
+      await Promise.all([q.refetch(), statsQ.refetch()]);
     } catch (err: unknown) {
       toast.error(toErrorMessage(err) ?? 'Action failed');
     }
@@ -101,7 +116,7 @@ export function useAdminUsers() {
     error: q.error,
     refetch: q.refetch,
     usersData, allUsers,
-    statistics: { totalUsers, activeUsers, pendingUsers, blockedUsers },
+    statistics,
     handleVerify, handleBan,
     exportToCSV: doExportToCSV,
   };

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { MoreHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
   type GridColDef,
@@ -34,15 +35,10 @@ type Extracted = {
 };
 
 
-function firstArrayInObject(obj: unknown): unknown[] | undefined {
-  if (!isRecord(obj)) return undefined;
-  for (const k of Object.keys(obj)) {
-    const v = obj[k];
-    if (Array.isArray(v)) return v;
-  }
-  return undefined;
-}
-
+/**
+ * Server-paged data: always use meta.total (and meta page/limit), not only when rows.length > 0.
+ * Otherwise empty pages or filters with 0 rows on a page showed total = 0 and broke Prev/Next.
+ */
 function extractPaged(data: unknown, fallbackPage = 1, fallbackLimit = 20): Extracted {
   if (Array.isArray(data)) {
     const rows = data.filter(isRecord);
@@ -52,16 +48,34 @@ function extractPaged(data: unknown, fallbackPage = 1, fallbackLimit = 20): Extr
     return { rows: [], total: 0, page: fallbackPage, limit: fallbackLimit };
   }
   const p = pickPagination(data);
-  if (p.rows.length)
-    return {
-      rows: p.rows.filter(isRecord),
-      total: p.total,
-      page: p.page ?? fallbackPage,
-      limit: p.limit ?? fallbackLimit,
-    };
-  const rowsAny = firstArrayInObject(data) || [];
-  const rows = rowsAny.filter(isRecord);
-  return { rows, total: rows.length, page: fallbackPage, limit: fallbackLimit };
+  const rows = p.rows.filter(isRecord);
+  return {
+    rows,
+    total: p.total,
+    page: p.page ?? fallbackPage,
+    limit: p.limit ?? fallbackLimit,
+  };
+}
+
+/** 1-based page numbers with ellipsis for large page counts */
+function getVisiblePages(current: number, totalPages: number): (number | 'ellipsis')[] {
+  if (totalPages <= 0) return [];
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  const pages = new Set<number>();
+  pages.add(1);
+  pages.add(totalPages);
+  for (let p = current - 1; p <= current + 1; p++) {
+    if (p >= 1 && p <= totalPages) pages.add(p);
+  }
+  const sorted = Array.from(pages).sort((a, b) => a - b);
+  const out: (number | 'ellipsis')[] = [];
+  for (let i = 0; i < sorted.length; i++) {
+    if (i > 0 && sorted[i] - sorted[i - 1] > 1) out.push('ellipsis');
+    out.push(sorted[i]);
+  }
+  return out;
 }
 
 function inferId(row: Record<string, unknown>, index: number): string | number {
@@ -177,6 +191,11 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const currentPage = Math.min(Math.max(1, page), totalPages);
 
+  const visiblePages = useMemo(
+    () => getVisiblePages(currentPage, totalPages),
+    [currentPage, totalPages],
+  );
+
   const selectionModel = dataGridProps?.rowSelectionModel ?? [];
   const setSelectionModel = dataGridProps?.onRowSelectionModelChange;
   const hasSelection = dataGridProps?.checkboxSelection && setSelectionModel;
@@ -216,7 +235,10 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
   }
 
   return (
-    <div className="w-full max-w-full min-w-0 rounded-xl border border-slate-200 dark:border-white/[0.08] overflow-hidden bg-card shadow-sm" style={{ height }}>
+    <div
+      className="flex w-full max-w-full min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200 bg-card shadow-sm dark:border-white/[0.08]"
+      style={{ height }}
+    >
       <DataGridToolbar
         onRefresh={dataGridProps?.onRefresh}
         onExport={dataGridProps?.onExport}
@@ -226,7 +248,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
         quickFilterPlaceholder={t('common.search')}
       />
 
-      <div className="relative min-w-0 overflow-auto overscroll-x-contain" style={{ height: height - 52 }}>
+      <div className="relative min-h-0 min-w-0 flex-1 overflow-auto overscroll-x-contain">
         {loading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
@@ -329,7 +351,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
         )}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 p-2 border-t border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03] rounded-b-lg">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-slate-200 bg-muted/30 p-2 dark:border-white/[0.03] dark:bg-white/[0.03] rounded-b-lg">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>
             {total === 0 ? 0 : (currentPage - 1) * limit + 1}–{Math.min(currentPage * limit, total)} of {total}
@@ -351,7 +373,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
           </Select>
           <span>{t('dataGrid.perPage')}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center justify-center gap-1 sm:justify-end">
           <button
             type="button"
             className="inline-flex items-center justify-center gap-1 rounded-md border-0 bg-amber-50 text-amber-700 px-3 py-1.5 text-sm font-medium transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:pointer-events-none disabled:opacity-50"
@@ -360,9 +382,31 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
           >
             {t('common.prev')}
           </button>
-          <span className="px-2 text-sm text-muted-foreground">
-            {t('common.page')} {currentPage} {t('common.pageOf', { total: totalPages })}
-          </span>
+          {visiblePages.map((item, idx) =>
+            item === 'ellipsis' ? (
+              <span
+                key={`ellipsis-${idx}`}
+                className="flex h-8 w-8 items-center justify-center text-muted-foreground"
+                aria-hidden
+              >
+                <MoreHorizontal className="size-4" />
+              </span>
+            ) : (
+              <button
+                key={item}
+                type="button"
+                className={cn(
+                  'inline-flex min-w-8 items-center justify-center rounded-md px-2 py-1.5 text-sm font-medium transition-all',
+                  item === currentPage
+                    ? 'bg-amber-600 text-white shadow-sm dark:bg-amber-600'
+                    : 'border-0 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40',
+                )}
+                onClick={() => onPageChange(item, limit)}
+              >
+                {item}
+              </button>
+            ),
+          )}
           <button
             type="button"
             className="inline-flex items-center justify-center gap-1 rounded-md border-0 bg-amber-50 text-amber-700 px-3 py-1.5 text-sm font-medium transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:pointer-events-none disabled:opacity-50"

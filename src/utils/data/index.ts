@@ -67,6 +67,58 @@ export function toNumber(v: unknown, fallback: number = 0): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
+/** GET /admin/users/stats — aggregate counts for current filters. */
+export type AdminUsersStatsSummary = {
+  total: number;
+  active: number;
+  pending: number;
+  blocked: number;
+};
+
+/**
+ * Parses GET /admin/users/stats body: `{ total, stats: { active, pending, blocked } }`.
+ */
+export function parseAdminUsersStatsSummary(raw: unknown): AdminUsersStatsSummary {
+  const d = unwrapEnvelope(raw);
+  if (!isRecord(d)) {
+    return { total: 0, active: 0, pending: 0, blocked: 0 };
+  }
+  const total = toNumber(d.total, 0);
+  const s = isRecord(d.stats) ? d.stats : {};
+  return {
+    total,
+    active: toNumber(s.active, 0),
+    pending: toNumber(s.pending, 0),
+    blocked: toNumber(s.blocked, 0),
+  };
+}
+
+/** GET /admin/masters/stats */
+export type AdminMastersStatsSummary = {
+  total: number;
+  verified: number;
+  featured: number;
+  avgRating: number;
+};
+
+/**
+ * Parses GET /admin/masters/stats body: `{ total, stats: { verified, featured, avgRating } }`.
+ */
+export function parseAdminMastersStatsSummary(raw: unknown): AdminMastersStatsSummary {
+  const d = unwrapEnvelope(raw);
+  if (!isRecord(d)) {
+    return { total: 0, verified: 0, featured: 0, avgRating: 0 };
+  }
+  const total = toNumber(d.total, 0);
+  const s = isRecord(d.stats) ? d.stats : {};
+  return {
+    total,
+    verified: toNumber(s.verified, 0),
+    featured: toNumber(s.featured, 0),
+    avgRating: toNumber(s.avgRating, 0),
+  };
+}
+
 /**
  * Admin API response meta (pagination + nextCursor).
  */

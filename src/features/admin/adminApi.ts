@@ -15,6 +15,14 @@ export const adminApi = api.injectEndpoints({
       query: (params) => ({ url: '/admin/users', method: 'GET', params: params ?? {} }),
       providesTags: ['Users'],
     }),
+    /** Aggregates for filters only — no page/limit; stable when switching table pages */
+    adminUsersStats: build.query<
+      unknown,
+      { role?: string; verified?: boolean; banned?: boolean } | void
+    >({
+      query: (params) => ({ url: '/admin/users/stats', method: 'GET', params: params ?? {} }),
+      providesTags: ['Users'],
+    }),
     adminUpdateUser: build.mutation<unknown, { id: string }>({
       query: ({ id }) => ({ url: `/admin/users/${id}`, method: 'PUT' }),
       invalidatesTags: ['Users'],
@@ -24,6 +32,13 @@ export const adminApi = api.injectEndpoints({
       (PagedQuery & { verified?: boolean; featured?: boolean; tariff?: string; q?: string }) | void
     >({
       query: (params) => ({ url: '/admin/masters', method: 'GET', params: params ?? {} }),
+      providesTags: ['Masters'],
+    }),
+    adminMastersStats: build.query<
+      unknown,
+      { verified?: boolean; featured?: boolean; tariff?: string } | void
+    >({
+      query: (params) => ({ url: '/admin/masters/stats', method: 'GET', params: params ?? {} }),
       providesTags: ['Masters'],
     }),
     adminUpdateMaster: build.mutation<unknown, { id: string }>({
@@ -238,8 +253,10 @@ export const adminApi = api.injectEndpoints({
 export const {
   useAdminDashboardQuery,
   useAdminUsersQuery,
+  useAdminUsersStatsQuery,
   useAdminUpdateUserMutation,
   useAdminMastersQuery,
+  useAdminMastersStatsQuery,
   useAdminUpdateMasterMutation,
   useAdminLeadsQuery,
   useAdminReviewsQuery,
