@@ -9,6 +9,8 @@ import { AppProviders } from '@/app/AppProviders';
 import '@/styles/index.css';
 import { bootstrapAuth } from '@/features/auth/bootstrap';
 import { reportWebVitals } from '@/utils/reportWebVitals';
+import { initTracking } from '@/utils/tracking';
+import { hasAnalyticsConsent } from '@/features/cookie-consent/storage';
 import { registerSW } from 'virtual:pwa-register';
 import { LazyToaster } from '@/components/common/LazyToaster';
 
@@ -41,6 +43,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 // Run auth bootstrap in background (refresh token if present)
 void bootstrapAuth(store);
+
+// Capture UTM params and track visits (respects cookie consent)
+initTracking(hasAnalyticsConsent());
 
 // Collect Core Web Vitals (CLS, INP, LCP, FCP, TTFB)
 reportWebVitals();

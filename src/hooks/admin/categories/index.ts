@@ -4,6 +4,9 @@ export type AdminCategoryRow = {
   slug?: string;
   description?: string;
   icon?: string;
+  iconKey?: string;
+  iconUrl?: string;
+  translations?: Record<string, { name?: string }> | null;
   isActive?: boolean;
   sortOrder?: number;
   [k: string]: unknown;

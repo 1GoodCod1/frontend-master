@@ -2,17 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import type { CategoryDto } from '@/types';
-
-const CATEGORY_EMOJI: Record<string, string> = {
-  elektrika: '⚡',
-  santehnika: '🔧',
-  stroitelstvo: '🏗️',
-  'otdelochnye-raboty': '🎨',
-  mebel: '🪚',
-  'uborka-klining': '✨',
-  'remont-tehniki': '🔧',
-  'remont-telefonov-pk': '📱',
-};
+import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
 
 interface HeroCategoryPillsProps {
   categories: CategoryDto[];
@@ -27,7 +17,7 @@ export function HeroCategoryPills({
   getCitySlugForUrl,
   isDark,
 }: HeroCategoryPillsProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <div
@@ -41,8 +31,8 @@ export function HeroCategoryPills({
       </p>
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => {
-          const emoji = CATEGORY_EMOJI[cat.slug] ?? '📋';
-          const translatedName = t(`categories.${cat.slug}`, { defaultValue: '' }) || cat.name;
+          const emoji = cat.icon?.trim() || '📋';
+          const translatedName = getTranslatedCategoryName(t, cat, i18n.language);
           return (
             <RouterLink
               key={cat.id}

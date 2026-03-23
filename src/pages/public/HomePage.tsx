@@ -3,10 +3,12 @@ import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { useMastersPopularQuery } from '@/features/masters/mastersApi';
+import { publicCachePolicy } from '@/config/publicCache';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { useIsDark } from '@/hooks/useIsDark';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { HeroSection } from '@/components/home/HeroSection';
+import { POPULAR_MASTERS_HOME_LIMIT } from '@/constants/home';
 import { Flame } from 'lucide-react';
 
 const MastersGridSection = lazy(() =>
@@ -35,9 +37,15 @@ export default function HomePage() {
     const id = setTimeout(prefetchMasters, 2000);
     return () => clearTimeout(id);
   }, []);
-  const popular = useMastersPopularQuery({ limit: 5 });
+  const popular = useMastersPopularQuery(
+    { limit: POPULAR_MASTERS_HOME_LIMIT },
+    {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: publicCachePolicy.mastersPopularRefetchOnFocus,
+    },
+  );
 
-  const popularList = (popular.data ?? []).slice(0, 5);
+  const popularList = (popular.data ?? []).slice(0, POPULAR_MASTERS_HOME_LIMIT);
 
   return (
     <>

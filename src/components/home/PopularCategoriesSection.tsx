@@ -12,6 +12,8 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import type { CategoryDto } from '@/types';
 import { CATEGORY_META, CATEGORY_DEFAULT_META } from '@/constants';
+import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
+import { getLucideIconByName } from '@/utils/lucideIconByName';
 
 function CategoryCardSkeleton() {
     return (
@@ -83,12 +85,11 @@ export const PopularCategoriesSection = () => {
             <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-4">
                 {visibleCategories.map((cat: CategoryDto, index: number) => {
                     const meta = CATEGORY_META[cat.slug] ?? CATEGORY_DEFAULT_META;
-                    const Icon = meta.icon;
+                    const fromApi = getLucideIconByName(cat.iconKey);
+                    const Icon = fromApi ?? meta.icon;
                     const mastersCount = cat._count?.masters ?? 0;
 
-                    // Единый справочник переводов категорий (citiesCategories)
-                    const translatedName =
-                        t(`categories.${cat.slug}`, { defaultValue: '' }) || cat.name;
+                    const translatedName = getTranslatedCategoryName(t, cat, i18n.language);
 
                     const mastersLabel =
                         i18n.language === 'ru'
@@ -121,7 +122,22 @@ export const PopularCategoriesSection = () => {
                                         meta.gradient,
                                     )}
                                 >
-                                    <Icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
+                                    {cat.iconUrl ? (
+                                        <img
+                                            src={cat.iconUrl}
+                                            alt=""
+                                            className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 object-contain"
+                                        />
+                                    ) : fromApi || !cat.icon ? (
+                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
+                                    ) : (
+                                        <span
+                                            className="text-lg sm:text-xl lg:text-2xl leading-none"
+                                            aria-hidden
+                                        >
+                                            {cat.icon}
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="text-center min-w-0 w-full flex flex-col items-center gap-0.5">

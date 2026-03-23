@@ -1,20 +1,32 @@
 import { createTransform, type PersistedState } from 'redux-persist';
 
 export { API_CACHE_PERSIST_VERSION } from '@/constants';
-import {
-  PERSISTED_ENDPOINT_PREFIXES,
-  API_CACHE_PERSIST_VERSION,
-  PURGE_QUERY_PREFIXES,
-} from '@/constants';
+import { PERSISTED_ENDPOINT_PREFIXES, API_CACHE_PERSIST_VERSION } from '@/constants';
 
 function isPersistedQueryKey(key: string): boolean {
   return PERSISTED_ENDPOINT_PREFIXES.some((prefix) => key.startsWith(prefix));
+}
+
+/** Only categories/cities query cache — nothing else should live in localStorage. */
+function filterQueriesForPersist(
+  queries: Record<string, unknown>
+): Record<string, unknown> {
+  const filtered: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(queries)) {
+    if (isPersistedQueryKey(key)) {
+      filtered[key] = value;
+    }
+  }
+  return filtered;
 }
 
 /**
  * Transform that persists only Categories and Cities RTK Query cache.
  * - inbound: filter when saving to localStorage
  * - outbound: pass through when rehydrating
+ *
+ * Important: we also strip mutations / subscriptions / provided — otherwise they
+ * were still serialized via `...s` (XSS-readable cache of unrelated API calls).
  */
 export const persistApiCacheTransform = createTransform(
   (state: unknown) => {
@@ -23,26 +35,18 @@ export const persistApiCacheTransform = createTransform(
     const queries = s.queries;
     if (!queries || typeof queries !== 'object') return state;
 
-    const filtered: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(queries)) {
-      if (isPersistedQueryKey(key)) {
-        filtered[key] = value;
-      }
-    }
-    return { ...s, queries: filtered };
+    const filtered = filterQueriesForPersist(queries as Record<string, unknown>);
+    return {
+      ...s,
+      queries: filtered,
+      mutations: {},
+      subscriptions: {},
+      provided: {},
+    };
   },
   null
 );
 
-
-function purgeQueries(queries: Record<string, unknown>): Record<string, unknown> {
-  const filtered: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(queries)) {
-    const shouldPurge = PURGE_QUERY_PREFIXES.some((p) => key.startsWith(p));
-    if (!shouldPurge) filtered[key] = value;
-  }
-  return filtered;
-}
 
 export function migrateApiCache(
   state: PersistedState,
@@ -54,7 +58,13 @@ export function migrateApiCache(
   if (storedVersion >= API_CACHE_PERSIST_VERSION) return Promise.resolve(state);
   const queries = s.queries;
   if (queries && typeof queries === 'object') {
-    const migrated = { ...s, queries: purgeQueries(queries as Record<string, unknown>) };
+    const migrated = {
+      ...s,
+      queries: filterQueriesForPersist(queries as Record<string, unknown>),
+      mutations: {},
+      subscriptions: {},
+      provided: {},
+    };
     return Promise.resolve(migrated as unknown as PersistedState);
   }
   return Promise.resolve(state);

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid } from 'recharts';
+import { ResponsiveContainer, ComposedChart, Area, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid } from 'recharts';
 import {
   Eye, CheckCircle, Rocket, Lock, History,
   Activity, BarChart3, Users, Clock, MousePointerClick
@@ -26,17 +26,20 @@ import { Progress } from '@/components/ui/progress';
 import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
 import { MasterPendingBookingsCard } from '@/features/bookings/components/MasterPendingBookingsCard';
 
-function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ color?: string; name?: string; value?: number }>; label?: string }) {
+function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ color?: string; name?: string; value?: number; dataKey?: string }>; label?: string }) {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-lg border bg-background p-3 shadow-xl">
-        <p className="mb-2 text-sm font-medium text-muted-foreground">{label}</p>
-        <div className="space-y-1">
+      <div className="rounded-xl border border-border/50 bg-background/95 backdrop-blur-sm px-4 py-3 shadow-2xl">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground/70">{label}</p>
+        <div className="space-y-1.5">
           {payload!.map((entry, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div className="size-3 rounded-full" style={{ backgroundColor: entry.color }} />
-              <span className="text-sm font-medium">{entry.name}:</span>
-              <span className="text-sm font-bold">{entry.value}</span>
+            <div key={index} className="flex items-center gap-2.5">
+              <div
+                className={entry.dataKey === 'leads' ? 'w-2.5 h-3 rounded-sm' : 'size-2.5 rounded-full'}
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-sm text-muted-foreground">{entry.name}:</span>
+              <span className="text-sm font-bold text-foreground">{entry.value}</span>
             </div>
           ))}
         </div>
@@ -230,7 +233,7 @@ export default function DashboardPage() {
                   <span className="text-muted-foreground">{t('dashboard.views', 'Просмотры')}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500 shrink-0"></div>
+                  <div className="w-2.5 h-3 sm:w-3 sm:h-3.5 rounded-sm bg-emerald-500 shrink-0"></div>
                   <span className="text-muted-foreground">{t('dashboard.leads', 'Заявки')}</span>
                 </div>
               </div>
@@ -244,26 +247,22 @@ export default function DashboardPage() {
                     minWidth={0}
                     minHeight={200}
                   >
-                    <AreaChart
+                    <ComposedChart
                       data={chartData}
                       margin={{
                         top: 10,
-                        right: isChartWide ? 20 : 10,
-                        left: isChartWide ? 0 : -10,
+                        right: 5,
+                        left: 5,
                         bottom: isChartWide ? 0 : 50,
                       }}
                     >
                       <defs>
                         <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="colorLeads" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.25} />
+                          <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.02} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.3} />
                       <XAxis
                         dataKey={isChartWide ? 'date' : 'dateCompact'}
                         axisLine={false}
@@ -275,20 +274,31 @@ export default function DashboardPage() {
                         interval={isChartWide ? 'preserveStartEnd' : 0}
                         angle={isChartWide ? 0 : -45}
                         textAnchor={isChartWide ? 'middle' : 'end'}
-                        tick={{ fontSize: isChartWide ? 12 : 10, fill: 'hsl(var(--muted-foreground))' }}
+                        tick={{ fontSize: isChartWide ? 11 : 9, fill: 'hsl(var(--muted-foreground))' }}
                         dy={isChartWide ? 10 : 0}
                       />
                       <YAxis
+                        yAxisId="views"
+                        orientation="left"
                         allowDecimals={false}
                         axisLine={false}
                         tickLine={false}
-                        tick={{ fontSize: isChartWide ? 12 : 10, fill: 'hsl(var(--muted-foreground))' }}
-                        width={isChartWide ? 35 : 28}
+                        tick={false}
+                        width={5}
                       />
-                      <RechartsTooltip content={<ChartTooltip />} />
-                      <Area type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={isChartWide ? 3 : 2} fillOpacity={1} fill="url(#colorViews)" />
-                      <Area type="monotone" dataKey="leads" name={t('dashboard.leads', 'Заявки')} stroke="#10b981" strokeWidth={isChartWide ? 3 : 2} fillOpacity={1} fill="url(#colorLeads)" />
-                    </AreaChart>
+                      <YAxis
+                        yAxisId="leads"
+                        orientation="right"
+                        allowDecimals={false}
+                        axisLine={false}
+                        tickLine={false}
+                        tick={false}
+                        width={5}
+                      />
+                      <RechartsTooltip content={<ChartTooltip />} cursor={{ fill: 'hsl(var(--muted))', opacity: 0.3 }} />
+                      <Bar yAxisId="leads" dataKey="leads" name={t('dashboard.leads', 'Заявки')} fill="#10b981" fillOpacity={0.55} radius={[6, 6, 0, 0]} barSize={isChartWide ? 24 : 16} />
+                      <Area yAxisId="views" type="monotone" dataKey="views" name={t('dashboard.views', 'Просмотры')} stroke="#3b82f6" strokeWidth={isChartWide ? 2.5 : 2} fillOpacity={1} fill="url(#colorViews)" dot={{ r: 3, fill: '#3b82f6', strokeWidth: 0 }} activeDot={{ r: 5, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }} />
+                    </ComposedChart>
                   </ResponsiveContainer>
                 ) : (
                   <div className="flex flex-col h-full items-center justify-center text-sm text-muted-foreground gap-3">

@@ -8,7 +8,9 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAdminCategories } from '@/hooks/admin/categories';
-import CategoryUpsertDialog from '@/features/admin/components/categories/CategoryUpsertDialog';
+import CategoryUpsertDialog, {
+  type CategoryFormValues,
+} from '@/features/admin/components/categories/CategoryUpsertDialog';
 import BulkActions from '@/features/admin/components/common/BulkActions';
 import ActiveCell from '@/features/admin/components/common/ActiveCell';
 import ActionsCell from '@/features/admin/components/common/ActionsCell';
@@ -19,10 +21,43 @@ type Row = {
   slug?: string;
   description?: string;
   icon?: string;
+  iconKey?: string;
+  iconUrl?: string;
+  translations?: Record<string, { name?: string }> | null;
   isActive?: boolean;
   sortOrder?: number;
   [k: string]: unknown;
 };
+
+const EMPTY_CATEGORY_FORM: CategoryFormValues = {
+  nameRo: '',
+  nameRu: '',
+  nameEn: '',
+  slug: '',
+  description: '',
+  icon: '',
+  iconKey: '',
+  iconUrl: '',
+  sortOrder: 0,
+  isActive: true,
+};
+
+function rowToCategoryForm(row: Row | null): CategoryFormValues {
+  if (!row) return EMPTY_CATEGORY_FORM;
+  const tr = row.translations ?? undefined;
+  return {
+    nameRo: tr?.ro?.name ?? row.name ?? '',
+    nameRu: tr?.ru?.name ?? '',
+    nameEn: tr?.en?.name ?? '',
+    slug: row.slug ?? '',
+    description: row.description ?? '',
+    icon: row.icon ?? '',
+    iconKey: row.iconKey ?? '',
+    iconUrl: row.iconUrl ?? '',
+    sortOrder: typeof row.sortOrder === 'number' ? row.sortOrder : 0,
+    isActive: Boolean(row.isActive),
+  };
+}
 
 export default function CategoriesAdminPage() {
   const { t } = useTranslation();
@@ -134,7 +169,7 @@ export default function CategoriesAdminPage() {
         <CategoryUpsertDialog
           open={createOpen}
           mode="create"
-          initial={{ name: '', slug: '', description: '', icon: '', isActive: true, sortOrder: 0 }}
+          initial={EMPTY_CATEGORY_FORM}
           onClose={() => setCreateOpen(false)}
           onSubmit={handleCreate}
         />
@@ -142,14 +177,7 @@ export default function CategoriesAdminPage() {
         <CategoryUpsertDialog
           open={Boolean(editRow)}
           mode="edit"
-          initial={{
-            name: editRow?.name ?? '',
-            slug: editRow?.slug ?? '',
-            description: editRow?.description ?? '',
-            icon: editRow?.icon ?? '',
-            isActive: Boolean(editRow?.isActive),
-            sortOrder: editRow?.sortOrder ?? 0,
-          }}
+          initial={rowToCategoryForm(editRow as Row)}
           onClose={() => setEditRow(null)}
           onSubmit={handleUpdate}
         />

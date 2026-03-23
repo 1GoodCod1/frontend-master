@@ -8,13 +8,4 @@ export const PERSISTED_ENDPOINT_PREFIXES = [
 ] as const;
 
 /** Версия схемы кэша API для миграций */
-export const API_CACHE_PERSIST_VERSION = 3;
-
-/** Префиксы запросов для очистки при миграции */
-export const PURGE_QUERY_PREFIXES = [
-  'categoriesList',
-  'categoriesWithCounts',
-  'categoriesById',
-  'mastersPopular',
-  'mastersNew',
-];
+export const API_CACHE_PERSIST_VERSION = 8;

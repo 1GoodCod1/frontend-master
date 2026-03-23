@@ -217,9 +217,9 @@ export const MasterCard = React.memo(function MasterCard({
         </div>
       )}
 
-      {/* Service tags + City */}
-      {(serviceTags.length > 0 || city) && (
-        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-2.5 sm:pb-3">
+      {/* Service tags */}
+      {serviceTags.length > 0 && (
+        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-1 min-[480px]:pb-1.5 sm:pb-2">
           <div className="flex items-center gap-0.5 min-[480px]:gap-1 sm:gap-1.5 flex-wrap">
             {serviceTags.map((tag, idx) => (
               <span
@@ -229,13 +229,17 @@ export const MasterCard = React.memo(function MasterCard({
                 {tag}
               </span>
             ))}
-            {city && (
-              <span className="flex items-center gap-0.5 text-[8px] min-[480px]:text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground/70 ml-auto">
-                <MapPin size={10} className="shrink-0" />
-                <span className="truncate">{city}</span>
-              </span>
-            )}
           </div>
+        </div>
+      )}
+
+      {/* City */}
+      {city && (
+        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-2.5 sm:pb-3">
+          <span className="flex items-center gap-0.5 text-[8px] min-[480px]:text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground/70">
+            <MapPin size={9} className="shrink-0 min-[480px]:[width:10px] min-[480px]:[height:10px]" />
+            <span className="truncate">{city}</span>
+          </span>
         </div>
       )}
 

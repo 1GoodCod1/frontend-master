@@ -28,6 +28,8 @@ import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { ShieldCheck, MapPin, Briefcase, Clock, Calendar, ChevronRight } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { trackRecentView } from '@/utils/tracking';
+import { hasRecentViewsConsent } from '@/features/cookie-consent/storage';
 
 type TabId = 'about' | 'services' | 'gallery' | 'reviews';
 
@@ -110,6 +112,10 @@ export default function MasterDetailsPage() {
     rawActiveLead !== null &&
     'id' in (rawActiveLead as Record<string, unknown>),
   );
+
+  useEffect(() => {
+    if (masterId && hasRecentViewsConsent()) trackRecentView(masterId);
+  }, [masterId]);
 
   useEffect(() => {
     if (searchParams.get('review') !== '1' || !masterId) return;

@@ -1,4 +1,5 @@
 import { api } from '@/services/api';
+import { publicCachePolicy } from '@/config/publicCache';
 import type {
   UpdateMasterDto,
   UpdateNotificationSettingsDto,
@@ -18,12 +19,53 @@ import type {
   AvailabilityStatusResponse,
   UpdateAvailabilityStatusResponse,
   UpdateScheduleSettingsResponse,
+  ScheduleSettingsResponse,
+  SuggestResponse,
 } from '@/types';
 import { isRecord } from '@/utils/guards';
 import { unwrapObject, toNumber } from '@/utils/data';
 
 function get(obj: Record<string, unknown>, key: string): unknown {
   return obj[key];
+}
+
+/**
+ * API may nest payloads as { data: { data: T } } (gateway + TransformInterceptor).
+ * Walk until we find an object that carries schedule fields.
+ */
+function unwrapSchedulePayload(raw: unknown): Record<string, unknown> | null {
+  let cur: unknown = raw;
+  for (let depth = 0; depth < 8; depth++) {
+    if (cur == null || typeof cur !== 'object') return null;
+    const r = cur as Record<string, unknown>;
+    if ('workStartHour' in r) {
+      return r;
+    }
+    const inner = r.data;
+    if (inner != null && typeof inner === 'object') {
+      cur = inner;
+      continue;
+    }
+    break;
+  }
+  return null;
+}
+
+function toScheduleSettings(raw: unknown): ScheduleSettingsResponse {
+  const o = unwrapSchedulePayload(raw);
+  if (!o) {
+    const fallback = unwrapObject<Record<string, unknown>>(raw);
+    return {
+      workStartHour: toNumber(get(fallback, 'workStartHour'), 9),
+      workEndHour: toNumber(get(fallback, 'workEndHour'), 18),
+      slotDurationMinutes: toNumber(get(fallback, 'slotDurationMinutes'), 60),
+    };
+  }
+  return {
+    workStartHour: toNumber(get(o, 'workStartHour'), 9),
+    workEndHour: toNumber(get(o, 'workEndHour'), 18),
+    slotDurationMinutes: toNumber(get(o, 'slotDurationMinutes'), 60),
+  };
 }
 
 export type MastersQuery = {
@@ -70,6 +112,10 @@ export const mastersApi = api.injectEndpoints({
     }),
     mastersFilters: build.query<MastersFiltersResponse, void>({
       query: () => ({ url: '/masters/filters', method: 'GET' }),
+      /** Инвалидируется при правках категорий/городов в админке (см. categoriesApi / citiesApi) */
+      providesTags: ['MastersFilters'],
+      /** Списки категорий/городов: в dev чаще сбрасываем, в prod дольше держим в RTK */
+      keepUnusedDataFor: publicCachePolicy.mastersFiltersKeepUnusedDataFor,
       transformResponse: (raw: unknown): MastersFiltersResponse => {
         const unwrapped = unwrapObject<unknown>(raw);
         const root = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
@@ -119,6 +165,7 @@ export const mastersApi = api.injectEndpoints({
     }),
     mastersPopular: build.query<PublicMaster[], { limit?: number } | void>({
       query: (params) => ({ url: '/masters/popular', method: 'GET', params: params ?? {} }),
+      keepUnusedDataFor: publicCachePolicy.mastersPopularKeepUnusedDataFor,
       transformResponse: (raw: unknown): PublicMaster[] => {
         const unwrapped = unwrapObject<unknown>(raw);
         if (Array.isArray(unwrapped)) return unwrapped as PublicMaster[];
@@ -237,9 +284,10 @@ export const mastersApi = api.injectEndpoints({
       invalidatesTags: ['Master'],
     }),
 
-    mastersGetScheduleSettings: build.query<{ workStartHour: number; workEndHour: number; slotDurationMinutes: number }, void>({
+    mastersGetScheduleSettings: build.query<ScheduleSettingsResponse, void>({
       query: () => ({ url: '/masters/schedule-settings/me', method: 'GET' }),
-      providesTags: ['Master'],
+      transformResponse: (raw: unknown): ScheduleSettingsResponse => toScheduleSettings(raw),
+      providesTags: ['ScheduleSettings'],
     }),
 
     mastersUpdateScheduleSettings: build.mutation<
@@ -247,7 +295,11 @@ export const mastersApi = api.injectEndpoints({
       { workStartHour?: number; workEndHour?: number; slotDurationMinutes?: number }
     >({
       query: (body) => ({ url: '/masters/schedule-settings/me', method: 'PATCH', data: body }),
-      invalidatesTags: ['Master', 'Masters'],
+      transformResponse: (raw: unknown): UpdateScheduleSettingsResponse => ({
+        success: true,
+        ...toScheduleSettings(raw),
+      }),
+      invalidatesTags: ['ScheduleSettings', 'Master'],
     }),
 
     mastersGetQuickReplies: build.query<QuickRepliesResponse, void>({
@@ -281,6 +333,20 @@ export const mastersApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Master', 'Me'],
     }),
+
+    mastersSuggest: build.query<SuggestResponse, { q: string; limit?: number; cityId?: string }>({
+      query: (params) => ({ url: '/masters/suggest', method: 'GET', params }),
+      transformResponse: (raw: unknown): SuggestResponse => {
+        const unwrapped = unwrapObject<unknown>(raw);
+        const root = isRecord(unwrapped) ? (unwrapped as Record<string, unknown>) : {};
+        return {
+          categories: Array.isArray(root.categories) ? (root.categories as SuggestResponse['categories']) : [],
+          masters: Array.isArray(root.masters) ? (root.masters as SuggestResponse['masters']) : [],
+          services: Array.isArray(root.services) ? (root.services as SuggestResponse['services']) : [],
+        };
+      },
+      keepUnusedDataFor: 30,
+    }),
   }),
 });
 
@@ -310,5 +376,6 @@ export const {
   useMastersGetAutoresponderSettingsQuery,
   useMastersUpdateAutoresponderSettingsMutation,
   useMastersClaimFreePlanMutation,
+  useMastersSuggestQuery,
   useSearchSimpleQuery,
 } = mastersApi;

@@ -19,6 +19,12 @@ export const cookieConsent = {
       preferenceCity: 'City by location',
       preferenceCityDesc:
         'Detect your city by IP to suggest nearby masters (requires your consent).',
+      preferenceRecentViews: 'Recently viewed',
+      preferenceRecentViewsDesc:
+        'Remember which masters you viewed for quick access later.',
+      preferenceAnalytics: 'Analytics & traffic sources',
+      preferenceAnalyticsDesc:
+        'Track where you came from and visit statistics to improve the service.',
       savePreferences: 'Save',
       rejectAll: 'Reject all optional',
     },
@@ -42,6 +48,12 @@ export const cookieConsent = {
       preferenceCity: 'Город по местоположению',
       preferenceCityDesc:
         'Определять город по IP для подбора мастеров рядом с вами (требуется согласие).',
+      preferenceRecentViews: 'Недавно просмотренные',
+      preferenceRecentViewsDesc:
+        'Запоминать просмотренных мастеров для быстрого доступа.',
+      preferenceAnalytics: 'Аналитика и источники трафика',
+      preferenceAnalyticsDesc:
+        'Отслеживать откуда вы пришли и статистику посещений для улучшения сервиса.',
       savePreferences: 'Сохранить',
       rejectAll: 'Отклонить все опциональные',
     },
@@ -66,6 +78,12 @@ export const cookieConsent = {
       preferenceCity: 'Oraș după locație',
       preferenceCityDesc:
         'Detectează orașul după IP pentru a sugera meșteri din apropiere (necesită consimțământul tău).',
+      preferenceRecentViews: 'Vizualizate recent',
+      preferenceRecentViewsDesc:
+        'Memorează meșterii vizualizați pentru acces rapid ulterior.',
+      preferenceAnalytics: 'Analiză și surse de trafic',
+      preferenceAnalyticsDesc:
+        'Urmărește de unde ai venit și statistici de vizitare pentru a îmbunătăți serviciul.',
       savePreferences: 'Salvează',
       rejectAll: 'Respinge toate opționale',
     },

@@ -8,6 +8,7 @@ import {
 } from '@/features/cookie-consent/storage';
 import { CookiePreferencesModal } from '@/features/cookie-consent/CookiePreferencesModal';
 import { prefsCookies } from '@/utils/prefsCookies';
+import { initTracking } from '@/utils/tracking';
 import { useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,7 @@ export function CookieConsentBanner() {
       setCookieConsent('all');
       setConsentGiven(true);
       window.dispatchEvent(new CustomEvent('mh:cityConsentChanged'));
+      initTracking(true);
       const lang = i18n.language || 'ro';
       if (['en', 'ru', 'ro'].includes(lang)) prefsCookies.lang.set(lang);
       prefsCookies.theme.set(colorMode);

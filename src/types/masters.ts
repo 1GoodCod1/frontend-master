@@ -3,6 +3,7 @@ import type { MasterServiceItem } from './index';
 export type WithSlugAndName = {
   slug?: string | null;
   name?: string | null;
+  translations?: Record<string, { name?: string }> | null;
 } | null;
 
 export type PublicFileRef = {
@@ -111,6 +112,37 @@ export type MastersFiltersResponse = {
   priceRange?: { min: number; max: number };
   availableNowCount?: number;
   hasPromotionCount?: number;
+};
+
+export type SuggestCategoryItem = {
+  id: string;
+  slug: string;
+  name: string;
+  icon: string | null;
+  count: number;
+};
+
+export type SuggestMasterItem = {
+  id: string;
+  slug: string;
+  name: string;
+  categoryName: string | null;
+  cityName: string | null;
+  avatarPath: string | null;
+  rating: number;
+};
+
+export type SuggestServiceItem = {
+  title: string;
+  categorySlug: string | null;
+  categoryName: string | null;
+  masterCount: number;
+};
+
+export type SuggestResponse = {
+  categories: SuggestCategoryItem[];
+  masters: SuggestMasterItem[];
+  services: SuggestServiceItem[];
 };
 
 // ====================

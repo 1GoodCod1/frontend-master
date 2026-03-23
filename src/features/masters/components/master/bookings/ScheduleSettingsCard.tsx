@@ -25,7 +25,7 @@ function formatHour(hour: number): string {
 
 export function ScheduleSettingsCard() {
     const { t } = useTranslation();
-    const { data, isLoading } = useMastersGetScheduleSettingsQuery();
+    const { data, isLoading, refetch } = useMastersGetScheduleSettingsQuery();
     const [updateSettings, { isLoading: isSaving }] = useMastersUpdateScheduleSettingsMutation();
 
     // Local overrides — null means "use server value"
@@ -50,15 +50,19 @@ export function ScheduleSettingsCard() {
                 workEndHour: workEnd,
                 slotDurationMinutes: slotDuration,
             }).unwrap();
+            const { error } = await refetch();
+            if (error) {
+                toast.error(t('bookings.schedule.saveFailed'));
+                return;
+            }
             toast.success(t('bookings.schedule.saved'));
-            // Clear local overrides — server data is now the source of truth
             setLocalStart(null);
             setLocalEnd(null);
             setLocalSlot(null);
         } catch {
             toast.error(t('bookings.schedule.saveFailed'));
         }
-    }, [workStart, workEnd, slotDuration, updateSettings, t]);
+    }, [workStart, workEnd, slotDuration, updateSettings, refetch, t]);
 
     if (isLoading) {
         return (

@@ -13,22 +13,62 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import type { CreateCategoryDto } from '@/types';
+import { CATEGORY_LUCIDE_ICON_OPTIONS } from '@/constants/categoryAdminIcons';
+import { cn } from '@/lib/utils';
 
 const Schema = Yup.object({
-  name: Yup.string().trim().required('Required'),
+  nameRo: Yup.string().trim().required('Required'),
+  nameRu: Yup.string().trim().optional(),
+  nameEn: Yup.string().trim().optional(),
   slug: Yup.string().trim().required('Required'),
   description: Yup.string().optional(),
   icon: Yup.string().optional(),
+  iconKey: Yup.string().optional(),
+  iconUrl: Yup.string().optional(),
   sortOrder: Yup.number().nullable().transform((v, o) => (o === '' ? null : v)).optional(),
   isActive: Yup.boolean().optional(),
 });
 
+export type CategoryFormValues = {
+  nameRo: string;
+  nameRu: string;
+  nameEn: string;
+  slug: string;
+  description: string;
+  icon: string;
+  iconKey: string;
+  iconUrl: string;
+  sortOrder: number;
+  isActive: boolean;
+};
+
 interface CategoryUpsertDialogProps {
   open: boolean;
   mode: 'create' | 'edit';
-  initial: CreateCategoryDto & { sortOrder?: number | null };
+  initial: CategoryFormValues;
   onClose: () => void;
   onSubmit: (values: CreateCategoryDto) => Promise<void>;
+}
+
+function toCreateDto(values: CategoryFormValues): CreateCategoryDto {
+  const ro = values.nameRo.trim();
+  const ru = values.nameRu.trim() || ro;
+  const en = values.nameEn.trim() || ro;
+  return {
+    name: ro,
+    slug: values.slug.trim(),
+    description: values.description.trim() || undefined,
+    icon: values.icon.trim() || undefined,
+    iconKey: values.iconKey.trim() || undefined,
+    iconUrl: values.iconUrl.trim() || undefined,
+    translations: {
+      ro: { name: ro },
+      ru: { name: ru },
+      en: { name: en },
+    },
+    sortOrder: typeof values.sortOrder === 'number' ? values.sortOrder : 0,
+    isActive: values.isActive,
+  };
 }
 
 export default function CategoryUpsertDialog({
@@ -40,7 +80,7 @@ export default function CategoryUpsertDialog({
 }: CategoryUpsertDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-extrabold">
             {mode === 'create' ? 'Create category' : 'Edit category'}
@@ -52,7 +92,7 @@ export default function CategoryUpsertDialog({
           validationSchema={Schema}
           onSubmit={async (values, helpers) => {
             try {
-              await onSubmit(values);
+              await onSubmit(toCreateDto(values));
               helpers.setSubmitting(false);
               onClose();
             } catch {
@@ -62,17 +102,48 @@ export default function CategoryUpsertDialog({
         >
           {({ values, isSubmitting, submitForm, setFieldValue }) => (
             <>
-              <div className="flex flex-col gap-4 py-2">
-                <FormikTextField label="Name" name="name" placeholder="Plumber" />
-                <FormikTextField label="Slug" name="slug" placeholder="plumber" />
+              <div className="flex flex-col gap-3 py-2">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                  Names (API translations)
+                </p>
+                <FormikTextField label="Name (RO) *" name="nameRo" placeholder="Instalații sanitare" />
+                <FormikTextField label="Name (RU)" name="nameRu" placeholder="Сантехника" />
+                <FormikTextField label="Name (EN)" name="nameEn" placeholder="Plumbing" />
+                <FormikTextField label="Slug *" name="slug" placeholder="santehnika" />
                 <FormikTextarea
                   label="Description"
                   name="description"
-                  placeholder="Optional description..."
-                  rows={3}
+                  placeholder="Optional..."
+                  rows={2}
                   className="w-full"
                 />
-                <FormikTextField label="Icon" name="icon" placeholder="Optional icon url/name" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="iconKey">Lucide icon</Label>
+                    <select
+                      id="iconKey"
+                      className={cn(
+                        'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm',
+                        'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                      )}
+                      value={values.iconKey}
+                      onChange={(e) => setFieldValue('iconKey', e.target.value)}
+                    >
+                      <option value="">— None (emoji / default) —</option>
+                      {CATEGORY_LUCIDE_ICON_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <FormikTextField label="Emoji fallback" name="icon" placeholder="🚿" />
+                </div>
+                <FormikTextField
+                  label="Icon image URL"
+                  name="iconUrl"
+                  placeholder="https://..."
+                />
                 <FormikTextField label="Sort order" name="sortOrder" type="number" />
                 <div className="flex items-center space-x-2">
                   <Switch
@@ -85,6 +156,7 @@ export default function CategoryUpsertDialog({
               </div>
               <DialogFooter className="gap-2 sm:gap-0">
                 <Button
+                  type="button"
                   onClick={onClose}
                   disabled={isSubmitting}
                   className="border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40"
@@ -92,7 +164,8 @@ export default function CategoryUpsertDialog({
                   Cancel
                 </Button>
                 <Button
-                  onClick={submitForm}
+                  type="button"
+                  onClick={() => submitForm()}
                   disabled={isSubmitting}
                   className="border-0 bg-amber-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
                 >

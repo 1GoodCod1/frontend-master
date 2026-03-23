@@ -11,6 +11,8 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { SortBy, SortOrder } from '@/types/sort';
 import type { MastersFilterItem, PublicMaster } from '@/types';
 import { useTranslation } from 'react-i18next';
+import { publicCachePolicy } from '@/config/publicCache';
+import { getPersistedViewMode, setPersistedViewMode, type ViewMode } from '@/utils/tracking';
 
 const VALID_SORT_VALUES: SortBy[] = [
   'all',
@@ -65,7 +67,10 @@ function parseQueryFromUrl(searchParams: URLSearchParams): Partial<MastersPageQu
 export function useMastersPage() {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const filters = useMastersFiltersQuery();
+  const filters = useMastersFiltersQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: publicCachePolicy.mastersFiltersRefetchOnFocus,
+  });
   const { data: activePromotions = [] } = usePromotionsActiveQuery({ limit: 50 });
   const [track] = useRecommendationsTrackMutation();
   const isInitialMount = useRef(true);
@@ -91,7 +96,11 @@ export function useMastersPage() {
   const [showAdvanced, setShowAdvanced] = useState(
     query.availableNow || query.hasPromotion || query.minPrice > 0 || query.maxPrice < 5000 || query.minRating > 0,
   );
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [viewMode, setViewModeState] = useState<ViewMode>(getPersistedViewMode);
+  const setViewMode = (mode: ViewMode) => {
+    setViewModeState(mode);
+    setPersistedViewMode(mode);
+  };
   const [priceMinLocal, setPriceMinLocal] = useState(query.minPrice);
   const [priceMaxLocal, setPriceMaxLocal] = useState(query.maxPrice);
   /** Snapshot of query-driven prices; when they change (reset, URL commit), sync slider locals. */

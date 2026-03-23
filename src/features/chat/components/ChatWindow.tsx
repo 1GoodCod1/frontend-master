@@ -369,7 +369,7 @@ export default function ChatWindow({
             {typingUsers.length > 0 && (
               <div className="flex items-end gap-2 mt-2">
                 <Avatar className="size-8 shrink-0">
-                  <AvatarImage src={otherParty?.avatar} alt="" />
+                  <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} alt="" />
                   <AvatarFallback className="text-[10px] bg-slate-500 text-white">
                     {(otherParty?.name ?? '?').slice(0, 2)}
                   </AvatarFallback>

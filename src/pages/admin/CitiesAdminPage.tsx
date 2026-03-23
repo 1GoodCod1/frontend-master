@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAdminCities } from '@/hooks/admin/cities';
-import CityUpsertDialog from '@/features/admin/components/cities/CityUpsertDialog';
+import CityUpsertDialog, { type CityFormValues } from '@/features/admin/components/cities/CityUpsertDialog';
 import BulkActions from '@/features/admin/components/common/BulkActions';
 import ActiveCell from '@/features/admin/components/common/ActiveCell';
 import ActionsCell from '@/features/admin/components/common/ActionsCell';
@@ -17,9 +17,30 @@ type Row = {
   id: string;
   name?: string;
   slug?: string;
+  translations?: Record<string, { name?: string }> | null;
   isActive?: boolean;
   [k: string]: unknown;
 };
+
+const EMPTY_CITY_FORM: CityFormValues = {
+  nameRo: '',
+  nameRu: '',
+  nameEn: '',
+  slug: '',
+  isActive: true,
+};
+
+function rowToCityForm(row: Row | null): CityFormValues {
+  if (!row) return EMPTY_CITY_FORM;
+  const tr = row.translations ?? undefined;
+  return {
+    nameRo: tr?.ro?.name ?? row.name ?? '',
+    nameRu: tr?.ru?.name ?? '',
+    nameEn: tr?.en?.name ?? '',
+    slug: row.slug ?? '',
+    isActive: Boolean(row.isActive),
+  };
+}
 
 export default function CitiesAdminPage() {
   const { t } = useTranslation();
@@ -130,7 +151,7 @@ export default function CitiesAdminPage() {
         <CityUpsertDialog
           open={createOpen}
           mode="create"
-          initial={{ name: '', slug: '', isActive: true }}
+          initial={EMPTY_CITY_FORM}
           onClose={() => setCreateOpen(false)}
           onSubmit={handleCreate}
         />
@@ -138,11 +159,7 @@ export default function CitiesAdminPage() {
         <CityUpsertDialog
           open={Boolean(editRow)}
           mode="edit"
-          initial={{
-            name: editRow?.name ?? '',
-            slug: editRow?.slug ?? '',
-            isActive: Boolean(editRow?.isActive),
-          }}
+          initial={rowToCityForm(editRow as Row)}
           onClose={() => setEditRow(null)}
           onSubmit={handleUpdate}
         />

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Users, ArrowRight, ChevronRight } from 'lucide-react';
@@ -13,6 +13,7 @@ import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { CategoryDto } from '@/types';
+import type { SearchSuggestionEvent } from '@/features/masters/components/search/SearchInputWithHistory';
 
 import { HeroSearchForm } from './hero/HeroSearchForm';
 import { HeroCategoryPills } from './hero/HeroCategoryPills';
@@ -78,6 +79,32 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
     if (effectiveCityId) params.set('city', getCitySlugForUrl(effectiveCityId));
     navigate(`/masters${params.toString() ? `?${params.toString()}` : ''}`);
   };
+
+  const handleSuggestionSelect = useCallback(
+    (event: SearchSuggestionEvent) => {
+      const params = new URLSearchParams();
+      if (effectiveCityId) params.set('city', getCitySlugForUrl(effectiveCityId));
+
+      if (event.type === 'category' && event.category) {
+        params.set('category', event.category.slug);
+      } else if (event.type === 'master' && event.master) {
+        navigate(`/masters/${event.master.slug}`);
+        return;
+      } else if (event.type === 'service' && event.service) {
+        params.set('q', event.service.title);
+        addSearchHistory(event.service.title);
+        if (event.service.categorySlug) {
+          params.set('category', event.service.categorySlug);
+        }
+      } else {
+        params.set('q', event.value);
+        addSearchHistory(event.value);
+      }
+
+      navigate(`/masters${params.toString() ? `?${params.toString()}` : ''}`);
+    },
+    [effectiveCityId, getCitySlugForUrl, navigate, addSearchHistory],
+  );
 
   const handleCityChange = (v: string) => {
     const id = v === 'all' ? '' : v;
@@ -162,6 +189,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
               getCityLabel={getCityLabel}
               onCityChange={handleCityChange}
               onSubmit={handleSearch}
+              onSuggestionSelect={handleSuggestionSelect}
               isDark={isDark}
             />
 

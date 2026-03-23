@@ -1,9 +1,18 @@
+/** Локализации с API (ro / ru / en) */
+export type CategoryTranslations = Record<
+  string,
+  { name?: string; description?: string }
+>;
+
 export type CategoryDto = {
   id: string;
   name: string;
   slug: string;
   description?: string | null;
   icon?: string | null;
+  iconKey?: string | null;
+  iconUrl?: string | null;
+  translations?: CategoryTranslations | null;
   isActive: boolean;
   sortOrder: number;
   createdAt?: string;

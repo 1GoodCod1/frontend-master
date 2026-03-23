@@ -20,7 +20,7 @@ export const citiesApi = api.injectEndpoints({
     }),
     citiesCreate: build.mutation<CityDto, CreateCityDto>({
       query: (body) => ({ url: '/cities', method: 'POST', data: body }),
-      invalidatesTags: ['Cities'],
+      invalidatesTags: ['Cities', 'MastersFilters'],
     }),
     citiesById: build.query<CityWithStatsDto, { id: string }>({
       query: ({ id }) => ({ url: `/cities/${id}`, method: 'GET' }),
@@ -29,11 +29,11 @@ export const citiesApi = api.injectEndpoints({
     }),
     citiesUpdate: build.mutation<CityDto, { id: string; body: UpdateCityDto }>({
       query: ({ id, body }) => ({ url: `/cities/${id}`, method: 'PUT', data: body }),
-      invalidatesTags: ['Cities'],
+      invalidatesTags: ['Cities', 'MastersFilters'],
     }),
     citiesDelete: build.mutation<CityDto, { id: string }>({
       query: ({ id }) => ({ url: `/cities/${id}`, method: 'DELETE' }),
-      invalidatesTags: ['Cities'],
+      invalidatesTags: ['Cities', 'MastersFilters'],
     }),
     citiesMasters: build.query<CityMastersResponse, { id: string }>({
       query: ({ id }) => ({ url: `/cities/${id}/masters`, method: 'GET' }),
@@ -41,7 +41,7 @@ export const citiesApi = api.injectEndpoints({
     }),
     citiesToggle: build.mutation<CityDto, { id: string }>({
       query: ({ id }) => ({ url: `/cities/${id}/toggle`, method: 'PUT', data: {} }),
-      invalidatesTags: ['Cities'],
+      invalidatesTags: ['Cities', 'MastersFilters'],
       async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
         const patcher = (args: { isActive?: boolean } | void) =>
           dispatch(

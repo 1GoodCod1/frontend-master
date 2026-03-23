@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { env } from '@/services/env';
+import { shouldBustHttpCacheForPublicGetPath } from '@/config/publicCache';
 import type { RootState } from '@/app/store';
 import { clearAuth, setTokens } from '@/features/auth/authSlice';
 import {
@@ -91,6 +92,18 @@ export const axiosBaseQuery =
         const sessionId = getSessionId(!!accessToken);
         if (sessionId) {
           headers['x-session-id'] = sessionId;
+        }
+
+        // Публичные GET с коротким max-age на API — иначе браузер отдаёт старый JSON из HTTP-кеша
+        // (axios/XHR подчиняется Cache-Control ответа сервера).
+        const method = (args.method ?? 'GET').toUpperCase();
+        if (method === 'GET' && args.url) {
+          const path = args.url.split('?')[0] ?? '';
+          const bustBrowserCache = shouldBustHttpCacheForPublicGetPath(path);
+          if (bustBrowserCache && !headers['Cache-Control']) {
+            headers['Cache-Control'] = 'no-cache';
+            headers['Pragma'] = 'no-cache';
+          }
         }
 
         // Удаляем Content-Type для FormData, чтобы браузер установил правильный boundary
@@ -216,6 +229,7 @@ export const api = createApi({
   tagTypes: [
     'Me',
     'Masters',
+    'MastersFilters',
     'Master',
     'Leads',
     'Reviews',
@@ -241,6 +255,7 @@ export const api = createApi({
     'Referrals',
     'Digest',
     'Notifications',
+    'ScheduleSettings',
   ],
   endpoints: () => ({}),
 });

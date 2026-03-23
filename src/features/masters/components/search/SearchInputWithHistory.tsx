@@ -1,30 +1,47 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Search, History, Trash2 } from 'lucide-react';
+import { Search, History, Trash2, Tag, User, Wrench, Star } from 'lucide-react';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useMastersSuggestQuery } from '@/features/masters/mastersApi';
 import { cn } from '@/lib/utils';
+import type { SuggestCategoryItem, SuggestMasterItem, SuggestServiceItem } from '@/types';
+
+export interface SearchSuggestionEvent {
+  type: 'category' | 'master' | 'service' | 'text';
+  value: string;
+  category?: SuggestCategoryItem;
+  master?: SuggestMasterItem;
+  service?: SuggestServiceItem;
+}
 
 interface SearchInputWithHistoryProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit?: (value: string) => void;
+  /** Called when user selects a structured suggestion (category, master, service) */
+  onSuggestionSelect?: (event: SearchSuggestionEvent) => void;
   placeholder?: string;
   className?: string;
   inputClassName?: string;
   variant?: 'hero' | 'default';
   id?: string;
+  /** City ID to pass to suggest API for local boosting */
+  cityId?: string;
 }
 
 export function SearchInputWithHistory({
   value,
   onChange,
   onSubmit,
+  onSuggestionSelect,
   placeholder,
   className,
   inputClassName,
   variant = 'default',
   id,
+  cityId,
 }: SearchInputWithHistoryProps) {
   const { t } = useTranslation();
   const { add, getFiltered, clear, refresh } = useSearchHistory();
@@ -32,9 +49,24 @@ export function SearchInputWithHistory({
   const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const trimmedValue = value.trim();
+  const debouncedQuery = useDebounce(trimmedValue, 250);
+  const shouldFetchSuggestions = debouncedQuery.length >= 2;
+
+  const { data: suggestions } = useMastersSuggestQuery(
+    { q: debouncedQuery, limit: 5, cityId },
+    { skip: !shouldFetchSuggestions },
+  );
+
   const filtered = getFiltered(value);
   const hasHistory = filtered.length > 0;
-  const showDropdown = isOpen && hasHistory;
+  const hasSuggestions =
+    shouldFetchSuggestions &&
+    suggestions &&
+    (suggestions.categories.length > 0 ||
+      suggestions.masters.length > 0 ||
+      suggestions.services.length > 0);
+  const showDropdown = isOpen && (hasHistory || hasSuggestions);
 
   const updatePosition = () => {
     if (containerRef.current) {
@@ -84,6 +116,36 @@ export function SearchInputWithHistory({
     onSubmit?.(term);
   };
 
+  const handleCategorySelect = (cat: SuggestCategoryItem) => {
+    setIsOpen(false);
+    if (onSuggestionSelect) {
+      onSuggestionSelect({ type: 'category', value: cat.slug, category: cat });
+    } else {
+      onChange(cat.name);
+      onSubmit?.(cat.name);
+    }
+  };
+
+  const handleMasterSelect = (master: SuggestMasterItem) => {
+    setIsOpen(false);
+    if (onSuggestionSelect) {
+      onSuggestionSelect({ type: 'master', value: master.slug, master });
+    } else {
+      onChange(master.name);
+      onSubmit?.(master.name);
+    }
+  };
+
+  const handleServiceSelect = (service: SuggestServiceItem) => {
+    setIsOpen(false);
+    if (onSuggestionSelect) {
+      onSuggestionSelect({ type: 'service', value: service.title, service });
+    } else {
+      onChange(service.title);
+      onSubmit?.(service.title);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
@@ -92,6 +154,7 @@ export function SearchInputWithHistory({
     if (e.key === 'Enter' && value.trim()) {
       add(value.trim());
       onSubmit?.(value.trim());
+      setIsOpen(false);
     }
   };
 
@@ -102,7 +165,19 @@ export function SearchInputWithHistory({
   };
 
   const isHero = variant === 'hero';
-  const hasValue = value.trim().length > 0;
+  const hasValue = trimmedValue.length > 0;
+
+  const itemClass = cn(
+    'relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-3 text-sm outline-none transition-colors',
+    'hover:bg-amber-600 hover:text-white focus:bg-amber-600 focus:text-white',
+    'text-popover-foreground',
+  );
+
+  const sectionHeaderClass = cn(
+    'px-3 py-1.5 border-b flex items-center gap-2',
+    'border-amber-200/40 dark:border-white/5',
+    'bg-[hsl(var(--popover))] text-popover-foreground',
+  );
 
   const dropdownContent = showDropdown && (
     <div
@@ -112,52 +187,124 @@ export function SearchInputWithHistory({
         'border-amber-200/60 dark:border-white/10',
         'bg-[hsl(var(--popover))] text-popover-foreground',
         'shadow-xl shadow-amber-900/5',
-        'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2'
+        'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2',
       )}
       style={{
         top: position.top,
         left: position.left,
-        width: Math.max(position.width, 200),
-        maxWidth: 'min(400px, 90vw)',
+        width: Math.max(position.width, 280),
+        maxWidth: 'min(440px, 90vw)',
       }}
     >
-      <div
-        className={cn(
-          'px-3 py-2 border-b flex items-center justify-between',
-          'border-amber-200/60 dark:border-white/10',
-          'bg-[hsl(var(--popover))] text-popover-foreground'
+      <div className="max-h-[360px] overflow-y-auto bg-[hsl(var(--popover))]">
+        {/* --- Categories --- */}
+        {hasSuggestions && suggestions.categories.length > 0 && (
+          <>
+            <div className={sectionHeaderClass}>
+              <Tag className="h-3.5 w-3.5 text-amber-500" />
+              <span className="text-xs font-medium text-muted-foreground">
+                {t('masters.suggestCategories')}
+              </span>
+            </div>
+            <ul className="p-1">
+              {suggestions.categories.map((cat) => (
+                <li key={cat.id}>
+                  <button type="button" onClick={() => handleCategorySelect(cat)} className={itemClass}>
+                    {cat.icon && <span className="text-base">{cat.icon}</span>}
+                    <span className="flex-1 text-left truncate">
+                      {t(`categories.${cat.slug}`, { defaultValue: cat.name })}
+                    </span>
+                    <span className="text-xs opacity-60 shrink-0">
+                      {t('masters.suggestMastersCount', { count: cat.count })}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
-      >
-        <span className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-          <History className="h-3.5 w-3.5" />
-          {t('masters.searchHistory')}
-        </span>
-        <button
-          type="button"
-          onClick={handleClearHistory}
-          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors"
-        >
-          <Trash2 className="h-3 w-3" />
-          {t('masters.clearSearchHistory')}
-        </button>
+
+        {/* --- Services --- */}
+        {hasSuggestions && suggestions.services.length > 0 && (
+          <>
+            <div className={sectionHeaderClass}>
+              <Wrench className="h-3.5 w-3.5 text-amber-500" />
+              <span className="text-xs font-medium text-muted-foreground">
+                {t('masters.suggestServices')}
+              </span>
+            </div>
+            <ul className="p-1">
+              {suggestions.services.map((svc) => (
+                <li key={svc.title}>
+                  <button type="button" onClick={() => handleServiceSelect(svc)} className={itemClass}>
+                    <span className="flex-1 text-left truncate">{svc.title}</span>
+                    {svc.categoryName && (
+                      <span className="text-xs opacity-50 shrink-0 truncate max-w-[120px]">
+                        {t(`categories.${svc.categorySlug}`, { defaultValue: svc.categoryName })}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {/* --- Masters --- */}
+        {hasSuggestions && suggestions.masters.length > 0 && (
+          <>
+            <div className={sectionHeaderClass}>
+              <User className="h-3.5 w-3.5 text-amber-500" />
+              <span className="text-xs font-medium text-muted-foreground">
+                {t('masters.suggestMasters')}
+              </span>
+            </div>
+            <ul className="p-1">
+              {suggestions.masters.map((master) => (
+                <li key={master.id}>
+                  <button type="button" onClick={() => handleMasterSelect(master)} className={itemClass}>
+                    <span className="flex-1 text-left truncate">{master.name}</span>
+                    <span className="flex items-center gap-1 text-xs opacity-50 shrink-0">
+                      <Star className="h-3 w-3 fill-current" />
+                      {master.rating.toFixed(1)}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {/* --- Search History --- */}
+        {hasHistory && (
+          <>
+            <div className={cn(sectionHeaderClass, 'justify-between')}>
+              <span className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                <History className="h-3.5 w-3.5" />
+                {t('masters.searchHistory')}
+              </span>
+              <button
+                type="button"
+                onClick={handleClearHistory}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <Trash2 className="h-3 w-3" />
+                {t('masters.clearSearchHistory')}
+              </button>
+            </div>
+            <ul className="p-1">
+              {filtered.map((term) => (
+                <li key={term}>
+                  <button type="button" onClick={() => handleSelect(term)} className={itemClass}>
+                    <History className="h-3.5 w-3.5 opacity-40 shrink-0" />
+                    <span className="flex-1 text-left truncate">{term}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
-      <ul className="max-h-[220px] overflow-y-auto p-1 bg-[hsl(var(--popover))]">
-        {filtered.map((term) => (
-          <li key={term}>
-            <button
-              type="button"
-              onClick={() => handleSelect(term)}
-              className={cn(
-                'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-3 text-sm outline-none transition-colors',
-                'hover:bg-amber-600 hover:text-white focus:bg-amber-600 focus:text-white',
-                'text-popover-foreground'
-              )}
-            >
-              {term}
-            </button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 
@@ -190,7 +337,7 @@ export function SearchInputWithHistory({
                 ? 'text-foreground placeholder:text-muted-foreground'
                 : 'h-9 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-stone-50/80 dark:bg-white/[0.03] px-3 py-1 shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-amber-600/40 focus-visible:border-amber-300 dark:border-transparent dark:bg-white/[0.03]',
               !isHero && (hasValue ? 'pl-3' : 'pl-9'),
-              inputClassName
+              inputClassName,
             )}
             autoComplete="off"
             spellCheck={false}

@@ -36,7 +36,7 @@ export interface LeadInfo {
 
 export interface MasterInfo {
   id: string;
-  user: { firstName: string; lastName: string };
+  user: { firstName: string; lastName: string; avatarFile?: { path: string } | null };
   isOnline?: boolean;
   lastActivityAt?: string | null;
   avatarFile: { path: string } | null;

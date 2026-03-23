@@ -44,6 +44,10 @@ export const masters = {
       listView: 'List',
       showOnMap: 'Show on map',
       currency: 'MDL',
+      suggestCategories: 'Categories',
+      suggestMasters: 'Masters',
+      suggestServices: 'Services',
+      suggestMastersCount: '{{count}} masters',
     },
   },
   ru: {
@@ -91,6 +95,10 @@ export const masters = {
       listView: 'Список',
       showOnMap: 'На карте',
       currency: 'MDL',
+      suggestCategories: 'Категории',
+      suggestMasters: 'Мастера',
+      suggestServices: 'Услуги',
+      suggestMastersCount: '{{count}} мастеров',
     },
   },
   ro: {
@@ -138,6 +146,10 @@ export const masters = {
       listView: 'Listă',
       showOnMap: 'Pe hartă',
       currency: 'MDL',
+      suggestCategories: 'Categorii',
+      suggestMasters: 'Meșteri',
+      suggestServices: 'Servicii',
+      suggestMastersCount: '{{count}} meșteri',
     },
   },
 };

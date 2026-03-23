@@ -1,6 +1,6 @@
-import { env } from '@/services/env';
 import type { Conversation, ConversationDetail, ChatUserRole, OtherPartyDisplay } from '@/types/chat';
 import { MIN_CONVERSATION_ID_LENGTH } from '@/features/chat/constants';
+import { mediaUrl } from '@/utils/media';
 
 /** Whether the string is a valid conversation ID (not undefined/null and long enough). */
 export function isValidConversationId(id: string | undefined): boolean {
@@ -16,10 +16,7 @@ const LOCALE = 'ru-RU';
 
 /** Build full URL for a file path (relative or absolute). */
 export function getFileUrl(path: string): string {
-  if (!path) return '';
-  if (path.startsWith('http')) return path;
-  const base = env.apiUrl?.replace('/api', '') ?? '';
-  return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+  return mediaUrl(path);
 }
 
 /** Format date for list preview: time today, yesterday label, weekday, or short date. */
@@ -103,7 +100,7 @@ export function getOtherPartyFromConversation(
   }
   return {
     name: `${conversation.master.user.firstName} ${conversation.master.user.lastName}`,
-    avatar: conversation.master.avatarFile?.path,
+    avatar: conversation.master.avatarFile?.path || conversation.master.user.avatarFile?.path,
     isOnline: conversation.master.isOnline,
     lastActivityAt: conversation.master.lastActivityAt,
   };

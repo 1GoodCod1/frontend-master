@@ -90,6 +90,9 @@ export type CreateCategoryDto = {
   slug: string;
   description?: string;
   icon?: string;
+  iconKey?: string;
+  iconUrl?: string;
+  translations?: Record<string, { name?: string; description?: string }>;
   isActive?: boolean;
   sortOrder?: number;
 };
@@ -99,6 +102,9 @@ export type UpdateCategoryDto = {
   slug?: string;
   description?: string;
   icon?: string;
+  iconKey?: string;
+  iconUrl?: string;
+  translations?: Record<string, { name?: string; description?: string }>;
   isActive?: boolean;
   sortOrder?: number;
 };
@@ -106,12 +112,14 @@ export type UpdateCategoryDto = {
 export type CreateCityDto = {
   name: string;
   slug: string;
+  translations?: Record<string, { name?: string }>;
   isActive?: boolean;
 };
 
 export type UpdateCityDto = {
   name?: string;
   slug?: string;
+  translations?: Record<string, { name?: string }>;
   isActive?: boolean;
 };
 

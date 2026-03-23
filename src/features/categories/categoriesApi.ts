@@ -21,7 +21,7 @@ export const categoriesApi = api.injectEndpoints({
     }),
     categoriesCreate: build.mutation<CategoryDto, CreateCategoryDto>({
       query: (body) => ({ url: '/categories', method: 'POST', data: body }),
-      invalidatesTags: ['Categories'],
+      invalidatesTags: ['Categories', 'MastersFilters'],
     }),
     categoriesById: build.query<CategoryWithStatsDto, { id: string }>({
       query: ({ id }) => ({ url: `/categories/${id}`, method: 'GET' }),
@@ -30,11 +30,11 @@ export const categoriesApi = api.injectEndpoints({
     }),
     categoriesUpdate: build.mutation<CategoryDto, { id: string; body: UpdateCategoryDto }>({
       query: ({ id, body }) => ({ url: `/categories/${id}`, method: 'PUT', data: body }),
-      invalidatesTags: ['Categories'],
+      invalidatesTags: ['Categories', 'MastersFilters'],
     }),
     categoriesDelete: build.mutation<CategoryDto, { id: string }>({
       query: ({ id }) => ({ url: `/categories/${id}`, method: 'DELETE' }),
-      invalidatesTags: ['Categories'],
+      invalidatesTags: ['Categories', 'MastersFilters'],
     }),
     categoriesMasters: build.query<CategoryMastersResponse, { id: string; page?: number; limit?: number }>({
       query: ({ id, page, limit }) => ({
@@ -46,7 +46,7 @@ export const categoriesApi = api.injectEndpoints({
     }),
     categoriesToggle: build.mutation<CategoryDto, { id: string }>({
       query: ({ id }) => ({ url: `/categories/${id}/toggle`, method: 'PUT', data: {} }),
-      invalidatesTags: ['Categories'],
+      invalidatesTags: ['Categories', 'MastersFilters'],
       async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
         const patcher = (args: { isActive?: boolean } | void) =>
           dispatch(

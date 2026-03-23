@@ -1,7 +1,10 @@
+export type CityTranslations = Record<string, { name?: string }>;
+
 export type CityDto = {
   id: string;
   name: string;
   slug: string;
+  translations?: CityTranslations | null;
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;

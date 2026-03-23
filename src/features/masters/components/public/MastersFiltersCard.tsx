@@ -1,4 +1,6 @@
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Search, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { SearchInputWithHistory } from '@/features/masters/components/search/SearchInputWithHistory';
+import type { SearchSuggestionEvent } from '@/features/masters/components/search/SearchInputWithHistory';
 import { ErrorState } from '@/components/common/States';
 import { MastersAdvancedFilters } from './MastersAdvancedFilters';
 import type { MastersFilterItem } from '@/types';
@@ -77,6 +80,32 @@ export function MastersFiltersCard({
   filters,
 }: MastersFiltersCardProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleSuggestionSelect = useCallback(
+    (event: SearchSuggestionEvent) => {
+      if (event.type === 'category' && event.category) {
+        setQuery((s) => ({
+          ...s,
+          page: 1,
+          q: '',
+          categoryValue: event.category!.slug,
+        }));
+      } else if (event.type === 'master' && event.master) {
+        navigate(`/masters/${event.master.slug}`);
+      } else if (event.type === 'service' && event.service) {
+        setQuery((s) => ({
+          ...s,
+          page: 1,
+          q: event.service!.title,
+          categoryValue: event.service!.categorySlug ?? s.categoryValue,
+        }));
+      } else {
+        setQuery((s) => ({ ...s, page: 1, q: event.value }));
+      }
+    },
+    [setQuery, navigate],
+  );
 
   return (
     <Card className="mb-3 sm:mb-5 md:mb-6 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
@@ -106,8 +135,10 @@ export function MastersFiltersCard({
                       q: v,
                     }))
                   }
+                  onSuggestionSelect={handleSuggestionSelect}
                   placeholder={t('masters.searchPlaceholder')}
                   variant="default"
+                  cityId={query.cityValue || undefined}
                 />
               </div>
 
