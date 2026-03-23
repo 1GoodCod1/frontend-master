@@ -100,8 +100,11 @@ export async function connectSocket(store: Store<RootState>) {
     store.dispatch(pushEvent({ type: mapped, payload }));
 
     // Cache invalidation by event type. No toasts — all events go to NotificationMenu only.
+    // lead_status_updated: и смена лида мастером, и COMPLETED записи (без отдельного PATCH лида у клиента)
     if (mapped === 'new_lead' || mapped === 'lead_status_updated' || mapped === 'admin_new_lead') {
-      store.dispatch(api.util.invalidateTags(['Leads', 'Analytics']));
+      store.dispatch(
+        api.util.invalidateTags(['Leads', 'Bookings', 'Reviews', 'Analytics']),
+      );
     } else if (mapped === 'lead_sent') {
       store.dispatch(api.util.invalidateTags(['Leads']));
     } else if (mapped === 'new_chat_message') {

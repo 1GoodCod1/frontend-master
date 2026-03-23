@@ -8,4 +8,4 @@ export const PERSISTED_ENDPOINT_PREFIXES = [
 ] as const;
 
 /** Версия схемы кэша API для миграций */
-export const API_CACHE_PERSIST_VERSION = 8;
+export const API_CACHE_PERSIST_VERSION = 10;

@@ -100,10 +100,8 @@ export default function MasterDetailsDialog({
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-2rem)] max-w-xl flex-col gap-0 overflow-hidden p-0 sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold tracking-tight">Master details</DialogTitle>
-          <p className="pr-2 text-sm text-muted-foreground">
-            Public profile summary and stats from the catalog.
-          </p>
+          <DialogTitle className="text-xl font-bold tracking-tight">{t('admin.masters.masterDetailsTitle')}</DialogTitle>
+          <p className="pr-2 text-sm text-muted-foreground">{t('admin.masters.detailSubtitle')}</p>
         </DialogHeader>
 
         <DialogBody className="space-y-6 py-5">
@@ -131,13 +129,13 @@ export default function MasterDetailsDialog({
                   {(master.user?.isVerified || master.isVerified) && (
                     <Badge className="gap-1 bg-emerald-600 font-semibold text-white hover:bg-emerald-600">
                       <CheckCircle className="size-4" />
-                      Verified
+                      {t('admin.masters.verifiedBadge')}
                     </Badge>
                   )}
                   {master.isFeatured && (
                     <Badge variant="destructive" className="gap-1 font-semibold">
                       <Star className="size-4" />
-                      Featured
+                      {t('admin.masters.featuredBadge')}
                     </Badge>
                   )}
                 </div>
@@ -149,11 +147,9 @@ export default function MasterDetailsDialog({
 
           <section className="space-y-3">
             <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              Public page
+              {t('admin.masters.publicPageSection')}
             </h3>
-            <p className="text-xs text-muted-foreground/90">
-              Opens the catalog profile in a new tab (same as visitors see).
-            </p>
+            <p className="text-xs text-muted-foreground/90">{t('admin.masters.publicPageHelp')}</p>
             <RouterLink
               to={publicProfilePath}
               target="_blank"
@@ -161,7 +157,7 @@ export default function MasterDetailsDialog({
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-900 shadow-sm transition-colors hover:bg-amber-500/20 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100 dark:hover:bg-amber-500/20"
             >
               <ExternalLink className="size-4 shrink-0" aria-hidden />
-              Open public profile
+              {t('admin.masters.openPublicProfile')}
             </RouterLink>
           </section>
 
@@ -172,12 +168,10 @@ export default function MasterDetailsDialog({
                 <div className="flex items-center gap-2">
                   <Images className="size-4 text-amber-600 dark:text-amber-400" aria-hidden />
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Gallery photos
+                    {t('admin.masters.gallerySection')}
                   </h3>
                 </div>
-                <p className="text-xs text-muted-foreground/90">
-                  Extra photos on the master profile (not including the avatar).
-                </p>
+                <p className="text-xs text-muted-foreground/90">{t('admin.masters.galleryHelp')}</p>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {galleryPhotos.map((photo, index) => (
                     <a
@@ -189,7 +183,7 @@ export default function MasterDetailsDialog({
                     >
                       <LazyImage
                         src={photo.src}
-                        alt={`Gallery photo ${index + 1}`}
+                        alt={t('admin.masters.galleryPhotoAlt', { n: index + 1 })}
                         objectFit="cover"
                         skeletonHeight={120}
                         className="aspect-[4/3] w-full transition-transform duration-200 group-hover:scale-[1.02]"
@@ -206,14 +200,14 @@ export default function MasterDetailsDialog({
 
           <section className="space-y-3">
             <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              Category &amp; contact
+              {t('admin.masters.categoryContactSection')}
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {master.category ? (
                 <div className={cardClass}>
                   <div className="mb-2 flex items-center gap-2">
                     <LayoutGrid className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">Category</span>
+                    <span className="text-sm font-semibold text-foreground">{t('admin.masters.category')}</span>
                   </div>
                   <p className="pl-6 text-sm text-muted-foreground">
                     {getTranslatedCategoryName(t, master.category)}
@@ -221,14 +215,14 @@ export default function MasterDetailsDialog({
                 </div>
               ) : (
                 <div className="flex min-h-[72px] items-center rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 text-sm text-muted-foreground">
-                  No category
+                  {t('admin.masters.emptyCategory')}
                 </div>
               )}
               {master.city ? (
                 <div className={cardClass}>
                   <div className="mb-2 flex items-center gap-2">
                     <MapPin className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">City</span>
+                    <span className="text-sm font-semibold text-foreground">{t('admin.masters.city')}</span>
                   </div>
                   <p className="pl-6 text-sm text-muted-foreground">
                     {getTranslatedCityName(t, master.city)}
@@ -236,27 +230,27 @@ export default function MasterDetailsDialog({
                 </div>
               ) : (
                 <div className="flex min-h-[72px] items-center rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 text-sm text-muted-foreground">
-                  No city
+                  {t('admin.masters.emptyCity')}
                 </div>
               )}
               {contactPhone ? (
                 <div className={cardClass}>
                   <div className="mb-2 flex items-center gap-2">
                     <Phone className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">Phone</span>
+                    <span className="text-sm font-semibold text-foreground">{t('admin.reviews.phoneLabel')}</span>
                   </div>
                   <p className="pl-6 text-sm text-muted-foreground">{contactPhone}</p>
                 </div>
               ) : (
                 <div className="flex min-h-[72px] items-center rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 text-sm text-muted-foreground">
-                  No phone
+                  {t('admin.masters.emptyPhone')}
                 </div>
               )}
               {(master.user?.email || master.email) ? (
                 <div className={cardClass}>
                   <div className="mb-2 flex items-center gap-2">
                     <Mail className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">Email</span>
+                    <span className="text-sm font-semibold text-foreground">{t('admin.users.email')}</span>
                   </div>
                   <p className="break-all pl-6 text-sm text-muted-foreground">
                     {master.user?.email || master.email}
@@ -264,7 +258,7 @@ export default function MasterDetailsDialog({
                 </div>
               ) : (
                 <div className="flex min-h-[72px] items-center rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 text-sm text-muted-foreground">
-                  No email
+                  {t('admin.masters.emptyEmail')}
                 </div>
               )}
             </div>
@@ -275,38 +269,39 @@ export default function MasterDetailsDialog({
           <section className="space-y-3">
             <div>
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                Statistics
+                {t('admin.masters.statisticsSection')}
               </h3>
-              <p className="mt-1 text-xs text-muted-foreground/90">
-                Ratings, visibility, and profile completeness signals.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground/90">{t('admin.masters.statisticsHelp')}</p>
             </div>
             <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 p-4 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
               <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
                 <div>
-                  <p className="mb-0.5 text-xs text-muted-foreground">Rating</p>
+                  <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.rating')}</p>
                   {rating != null ? (
                     <div className="flex items-center gap-1">
                       <StarRatingDisplay value={Number(rating)} size="sm" />
                       <span className="font-semibold">{Number(rating).toFixed(1)}</span>
                     </div>
                   ) : (
-                    <p className="font-medium">No reviews</p>
+                    <p className="font-medium">{t('admin.masters.noReviews')}</p>
                   )}
                 </div>
                 <div>
-                  <p className="mb-0.5 text-xs text-muted-foreground">Reviews</p>
+                  <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.reviewsLabel')}</p>
                   <p className="font-semibold">{master.reviewCount ?? 0}</p>
                 </div>
                 <div>
-                  <p className="mb-0.5 text-xs text-muted-foreground">Views</p>
+                  <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.views')}</p>
                   <p className="font-semibold">{(master.views ?? 0).toLocaleString()}</p>
                 </div>
                 {master.experienceYears !== undefined && (
                   <div>
-                    <p className="mb-0.5 text-xs text-muted-foreground">Experience</p>
+                    <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.users.experienceLabel')}</p>
                     <p className="font-semibold">
-                      {master.experienceYears} {master.experienceYears === 1 ? 'year' : 'years'}
+                      {master.experienceYears}{' '}
+                      {master.experienceYears === 1
+                        ? t('admin.masters.experienceYear')
+                        : t('admin.masters.experienceYears')}
                     </p>
                   </div>
                 )}
@@ -319,7 +314,7 @@ export default function MasterDetailsDialog({
               <Separator className="bg-border/60" />
               <section className="space-y-2">
                 <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  Description
+                  {t('admin.masters.descriptionSection')}
                 </h3>
                 <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 text-sm text-muted-foreground shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
                   <p className="whitespace-pre-wrap">{master.description}</p>
@@ -336,7 +331,7 @@ export default function MasterDetailsDialog({
             onClick={onClose}
             className="min-w-[7rem] border-amber-500/50 bg-transparent text-amber-800 hover:bg-amber-50 dark:border-amber-500/40 dark:text-amber-300 dark:hover:bg-amber-950/40"
           >
-            Close
+            {t('admin.masters.closeDialog')}
           </Button>
           <Button
             type="button"
@@ -344,7 +339,7 @@ export default function MasterDetailsDialog({
             onClick={onUpdate}
             className="min-w-[7rem] border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
           >
-            {isLoading ? 'Updating…' : 'Update master'}
+            {isLoading ? t('admin.masters.updating') : t('admin.masters.updateMaster')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -89,10 +89,8 @@ export default function UserDetailsDialog({
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-2rem)] max-w-xl flex-col gap-0 p-0 sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold tracking-tight">User details</DialogTitle>
-          <p className="pr-2 text-sm text-muted-foreground">
-            Profile summary and moderation actions for this account.
-          </p>
+          <DialogTitle className="text-xl font-bold tracking-tight">{t('admin.users.userDetails')}</DialogTitle>
+          <p className="pr-2 text-sm text-muted-foreground">{t('admin.users.detailSubtitle')}</p>
         </DialogHeader>
 
         <DialogBody className="space-y-6 py-5">
@@ -124,17 +122,17 @@ export default function UserDetailsDialog({
                   </Badge>
                   {user.isVerified && !user.isBanned && (
                     <Badge className="gap-1 border-0 bg-emerald-600 font-semibold text-white">
-                      <CheckCircle className="size-4" /> Active
+                      <CheckCircle className="size-4" /> {t('admin.users.badgeActive')}
                     </Badge>
                   )}
                   {!user.isVerified && user.isBanned && (
                     <Badge className="gap-1 border-0 bg-destructive font-semibold text-white">
-                      <Ban className="size-4" /> Blocked
+                      <Ban className="size-4" /> {t('admin.users.badgeBlocked')}
                     </Badge>
                   )}
                   {!user.isVerified && !user.isBanned && (
                     <Badge className="gap-1 border-0 bg-amber-500 font-semibold text-white">
-                      <Clock className="size-4" /> Pending
+                      <Clock className="size-4" /> {t('admin.users.badgePending')}
                     </Badge>
                   )}
                 </div>
@@ -148,16 +146,14 @@ export default function UserDetailsDialog({
               <section className="space-y-3">
                 <div>
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Master profile
+                    {t('admin.users.masterProfileSection')}
                   </h3>
-                  <p className="mt-1 text-xs text-muted-foreground/90">
-                    Tariff, category, and public stats for this master.
-                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground/90">{t('admin.users.masterProfileHelp')}</p>
                 </div>
                 <div className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-4 dark:bg-amber-500/10">
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                     <div>
-                      <p className="mb-0.5 text-xs text-muted-foreground">Tariff</p>
+                      <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.tariff')}</p>
                       <Badge
                         className="border-0 font-semibold text-white"
                         style={{
@@ -182,30 +178,32 @@ export default function UserDetailsDialog({
                     )}
                     {user.masterProfile.city && (
                       <div>
-                        <p className="mb-0.5 text-xs text-muted-foreground">City</p>
+                        <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.city')}</p>
                         <p className="text-sm font-medium">
                           {getTranslatedCityName(t, user.masterProfile.city)}
                         </p>
                       </div>
                     )}
                     <div>
-                      <p className="mb-0.5 text-xs text-muted-foreground">Views</p>
+                      <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.views')}</p>
                       <p className="text-sm font-medium">{user.masterProfile.views ?? 0}</p>
                     </div>
                     <div>
-                      <p className="mb-0.5 text-xs text-muted-foreground">Rating</p>
+                      <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.rating')}</p>
                       <p className="text-sm font-medium">
                         {user.masterProfile.rating ?? user.masterProfile.avgRating
                           ? `⭐ ${Number(user.masterProfile.rating ?? user.masterProfile.avgRating).toFixed(1)}`
-                          : 'No reviews'}
+                          : t('admin.users.noReviews')}
                       </p>
                     </div>
                     {user.masterProfile.experienceYears !== undefined && (
                       <div>
-                        <p className="mb-0.5 text-xs text-muted-foreground">Experience</p>
+                        <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.users.experienceLabel')}</p>
                         <p className="text-sm font-medium">
                           {user.masterProfile.experienceYears}{' '}
-                          {user.masterProfile.experienceYears === 1 ? 'year' : 'years'}
+                          {user.masterProfile.experienceYears === 1
+                            ? t('admin.users.experienceYear')
+                            : t('admin.users.experienceYears')}
                         </p>
                       </div>
                     )}
@@ -219,13 +217,13 @@ export default function UserDetailsDialog({
 
           <section className="space-y-3">
             <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              Contact
+              {t('admin.users.contactSection')}
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
                 <div className="mb-2 flex items-center gap-2">
                   <Mail className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                  <span className="text-sm font-semibold text-foreground">Email</span>
+                  <span className="text-sm font-semibold text-foreground">{t('admin.users.email')}</span>
                 </div>
                 <p className="text-sm text-muted-foreground break-all pl-6">{user.email || '—'}</p>
               </div>
@@ -233,13 +231,13 @@ export default function UserDetailsDialog({
                 <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
                   <div className="mb-2 flex items-center gap-2">
                     <Phone className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">Phone</span>
+                    <span className="text-sm font-semibold text-foreground">{t('admin.reviews.phoneLabel')}</span>
                   </div>
                   <p className="text-sm text-muted-foreground pl-6">{user.phone}</p>
                 </div>
               ) : (
                 <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 py-3 text-sm text-muted-foreground sm:flex sm:items-center">
-                  No phone on file
+                  {t('admin.users.noPhoneOnFile')}
                 </div>
               )}
             </div>
@@ -250,12 +248,12 @@ export default function UserDetailsDialog({
               <Separator className="bg-border/60" />
               <section className="space-y-3">
                 <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  Activity
+                  {t('admin.users.activitySection')}
                 </h3>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {user.createdAt && (
                     <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
-                      <p className="mb-1 text-sm font-semibold text-foreground">Account created</p>
+                      <p className="mb-1 text-sm font-semibold text-foreground">{t('admin.users.accountCreated')}</p>
                       <p className="text-sm text-muted-foreground">
                         {formatDateTimeLong(user.createdAt, locale)}
                       </p>
@@ -263,7 +261,7 @@ export default function UserDetailsDialog({
                   )}
                   {user.lastLoginAt && (
                     <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
-                      <p className="mb-1 text-sm font-semibold text-foreground">Last login</p>
+                      <p className="mb-1 text-sm font-semibold text-foreground">{t('admin.users.lastLogin')}</p>
                       <p className="text-sm text-muted-foreground">
                         {formatDateTimeLong(user.lastLoginAt, locale)}
                       </p>
@@ -282,14 +280,14 @@ export default function UserDetailsDialog({
             onClick={onClose}
             className="min-w-[7rem] border-amber-500/50 bg-transparent text-amber-800 hover:bg-amber-50 dark:border-amber-500/40 dark:text-amber-300 dark:hover:bg-amber-950/40"
           >
-            Close
+            {t('admin.users.closeDialog')}
           </Button>
           <Button
             type="button"
             onClick={onVerify}
             className="min-w-[7rem] border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
           >
-            {user?.isVerified ? 'Unverify' : 'Verify'}
+            {user?.isVerified ? t('admin.users.unverify') : t('admin.users.verify')}
           </Button>
           {user?.isBanned ? (
             <Button
@@ -297,11 +295,11 @@ export default function UserDetailsDialog({
               className="min-w-[7rem] bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500"
               onClick={onBan}
             >
-              Unban
+              {t('admin.users.unban')}
             </Button>
           ) : (
             <Button type="button" variant="destructive" className="min-w-[7rem]" onClick={onBan}>
-              Ban
+              {t('admin.users.ban')}
             </Button>
           )}
         </DialogFooter>

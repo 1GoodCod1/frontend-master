@@ -21,9 +21,17 @@ const PATHS_BUST_HTTP_PROD = new Set([
   '/masters/filters',
 ]);
 
+const DYNAMIC_PATH_PATTERNS: RegExp[] = [
+  /^\/masters\/[^/]+$/,
+  /^\/masters\/[^/]+\/photos$/,
+  /^\/reviews\/master\/[^/]+$/,
+  /^\/reviews\/stats\/[^/]+$/,
+];
+
 export function shouldBustHttpCacheForPublicGetPath(pathWithoutQuery: string): boolean {
   const set = isProductionBuild ? PATHS_BUST_HTTP_PROD : PATHS_BUST_HTTP_DEV;
-  return set.has(pathWithoutQuery);
+  if (set.has(pathWithoutQuery)) return true;
+  return DYNAMIC_PATH_PATTERNS.some((re) => re.test(pathWithoutQuery));
 }
 
 export const publicCachePolicy = {

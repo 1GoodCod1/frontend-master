@@ -4,7 +4,7 @@ import { Calendar, Heart, Mail, AlertTriangle, Star } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { RecentlyViewed } from '@/components/home/recommendations/RecentlyViewed';
 import { RecommendedMasters } from '@/components/home/recommendations/RecommendedMasters';
-import { useClientDashboard, type ClientBooking } from '@/hooks/client/dashboard';
+import { useClientDashboard, type ClientBooking, type ClientLead } from '@/hooks/client/dashboard';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useNow } from '@/hooks/useNow';
 import DashboardMetricCard from '@/features/clients/components/dashboard/DashboardMetricCard';
@@ -112,10 +112,47 @@ export default function ClientDashboardPage() {
       .slice(0, 10);
   }, [bookingsList, leadsList, reviewsList]);
 
-  const pendingReviews = useMemo(
-    () => (bookingsList || []).filter((b) => b.status === 'COMPLETED' && !b.isReviewed),
-    [bookingsList],
-  );
+  /** Мастера, по которым клиент уже оставил отзыв (из GET /reviews/my-reviews). */
+  const reviewedMasterIds = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of reviewsList || []) {
+      if (typeof r.masterId === 'string' && r.masterId) set.add(r.masterId);
+    }
+    return set;
+  }, [reviewsList]);
+
+  /**
+   * Напоминание «оставить отзыв», если выполняется хотя бы одно:
+   * — запись в статусе COMPLETED, или
+   * — заявка в статусе CLOSED.
+   * На одного мастера — одна карточка; уже оставленные отзывы исключаем.
+   */
+  const pendingReviews = useMemo(() => {
+    type Row = { id: string; masterId: string; master: ClientBooking['master'] };
+    const rows: Row[] = [];
+    const seenMaster = new Set<string>();
+
+    const push = (item: ClientBooking | ClientLead, keyPrefix: 'booking' | 'lead') => {
+      const mid = item.masterId;
+      if (!mid || reviewedMasterIds.has(mid) || seenMaster.has(mid)) return;
+      if ('isReviewed' in item && item.isReviewed === true) return;
+      seenMaster.add(mid);
+      rows.push({
+        id: `${keyPrefix}-${item.id}`,
+        masterId: mid,
+        master: item.master ?? null,
+      });
+    };
+
+    for (const b of bookingsList || []) {
+      if (b.status === 'COMPLETED') push(b, 'booking');
+    }
+    for (const l of leadsList || []) {
+      if (l.status === 'CLOSED') push(l, 'lead');
+    }
+
+    return rows;
+  }, [bookingsList, leadsList, reviewedMasterIds]);
 
   const now = useNow();
   const upcomingBookings = useMemo(() => {

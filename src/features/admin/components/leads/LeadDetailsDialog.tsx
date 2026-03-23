@@ -138,7 +138,7 @@ export default function RequestDetailsDialog({
               {displayLead?.isPremium && (
                 <Badge className="bg-amber-600 hover:bg-amber-600 text-white gap-1 shrink-0">
                   <Star className="size-3.5" />
-                  Premium
+                  {t('leads.premiumBadge')}
                 </Badge>
               )}
             </div>
@@ -187,14 +187,14 @@ export default function RequestDetailsDialog({
                   <div className="flex items-start gap-2">
                     <User className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-muted-foreground text-xs">Name</p>
+                      <p className="text-muted-foreground text-xs">{t('leads.nameLabel')}</p>
                       <p className="font-medium">{clientName || '—'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <Phone className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-muted-foreground text-xs">Phone</p>
+                      <p className="text-muted-foreground text-xs">{t('leads.phoneLabel')}</p>
                       <p className="font-medium">{clientPhone || '—'}</p>
                     </div>
                   </div>

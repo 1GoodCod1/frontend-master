@@ -5,12 +5,14 @@ export type StatusOption = ReviewStatus;
 
 export type AdminReviewRow = {
   id: string;
-  status?: string | null;
+  masterId?: string | null;
   clientName?: string | null;
   rating?: number | null;
   comment?: string | null;
   createdAt?: string | null;
   master?: {
+    id?: string | null;
+    slug?: string | null;
     avatarUrl?: string | null;
     avatarFile?: { path?: string | null } | null;
     user?: {

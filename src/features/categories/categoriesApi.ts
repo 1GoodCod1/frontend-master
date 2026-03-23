@@ -17,7 +17,7 @@ export const categoriesApi = api.injectEndpoints({
       query: (params) => ({ url: '/categories', method: 'GET', params: params ?? {} }),
       transformResponse: (raw: unknown) => extractItems<CategoryDto>(raw),
       providesTags: ['Categories'],
-      keepUnusedDataFor: 3600, // 1h - categories rarely change
+      keepUnusedDataFor: 3600,
     }),
     categoriesCreate: build.mutation<CategoryDto, CreateCategoryDto>({
       query: (body) => ({ url: '/categories', method: 'POST', data: body }),

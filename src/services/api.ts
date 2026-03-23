@@ -225,7 +225,8 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth(axiosBaseQuery()),
   keepUnusedDataFor: 300,
-  refetchOnMountOrArgChange: false,
+  refetchOnMountOrArgChange: 120,
+  refetchOnFocus: true,
   tagTypes: [
     'Me',
     'Masters',

@@ -44,6 +44,9 @@ export const leads = {
       statusLocked: 'This request is closed, status change is not possible',
       markAsSpam: 'Mark as spam',
       confirmSpam: 'Are you sure you want to mark this as spam?',
+      nameLabel: 'Name',
+      phoneLabel: 'Phone',
+      premiumBadge: 'Premium',
     },
   },
   ru: {
@@ -91,6 +94,9 @@ export const leads = {
       statusLocked: 'Эта заявка закрыта, изменение статуса невозможно',
       markAsSpam: 'Пометить как спам',
       confirmSpam: 'Вы уверены, что хотите пометить это как спам?',
+      nameLabel: 'Имя',
+      phoneLabel: 'Телефон',
+      premiumBadge: 'Премиум',
     },
   },
   ro: {
@@ -138,6 +144,9 @@ export const leads = {
       statusLocked: 'Această cerere este închisă, schimbarea statusului nu este posibilă',
       markAsSpam: 'Marchează ca spam',
       confirmSpam: 'Sigur dorești să marchezi ca spam?',
+      nameLabel: 'Nume',
+      phoneLabel: 'Telefon',
+      premiumBadge: 'Premium',
     },
   },
 };

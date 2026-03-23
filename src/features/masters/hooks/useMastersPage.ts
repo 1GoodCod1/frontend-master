@@ -36,6 +36,8 @@ export type MastersPageQuery = {
   minRating: number;
 };
 
+const DEFAULT_MAX_PRICE = 5000;
+
 function parseQueryFromUrl(searchParams: URLSearchParams): Partial<MastersPageQuery> {
   const urlQ = searchParams.get('q');
   const urlSortBy = searchParams.get('sortBy') as SortBy | null;
@@ -59,7 +61,7 @@ function parseQueryFromUrl(searchParams: URLSearchParams): Partial<MastersPageQu
     availableNow: urlAvailable === 'true',
     hasPromotion: urlHasPromotion === 'true',
     minPrice: urlMinPrice ? Number(urlMinPrice) : 0,
-    maxPrice: urlMaxPrice ? Number(urlMaxPrice) : 5000,
+    maxPrice: urlMaxPrice ? Number(urlMaxPrice) : DEFAULT_MAX_PRICE,
     minRating: urlMinRating ? Number(urlMinRating) : 0,
   };
 }
@@ -74,6 +76,7 @@ export function useMastersPage() {
   const { data: activePromotions = [] } = usePromotionsActiveQuery({ limit: 50 });
   const [track] = useRecommendationsTrackMutation();
   const isInitialMount = useRef(true);
+  const [urlHadExplicitMaxPrice] = useState(() => searchParams.has('maxPrice'));
 
   const [query, setQuery] = useState<MastersPageQuery>(() => {
     const parsed = parseQueryFromUrl(searchParams);
@@ -88,13 +91,13 @@ export function useMastersPage() {
       availableNow: parsed.availableNow ?? false,
       hasPromotion: parsed.hasPromotion ?? false,
       minPrice: parsed.minPrice ?? 0,
-      maxPrice: parsed.maxPrice ?? 5000,
+      maxPrice: parsed.maxPrice ?? DEFAULT_MAX_PRICE,
       minRating: parsed.minRating ?? 0,
     };
   });
 
   const [showAdvanced, setShowAdvanced] = useState(
-    query.availableNow || query.hasPromotion || query.minPrice > 0 || query.maxPrice < 5000 || query.minRating > 0,
+    query.availableNow || query.hasPromotion || query.minPrice > 0 || query.maxPrice < DEFAULT_MAX_PRICE || query.minRating > 0,
   );
   const [viewMode, setViewModeState] = useState<ViewMode>(getPersistedViewMode);
   const setViewMode = (mode: ViewMode) => {
@@ -108,6 +111,27 @@ export function useMastersPage() {
     min: query.minPrice,
     max: query.maxPrice,
   });
+
+  const categories = filters.data?.categories ?? [];
+  const cities = filters.data?.cities ?? [];
+  const filtersPriceRange = filters.data?.priceRange;
+  const availableNowCount = filters.data?.availableNowCount ?? 0;
+  const hasPromotionCount = filters.data?.hasPromotionCount ?? 0;
+
+  const priceRange = useMemo(() => {
+    const raw = filtersPriceRange ?? { min: 0, max: DEFAULT_MAX_PRICE };
+    const { min, max } = raw;
+    const effectiveMax = min >= max ? Math.max(DEFAULT_MAX_PRICE, max + 500) : max;
+    return { min: 0, max: effectiveMax };
+  }, [filtersPriceRange]);
+
+  const [priceRangeSynced, setPriceRangeSynced] = useState(false);
+  if (!priceRangeSynced && filtersPriceRange && !urlHadExplicitMaxPrice) {
+    setPriceRangeSynced(true);
+    setQuery((s) => ({ ...s, maxPrice: priceRange.max }));
+  } else if (!priceRangeSynced && filtersPriceRange) {
+    setPriceRangeSynced(true);
+  }
 
   if (
     query.minPrice !== prevQueryPrices.min ||
@@ -133,8 +157,8 @@ export function useMastersPage() {
     if (query.cityValue) params.set('city', query.cityValue);
     if (query.availableNow) params.set('availableNow', 'true');
     if (query.hasPromotion) params.set('hasPromotion', 'true');
-    if (query.minPrice > 0) params.set('minPrice', String(query.minPrice));
-    if (query.maxPrice < 5000) params.set('maxPrice', String(query.maxPrice));
+    if (query.minPrice > priceRange.min) params.set('minPrice', String(query.minPrice));
+    if (query.maxPrice < priceRange.max) params.set('maxPrice', String(query.maxPrice));
     if (query.minRating > 0) params.set('minRating', String(query.minRating));
     setSearchParams(params, { replace: true });
   }, [
@@ -148,6 +172,8 @@ export function useMastersPage() {
     query.minPrice,
     query.maxPrice,
     query.minRating,
+    priceRange.min,
+    priceRange.max,
     setSearchParams,
   ]);
 
@@ -163,19 +189,6 @@ export function useMastersPage() {
       track({ action: 'filter', searchQuery, categoryId, cityId }).catch(() => {});
     }
   }, [debouncedQ, query.categoryValue, query.cityValue, track]);
-
-  const categories = filters.data?.categories ?? [];
-  const cities = filters.data?.cities ?? [];
-  const filtersPriceRange = filters.data?.priceRange;
-  const availableNowCount = filters.data?.availableNowCount ?? 0;
-  const hasPromotionCount = filters.data?.hasPromotionCount ?? 0;
-
-  const priceRange = useMemo(() => {
-    const raw = filtersPriceRange ?? { min: 0, max: 5000 };
-    const { min, max } = raw;
-    const effectiveMax = min >= max ? Math.max(5000, max + 500) : max;
-    return { min: 0, max: effectiveMax };
-  }, [filtersPriceRange]);
 
   const priceMinClamp = (v: number) =>
     Math.max(priceRange.min, Math.min(v, priceRange.max));
@@ -302,8 +315,8 @@ export function useMastersPage() {
       cityValue: '',
       availableNow: false,
       hasPromotion: false,
-      minPrice: 0,
-      maxPrice: 5000,
+      minPrice: priceRange.min,
+      maxPrice: priceRange.max,
       minRating: 0,
     }));
   };

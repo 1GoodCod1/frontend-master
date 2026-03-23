@@ -3,6 +3,9 @@ import { createTransform, type PersistedState } from 'redux-persist';
 export { API_CACHE_PERSIST_VERSION } from '@/constants';
 import { PERSISTED_ENDPOINT_PREFIXES, API_CACHE_PERSIST_VERSION } from '@/constants';
 
+/** RTK Query invalidation slice shape — `provided: {}` leaves `provided.tags` undefined and breaks invalidateTags (e.g. reading 'Me'). */
+const EMPTY_RTQ_PROVIDED = { tags: {}, keys: {} } as const;
+
 function isPersistedQueryKey(key: string): boolean {
   return PERSISTED_ENDPOINT_PREFIXES.some((prefix) => key.startsWith(prefix));
 }
@@ -28,6 +31,16 @@ function filterQueriesForPersist(
  * Important: we also strip mutations / subscriptions / provided — otherwise they
  * were still serialized via `...s` (XSS-readable cache of unrelated API calls).
  */
+function normalizeRtqProvided(state: unknown): unknown {
+  if (!state || typeof state !== 'object') return state;
+  const s = state as Record<string, unknown>;
+  const p = s.provided;
+  if (p && typeof p === 'object' && p !== null && !('tags' in p)) {
+    return { ...s, provided: { ...EMPTY_RTQ_PROVIDED } };
+  }
+  return state;
+}
+
 export const persistApiCacheTransform = createTransform(
   (state: unknown) => {
     if (!state || typeof state !== 'object') return state;
@@ -41,10 +54,10 @@ export const persistApiCacheTransform = createTransform(
       queries: filtered,
       mutations: {},
       subscriptions: {},
-      provided: {},
+      provided: { ...EMPTY_RTQ_PROVIDED },
     };
   },
-  null
+  (state: unknown) => normalizeRtqProvided(state)
 );
 
 
@@ -63,9 +76,9 @@ export function migrateApiCache(
       queries: filterQueriesForPersist(queries as Record<string, unknown>),
       mutations: {},
       subscriptions: {},
-      provided: {},
+      provided: { ...EMPTY_RTQ_PROVIDED },
     };
     return Promise.resolve(migrated as unknown as PersistedState);
   }
-  return Promise.resolve(state);
+  return Promise.resolve(normalizeRtqProvided(state) as PersistedState);
 }
