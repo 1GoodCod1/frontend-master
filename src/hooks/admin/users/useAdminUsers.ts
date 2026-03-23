@@ -1,8 +1,9 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useAdminUsersQuery, useAdminUsersStatsQuery } from '@/features/admin/adminApi';
 import { useUsersToggleVerifyMutation, useUsersToggleBanMutation } from '@/features/users/usersApi';
 import { formatDateTimeString } from '@/utils/date';
 import { parseAdminPaginatedResponse, parseAdminUsersStatsSummary } from '@/utils/data';
+import { fetchAllAdminUsers } from '@/utils/adminFetchAllPages';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
 import toast from 'react-hot-toast';
@@ -10,6 +11,8 @@ import { useAdminCursors } from '../useAdminCursors';
 import type { AdminUserRow } from '.';
 
 export function useAdminUsers() {
+  const [exportLoading, setExportLoading] = useState(false);
+  const exportInFlight = useRef(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [role, setRole] = useState<string>('');
@@ -94,18 +97,45 @@ export function useAdminUsers() {
     }
   };
 
-  const doExportToCSV = () => {
-    const headers = ['ID', 'Email', 'Role', 'Status', 'Created At', 'Last Login'];
-    const rows = allUsers.map((user) => [
-      user.id,
-      user.email ?? '',
-      user.role ?? '',
-      user.isVerified && !user.isBanned ? 'Active' : user.isBanned ? 'Blocked' : 'Pending',
-      user.createdAt ? formatDateTimeString(user.createdAt) : '',
-      user.lastLoginAt ? formatDateTimeString(user.lastLoginAt) : 'Never',
-    ]);
-    exportToCSV(headers, rows, 'users_export', 'Users exported to CSV');
-  };
+  const doExportToCSV = useCallback(async () => {
+    if (exportInFlight.current) return;
+    exportInFlight.current = true;
+    setExportLoading(true);
+    try {
+      await toast.promise(
+        (async () => {
+          const rows = await fetchAllAdminUsers({
+            role: role || undefined,
+            verified: verified === true ? true : undefined,
+            banned: banned === true ? true : undefined,
+            q: qText || undefined,
+          });
+          const headers = ['ID', 'Email', 'Role', 'Status', 'Created At', 'Last Login'];
+          const csvRows = rows.map((user) => [
+            user.id,
+            user.email ?? '',
+            user.role ?? '',
+            user.isVerified && !user.isBanned ? 'Active' : user.isBanned ? 'Blocked' : 'Pending',
+            user.createdAt ? formatDateTimeString(user.createdAt) : '',
+            user.lastLoginAt ? formatDateTimeString(user.lastLoginAt) : 'Never',
+          ]);
+          exportToCSV(headers, csvRows, 'users_export', 'Users exported to CSV', {
+            skipSuccessToast: true,
+          });
+          return rows.length;
+        })(),
+        {
+          loading: 'Loading all users…',
+          success: (n) =>
+            n === 0 ? 'Nothing to export' : `Exported ${n} user${n === 1 ? '' : 's'}`,
+          error: (e: unknown) => toErrorMessage(e) ?? 'Export failed',
+        },
+      );
+    } finally {
+      exportInFlight.current = false;
+      setExportLoading(false);
+    }
+  }, [role, verified, banned, qText]);
 
   return {
     page, setPage, limit, setLimit,
@@ -119,5 +149,6 @@ export function useAdminUsers() {
     statistics,
     handleVerify, handleBan,
     exportToCSV: doExportToCSV,
+    exportLoading,
   };
 }

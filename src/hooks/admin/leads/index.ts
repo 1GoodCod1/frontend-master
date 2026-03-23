@@ -13,7 +13,11 @@ export type AdminLeadRow = {
   message?: string | null;
   isPremium?: boolean | null;
   createdAt?: string | null;
-  master?: { user?: { firstName?: string | null; lastName?: string | null } | null } | null;
+  master?: {
+    avatarFile?: { path?: string | null } | null;
+    avatarUrl?: string | null;
+    user?: { firstName?: string | null; lastName?: string | null } | null;
+  } | null;
 } & Record<string, unknown>;
 
 export const STATUS_OPTIONS = LEAD_STATUS_OPTIONS;

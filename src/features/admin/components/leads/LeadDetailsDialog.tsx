@@ -6,7 +6,6 @@ import {
   MessageSquare,
   Paperclip,
   ExternalLink,
-  Copy,
   Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -21,13 +20,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-
 import { StatusChip } from '@/components/ui/StatusChip';
 import { mediaUrl } from '@/utils/media';
 import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
-import { useLeadsByIdQuery } from '@/features/leads/leadsApi';
-import { useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
+import { useLeadsByIdQuery, useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
 import {
   Select,
   SelectContent,
@@ -36,21 +33,29 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { LEAD_STATUS_OPTIONS, type LeadStatus } from '@/types/leads';
-import { Card } from '@/components/ui/card';
-import type { LeadDto } from '@/types/leads';
 import { isRecord } from '@/utils/guards';
-
-function pickDateLikeField(obj: unknown, key: string): string | number | undefined {
-  if (!isRecord(obj)) return undefined;
-  const v = obj[key];
-  return typeof v === 'string' || typeof v === 'number' ? v : undefined;
-}
+import type { LeadDto } from '@/types/leads';
 
 interface RequestDetailsDialogProps {
   open: boolean;
   lead: LeadDto | null;
   onClose: () => void;
   onStatusUpdated?: () => void;
+}
+
+function pickStr(obj: unknown, ...keys: string[]): string {
+  if (!isRecord(obj)) return '';
+  for (const key of keys) {
+    const v = obj[key];
+    if (typeof v === 'string' && v.trim()) return v;
+  }
+  return '';
+}
+
+function pickDate(obj: unknown, key: string): string | null {
+  if (!isRecord(obj)) return null;
+  const v = obj[key];
+  return typeof v === 'string' || typeof v === 'number' ? String(v) : null;
 }
 
 export default function RequestDetailsDialog({
@@ -69,15 +74,36 @@ export default function RequestDetailsDialog({
   );
   const [updateStatus, { isLoading: isUpdating }] = useLeadsUpdateStatusMutation();
 
-  const displayLead = fullLeadData ?? lead;
+  const displayLead = (fullLeadData ?? lead) as LeadDto & Record<string, unknown>;
 
   if (!lead) return null;
 
-  const files = Array.isArray(displayLead?.files) ? displayLead.files : [];
-  const avatarPath = displayLead?.master?.avatarFile?.path ?? undefined;
-  const avatarUrl = avatarPath
-    ? mediaUrl(avatarPath)
-    : displayLead?.master?.avatarUrl;
+  const clientName = pickStr(displayLead, 'clientName', 'name');
+  const clientPhone = pickStr(displayLead, 'clientPhone', 'phone');
+
+  const master = displayLead?.master;
+  const masterName = master
+    ? `${master.user?.firstName ?? ''} ${master.user?.lastName ?? ''}`.trim() || '—'
+    : null;
+  const avatarUrl = mediaUrl(
+    master?.avatarUrl || master?.avatarFile?.path || null,
+  );
+  const avatarFallback = (master?.user?.firstName?.[0] ?? 'M').toUpperCase();
+
+  // Collect client-attached files/photos
+  const rawFiles = Array.isArray(displayLead?.files) ? displayLead.files : [];
+  const files = rawFiles.map((x: unknown) => {
+    const item = isRecord(x) ? x : {};
+    // Support both nested { file: {...} } and flat { path, mimetype, ... }
+    const f = (isRecord(item.file) ? item.file : item) as Record<string, unknown>;
+    const path = typeof f.path === 'string' ? f.path : typeof item.path === 'string' ? item.path : '';
+    const mimetype = typeof f.mimetype === 'string' ? f.mimetype : '';
+    const filename = typeof f.filename === 'string' ? f.filename : typeof f.originalName === 'string' ? f.originalName : '';
+    const id = typeof f.id === 'string' ? f.id : typeof item.id === 'string' ? String(item.id) : path;
+    const isImage = mimetype.startsWith('image/')
+      || /\.(png|jpe?g|webp|gif|avif)$/i.test(path);
+    return { id, path, filename, isImage, url: mediaUrl(path) };
+  }).filter((f) => f.path);
 
   const handleStatusChange = async (next: LeadStatus) => {
     if (!leadId) return;
@@ -92,6 +118,8 @@ export default function RequestDetailsDialog({
       toast.error((msg as string) || (e instanceof Error ? e.message : t('leads.updateStatusFailed')));
     }
   };
+
+  const updatedAt = pickDate(displayLead, 'updatedAt');
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -124,6 +152,7 @@ export default function RequestDetailsDialog({
             </div>
           ) : (
             <>
+              {/* Status row */}
               <div className="flex flex-wrap items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-75 fill-mode-backwards">
                 <StatusChip kind="lead" value={String(displayLead?.status ?? '')} />
                 {leadId && (
@@ -149,6 +178,7 @@ export default function RequestDetailsDialog({
                 )}
               </div>
 
+              {/* Client info */}
               <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 p-4 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-100 fill-mode-backwards">
                 <p className="text-sm font-semibold text-foreground mb-3">
                   {t('leads.client')}
@@ -158,46 +188,39 @@ export default function RequestDetailsDialog({
                     <User className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-muted-foreground text-xs">Name</p>
-                      <p className="font-medium">
-                        displayLead?.clientName ||
-                        pickStringField(displayLead, 'name') ||
-                        '—'
-                      </p>
+                      <p className="font-medium">{clientName || '—'}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <Phone className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-muted-foreground text-xs">Phone</p>
-                      <p className="font-medium">
-                        displayLead?.clientPhone ||
-                        pickStringField(displayLead, 'phone') ||
-                        '—'
-                      </p>
+                      <p className="font-medium">{clientPhone || '—'}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {displayLead?.master && (
+              {/* Master info */}
+              {master && (
                 <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 p-4 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-150 fill-mode-backwards">
                   <p className="text-sm font-semibold text-foreground mb-3">
                     {t('admin.leads.master')}
                   </p>
                   <div className="flex items-center gap-3">
                     <Avatar className="size-14 rounded-lg border-2 border-slate-200 dark:border-white/[0.08] bg-amber-600 text-lg font-semibold">
-                      <AvatarImage src={avatarUrl ?? undefined} className="object-cover" />
-                      <AvatarFallback className="text-white">
-                        {String(displayLead.master?.user?.firstName?.[0] ?? 'M').toUpperCase()}
+                      {avatarUrl ? (
+                        <AvatarImage src={avatarUrl} className="object-cover" />
+                      ) : null}
+                      <AvatarFallback className="text-white bg-amber-600">
+                        {avatarFallback}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-foreground truncate">
-                        {`${displayLead.master?.user?.firstName || ''} ${displayLead.master?.user?.lastName || ''}`.trim() || '—'}
-                      </p>
-                      {displayLead.master?.category && (
+                      <p className="font-semibold text-foreground truncate">{masterName}</p>
+                      {master?.category && (
                         <p className="text-sm text-muted-foreground truncate">
-                          {getTranslatedCategoryName(t, displayLead.master.category)}
+                          {getTranslatedCategoryName(t, master.category)}
                         </p>
                       )}
                     </div>
@@ -205,6 +228,7 @@ export default function RequestDetailsDialog({
                 </div>
               )}
 
+              {/* Message */}
               {displayLead?.message && (
                 <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03] p-4 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-200 fill-mode-backwards">
                   <div className="flex items-center gap-2 mb-2">
@@ -219,6 +243,7 @@ export default function RequestDetailsDialog({
                 </div>
               )}
 
+              {/* Client attachments (photos / files) */}
               {files.length > 0 && (
                 <div className="rounded-xl border border-slate-200 dark:border-white/[0.08] p-4 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-200 fill-mode-backwards">
                   <div className="flex items-center gap-2 mb-3">
@@ -227,88 +252,40 @@ export default function RequestDetailsDialog({
                       {t('leads.files')} ({files.length})
                     </p>
                   </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {files.map((x: unknown) => {
-                      const item = x as { file?: Record<string, unknown>; id?: string };
-                      const f = item?.file ?? item;
-                      const file = f as {
-                        path?: string;
-                        mimetype?: string;
-                        filename?: string;
-                        size?: number;
-                        id?: string;
-                      };
-                      const url = mediaUrl(file?.path);
-                      const isImage =
-                        typeof file?.mimetype === 'string'
-                          ? file.mimetype.startsWith('image/')
-                          : /\.(png|jpe?g|webp|gif)$/i.test(String(file?.path));
-
-                      return (
-                        <Card
-                          key={file?.id ?? item?.id}
-                          className="overflow-hidden border border-slate-200 dark:border-white/[0.08] transition-all hover:border-amber-500/50"
+                  <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
+                    {files.map((f) =>
+                      f.isImage ? (
+                        <button
+                          key={f.id}
+                          type="button"
+                          className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-white/[0.08] aspect-square cursor-pointer transition-all hover:border-amber-500/60 hover:shadow-md p-0 bg-transparent"
+                          onClick={() => window.open(f.url, '_blank')}
                         >
-                          {isImage ? (
-                            <button
-                              type="button"
-                              className="block w-full cursor-pointer border-0 bg-transparent p-0"
-                              onClick={() => window.open(url, '_blank')}
-                            >
-                              <img
-                                src={url}
-                                alt={file?.filename ?? 'file'}
-                                className="h-32 w-full object-cover transition-transform hover:scale-[1.02]"
-                              />
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              className="flex h-32 w-full items-center justify-center bg-muted/50 transition-colors hover:bg-muted"
-                              onClick={() => window.open(url, '_blank')}
-                            >
-                              <div className="flex flex-col items-center gap-1">
-                                <Paperclip className="size-8 text-muted-foreground opacity-50" />
-                                <span className="max-w-[180px] truncate text-xs text-muted-foreground">
-                                  {file?.filename ?? 'Attachment'}
-                                </span>
-                              </div>
-                            </button>
-                          )}
-                          <div className="space-y-2 p-2">
-                            <p className="truncate text-xs font-bold" title={file?.filename}>
-                              {file?.filename ?? 'Attachment'}
-                            </p>
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                className="h-7 gap-1 border-0 bg-amber-600 text-white text-xs hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
-                                onClick={() => window.open(url, '_blank')}
-                              >
-                                <ExternalLink className="size-3" />
-                                {t('common.open')}
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-7 gap-1 text-xs"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(url);
-                                  toast.success(t('common.copied'));
-                                }}
-                              >
-                                <Copy className="size-3" />
-                                {t('common.copyLink')}
-                              </Button>
-                            </div>
-                          </div>
-                        </Card>
-                      );
-                    })}
+                          <img
+                            src={f.url}
+                            alt={f.filename || 'photo'}
+                            className="h-full w-full object-cover transition-transform hover:scale-105"
+                          />
+                        </button>
+                      ) : (
+                        <button
+                          key={f.id}
+                          type="button"
+                          className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-slate-200 dark:border-white/[0.08] aspect-square bg-muted/40 hover:bg-muted transition-colors cursor-pointer"
+                          onClick={() => window.open(f.url, '_blank')}
+                        >
+                          <ExternalLink className="size-6 text-amber-600 dark:text-amber-400" />
+                          <span className="max-w-[90%] truncate text-[11px] text-muted-foreground px-1">
+                            {f.filename || 'file'}
+                          </span>
+                        </button>
+                      ),
+                    )}
                   </div>
                 </div>
               )}
 
+              {/* Timestamps */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-lg border border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 p-3 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-250 fill-mode-backwards">
                   <p className="text-muted-foreground text-xs mb-0.5">{t('common.created')}</p>
@@ -318,11 +295,11 @@ export default function RequestDetailsDialog({
                       : '—'}
                   </p>
                 </div>
-                {pickDateLikeField(displayLead, 'updatedAt') && (
+                {updatedAt && (
                   <div className="rounded-lg border border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 p-3 animate-in fade-in slide-in-from-bottom-2 duration-300 delay-250 fill-mode-backwards">
                     <p className="text-muted-foreground text-xs mb-0.5">{t('common.updated')}</p>
                     <p className="text-sm font-semibold">
-                      {formatDateTimeLong(String(pickDateLikeField(displayLead, 'updatedAt')), locale)}
+                      {formatDateTimeLong(updatedAt, locale)}
                     </p>
                   </div>
                 )}

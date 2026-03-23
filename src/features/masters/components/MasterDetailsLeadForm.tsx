@@ -182,7 +182,7 @@ export const MasterDetailsLeadForm = ({
     );
   }
 
-  if (role === 'MASTER') return null;
+  if (role === 'MASTER' || role === 'ADMIN') return null;
 
   if (!isAuthed || role !== 'CLIENT') {
     return (

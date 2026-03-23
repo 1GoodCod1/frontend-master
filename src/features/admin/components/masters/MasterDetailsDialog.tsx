@@ -8,10 +8,10 @@ import {
   DialogBody,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { LazyImage } from '@/components/ui/LazyImage';
+import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { Star, CheckCircle, LayoutGrid, MapPin, Phone, Mail, ExternalLink, Images } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { StarRatingDisplay } from '@/features/admin/components/common/StarRatingDisplay';
@@ -21,9 +21,9 @@ import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/transl
 type MasterDetailsMaster = {
   id: string;
   slug?: string | null;
-  avatarUrl?: string | null;
   avatarFile?: { path?: string | null } | null;
   fullName?: string | null;
+  displayName?: string | null;
   email?: string | null;
   phone?: string | null;
   tariffType?: string | null;
@@ -39,6 +39,7 @@ type MasterDetailsMaster = {
   description?: string | null;
   user?: {
     email?: string | null;
+    phone?: string | null;
     firstName?: string | null;
     lastName?: string | null;
     avatarFile?: { path?: string | null } | null;
@@ -71,12 +72,22 @@ export default function MasterDetailsDialog({
   if (!master) return null;
 
   const avatarPath = master.avatarFile?.path || master.user?.avatarFile?.path;
-  const avatarUrl = avatarPath ? mediaUrl(avatarPath) : master.avatarUrl;
+  const avatarSrc = avatarPath ? mediaUrl(avatarPath) : undefined;
   const tariff = master?.tariffType ?? master?.tariff ?? master?.plan ?? 'BASIC';
   const tariffUpper = String(tariff).toUpperCase();
   const rating = master.avgRating ?? master.rating;
 
   const publicProfilePath = `/masters/${master.slug ?? master.id}`;
+  /** Phone lives on `users`; Master has no phone column in DB */
+  const contactPhone = master.user?.phone ?? master.phone ?? null;
+  const nameLine = [master.user?.firstName, master.user?.lastName].filter(Boolean).join(' ').trim();
+  const emailLocal = master.user?.email?.split('@')[0];
+  const displayName =
+    (master.displayName ?? '').trim() ||
+    nameLine ||
+    master.fullName ||
+    emailLocal ||
+    '—';
   const galleryPhotos = (master.photos ?? [])
     .map((p) => {
       const path = p?.file?.path;
@@ -98,18 +109,15 @@ export default function MasterDetailsDialog({
         <DialogBody className="space-y-6 py-5">
           <section className="space-y-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-              <Avatar className="size-20 shrink-0 rounded-xl border-2 border-slate-200 shadow-md dark:border-white/[0.08] bg-gradient-to-br from-primary to-primary/80 text-2xl font-semibold">
-                <AvatarImage src={avatarUrl ?? undefined} className="object-cover" />
-                <AvatarFallback className="rounded-xl">
-                  {master.user?.firstName?.[0]?.toUpperCase() || 'M'}
-                </AvatarFallback>
-              </Avatar>
+              <div className="size-20 shrink-0 overflow-hidden rounded-xl shadow-md">
+                {avatarSrc ? (
+                  <img src={avatarSrc} alt="" className="size-full object-cover" />
+                ) : (
+                  <AvatarPlaceholder role="master" height={80} fillParent />
+                )}
+              </div>
               <div className="min-w-0 flex-1 space-y-1">
-                <p className="truncate text-lg font-semibold text-foreground">
-                  {`${master.user?.firstName || ''} ${master.user?.lastName || ''}`.trim() ||
-                    master.fullName ||
-                    '—'}
-                </p>
+                <p className="truncate text-lg font-semibold text-foreground">{displayName}</p>
                 <p className="truncate text-sm text-muted-foreground">
                   {master.user?.email || master.email || '—'}
                 </p>
@@ -231,13 +239,13 @@ export default function MasterDetailsDialog({
                   No city
                 </div>
               )}
-              {master.phone ? (
+              {contactPhone ? (
                 <div className={cardClass}>
                   <div className="mb-2 flex items-center gap-2">
                     <Phone className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
                     <span className="text-sm font-semibold text-foreground">Phone</span>
                   </div>
-                  <p className="pl-6 text-sm text-muted-foreground">{master.phone}</p>
+                  <p className="pl-6 text-sm text-muted-foreground">{contactPhone}</p>
                 </div>
               ) : (
                 <div className="flex min-h-[72px] items-center rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 text-sm text-muted-foreground">

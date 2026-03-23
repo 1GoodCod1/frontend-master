@@ -9,9 +9,9 @@ import {
   DialogBody,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 
 import { mediaUrl } from '@/utils/media';
 import { getRoleGradient, getRoleColor, formatRole } from '@/utils/user';
@@ -24,7 +24,6 @@ type UserDetailsUser = {
   role?: string | null;
   isVerified?: boolean | null;
   isBanned?: boolean | null;
-  avatarUrl?: string | null;
   avatarFile?: { path?: string | null } | null;
   email?: string | null;
   firstName?: string | null;
@@ -72,17 +71,10 @@ export default function UserDetailsDialog({
   const role = (user.role ?? 'USER') as string;
 
   const avatarPath = user.avatarFile?.path || user.masterProfile?.avatarFile?.path;
-  const avatarUrl =
-    typeof avatarPath === 'string' && avatarPath
-      ? mediaUrl(avatarPath)
-      : user.avatarUrl ?? undefined;
-  const fallbackBg = getRoleGradient(role, isDark) || getRoleColor(role, isDark);
-  const initial =
-    user.email?.[0]?.toUpperCase() || user.firstName?.[0]?.toUpperCase() || 'U';
-  const displayName =
-    user.firstName && user.lastName
-      ? `${user.firstName} ${user.lastName}`
-      : user.email || '—';
+  const avatarSrc = avatarPath ? mediaUrl(avatarPath) : undefined;
+  /** Join non-empty parts; do not require both names; never use email as the title (avoids duplicate with line below). */
+  const nameLine = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
+  const displayName = nameLine || '—';
 
   const mp = user.masterProfile;
   const rawTariff = (mp?.effectiveTariffType ?? mp?.tariffType ?? mp?.tariff ?? 'BASIC') as string;
@@ -106,15 +98,17 @@ export default function UserDetailsDialog({
         <DialogBody className="space-y-6 py-5">
           <section className="space-y-4">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-              <Avatar
-                className="size-20 shrink-0 rounded-xl border-[3px] border-slate-200 shadow-md dark:border-white/[0.08]"
-                style={!avatarUrl ? { background: fallbackBg } : undefined}
-              >
-                {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
-                <AvatarFallback className="rounded-xl bg-transparent text-2xl font-semibold text-white">
-                  {!avatarUrl && initial}
-                </AvatarFallback>
-              </Avatar>
+              <div className="size-20 shrink-0 overflow-hidden rounded-xl shadow-md">
+                {avatarSrc ? (
+                  <img src={avatarSrc} alt="" className="size-full object-cover" />
+                ) : (
+                  <AvatarPlaceholder
+                    role={role === 'MASTER' ? 'master' : 'client'}
+                    height={80}
+                    fillParent
+                  />
+                )}
+              </div>
               <div className="min-w-0 flex-1">
                 <p className="mb-0.5 text-lg font-semibold text-foreground">{displayName}</p>
                 <p className="mb-3 text-sm text-muted-foreground">{user.email}</p>

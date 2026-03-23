@@ -3,13 +3,11 @@ import type { GridColDef } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
-import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminRequests, type AdminLeadRow } from '@/hooks/admin/requests';
 import RequestStatisticsCards from '@/features/admin/components/requests/RequestStatisticsCards';
 import RequestsFilters from '@/features/admin/components/requests/RequestsFilters';
-import BulkRequestActions from '@/features/admin/components/requests/BulkRequestActions';
 import RequestDetailsDialog from '@/features/admin/components/requests/RequestDetailsDialog';
 import RequestsEmptyState from '@/features/admin/components/requests/RequestsEmptyState';
 import RequestClientCell from '@/features/admin/components/requests/RequestClientCell';
@@ -33,14 +31,8 @@ export default function RequestsAdminPage() {
     setDateFrom,
     dateTo,
     setDateTo,
-    selection,
-    setSelection,
-    bulkStatus,
-    setBulkStatus,
     selectedLead,
     setSelectedLead,
-    confirmOpen,
-    setConfirmOpen,
     isLoading,
     isError,
     error,
@@ -49,9 +41,7 @@ export default function RequestsAdminPage() {
     allLeads,
     statistics,
     isRecent,
-    updateStatusLoading,
     exportToCSV,
-    applyBulkStatus,
     clearFilters,
   } = useAdminRequests();
 
@@ -67,7 +57,7 @@ export default function RequestsAdminPage() {
       field: 'master',
       headerName: t('admin.leads.master'),
       width: 200,
-      renderCell: (params) => <RequestMasterCell master={params.row?.master as { id?: string; slug?: string; user?: { firstName?: string; lastName?: string } } | null} />,
+      renderCell: (params) => <RequestMasterCell master={params.row?.master as AdminLeadRow['master']} />,
     },
     {
       field: 'status',
@@ -120,7 +110,7 @@ export default function RequestsAdminPage() {
               status={status}
               dateFrom={dateFrom}
               dateTo={dateTo}
-              allLeadsLength={allLeads.length}
+              allLeadsLength={statistics.totalLeads}
               onStatusChange={setStatus}
               onDateFromChange={setDateFrom}
               onDateToChange={setDateTo}
@@ -128,15 +118,6 @@ export default function RequestsAdminPage() {
             />
           }
         >
-          <BulkRequestActions
-            selection={selection}
-            bulkStatus={bulkStatus}
-            isLoading={updateStatusLoading}
-            onBulkStatusChange={setBulkStatus}
-            onApply={() => setConfirmOpen(true)}
-            onClearSelection={() => setSelection([])}
-          />
-
           <PaginatedDataGrid
             data={leadsData}
             loading={isLoading}
@@ -219,9 +200,7 @@ export default function RequestsAdminPage() {
                   marginTop: '56px !important',
                 },
               },
-              checkboxSelection: true,
-              rowSelectionModel: selection,
-              onRowSelectionModelChange: (m: (string | number)[]) => setSelection(m as string[]),
+              checkboxSelection: false,
             }}
           />
 
@@ -229,17 +208,6 @@ export default function RequestsAdminPage() {
             <RequestsEmptyState hasFilters={hasFilters} onClearFilters={clearFilters} />
           )}
 
-          <ConfirmDialog
-            open={confirmOpen}
-            title={t('admin.leads.applyStatusConfirm', { count: selection.length || 0 })}
-            description={t('admin.leads.applyStatusDesc', { status: bulkStatus })}
-            confirmText={t('admin.leads.apply')}
-            onClose={() => setConfirmOpen(false)}
-            onConfirm={async () => {
-              setConfirmOpen(false);
-              await applyBulkStatus();
-            }}
-          />
         </SectionCard>
 
         <RequestDetailsDialog

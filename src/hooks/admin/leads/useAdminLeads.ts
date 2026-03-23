@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { clearUnreadLeads } from '@/features/socket/socketSlice';
-import { useAdminLeadsQuery } from '@/features/admin/adminApi';
-import { useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
+import { useAdminLeadsQuery, useAdminLeadsStatsQuery, useLazyAdminLeadsExportQuery } from '@/features/admin/adminApi';
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
 import { parseAdminPaginatedResponse } from '@/utils/data';
@@ -10,7 +9,7 @@ import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
 import { useAdminCursors } from '../useAdminCursors';
 import { useIsRecent } from '../useIsRecent';
-import type { AdminLeadRow, StatusOption } from '.';
+import type { AdminLeadRow } from '.';
 
 export function useAdminLeads() {
   const dispatch = useAppDispatch();
@@ -19,10 +18,7 @@ export function useAdminLeads() {
   const [status, setStatus] = useState<string>('');
   const [dateFrom, setDateFrom] = useState<string>('');
   const [dateTo, setDateTo] = useState<string>('');
-  const [selection, setSelection] = useState<string[]>([]);
-  const [bulkStatus, setBulkStatus] = useState<StatusOption>('IN_PROGRESS');
   const [selectedLead, setSelectedLead] = useState<AdminLeadRow | null>(null);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const { cursor, resetCursors, updateMeta } = useAdminCursors(page);
 
@@ -58,41 +54,60 @@ export function useAdminLeads() {
 
   const leadsData = useMemo(() => ({ items: allLeads, meta }), [allLeads, meta]);
 
-  const totalLeads = allLeads.length;
-  const newLeads = allLeads.filter((l) => l.status === 'NEW').length;
-  const inProgressLeads = allLeads.filter((l) => l.status === 'IN_PROGRESS').length;
-  const closedLeads = allLeads.filter((l) => l.status === 'CLOSED').length;
-  const premiumLeads = allLeads.filter((l) => l.isPremium).length;
+  // Global stats — always reflect total counts regardless of pagination, auto-refresh every 30s
+  const statsQ = useAdminLeadsStatsQuery(
+    {
+      ...(dateFrom ? { dateFrom } : {}),
+      ...(dateTo ? { dateTo } : {}),
+    },
+    { pollingInterval: 30000 },
+  );
 
-  const [updateStatus, upd] = useLeadsUpdateStatusMutation();
+  const statsRaw = statsQ.data as Record<string, unknown> | undefined;
+  const statsData = (statsRaw && 'data' in statsRaw ? statsRaw.data : statsRaw) as
+    | { total?: number; newCount?: number; inProgressCount?: number; closedCount?: number; premiumCount?: number }
+    | undefined;
 
-  const doExportToCSV = () => {
-    const headers = ['ID', 'Status', 'Client Name', 'Phone', 'Master', 'Message', 'Premium', 'Created At'];
-    const rows = allLeads.map((lead) => [
-      lead.id,
-      lead.status,
-      lead.clientName || lead.name || '-',
-      lead.clientPhone || lead.phone || '-',
-      lead.master ? `${lead.master.user?.firstName || ''} ${lead.master.user?.lastName || ''}`.trim() : '-',
-      lead.message || '-',
-      lead.isPremium ? 'Yes' : 'No',
-      lead.createdAt ? formatDateTimeString(lead.createdAt) : '',
-    ]);
-    exportToCSV(headers, rows, 'requests_export', 'Requests exported to CSV');
+  const statistics = {
+    totalLeads: Number(statsData?.total ?? 0),
+    newLeads: Number(statsData?.newCount ?? 0),
+    inProgressLeads: Number(statsData?.inProgressCount ?? 0),
+    closedLeads: Number(statsData?.closedCount ?? 0),
+    premiumLeads: Number(statsData?.premiumCount ?? 0),
   };
 
-  const applyBulkStatus = async () => {
-    if (!selection.length) return toast.error('Select rows first');
-    const t = toast.loading(`Updating ${selection.length} request(s)...`);
+  // Lazy export — fetches ALL leads matching current filters
+  const [triggerExport] = useLazyAdminLeadsExportQuery();
+
+  const doExportToCSV = async () => {
+    const t = toast.loading('Preparing export...');
     try {
-      for (const id of selection) {
-        await updateStatus({ id, body: { status: bulkStatus } }).unwrap();
-      }
-      toast.success('Updated', { id: t });
-      setSelection([]);
-      q.refetch();
+      const result = await triggerExport({
+        ...(status ? { status } : {}),
+        ...(dateFrom ? { dateFrom } : {}),
+        ...(dateTo ? { dateTo } : {}),
+      }).unwrap();
+
+      const raw = result as Record<string, unknown>;
+      const inner = ('data' in raw ? raw.data : raw) as Record<string, unknown>;
+      const leads = (Array.isArray(inner?.leads) ? inner.leads : []) as AdminLeadRow[];
+
+      const headers = ['ID', 'Status', 'Client Name', 'Phone', 'Master', 'Message', 'Premium', 'Created At'];
+      const rows = leads.map((lead) => [
+        lead.id,
+        lead.status,
+        lead.clientName || lead.name || '-',
+        lead.clientPhone || lead.phone || '-',
+        lead.master ? `${lead.master.user?.firstName || ''} ${lead.master.user?.lastName || ''}`.trim() : '-',
+        lead.message || '-',
+        lead.isPremium ? 'Yes' : 'No',
+        lead.createdAt ? formatDateTimeString(lead.createdAt) : '',
+      ]);
+
+      exportToCSV(headers, rows, 'requests_export', 'Requests exported to CSV');
+      toast.dismiss(t);
     } catch (e: unknown) {
-      toast.error(toErrorMessage(e) ?? 'Failed', { id: t });
+      toast.error(toErrorMessage(e) ?? 'Export failed', { id: t });
     }
   };
 
@@ -102,22 +117,20 @@ export function useAdminLeads() {
     setDateTo('');
   };
 
-  const isRecent = useIsRecent('leads');
+  const isRecent: (id: unknown) => boolean = useIsRecent('leads');
 
   return {
     page, setPage, limit, setLimit,
     status, setStatus, dateFrom, setDateFrom, dateTo, setDateTo,
-    selection, setSelection, bulkStatus, setBulkStatus,
-    selectedLead, setSelectedLead, confirmOpen, setConfirmOpen,
+    selectedLead, setSelectedLead,
     isLoading: q.isLoading,
     isError: q.isError,
     error: q.error,
     refetch: q.refetch,
     leadsData, allLeads,
-    statistics: { totalLeads, newLeads, inProgressLeads, closedLeads, premiumLeads },
+    statistics,
     isRecent,
-    updateStatusLoading: upd.isLoading,
     exportToCSV: doExportToCSV,
-    applyBulkStatus, clearFilters,
+    clearFilters,
   };
 }

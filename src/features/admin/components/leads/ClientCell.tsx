@@ -12,8 +12,10 @@ export default function ClientCell({ lead }: ClientCellProps) {
 
   return (
     <div className="flex items-center gap-3 w-full min-w-0">
-      <Avatar className="size-12 rounded-lg shrink-0 bg-gradient-to-br from-primary to-primary/80 text-base font-semibold shadow-sm">
-        <AvatarFallback>{name[0]?.toUpperCase() || 'C'}</AvatarFallback>
+      <Avatar className="size-12 rounded-lg shrink-0 text-base font-semibold shadow-sm">
+        <AvatarFallback className="rounded-lg bg-slate-600 text-white dark:bg-slate-500">
+          {name[0]?.toUpperCase() || 'C'}
+        </AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1 flex flex-col gap-0.5">
         <span className="text-sm font-semibold text-foreground truncate">{name}</span>

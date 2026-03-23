@@ -22,12 +22,14 @@ interface UsersFiltersProps {
   role: string;
   verified: boolean | null;
   banned: boolean | null;
-  allUsersLength: number;
+  /** Total rows matching current filters (from stats), not current page size */
+  totalMatching: number;
+  exportLoading?: boolean;
   onQTextChange: (value: string) => void;
   onRoleChange: (value: string) => void;
   onVerifiedChange: (value: boolean | null) => void;
   onBannedChange: (value: boolean | null) => void;
-  onExport: () => void;
+  onExport: () => void | Promise<void>;
 }
 
 export default function UsersFilters({
@@ -35,7 +37,8 @@ export default function UsersFilters({
   role,
   verified,
   banned,
-  allUsersLength,
+  totalMatching,
+  exportLoading = false,
   onQTextChange,
   onRoleChange,
   onVerifiedChange,
@@ -50,8 +53,8 @@ export default function UsersFilters({
             <span className="inline-block">
               <Button
                 size="sm"
-                onClick={onExport}
-                disabled={!allUsersLength}
+                onClick={() => void onExport()}
+                disabled={!totalMatching || exportLoading}
                 className="gap-2 border-0 bg-amber-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
               >
                 <Download className="size-4" />

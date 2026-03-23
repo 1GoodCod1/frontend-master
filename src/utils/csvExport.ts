@@ -10,6 +10,11 @@ function escapeCsvCell(value: unknown): string {
   return `"${str.replace(/"/g, '""')}"`;
 }
 
+export type ExportCsvOptions = {
+  /** When true, caller handles success UI (e.g. toast.promise). */
+  skipSuccessToast?: boolean;
+};
+
 /**
  * Exports data to CSV and triggers download.
  * @param headers - Column headers
@@ -22,6 +27,7 @@ export function exportToCSV(
   rows: unknown[][],
   filename: string,
   successMessage = 'Exported to CSV',
+  options?: ExportCsvOptions,
 ): void {
   const csvContent = [
     headers.join(','),
@@ -34,5 +40,7 @@ export function exportToCSV(
   link.download = `${filename}_${new Date().toISOString().split('T')[0]}.csv`;
   link.click();
   URL.revokeObjectURL(link.href);
-  toast.success(successMessage);
+  if (!options?.skipSuccessToast) {
+    toast.success(successMessage);
+  }
 }

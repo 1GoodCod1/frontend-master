@@ -42,8 +42,11 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
   const cities = citiesFromDb;
   const getCityLabel = (c: { id: string; name: string; slug: string }) =>
     t(`cities.${c.slug}`, { defaultValue: c.name }) || c.name;
-  const getCitySlugForUrl = (cityIdOrSlug: string) =>
-    cities.find((c) => c.id === cityIdOrSlug || c.slug === cityIdOrSlug)?.slug ?? cityIdOrSlug;
+  const getCitySlugForUrl = useCallback(
+    (cityIdOrSlug: string) =>
+      cities.find((c) => c.id === cityIdOrSlug || c.slug === cityIdOrSlug)?.slug ?? cityIdOrSlug,
+    [cities],
+  );
   const heroCategories = (categories as CategoryDto[]).slice(0, 6);
 
   const stats = useMemo(() => {

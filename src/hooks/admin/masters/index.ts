@@ -24,6 +24,7 @@ export type AdminMasterRow = {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    phone?: string | null;
     isVerified?: boolean | null;
   } | null;
   category?: { name?: string | null } | null;

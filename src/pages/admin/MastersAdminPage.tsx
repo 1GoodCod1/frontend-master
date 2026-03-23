@@ -45,6 +45,7 @@ export default function MastersAdminPage() {
     statistics,
     updateLoading,
     exportToCSV,
+    exportLoading,
     doUpdate,
     clearFilters,
   } = useAdminMasters();
@@ -139,7 +140,8 @@ export default function MastersAdminPage() {
               qText={qText}
               verified={verified}
               featured={featured}
-              allMastersLength={allMasters.length}
+              totalMatching={statistics.totalMasters}
+              exportLoading={exportLoading}
               onQTextChange={setQText}
               onVerifiedChange={setVerified}
               onFeaturedChange={setFeatured}

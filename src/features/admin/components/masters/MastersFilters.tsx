@@ -14,18 +14,21 @@ interface MastersFiltersProps {
   qText: string;
   verified: boolean;
   featured: boolean;
-  allMastersLength: number;
+  /** Total rows matching current filters (from stats), not current page size */
+  totalMatching: number;
+  exportLoading?: boolean;
   onQTextChange: (value: string) => void;
   onVerifiedChange: (value: boolean) => void;
   onFeaturedChange: (value: boolean) => void;
-  onExport: () => void;
+  onExport: () => void | Promise<void>;
 }
 
 export default function MastersFilters({
   qText,
   verified,
   featured,
-  allMastersLength,
+  totalMatching,
+  exportLoading = false,
   onQTextChange,
   onVerifiedChange,
   onFeaturedChange,
@@ -40,8 +43,8 @@ export default function MastersFilters({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={onExport}
-                disabled={!allMastersLength}
+                onClick={() => void onExport()}
+                disabled={!totalMatching || exportLoading}
                 className="gap-2"
               >
                 <Download className="size-4" />

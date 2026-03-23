@@ -52,6 +52,19 @@ export const adminApi = api.injectEndpoints({
       query: (params) => ({ url: '/admin/leads', method: 'GET', params: params ?? {} }),
       providesTags: ['Leads'],
     }),
+    adminLeadsStats: build.query<
+      unknown,
+      { dateFrom?: string; dateTo?: string } | void
+    >({
+      query: (params) => ({ url: '/admin/leads/stats', method: 'GET', params: params ?? {} }),
+      providesTags: ['Leads'],
+    }),
+    adminLeadsExport: build.query<
+      unknown,
+      { status?: string; dateFrom?: string; dateTo?: string } | void
+    >({
+      query: (params) => ({ url: '/admin/leads/export', method: 'GET', params: params ?? {} }),
+    }),
     adminReviews: build.query<unknown, (PagedQuery & { status?: string }) | void>({
       query: (params) => ({ url: '/admin/reviews', method: 'GET', params: params ?? {} }),
       providesTags: ['Reviews'],
@@ -259,6 +272,8 @@ export const {
   useAdminMastersStatsQuery,
   useAdminUpdateMasterMutation,
   useAdminLeadsQuery,
+  useAdminLeadsStatsQuery,
+  useLazyAdminLeadsExportQuery,
   useAdminReviewsQuery,
   useAdminModerateReviewMutation,
   useAdminPaymentsQuery,

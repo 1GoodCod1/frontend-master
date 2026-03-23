@@ -318,7 +318,7 @@ export default function MasterDetailsPage() {
           {/* Right sidebar */}
           <div className="space-y-4">
             {/* Lead form / CTA */}
-            {!isOwnProfile && m?.user?.isVerified && (
+            {!isOwnProfile && m?.user?.isVerified && role !== 'ADMIN' && (
               <div id="lead-form" className="lg:sticky lg:top-24 space-y-3">
                 <MasterDetailsLeadForm
                   isAuthed={isAuthed}

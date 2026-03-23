@@ -47,11 +47,11 @@ export default function UsersPage() {
     error,
     refetch,
     usersData,
-    allUsers,
     statistics,
     handleVerify,
     handleBan,
     exportToCSV,
+    exportLoading,
   } = useAdminUsers();
 
   const handleOpenConfirmDialog = (action: 'verify' | 'ban', user: Record<string, unknown>) => {
@@ -151,7 +151,8 @@ export default function UsersPage() {
               role={role}
               verified={verified}
               banned={banned}
-              allUsersLength={allUsers.length}
+              totalMatching={statistics.totalUsers}
+              exportLoading={exportLoading}
               onQTextChange={setQText}
               onRoleChange={setRole}
               onVerifiedChange={setVerified}

@@ -244,7 +244,7 @@ export const MasterCard = React.memo(function MasterCard({
       )}
 
       {/* Contact button */}
-      {role !== 'MASTER' && (
+      {role !== 'MASTER' && role !== 'ADMIN' && (
         <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-3 sm:pb-4 pt-0.5 mt-auto">
           <button
             onClick={handleContactClick}

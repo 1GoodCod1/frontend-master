@@ -1,6 +1,8 @@
 export type AdminUserRow = {
   id: string;
   email?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   role?: string | null;
   isVerified?: boolean | null;
   isBanned?: boolean | null;

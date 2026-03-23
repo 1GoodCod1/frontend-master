@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import {
   useAdminMastersQuery,
   useAdminMastersStatsQuery,
@@ -7,12 +7,15 @@ import {
 import { formatDateTimeString } from '@/utils/date';
 import toast from 'react-hot-toast';
 import { parseAdminPaginatedResponse, parseAdminMastersStatsSummary } from '@/utils/data';
+import { fetchAllAdminMasters } from '@/utils/adminFetchAllPages';
 import { exportToCSV } from '@/utils/csvExport';
 import { toErrorMessage } from '@/utils/errors';
 import { useAdminCursors } from '../useAdminCursors';
 import type { AdminMasterRow } from '.';
 
 export function useAdminMasters() {
+  const [exportLoading, setExportLoading] = useState(false);
+  const exportInFlight = useRef(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [verified, setVerified] = useState(false);
@@ -78,23 +81,49 @@ export function useAdminMasters() {
     [allMasters, meta],
   );
 
-  const doExportToCSV = () => {
-    const headers = ['ID', 'Name', 'Email', 'Phone', 'Category', 'City', 'Tariff', 'Rating', 'Views', 'Verified', 'Created At'];
-    const rows = allMasters.map((master) => [
-      master.id,
-      `${master.user?.firstName || ''} ${master.user?.lastName || ''}`.trim() || master.fullName || '-',
-      master.user?.email || master.email || '-',
-      master.phone || '-',
-      master.category?.name || '-',
-      master.city?.name || '-',
-      String(master.tariffType || master.tariff || master.plan || 'BASIC').toUpperCase(),
-      master.avgRating || master.rating || '0',
-      master.views || '0',
-      master.user?.isVerified || master.isVerified ? 'Yes' : 'No',
-      master.createdAt ? formatDateTimeString(master.createdAt) : '',
-    ]);
-    exportToCSV(headers, rows, 'masters_export', 'Masters exported to CSV');
-  };
+  const doExportToCSV = useCallback(async () => {
+    if (exportInFlight.current) return;
+    exportInFlight.current = true;
+    setExportLoading(true);
+    try {
+      await toast.promise(
+        (async () => {
+          const rows = await fetchAllAdminMasters({
+            verified: verified ? true : undefined,
+            featured: featured ? true : undefined,
+            q: qText || undefined,
+          });
+          const headers = ['ID', 'Name', 'Email', 'Phone', 'Category', 'City', 'Tariff', 'Rating', 'Views', 'Verified', 'Created At'];
+          const csvRows = rows.map((master) => [
+            master.id,
+            `${master.user?.firstName || ''} ${master.user?.lastName || ''}`.trim() || master.fullName || '-',
+            master.user?.email || master.email || '-',
+            master.user?.phone ?? master.phone ?? '-',
+            master.category?.name || '-',
+            master.city?.name || '-',
+            String(master.tariffType || master.tariff || master.plan || 'BASIC').toUpperCase(),
+            master.avgRating || master.rating || '0',
+            master.views || '0',
+            master.user?.isVerified || master.isVerified ? 'Yes' : 'No',
+            master.createdAt ? formatDateTimeString(master.createdAt) : '',
+          ]);
+          exportToCSV(headers, csvRows, 'masters_export', 'Masters exported to CSV', {
+            skipSuccessToast: true,
+          });
+          return rows.length;
+        })(),
+        {
+          loading: 'Loading all masters…',
+          success: (n) =>
+            n === 0 ? 'Nothing to export' : `Exported ${n} master${n === 1 ? '' : 's'}`,
+          error: (e: unknown) => toErrorMessage(e) ?? 'Export failed',
+        },
+      );
+    } finally {
+      exportInFlight.current = false;
+      setExportLoading(false);
+    }
+  }, [verified, featured, qText]);
 
   const doUpdate = async () => {
     if (!selectedMaster?.id) return;
@@ -129,6 +158,7 @@ export function useAdminMasters() {
     statistics,
     updateLoading: updState.isLoading,
     exportToCSV: doExportToCSV,
+    exportLoading,
     doUpdate, clearFilters,
   };
 }
