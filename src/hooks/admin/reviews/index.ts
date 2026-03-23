@@ -10,7 +10,19 @@ export type AdminReviewRow = {
   rating?: number | null;
   comment?: string | null;
   createdAt?: string | null;
-  master?: { user?: { firstName?: string | null; lastName?: string | null } | null } | null;
+  master?: {
+    avatarUrl?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    user?: {
+      firstName?: string | null;
+      lastName?: string | null;
+      avatarFile?: { path?: string | null } | null;
+    } | null;
+  } | null;
+  client?: {
+    avatarFile?: { path?: string | null } | null;
+    clientPhotos?: Array<{ file?: { path?: string | null } | null }> | null;
+  } | null;
 } & Record<string, unknown>;
 
 export const STATUS_OPTIONS = REVIEW_STATUS_OPTIONS;

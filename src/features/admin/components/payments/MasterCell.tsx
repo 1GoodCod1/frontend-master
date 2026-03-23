@@ -1,4 +1,5 @@
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { mediaUrl } from '@/utils/media';
 
 type PaymentMaster = {
@@ -8,6 +9,7 @@ type PaymentMaster = {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    avatarFile?: { path?: string | null } | null;
   } | null;
 } & Record<string, unknown>;
 
@@ -18,15 +20,23 @@ interface MasterCellProps {
 export default function MasterCell({ master }: MasterCellProps) {
   if (!master) return <span className="text-sm text-muted-foreground">—</span>;
 
-  const avatarPath = master.avatarFile?.path;
-  const avatarUrl = avatarPath ? mediaUrl(avatarPath) : master.avatarUrl;
+  const rawPath =
+    master.avatarUrl ||
+    master.avatarFile?.path ||
+    master.user?.avatarFile?.path ||
+    null;
+  const avatarSrc = rawPath ? mediaUrl(rawPath) : undefined;
   const fullName = `${master.user?.firstName || ''} ${master.user?.lastName || ''}`.trim() || '—';
 
   return (
     <div className="flex items-center gap-3 w-full min-w-0">
-      <Avatar className="size-12 rounded-lg shrink-0 border-2 border-border bg-gradient-to-br from-primary to-primary/80 text-base font-semibold shadow-sm">
-        <AvatarImage src={avatarUrl ?? undefined} className="object-cover" />
-        <AvatarFallback>{master.user?.firstName?.[0]?.toUpperCase() || 'M'}</AvatarFallback>
+      <Avatar className="size-12 rounded-lg shrink-0 overflow-hidden border-2 border-border shadow-sm">
+        {avatarSrc ? (
+          <AvatarImage key={avatarSrc} src={avatarSrc} className="object-cover" alt="" />
+        ) : null}
+        <AvatarFallback className="rounded-lg p-0 bg-transparent">
+          <AvatarPlaceholder role="master" height={48} fillParent />
+        </AvatarFallback>
       </Avatar>
       <div className="min-w-0 flex-1 flex flex-col gap-0.5">
         <span className="text-sm font-semibold text-foreground truncate">{fullName}</span>

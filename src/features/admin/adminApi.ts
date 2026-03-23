@@ -69,6 +69,13 @@ export const adminApi = api.injectEndpoints({
       query: (params) => ({ url: '/admin/reviews', method: 'GET', params: params ?? {} }),
       providesTags: ['Reviews'],
     }),
+    adminReviewsStats: build.query<unknown, void>({
+      query: () => ({ url: '/admin/reviews/stats', method: 'GET' }),
+      providesTags: ['Reviews'],
+    }),
+    adminReviewsExport: build.query<unknown, { status?: string } | void>({
+      query: (params) => ({ url: '/admin/reviews/export', method: 'GET', params: params ?? {} }),
+    }),
     adminModerateReview: build.mutation<unknown, { id: string }>({
       query: ({ id }) => ({ url: `/admin/reviews/${id}/moderate`, method: 'PUT' }),
       invalidatesTags: ['Reviews'],
@@ -76,6 +83,13 @@ export const adminApi = api.injectEndpoints({
     adminPayments: build.query<unknown, (PagedQuery & { status?: string }) | void>({
       query: (params) => ({ url: '/admin/payments', method: 'GET', params: params ?? {} }),
       providesTags: ['Payments'],
+    }),
+    adminPaymentsStats: build.query<unknown, void>({
+      query: () => ({ url: '/admin/payments/stats', method: 'GET' }),
+      providesTags: ['Payments'],
+    }),
+    adminPaymentsExport: build.query<unknown, { status?: string } | void>({
+      query: (params) => ({ url: '/admin/payments/export', method: 'GET', params: params ?? {} }),
     }),
     adminAnalytics: build.query<unknown, { timeframe?: 'day' | 'week' | 'month' } | void>({
       query: (params) => ({ url: '/admin/analytics', method: 'GET', params: params ?? {} }),
@@ -275,8 +289,12 @@ export const {
   useAdminLeadsStatsQuery,
   useLazyAdminLeadsExportQuery,
   useAdminReviewsQuery,
+  useAdminReviewsStatsQuery,
+  useLazyAdminReviewsExportQuery,
   useAdminModerateReviewMutation,
   useAdminPaymentsQuery,
+  useAdminPaymentsStatsQuery,
+  useLazyAdminPaymentsExportQuery,
   useAdminAnalyticsQuery,
   useAdminCreateBackupMutation,
   useAdminListBackupsQuery,

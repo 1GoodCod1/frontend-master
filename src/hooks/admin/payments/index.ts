@@ -7,7 +7,16 @@ export type AdminPaymentRow = {
   plan?: string | null;
   type?: string | null;
   createdAt?: string | null;
-  master?: { user?: { firstName?: string | null; lastName?: string | null } | null } | null;
+  master?: {
+    avatarUrl?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    user?: {
+      firstName?: string | null;
+      lastName?: string | null;
+      email?: string | null;
+      avatarFile?: { path?: string | null } | null;
+    } | null;
+  } | null;
 } & Record<string, unknown>;
 
 export { useAdminPayments } from './useAdminPayments';

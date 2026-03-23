@@ -1,4 +1,5 @@
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { mediaUrl } from '@/utils/media';
 import type { LeadDto } from '@/types/leads';
 
@@ -9,18 +10,23 @@ interface MasterCellProps {
 export default function MasterCell({ master }: MasterCellProps) {
   if (!master) return <span className="text-sm text-muted-foreground">—</span>;
 
-  const avatarSrc = mediaUrl(
-    master.avatarFile?.path || master.avatarUrl || null,
-  ) || undefined;
+  // Same resolution order as useMasterCardData / public master cards
+  const rawPath =
+    master.avatarUrl ||
+    master.avatarFile?.path ||
+    master.user?.avatarFile?.path ||
+    null;
+  const avatarSrc = rawPath ? mediaUrl(rawPath) : undefined;
   const fullName = `${master.user?.firstName || ''} ${master.user?.lastName || ''}`.trim() || '—';
-  const initials = (master.user?.firstName?.[0] ?? 'M').toUpperCase();
 
   return (
     <div className="flex items-center gap-2">
-      <Avatar className="size-10 rounded-md text-sm font-semibold">
-        {avatarSrc && <AvatarImage src={avatarSrc} className="object-cover" />}
-        <AvatarFallback className="rounded-md bg-amber-600 text-white">
-          {initials}
+      <Avatar className="size-10 rounded-md overflow-hidden text-sm font-semibold">
+        {avatarSrc ? (
+          <AvatarImage key={avatarSrc} src={avatarSrc} className="object-cover" alt="" />
+        ) : null}
+        <AvatarFallback className="rounded-md p-0 bg-transparent">
+          <AvatarPlaceholder role="master" height={40} fillParent />
         </AvatarFallback>
       </Avatar>
       <span className="text-sm font-medium truncate">{fullName}</span>

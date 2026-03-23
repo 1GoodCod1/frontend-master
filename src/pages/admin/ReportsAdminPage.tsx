@@ -22,6 +22,7 @@ export default function ReportsAdminPage() {
     notes,
     setNotes,
     reportsList,
+    totalMatching,
     isLoading,
     isError,
     error,
@@ -53,7 +54,7 @@ export default function ReportsAdminPage() {
         <ReportsFilters
           statusFilter={statusFilter}
           onStatusFilterChange={setStatusFilter}
-          reportsListLength={reportsList.length}
+          totalMatching={totalMatching}
           onExport={exportToCSV}
         />
       </div>

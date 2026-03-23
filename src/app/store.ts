@@ -56,6 +56,10 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefault) =>
     getDefault({
+      immutableCheck: {
+        warnAfter: 128,
+        ignoredPaths: [api.reducerPath],
+      },
       serializableCheck: {
         ignoredPaths: [api.reducerPath],
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

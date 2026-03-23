@@ -3,13 +3,11 @@ import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
 import { useIsDark } from '@/hooks/useIsDark';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
-import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
 import { useAdminReviews, type AdminReviewRow } from '@/hooks/admin/reviews';
 import StatisticsCards from '@/features/admin/components/reviews/StatisticsCards';
 import ReviewsFilters from '@/features/admin/components/reviews/ReviewsFilters';
-import BulkActions from '@/features/admin/components/reviews/BulkActions';
 import ReviewDetailsDialog from '@/features/admin/components/reviews/ReviewDetailsDialog';
 import ReviewsEmptyState from '@/features/admin/components/reviews/ReviewsEmptyState';
 import ClientCell from '@/features/admin/components/reviews/ClientCell';
@@ -30,16 +28,8 @@ export default function ReviewsAdminPage() {
     setLimit,
     statusFilter,
     setStatusFilter,
-    selection,
-    setSelection,
-    bulkStatus,
-    setBulkStatus,
     selectedReview,
     setSelectedReview,
-    confirmOpen,
-    confirmTitle,
-    confirmDesc,
-    confirmLoading,
     isLoading,
     isError,
     error,
@@ -47,14 +37,8 @@ export default function ReviewsAdminPage() {
     reviewsData,
     allReviews,
     statistics,
+    totalMatching,
     isRecent,
-    updateStatusLoading,
-    moderateLoading,
-    openConfirm,
-    handleConfirm,
-    handleCloseConfirm,
-    applyBulkStatus,
-    applyBulkModerate,
     handleToggleVisibility,
     exportToCSV,
   } = useAdminReviews();
@@ -123,38 +107,11 @@ export default function ReviewsAdminPage() {
             <ReviewsFilters
               statusFilter={statusFilter}
               onStatusFilterChange={setStatusFilter}
-              allReviewsLength={allReviews.length}
+              totalMatching={totalMatching}
               onExport={exportToCSV}
             />
           }
         >
-          <BulkActions
-            selection={selection}
-            bulkStatus={bulkStatus}
-            updateStatusLoading={updateStatusLoading}
-            moderateLoading={moderateLoading}
-            onBulkStatusChange={setBulkStatus}
-            onApplyBulkStatus={() =>
-              openConfirm({
-                title: t('admin.reviews.applyBulkStatusConfirm', { count: selection.length || 0 }),
-                description: t('admin.reviews.applyBulkStatusDesc', { status: bulkStatus }),
-                action: async () => {
-                  await applyBulkStatus();
-                },
-              })
-            }
-            onApplyBulkModerate={() =>
-              openConfirm({
-                title: t('admin.reviews.moderateBulkConfirm', { count: selection.length || 0 }),
-                description: t('admin.reviews.moderateBulkDesc'),
-                action: async () => {
-                  await applyBulkModerate();
-                },
-              })
-            }
-            onClearSelection={() => setSelection([])}
-          />
-
           <PaginatedDataGrid
             data={reviewsData}
             loading={isLoading}
@@ -236,9 +193,7 @@ export default function ReviewsAdminPage() {
                   marginTop: '56px !important',
                 },
               },
-              checkboxSelection: true,
-              rowSelectionModel: selection,
-              onRowSelectionModelChange: (m: (string | number)[]) => setSelection(m as string[]),
+              checkboxSelection: false,
             }}
           />
 
@@ -246,15 +201,6 @@ export default function ReviewsAdminPage() {
             <ReviewsEmptyState statusFilter={statusFilter} onClearFilter={() => setStatusFilter('')} />
           )}
 
-          <ConfirmDialog
-            open={confirmOpen}
-            title={confirmTitle}
-            description={confirmDesc}
-            confirmText={t('admin.reviews.confirm')}
-            isLoading={confirmLoading}
-            onClose={handleCloseConfirm}
-            onConfirm={handleConfirm}
-          />
         </SectionCard>
 
         <ReviewDetailsDialog

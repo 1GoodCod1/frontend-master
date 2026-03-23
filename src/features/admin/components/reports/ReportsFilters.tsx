@@ -19,14 +19,15 @@ import { Badge } from '@/components/ui/badge';
 interface ReportsFiltersProps {
   statusFilter: string;
   onStatusFilterChange: (value: string) => void;
-  reportsListLength: number;
+  /** Rows matching current filter (full list from API — used for export enable) */
+  totalMatching: number;
   onExport: () => void;
 }
 
 export default function ReportsFilters({
   statusFilter,
   onStatusFilterChange,
-  reportsListLength,
+  totalMatching,
   onExport,
 }: ReportsFiltersProps) {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ export default function ReportsFilters({
                 variant="outline"
                 size="sm"
                 onClick={onExport}
-                disabled={!reportsListLength}
+                disabled={totalMatching === 0}
                 className="gap-2"
               >
                 <Download className="size-4" />

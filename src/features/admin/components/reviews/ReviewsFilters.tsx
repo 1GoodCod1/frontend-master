@@ -19,14 +19,15 @@ import {
 interface ReviewsFiltersProps {
   statusFilter: string;
   onStatusFilterChange: (value: string) => void;
-  allReviewsLength: number;
+  /** Total rows matching the current table filter (not only the current page) */
+  totalMatching: number;
   onExport: () => void;
 }
 
 export default function ReviewsFilters({
   statusFilter,
   onStatusFilterChange,
-  allReviewsLength,
+  totalMatching,
   onExport,
 }: ReviewsFiltersProps) {
   return (
@@ -39,7 +40,7 @@ export default function ReviewsFilters({
                 variant="outline"
                 size="sm"
                 onClick={onExport}
-                disabled={!allReviewsLength}
+                disabled={totalMatching === 0}
                 className="gap-2"
               >
                 <Download className="size-4" />

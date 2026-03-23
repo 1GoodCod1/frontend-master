@@ -36,6 +36,7 @@ export default function PaymentsAdminPage() {
     paymentsData,
     allPayments,
     statistics,
+    totalMatching,
     exportToCSV,
     clearFilters,
   } = useAdminPayments();
@@ -101,7 +102,7 @@ export default function PaymentsAdminPage() {
           actions={
             <PaymentsFilters
               status={status}
-              allPaymentsLength={allPayments.length}
+              totalMatching={totalMatching}
               onStatusChange={setStatus}
               onExport={exportToCSV}
             />

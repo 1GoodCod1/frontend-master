@@ -50,9 +50,20 @@ export type ReviewDto = {
   updatedAt: string;
 
   master?: {
-    user?: { firstName?: string | null; lastName?: string | null } | null;
+    avatarUrl?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    user?: {
+      firstName?: string | null;
+      lastName?: string | null;
+      avatarFile?: { path?: string | null } | null;
+    } | null;
   } | null;
-  client?: { firstName?: string | null; lastName?: string | null } | null;
+  client?: {
+    firstName?: string | null;
+    lastName?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    clientPhotos?: Array<{ file?: { path?: string | null } | null }> | null;
+  } | null;
 
   reviewCriteria?: ReviewCriteriaDto[];
   reviewFiles?: ReviewFileDto[];

@@ -10,6 +10,10 @@ export type LeadDto = {
   clientName?: string | null;
   clientPhone?: string | null;
   masterId?: string | null;
+  client?: {
+    avatarFile?: { path?: string | null } | null;
+    clientPhotos?: Array<{ file?: { path?: string | null } | null }> | null;
+  } | null;
   master?: {
     id?: string;
     /** URL-safe encoded ID for master profile links */
@@ -22,6 +26,7 @@ export type LeadDto = {
       lastName?: string | null;
       phone?: string | null;
       email?: string | null;
+      avatarFile?: { path?: string | null } | null;
     } | null;
     category?: { name?: string | null } | null;
   } | null;

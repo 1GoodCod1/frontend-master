@@ -29,9 +29,11 @@ function mapVariantAndClass(kind: StatusChipKind, value: string): { variant?: 'd
 
   if (kind === 'payment') {
     if (v === 'PENDING') return { className: 'border-0 bg-amber-500 text-white hover:bg-amber-600' };
-    if (v === 'PAID') return { className: 'border-0 bg-emerald-600 text-white hover:bg-emerald-700' };
+    if (v === 'SUCCESS' || v === 'PAID' || v === 'COMPLETED') {
+      return { className: 'border-0 bg-emerald-600 text-white hover:bg-emerald-700' };
+    }
     if (v === 'FAILED') return { variant: 'destructive' };
-    if (v === 'CANCELLED') return { variant: 'secondary' };
+    if (v === 'REFUNDED' || v === 'CANCELLED') return { variant: 'secondary' };
   }
 
   return { variant: 'secondary' };

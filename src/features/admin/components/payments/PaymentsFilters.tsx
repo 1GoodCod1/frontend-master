@@ -17,14 +17,15 @@ import {
 
 interface PaymentsFiltersProps {
   status: string;
-  allPaymentsLength: number;
+  /** Total rows for current filter (from API meta, not only current page) */
+  totalMatching: number;
   onStatusChange: (value: string) => void;
   onExport: () => void;
 }
 
 export default function PaymentsFilters({
   status,
-  allPaymentsLength,
+  totalMatching,
   onStatusChange,
   onExport,
 }: PaymentsFiltersProps) {
@@ -38,7 +39,7 @@ export default function PaymentsFilters({
                 variant="outline"
                 size="sm"
                 onClick={onExport}
-                disabled={!allPaymentsLength}
+                disabled={totalMatching === 0}
                 className="gap-2"
               >
                 <Download className="size-4" />
@@ -56,10 +57,9 @@ export default function PaymentsFilters({
         <SelectContent>
           <SelectItem value="all">All Statuses</SelectItem>
           <SelectItem value="PENDING">PENDING</SelectItem>
-          <SelectItem value="PAID">PAID</SelectItem>
-          <SelectItem value="COMPLETED">COMPLETED</SelectItem>
+          <SelectItem value="SUCCESS">SUCCESS</SelectItem>
           <SelectItem value="FAILED">FAILED</SelectItem>
-          <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+          <SelectItem value="REFUNDED">REFUNDED</SelectItem>
         </SelectContent>
       </Select>
       {status && (

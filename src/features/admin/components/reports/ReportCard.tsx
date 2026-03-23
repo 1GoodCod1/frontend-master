@@ -10,9 +10,12 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
 import { getStatusColor, getStatusBgColor } from '@/utils/reports';
 import { useIsDark } from '@/hooks/useIsDark';
+import { mediaUrl } from '@/utils/media';
 
 export type ReportLike = {
   id: string;
@@ -22,9 +25,38 @@ export type ReportLike = {
   description?: string | null;
   evidence?: string | null;
   notes?: string | null;
-  client?: { email?: string | null; phone?: string | null } | null;
-  master?: { user?: { firstName?: string | null; lastName?: string | null; email?: string | null } | null } | null;
+  client?: {
+    email?: string | null;
+    phone?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    clientPhotos?: Array<{ file?: { path?: string | null } | null }> | null;
+  } | null;
+  master?: {
+    avatarUrl?: string | null;
+    avatarFile?: { path?: string | null } | null;
+    user?: {
+      firstName?: string | null;
+      lastName?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      avatarFile?: { path?: string | null } | null;
+    } | null;
+  } | null;
 } & Record<string, unknown>;
+
+function clientAvatarSrc(c: ReportLike['client']): string | undefined {
+  const raw =
+    c?.avatarFile?.path ?? c?.clientPhotos?.[0]?.file?.path ?? null;
+  return raw ? mediaUrl(raw) : undefined;
+}
+
+function masterAvatarSrc(m: ReportLike['master']): string | undefined {
+  if (!m) return undefined;
+  const raw = m.avatarUrl || m.avatarFile?.path || m.user?.avatarFile?.path || null;
+  return raw ? mediaUrl(raw) : undefined;
+}
 
 interface ReportCardProps {
   report: ReportLike;
@@ -38,6 +70,14 @@ export default function ReportCard({ report, onOpenDialog }: ReportCardProps) {
   const statusKey = report.status ?? 'PENDING';
   const statusColor = getStatusColor(statusKey);
   const statusBg = getStatusBgColor(statusKey, isDark);
+
+  const clientSrc = clientAvatarSrc(report.client);
+  const masterSrc = masterAvatarSrc(report.master);
+  const clientDisplayName =
+    [report.client?.firstName, report.client?.lastName].filter(Boolean).join(' ').trim() ||
+    report.client?.email ||
+    report.client?.phone ||
+    '—';
 
   return (
     <Card
@@ -102,19 +142,30 @@ export default function ReportCard({ report, onOpenDialog }: ReportCardProps) {
                 {t('admin.reports.client')}
               </span>
             </div>
-            <div className="space-y-1 ml-7">
-              {report.client?.email && (
-                <div className="flex items-center gap-2">
-                  <Mail className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">{report.client.email}</span>
-                </div>
-              )}
-              {report.client?.phone && (
-                <div className="flex items-center gap-2">
-                  <Phone className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">{report.client.phone}</span>
-                </div>
-              )}
+            <div className="flex items-start gap-3">
+              <Avatar className="size-11 rounded-lg shrink-0 overflow-hidden border border-border">
+                {clientSrc ? (
+                  <AvatarImage src={clientSrc} className="object-cover" alt="" />
+                ) : null}
+                <AvatarFallback className="rounded-lg p-0 bg-transparent">
+                  <AvatarPlaceholder role="client" height={44} fillParent />
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-1 min-w-0 flex-1">
+                <p className="text-sm font-semibold text-foreground truncate">{clientDisplayName}</p>
+                {report.client?.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="size-3.5 text-muted-foreground shrink-0" />
+                    <span className="text-sm text-muted-foreground truncate">{report.client.email}</span>
+                  </div>
+                )}
+                {report.client?.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="size-3.5 text-muted-foreground shrink-0" />
+                    <span className="text-sm text-muted-foreground truncate">{report.client.phone}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -125,18 +176,28 @@ export default function ReportCard({ report, onOpenDialog }: ReportCardProps) {
                 {t('admin.reports.master')}
               </span>
             </div>
-            <div className="space-y-1 ml-7">
-              <span className="text-sm font-semibold">
-                {report.master?.user?.firstName} {report.master?.user?.lastName}
-              </span>
-              {report.master?.user?.email && (
-                <div className="flex items-center gap-2">
-                  <Mail className="size-3.5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    {report.master.user.email}
-                  </span>
-                </div>
-              )}
+            <div className="flex items-start gap-3">
+              <Avatar className="size-10 rounded-md shrink-0 overflow-hidden border border-border">
+                {masterSrc ? (
+                  <AvatarImage src={masterSrc} className="object-cover" alt="" />
+                ) : null}
+                <AvatarFallback className="rounded-md p-0 bg-transparent">
+                  <AvatarPlaceholder role="master" height={40} fillParent />
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-1 min-w-0 flex-1">
+                <span className="text-sm font-semibold block truncate">
+                  {report.master?.user?.firstName} {report.master?.user?.lastName}
+                </span>
+                {report.master?.user?.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="size-3.5 text-muted-foreground shrink-0" />
+                    <span className="text-sm text-muted-foreground truncate">
+                      {report.master.user.email}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

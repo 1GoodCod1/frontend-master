@@ -31,6 +31,15 @@ export const reportsApi = api.injectEndpoints({
       providesTags: ['Reports'],
     }),
 
+    reportsStats: build.query<unknown, void>({
+      query: () => ({ url: '/reports/stats', method: 'GET' }),
+      providesTags: ['Reports'],
+    }),
+
+    reportsExport: build.query<unknown, { status?: string } | void>({
+      query: (params) => ({ url: '/reports/export', method: 'GET', params: params ?? {} }),
+    }),
+
     reportsUpdateStatus: build.mutation<
       unknown,
       { id: string; status: string; action?: string; notes?: string }
@@ -45,6 +54,8 @@ export const {
   useReportsCreateMutation,
   useReportsMyQuery,
   useReportsListQuery,
+  useReportsStatsQuery,
+  useLazyReportsExportQuery,
   useReportsUpdateStatusMutation,
   useReportsAgainstMeCountQuery,
 } = reportsApi;
