@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Mail, Phone, CheckCircle, Ban, Clock } from 'lucide-react';
+import { Mail, Phone, CheckCircle, Ban, Clock, Calendar, LogIn, Star, Eye, Briefcase, MapPin } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 
 import { mediaUrl } from '@/utils/media';
@@ -72,7 +71,6 @@ export default function UserDetailsDialog({
 
   const avatarPath = user.avatarFile?.path || user.masterProfile?.avatarFile?.path;
   const avatarSrc = avatarPath ? mediaUrl(avatarPath) : undefined;
-  /** Join non-empty parts; do not require both names; never use email as the title (avoids duplicate with line below). */
   const nameLine = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
   const displayName = nameLine || '—';
 
@@ -85,158 +83,167 @@ export default function UserDetailsDialog({
     rawTariff === 'BASIC' ? 'BASIC' : isActivePaid ? rawTariff : 'BASIC';
   const tariffUpper = String(effectiveTariff).toUpperCase();
 
+  // Premium card styling without ugly black borders
+  const blockClass = "group flex flex-col justify-center rounded-2xl bg-slate-50/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
+  const rowBlockClass = "group flex items-center gap-4 rounded-2xl bg-slate-50/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
+
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-2rem)] max-w-xl flex-col gap-0 p-0 sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold tracking-tight">{t('admin.users.userDetails')}</DialogTitle>
-          <p className="pr-2 text-sm text-muted-foreground">{t('admin.users.detailSubtitle')}</p>
+      <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-2rem)] max-w-2xl flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl border-none shadow-2xl">
+        <DialogHeader className="px-6 pt-6 pb-2">
+          <DialogTitle className="text-2xl font-bold tracking-tight">{t('admin.users.userDetails')}</DialogTitle>
+          <p className="text-sm text-muted-foreground">{t('admin.users.detailSubtitle')}</p>
         </DialogHeader>
 
-        <DialogBody className="space-y-6 py-5">
-          <section className="space-y-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-              <div className="size-20 shrink-0 overflow-hidden rounded-xl shadow-md">
-                {avatarSrc ? (
-                  <img src={avatarSrc} alt="" className="size-full object-cover" />
-                ) : (
-                  <AvatarPlaceholder
-                    role={role === 'MASTER' ? 'master' : 'client'}
-                    height={80}
-                    fillParent
-                  />
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="mb-0.5 text-lg font-semibold text-foreground">{displayName}</p>
-                <p className="mb-3 text-sm text-muted-foreground">{user.email}</p>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge
-                    className="border-0 font-semibold text-white"
-                    style={{
-                      background: getRoleGradient(role, isDark) || getRoleColor(role, isDark),
-                      boxShadow: user.role?.toUpperCase() === 'ADMIN' ? '0 2px 8px rgba(220, 20, 60, 0.4)' : undefined,
-                    }}
-                  >
-                    {formatRole(role)}
+        <DialogBody className="space-y-8 overflow-y-auto px-6 py-4 custom-scrollbar">
+          {/* Profile Section */}
+          <section className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+            <div className="relative size-24 shrink-0 overflow-hidden rounded-full ring-[4px] ring-white shadow-xl dark:ring-slate-900 sm:size-28">
+              {avatarSrc ? (
+                <img src={avatarSrc} alt="" className="size-full object-cover" />
+              ) : (
+                <AvatarPlaceholder
+                  role={role === 'MASTER' ? 'master' : 'client'}
+                  height={112}
+                  fillParent
+                />
+              )}
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col items-center text-center sm:items-start sm:text-left pt-2">
+              <h2 className="mb-1.5 truncate text-2xl font-bold tracking-tight text-foreground">{displayName}</h2>
+              <p className="mb-4 truncate text-sm font-medium text-muted-foreground">{user.email}</p>
+              
+              <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+                <Badge
+                  className="border-0 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm"
+                  style={{
+                    background: getRoleGradient(role, isDark) || getRoleColor(role, isDark),
+                  }}
+                >
+                  {formatRole(role)}
+                </Badge>
+                {user.isVerified && !user.isBanned && (
+                  <Badge className="gap-1.5 border-0 bg-emerald-500/15 px-3 py-1.5 text-emerald-700 hover:bg-emerald-500/25 dark:bg-emerald-500/20 dark:text-emerald-400">
+                    <CheckCircle className="size-3.5" /> {t('admin.users.badgeActive')}
                   </Badge>
-                  {user.isVerified && !user.isBanned && (
-                    <Badge className="gap-1 border-0 bg-emerald-600 font-semibold text-white">
-                      <CheckCircle className="size-4" /> {t('admin.users.badgeActive')}
-                    </Badge>
-                  )}
-                  {!user.isVerified && user.isBanned && (
-                    <Badge className="gap-1 border-0 bg-destructive font-semibold text-white">
-                      <Ban className="size-4" /> {t('admin.users.badgeBlocked')}
-                    </Badge>
-                  )}
-                  {!user.isVerified && !user.isBanned && (
-                    <Badge className="gap-1 border-0 bg-amber-500 font-semibold text-white">
-                      <Clock className="size-4" /> {t('admin.users.badgePending')}
-                    </Badge>
-                  )}
-                </div>
+                )}
+                {!user.isVerified && user.isBanned && (
+                  <Badge className="gap-1.5 border-0 bg-rose-500/15 px-3 py-1.5 text-rose-700 hover:bg-rose-500/25 dark:bg-rose-500/20 dark:text-rose-400">
+                    <Ban className="size-3.5" /> {t('admin.users.badgeBlocked')}
+                  </Badge>
+                )}
+                {!user.isVerified && !user.isBanned && (
+                  <Badge className="gap-1.5 border-0 bg-amber-500/15 px-3 py-1.5 text-amber-700 hover:bg-amber-500/25 dark:bg-amber-500/20 dark:text-amber-400">
+                    <Clock className="size-3.5" /> {t('admin.users.badgePending')}
+                  </Badge>
+                )}
               </div>
             </div>
           </section>
 
           {user.role === 'MASTER' && user.masterProfile && (
-            <>
-              <Separator className="bg-border/60" />
-              <section className="space-y-3">
-                <div>
-                  <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    {t('admin.users.masterProfileSection')}
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground/90">{t('admin.users.masterProfileHelp')}</p>
-                </div>
-                <div className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-4 dark:bg-amber-500/10">
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    <div>
-                      <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.tariff')}</p>
-                      <Badge
-                        className="border-0 font-semibold text-white"
-                        style={{
-                          backgroundColor:
-                            tariffUpper === 'VIP'
-                              ? '#DC143C'
-                              : tariffUpper === 'PREMIUM'
-                                ? '#F39C12'
-                                : '#4A90E2',
-                        }}
-                      >
-                        {tariffUpper}
-                      </Badge>
-                    </div>
-                    {user.masterProfile.category && (
-                      <div>
-                        <p className="mb-0.5 text-xs text-muted-foreground">Category</p>
-                        <p className="text-sm font-medium">
-                          {getTranslatedCategoryName(t, user.masterProfile.category)}
-                        </p>
-                      </div>
-                    )}
-                    {user.masterProfile.city && (
-                      <div>
-                        <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.city')}</p>
-                        <p className="text-sm font-medium">
-                          {getTranslatedCityName(t, user.masterProfile.city)}
-                        </p>
-                      </div>
-                    )}
-                    <div>
-                      <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.views')}</p>
-                      <p className="text-sm font-medium">{user.masterProfile.views ?? 0}</p>
-                    </div>
-                    <div>
-                      <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.masters.rating')}</p>
-                      <p className="text-sm font-medium">
-                        {user.masterProfile.rating ?? user.masterProfile.avgRating
-                          ? `⭐ ${Number(user.masterProfile.rating ?? user.masterProfile.avgRating).toFixed(1)}`
-                          : t('admin.users.noReviews')}
-                      </p>
-                    </div>
-                    {user.masterProfile.experienceYears !== undefined && (
-                      <div>
-                        <p className="mb-0.5 text-xs text-muted-foreground">{t('admin.users.experienceLabel')}</p>
-                        <p className="text-sm font-medium">
-                          {user.masterProfile.experienceYears}{' '}
-                          {user.masterProfile.experienceYears === 1
-                            ? t('admin.users.experienceYear')
-                            : t('admin.users.experienceYears')}
-                        </p>
-                      </div>
-                    )}
+            <section className="space-y-4 pt-2">
+              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                <Briefcase className="size-4" />
+                {t('admin.users.masterProfileSection')}
+              </h3>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <div className={blockClass}>
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.masters.tariff')}</p>
+                  <div>
+                    <Badge
+                      className="border-0 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm"
+                      style={{
+                        backgroundColor:
+                          tariffUpper === 'VIP'
+                            ? '#DC143C'
+                            : tariffUpper === 'PREMIUM'
+                              ? '#F39C12'
+                              : '#4A90E2',
+                      }}
+                    >
+                      {tariffUpper}
+                    </Badge>
                   </div>
                 </div>
-              </section>
-            </>
+                {user.masterProfile.category && (
+                  <div className={blockClass}>
+                    <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.masters.category')}</p>
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {getTranslatedCategoryName(t, user.masterProfile.category)}
+                    </p>
+                  </div>
+                )}
+                {user.masterProfile.city && (
+                  <div className={blockClass}>
+                    <p className="mb-1 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
+                      <MapPin className="size-3" />
+                      {t('admin.masters.city')}
+                    </p>
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {getTranslatedCityName(t, user.masterProfile.city)}
+                    </p>
+                  </div>
+                )}
+                <div className={blockClass}>
+                  <p className="mb-1 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
+                    <Eye className="size-3" />
+                    {t('admin.masters.views')}
+                  </p>
+                  <p className="truncate text-sm font-semibold text-foreground">{user.masterProfile.views ?? 0}</p>
+                </div>
+                <div className={blockClass}>
+                  <p className="mb-1 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
+                    <Star className="size-3" />
+                    {t('admin.masters.rating')}
+                  </p>
+                  <p className="truncate text-sm font-semibold text-foreground">
+                    {user.masterProfile.rating ?? user.masterProfile.avgRating
+                      ? `${Number(user.masterProfile.rating ?? user.masterProfile.avgRating).toFixed(1)}`
+                      : t('admin.users.noReviews')}
+                  </p>
+                </div>
+                {user.masterProfile.experienceYears !== undefined && (
+                  <div className={blockClass}>
+                    <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.experienceLabel')}</p>
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {user.masterProfile.experienceYears}{' '}
+                      {user.masterProfile.experienceYears === 1
+                        ? t('admin.users.experienceYear')
+                        : t('admin.users.experienceYears')}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
           )}
 
-          <Separator className="bg-border/60" />
-
-          <section className="space-y-3">
-            <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          <section className="space-y-4 pt-2">
+            <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
               {t('admin.users.contactSection')}
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
-                <div className="mb-2 flex items-center gap-2">
-                  <Mail className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                  <span className="text-sm font-semibold text-foreground">{t('admin.users.email')}</span>
+              <div className={rowBlockClass}>
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                  <Mail className="size-5" />
                 </div>
-                <p className="text-sm text-muted-foreground break-all pl-6">{user.email || '—'}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="mb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.email')}</p>
+                  <p className="truncate text-sm font-semibold text-foreground">{user.email || '—'}</p>
+                </div>
               </div>
               {user.phone ? (
-                <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
-                  <div className="mb-2 flex items-center gap-2">
-                    <Phone className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">{t('admin.reviews.phoneLabel')}</span>
+                <div className={rowBlockClass}>
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                    <Phone className="size-5" />
                   </div>
-                  <p className="text-sm text-muted-foreground pl-6">{user.phone}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="mb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.reviews.phoneLabel')}</p>
+                    <p className="truncate text-sm font-semibold text-foreground">{user.phone}</p>
+                  </div>
                 </div>
               ) : (
-                <div className="rounded-xl border border-dashed border-border/80 bg-muted/20 px-4 py-3 text-sm text-muted-foreground sm:flex sm:items-center">
+                <div className="flex items-center justify-center rounded-2xl border border-dashed border-border/40 bg-slate-50/50 p-4 text-sm text-muted-foreground dark:bg-white/[0.02]">
                   {t('admin.users.noPhoneOnFile')}
                 </div>
               )}
@@ -244,64 +251,81 @@ export default function UserDetailsDialog({
           </section>
 
           {(user.createdAt || user.lastLoginAt) && (
-            <>
-              <Separator className="bg-border/60" />
-              <section className="space-y-3">
-                <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  {t('admin.users.activitySection')}
-                </h3>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {user.createdAt && (
-                    <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
-                      <p className="mb-1 text-sm font-semibold text-foreground">{t('admin.users.accountCreated')}</p>
-                      <p className="text-sm text-muted-foreground">
+            <section className="space-y-4 pt-2">
+              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                {t('admin.users.activitySection')}
+              </h3>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {user.createdAt && (
+                  <div className={rowBlockClass}>
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400">
+                      <Calendar className="size-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="mb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.accountCreated')}</p>
+                      <p className="truncate text-sm font-semibold text-foreground">
                         {formatDateTimeLong(user.createdAt, locale)}
                       </p>
                     </div>
-                  )}
-                  {user.lastLoginAt && (
-                    <div className="rounded-xl border border-slate-200/90 bg-stone-50/60 px-4 py-3 shadow-sm dark:border-white/[0.12] dark:bg-white/[0.04]">
-                      <p className="mb-1 text-sm font-semibold text-foreground">{t('admin.users.lastLogin')}</p>
-                      <p className="text-sm text-muted-foreground">
+                  </div>
+                )}
+                {user.lastLoginAt && (
+                  <div className={rowBlockClass}>
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-rose-500/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400">
+                      <LogIn className="size-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="mb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.lastLogin')}</p>
+                      <p className="truncate text-sm font-semibold text-foreground">
                         {formatDateTimeLong(user.lastLoginAt, locale)}
                       </p>
                     </div>
-                  )}
-                </div>
-              </section>
-            </>
+                  </div>
+                )}
+              </div>
+            </section>
           )}
         </DialogBody>
 
-        <DialogFooter className="gap-2 sm:gap-2.5">
+        <DialogFooter className="flex-col-reverse gap-3 border-t border-black/5 dark:border-white/5 bg-slate-50/50 px-6 py-5 dark:bg-slate-900/50 sm:flex-row sm:justify-between sm:gap-2">
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             onClick={onClose}
-            className="min-w-[7rem] border-amber-500/50 bg-transparent text-amber-800 hover:bg-amber-50 dark:border-amber-500/40 dark:text-amber-300 dark:hover:bg-amber-950/40"
+            className="w-full sm:w-auto font-medium"
           >
             {t('admin.users.closeDialog')}
           </Button>
-          <Button
-            type="button"
-            onClick={onVerify}
-            className="min-w-[7rem] border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
-          >
-            {user?.isVerified ? t('admin.users.unverify') : t('admin.users.verify')}
-          </Button>
-          {user?.isBanned ? (
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Button
               type="button"
-              className="min-w-[7rem] bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500"
-              onClick={onBan}
+              onClick={onVerify}
+              className={`w-full sm:w-auto font-medium shadow-sm transition-all ${
+                user?.isVerified
+                  ? 'border border-amber-600/30 bg-white text-amber-700 hover:bg-amber-50 dark:border-amber-500/40 dark:bg-transparent dark:text-amber-400 dark:hover:bg-amber-500/10'
+                  : 'bg-amber-600 text-white hover:bg-amber-700 hover:shadow-md dark:bg-amber-600 dark:hover:bg-amber-500'
+              }`}
             >
-              {t('admin.users.unban')}
+              {user?.isVerified ? t('admin.users.unverify') : t('admin.users.verify')}
             </Button>
-          ) : (
-            <Button type="button" variant="destructive" className="min-w-[7rem]" onClick={onBan}>
-              {t('admin.users.ban')}
-            </Button>
-          )}
+            {user?.isBanned ? (
+              <Button
+                type="button"
+                className="w-full bg-emerald-500 text-white font-medium shadow-sm hover:bg-emerald-600 hover:shadow-md dark:bg-emerald-600 dark:hover:bg-emerald-500 sm:w-auto"
+                onClick={onBan}
+              >
+                {t('admin.users.unban')}
+              </Button>
+            ) : (
+              <Button 
+                type="button" 
+                className="w-full sm:w-auto bg-red-500 text-white font-medium shadow-sm hover:bg-red-600 hover:shadow-md dark:bg-red-600 dark:hover:bg-red-500" 
+                onClick={onBan}
+              >
+                {t('admin.users.ban')}
+              </Button>
+            )}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -18,6 +18,7 @@ export default function LeaveReviewButton({
   const masterId = lead?.master?.id;
   const canCreate = useReviewsCanCreateQuery(masterId ?? '', {
     skip: lead?.status !== 'CLOSED' || !masterId,
+    refetchOnMountOrArgChange: true, // Always refetch when lead transitions to CLOSED
   });
 
   if (lead?.status !== 'CLOSED' || !masterId) return null;

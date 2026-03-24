@@ -14,13 +14,16 @@ import {
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/app/hooks';
-import { useLeadsSubscribeToAvailabilityMutation, useLeadsActiveToMasterQuery } from '@/features/leads/leadsApi';
+import {
+  useLeadsSubscribeToAvailabilityMutation,
+  useLeadsActiveToMasterQuery,
+  useLeadsCheckAvailabilitySubscriptionQuery,
+} from '@/features/leads/leadsApi';
 import { useCreateConversationMutation, useGetConversationByLeadIdQuery } from '@/features/chat/chatApi';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import type { RequestSubmissionState as LeadSubmissionState } from '@/hooks/requests';
 import { partitionLeadImageFiles } from '@/utils/leadImageUpload';
 import { toErrorMessage } from '@/utils/errors';
@@ -46,7 +49,12 @@ export const MasterDetailsLeadForm = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [subscribeToAvailability, { isLoading: isSubscribing }] = useLeadsSubscribeToAvailabilityMutation();
-  const [subscribed, setSubscribed] = useState(false);
+
+  const { data: subData } = useLeadsCheckAvailabilitySubscriptionQuery(
+    { masterId },
+    { skip: !isAuthed || role !== 'CLIENT' || !masterId },
+  );
+  const subscribed = !!subData?.subscribed;
 
   const { attach, setAttach, handleSendLead, isLoading: isSubmitting, submittedLeadId } = leadSubmission;
 
@@ -81,8 +89,6 @@ export const MasterDetailsLeadForm = ({
     }
   };
 
-
-
   const handleSubmitLead = async () => {
     try {
       await handleSendLead({ message });
@@ -95,7 +101,6 @@ export const MasterDetailsLeadForm = ({
   const handleSubscribe = async () => {
     try {
       await subscribeToAvailability({ masterId }).unwrap();
-      setSubscribed(true);
       toast.success(t('masterDetails.subscribedToNotifications', 'You will be notified when this master becomes available'));
     } catch (error: unknown) {
       toast.error(toErrorMessage(error) ?? 'Failed to subscribe');
@@ -212,6 +217,57 @@ export const MasterDetailsLeadForm = ({
     );
   }
 
+  // ─── Master is unavailable (BUSY or at lead limit) ───
+  if (!isMasterAvailable) {
+    const isBusy = availabilityStatus === 'BUSY';
+
+    return (
+      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600" />
+        <CardContent className="p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
+            <Clock className="h-10 w-10" />
+          </div>
+          <h3 className="text-lg font-bold tracking-tight mb-2">
+            {isBusy
+              ? t('masterDetails.masterBusyTitle', 'Master is busy')
+              : t('masterDetails.masterAtLimitTitle', 'Master is at full capacity')}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            {isBusy
+              ? t('masterDetails.masterBusyDesc', 'This master is currently busy and cannot accept new requests. Subscribe to get notified when they become available.')
+              : t('masterDetails.masterAtLimitDesc', 'This master has reached the maximum number of active requests. Subscribe to get notified when a spot opens up.')}
+          </p>
+
+          {!subscribed ? (
+            <Button
+              size="lg"
+              className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              onClick={handleSubscribe}
+              disabled={isSubscribing}
+            >
+              {isSubscribing ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : (
+                <Bell className="h-4 w-4" />
+              )}
+              {t('masterDetails.subscribeNotify', 'Notify me when available')}
+            </Button>
+          ) : (
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/80 dark:bg-emerald-950/30 p-4">
+              <div className="flex items-center justify-center gap-2 text-emerald-700 dark:text-emerald-400">
+                <CheckCircle className="h-5 w-5" />
+                <p className="text-sm font-semibold">
+                  {t('masterDetails.subscriptionConfirmed', 'You will be notified when available')}
+                </p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-500/80" />
@@ -221,47 +277,18 @@ export const MasterDetailsLeadForm = ({
           <p className="text-sm text-muted-foreground mt-0.5">{t('masterDetails.sendLeadSubtitle')}</p>
         </div>
 
-        {!isMasterAvailable && (
-          <Alert className="border-amber-500/40 bg-amber-500/5">
-            <AlertDescription>
-              <p className="font-semibold text-sm">
-                {availabilityStatus === 'BUSY'
-                  ? t('masterDetails.masterBusyAlert', 'Master is currently busy')
-                  : availabilityStatus === 'OFFLINE'
-                    ? t('masterDetails.masterOfflineAlert', 'Master is offline')
-                    : t('masterDetails.masterFullAlert', 'Master has reached maximum requests')}
-              </p>
-              {!subscribed ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2 gap-1 font-semibold text-foreground"
-                  onClick={handleSubscribe}
-                  disabled={isSubscribing}
-                >
-                  <Bell className="h-4 w-4" />
-                  {t('masterDetails.subscribeNotify', 'Notify me')}
-                </Button>
-              ) : (
-                <p className="text-xs mt-1">✓ {t('masterDetails.subscriptionConfirmed', 'You will be notified when available')}</p>
-              )}
-            </AlertDescription>
-          </Alert>
-        )}
-
         <div className="space-y-2">
           <Label htmlFor="lead_message">{t('masterDetails.message')}</Label>
           <Textarea
             id="lead_message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            disabled={!isMasterAvailable}
             rows={6}
             className="rounded-xl min-h-[120px] resize-y"
           />
         </div>
 
-        <Button variant="outline" size="sm" className="w-full gap-2 border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40" disabled={!isMasterAvailable} asChild>
+        <Button variant="outline" size="sm" className="w-full gap-2 border-[#f5f4eb] dark:border-white/10 hover:border-[#e8e6dd] dark:hover:border-amber-500/40" asChild>
           <label>
             <Paperclip className="h-4 w-4" />
             {t('masterDetails.attachPhotos', 'Attach photos (max 10)')}
@@ -328,7 +355,7 @@ export const MasterDetailsLeadForm = ({
           size="lg"
           className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all "
           onClick={handleSubmitLead}
-          disabled={isSubmitting || !isMasterAvailable || !message.trim()}
+          disabled={isSubmitting || !message.trim()}
         >
           <Send className="h-4 w-4" />
           {isSubmitting ? t('masterDetails.sendSending') : t('masterDetails.send')}

@@ -83,7 +83,10 @@ export default function MasterDetailsPage() {
     { masterId: masterId ?? '', status: 'VISIBLE' },
     { skip: !masterId }
   );
-  const canCreateReviewQuery = useReviewsCanCreateQuery(masterId ?? '', { skip: !isClient || !masterId });
+  const canCreateReviewQuery = useReviewsCanCreateQuery(masterId ?? '', {
+    skip: !isClient || !masterId,
+    refetchOnMountOrArgChange: true, // Always re-check after lead gets CLOSED
+  });
 
   const favorites = useMasterFavorites(masterId, isClient);
   const reviewSubmission = useReviewSubmission(masterId, canCreateReviewQuery.data?.leadId);

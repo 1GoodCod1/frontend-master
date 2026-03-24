@@ -59,7 +59,11 @@ export function PhoneVerification({ onVerified, onAlreadyVerified }: PhoneVerifi
         onAlreadyVerified?.();
         return;
       }
-      setError(dataMsg ?? t('security.sendCodeError'));
+      let displayError = dataMsg ?? t('security.sendCodeError');
+      if (typeof displayError === 'string' && displayError.toLowerCase().includes('please wait before requesting a new code')) {
+        displayError = t('security.pleaseWaitBeforeNewCode');
+      }
+      setError(displayError);
     }
   };
 
@@ -85,7 +89,11 @@ export function PhoneVerification({ onVerified, onAlreadyVerified }: PhoneVerifi
         onAlreadyVerified?.();
         return;
       }
-      setError(dataMsg ?? t('security.invalidCode'));
+      let displayError = dataMsg ?? t('security.invalidCode');
+      if (typeof displayError === 'string' && displayError.toLowerCase().includes('please wait before requesting a new code')) {
+        displayError = t('security.pleaseWaitBeforeNewCode');
+      }
+      setError(displayError);
     }
   };
 
@@ -94,7 +102,7 @@ export function PhoneVerification({ onVerified, onAlreadyVerified }: PhoneVerifi
       <h3 className="mb-4 text-xl font-semibold">{t('security.phoneVerification')}</h3>
 
       {error && (
-        <Alert variant="destructive" className="mb-4">
+        <Alert variant="warning" className="mb-4">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}

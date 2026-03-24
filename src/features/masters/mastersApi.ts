@@ -249,14 +249,14 @@ export const mastersApi = api.injectEndpoints({
     }),
     mastersUpdateOnlineStatus: build.mutation<UpdateOnlineStatusResponse, { isOnline: boolean }>({
       query: (body) => ({ url: '/masters/online-status/me', method: 'PATCH', data: body }),
-      invalidatesTags: ['Master', 'Masters'],
+      invalidatesTags: ['Master'],
     }),
     mastersUpdateAvailabilityStatus: build.mutation<
       UpdateAvailabilityStatusResponse,
       { availabilityStatus: string; maxActiveLeads?: number }
     >({
       query: (body) => ({ url: '/masters/availability-status/me', method: 'PATCH', data: body }),
-      invalidatesTags: ['Master', 'Masters'],
+      invalidatesTags: ['Master'],
     }),
     mastersGetAvailabilityStatus: build.query<AvailabilityStatusResponse, void>({
       query: () => ({ url: '/masters/availability-status/me', method: 'GET' }),
@@ -270,7 +270,7 @@ export const mastersApi = api.injectEndpoints({
 
     mastersUpdateNotificationSettings: build.mutation<NotificationSettings, UpdateNotificationSettingsDto>({
       query: (body) => ({ url: '/masters/notifications-settings/me', method: 'PATCH', data: body }),
-      invalidatesTags: ['Master', 'Masters'],
+      invalidatesTags: ['Master'],
     }),
 
     mastersCreateTelegramConnectLink: build.mutation<

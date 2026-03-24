@@ -100,11 +100,16 @@ export async function connectSocket(store: Store<RootState>) {
     store.dispatch(pushEvent({ type: mapped, payload }));
 
     // Cache invalidation by event type. No toasts — all events go to NotificationMenu only.
-    // lead_status_updated: и смена лида мастером, и COMPLETED записи (без отдельного PATCH лида у клиента)
-    if (mapped === 'new_lead' || mapped === 'lead_status_updated' || mapped === 'admin_new_lead') {
+    // NOTE: Mutations already invalidate their own tags. Socket events only invalidate
+    // tags of OTHER domains that might be affected by the event.
+    if (mapped === 'new_lead' || mapped === 'admin_new_lead') {
       store.dispatch(
-        api.util.invalidateTags(['Leads', 'Bookings', 'Reviews', 'Analytics']),
+        api.util.invalidateTags(['Leads', 'Analytics']),
       );
+    } else if (mapped === 'lead_status_updated') {
+      // Client needs 'Leads' (their lead list) + 'Reviews' (reviewsCanCreate re-eval after CLOSED).
+      // Master's mutation already invalidated their own 'Leads', but the CLIENT needs to know.
+      store.dispatch(api.util.invalidateTags(['Leads', 'Bookings', 'Reviews', 'Analytics']));
     } else if (mapped === 'lead_sent') {
       store.dispatch(api.util.invalidateTags(['Leads']));
     } else if (mapped === 'new_chat_message') {
@@ -118,14 +123,13 @@ export async function connectSocket(store: Store<RootState>) {
     } else if (mapped === 'verification_approved' || mapped === 'verification_rejected') {
       store.dispatch(api.util.invalidateTags(['Me', 'Verification']));
     } else if (mapped === 'admin_new_verification') {
-      // Pending list uses tag 'Admin'; stats use 'VerificationStats'
       store.dispatch(api.util.invalidateTags(['Admin', 'Verification', 'VerificationStats']));
     } else if (mapped === 'admin_new_report') {
       store.dispatch(api.util.invalidateTags(['Reports']));
     } else if (mapped === 'admin_new_user' || mapped === 'admin_new_master') {
       store.dispatch(api.util.invalidateTags(['Users']));
     } else if (mapped === 'booking_pending' || mapped === 'booking_confirmed' || mapped === 'booking_cancelled') {
-      store.dispatch(api.util.invalidateTags(['Bookings', 'Leads']));
+      store.dispatch(api.util.invalidateTags(['Bookings']));
     }
 
     // Play sound for all notifications except system maintenance (optional)

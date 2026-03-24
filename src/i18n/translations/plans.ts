@@ -75,6 +75,7 @@ export const plans = {
         features: {
           vipBadge: 'VIP badge',
           higherInSearch: 'Higher in search results',
+          portfolio: 'Portfolio (Before/After)',
           upTo10Photos: 'Up to 10 photos',
           basicAnalytics30: 'Basic analytics',
           telegramWhatsapp: 'Telegram / WhatsApp notifications',
@@ -91,7 +92,7 @@ export const plans = {
         higherInSearch: 'Higher in search results',
         telegramWhatsapp: 'Telegram / WhatsApp notifications',
         topPositions: 'Top positions in catalog',
-        featuredHomepage: 'Featured on homepage',
+        portfolio: 'Portfolio (Before/After)',
         autoBoost: 'Auto-boost profile',
         availabilityStatus: 'Availability status & requests limit',
         exportLeads: 'Export requests (CSV, Excel, PDF)',
@@ -105,7 +106,7 @@ export const plans = {
         description: 'Maximum exposure & requests',
         features: {
           topPositions: 'Top positions in catalog',
-          featuredHomepage: 'Featured on homepage',
+          portfolio: 'Portfolio (Before/After)',
           upTo15Photos: 'Up to 15 photos',
           autoBoost: 'Auto-boost profile',
           advancedAnalytics: 'Advanced analytics (30 days)',
@@ -195,6 +196,7 @@ export const plans = {
         features: {
           vipBadge: 'VIP значок',
           higherInSearch: 'Выше в результатах поиска',
+          portfolio: 'Портфолио (до/после)',
           upTo10Photos: 'До 10 фото',
           basicAnalytics30: 'Базовая аналитика',
           telegramWhatsapp: 'Уведомления в Telegram / WhatsApp',
@@ -211,7 +213,7 @@ export const plans = {
         higherInSearch: 'Выше в результатах поиска',
         telegramWhatsapp: 'Уведомления в Telegram / WhatsApp',
         topPositions: 'Топ позиции в каталоге',
-        featuredHomepage: 'На главной странице',
+        portfolio: 'Портфолио (до/после)',
         autoBoost: 'Авто-буст профиля',
         availabilityStatus: 'Статус доступности и лимит заявок',
         exportLeads: 'Экспорт заявок (CSV, Excel, PDF)',
@@ -225,7 +227,7 @@ export const plans = {
         description: 'Максимальная видимость и заявки',
         features: {
           topPositions: 'Топ позиции в каталоге',
-          featuredHomepage: 'На главной странице',
+          portfolio: 'Портфолио (до/после)',
           upTo15Photos: 'До 15 фото',
           autoBoost: 'Авто-буст профиля',
           advancedAnalytics: 'Расширенная аналитика',
@@ -313,6 +315,7 @@ export const plans = {
         features: {
           vipBadge: 'Insignă VIP',
           higherInSearch: 'Mai sus în rezultatele căutării',
+          portfolio: 'Portofoliu (înainte/după)',
           upTo10Photos: 'Până la 10 poze',
           basicAnalytics30: 'Analiză de bază',
           telegramWhatsapp: 'Notificări Telegram / WhatsApp',
@@ -329,7 +332,7 @@ export const plans = {
         higherInSearch: 'Mai sus în rezultate căutare',
         telegramWhatsapp: 'Notificări Telegram / WhatsApp',
         topPositions: 'Poziții de top în catalog',
-        featuredHomepage: 'Promovat pe pagina principală',
+        portfolio: 'Portofoliu (înainte/după)',
         autoBoost: 'Auto-boost profil',
         availabilityStatus: 'Status disponibilitate & limită cereri',
         exportLeads: 'Export cereri (CSV, Excel, PDF)',
@@ -343,7 +346,7 @@ export const plans = {
         description: 'Vizibilitate maximă și cereri',
         features: {
           topPositions: 'Poziții de top în catalog',
-          featuredHomepage: 'Promovat pe pagina principală',
+          portfolio: 'Portofoliu (înainte/după)',
           upTo15Photos: 'Până la 15 poze',
           autoBoost: 'Auto-boost profil',
           advancedAnalytics: 'Analiză avansată',

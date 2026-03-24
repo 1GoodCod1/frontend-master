@@ -41,8 +41,8 @@ const FEATURE_ROWS: FeatureRow[] = [
     values: [false, false, true],
   },
   {
-    labelKey: 'plans.comparisonTable.featuredHomepage',
-    values: [false, false, true],
+    labelKey: 'plans.comparisonTable.portfolio',
+    values: [false, true, true],
   },
   { labelKey: 'plans.comparisonTable.autoBoost', values: [false, false, true] },
   {

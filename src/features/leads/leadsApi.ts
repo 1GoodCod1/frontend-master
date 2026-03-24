@@ -48,31 +48,42 @@ export const leadsApi = api.injectEndpoints({
 
     leadsUpdateStatus: build.mutation<LeadDto, { id: string; body: UpdateLeadStatusDto }>({
       query: ({ id, body }) => ({ url: `/leads/${id}/status`, method: 'PATCH', data: body }),
-      invalidatesTags: ['Leads', 'Master'],
+      invalidatesTags: ['Leads'],
       async onQueryStarted({ id, body }, { dispatch, queryFulfilled }) {
-        const patcher = (args: { limit?: number; page?: number; status?: string } | void) =>
-          dispatch(
-            leadsApi.util.updateQueryData('leadsMyList', args, (draft) => {
-              patchInListResponse<LeadDto>(draft, (it) => idMatches(it, id), (it) => {
-                it.status = body.status;
-              });
-            }),
-          );
+        // Optimistic update: patch all existing leadsMyList cache entries
+        const patches: Array<{ undo: () => void }> = [];
 
-        const patches = [
-          patcher(undefined),
-          patcher({ status: 'NEW' }),
-          patcher({ status: 'IN_PROGRESS' }),
-          patcher({ status: 'CLOSED' }),
-          patcher({ status: 'SPAM' }),
-        ];
+        // Patch all cached leadsMyList queries (RTK Query stores them by serialized args)
+        for (const args of [
+          undefined,
+          { status: 'NEW' },
+          { status: 'IN_PROGRESS' },
+          { status: 'CLOSED' },
+          { status: 'SPAM' },
+        ] as const) {
+          try {
+            patches.push(
+              dispatch(
+                leadsApi.util.updateQueryData('leadsMyList', args as { limit?: number; page?: number; status?: string } | void, (draft) => {
+                  patchInListResponse<LeadDto>(draft, (it) => idMatches(it, id), (it) => {
+                    it.status = body.status;
+                  });
+                }),
+              ),
+            );
+          } catch {
+            // No cache entry for this arg variant
+          }
+        }
 
-        let byIdPatch: { undo: () => void } | undefined;
+        // Patch leadsById cache if exists
         try {
-          byIdPatch = dispatch(
-            leadsApi.util.updateQueryData('leadsById', { id }, (draft) => {
-              if (draft && typeof draft === 'object') (draft as LeadDto).status = body.status;
-            }),
+          patches.push(
+            dispatch(
+              leadsApi.util.updateQueryData('leadsById', { id }, (draft) => {
+                if (draft && typeof draft === 'object') (draft as LeadDto).status = body.status;
+              }),
+            ),
           );
         } catch {
           // No cache entry for this id
@@ -82,17 +93,27 @@ export const leadsApi = api.injectEndpoints({
           await queryFulfilled;
         } catch {
           patches.forEach((p) => p.undo());
-          byIdPatch?.undo();
         }
       },
     }),
 
     leadsSubscribeToAvailability: build.mutation<unknown, { masterId: string }>({
       query: (body) => ({ url: '/leads/subscribe-availability', method: 'POST', data: body }),
+      invalidatesTags: (_r, _e, { masterId }) => [{ type: 'AvailabilitySubscription' as const, id: masterId }],
     }),
 
     leadsUnsubscribeFromAvailability: build.mutation<unknown, { masterId: string }>({
       query: ({ masterId }) => ({ url: `/leads/unsubscribe-availability/${masterId}`, method: 'POST' }),
+      invalidatesTags: (_r, _e, { masterId }) => [{ type: 'AvailabilitySubscription' as const, id: masterId }],
+    }),
+
+    leadsCheckAvailabilitySubscription: build.query<{ subscribed: boolean }, { masterId: string }>({
+      query: ({ masterId }) => ({ url: `/leads/availability-subscription/${masterId}`, method: 'GET' }),
+      providesTags: (_r, _e, { masterId }) => [{ type: 'AvailabilitySubscription' as const, id: masterId }],
+      transformResponse: (raw: unknown) => {
+        const obj = unwrapObject<{ subscribed?: boolean }>(raw);
+        return { subscribed: !!obj?.subscribed };
+      },
     }),
 
     // Check if client has an active lead to a specific master (args include userId so cache is per-user)
@@ -116,5 +137,6 @@ export const {
   useLeadsByIdQuery,
   useLeadsSubscribeToAvailabilityMutation,
   useLeadsUnsubscribeFromAvailabilityMutation,
+  useLeadsCheckAvailabilitySubscriptionQuery,
   useLeadsActiveToMasterQuery,
 } = leadsApi;

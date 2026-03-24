@@ -106,6 +106,30 @@ const pathToCrumbs: Record<
     { label: t('dashboard.title'), to: '/dashboard' },
     { label: t('dashboard.files') },
   ],
+  '/dashboard/services': (t) => [
+    { label: t('dashboard.title'), to: '/dashboard' },
+    { label: t('dashboard.services') },
+  ],
+  '/dashboard/chat': (t) => [
+    { label: t('dashboard.title'), to: '/dashboard' },
+    { label: t('dashboard.chat') },
+  ],
+  '/dashboard/subscription': (t) => [
+    { label: t('dashboard.title'), to: '/dashboard' },
+    { label: t('dashboard.subscription') },
+  ],
+  '/dashboard/notifications': (t) => [
+    { label: t('dashboard.title'), to: '/dashboard' },
+    { label: t('dashboard.notifications') },
+  ],
+  '/dashboard/referrals': (t) => [
+    { label: t('dashboard.title'), to: '/dashboard' },
+    { label: t('referrals.title') },
+  ],
+  '/dashboard/portfolio': (t) => [
+    { label: t('dashboard.title'), to: '/dashboard' },
+    { label: t('dashboard.portfolio') },
+  ],
   '/dashboard/security': (t) => [
     { label: t('dashboard.title'), to: '/dashboard' },
     { label: t('dashboard.security') },

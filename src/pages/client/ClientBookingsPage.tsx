@@ -65,6 +65,12 @@ export default function ClientBookingsPage() {
           variant={statusFilter === 'ALL' ? 'default' : 'outline'}
           size="sm"
           onClick={() => setStatusFilter('ALL')}
+          className={cn(
+            "rounded-xl transition-all font-medium",
+            statusFilter === 'ALL' 
+              ? "bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-500/20" 
+              : "border-black/5 dark:border-white/5 hover:border-amber-500/30 hover:text-amber-600 hover:bg-amber-500/5 shadow-sm"
+          )}
         >
           {t('common.all', 'All')}
         </Button>
@@ -74,6 +80,12 @@ export default function ClientBookingsPage() {
             variant={statusFilter === s ? 'default' : 'outline'}
             size="sm"
             onClick={() => setStatusFilter(s)}
+            className={cn(
+              "rounded-xl transition-all font-medium",
+              statusFilter === s 
+                ? "bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-500/20" 
+                : "border-black/5 dark:border-white/5 hover:border-amber-500/30 hover:text-amber-600 hover:bg-amber-500/5 shadow-sm"
+            )}
           >
             {t(`bookings.status.${s}`, s)}
           </Button>
@@ -81,16 +93,19 @@ export default function ClientBookingsPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <Card className="border-border bg-card text-center">
-          <CardContent className="p-8">
-            <Calendar className="mx-auto mb-4 size-16 text-muted-foreground opacity-50" />
-            <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
+        <Card className="group relative overflow-hidden rounded-[2rem] border border-black/5 bg-card shadow-sm transition-all duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none z-0" />
+          <CardContent className="relative z-10 p-12 flex flex-col items-center">
+            <div className="mb-6 flex size-20 items-center justify-center rounded-[1.5rem] bg-amber-50 dark:bg-amber-500/10 group-hover:scale-110 transition-transform duration-500">
+              <Calendar className="size-10 text-amber-500 opacity-80" />
+            </div>
+            <h3 className="mb-2 text-xl font-bold text-foreground">
               {t('clientDashboard.noBookings')}
             </h3>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="mb-8 text-sm text-muted-foreground/80">
               {t('clientDashboard.noBookingsSubtitle')}
             </p>
-            <Button asChild>
+            <Button asChild className="rounded-xl px-6 bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:bg-amber-700 hover:-translate-y-0.5 transition-all text-sm font-semibold h-11">
               <Link to="/masters">
                 <Search className="mr-2 size-4" />
                 {t('clientDashboard.browseMasters')}
@@ -109,7 +124,7 @@ export default function ClientBookingsPage() {
             const isPending = status === 'PENDING';
 
             return (
-              <Card key={booking.id} className="border-border bg-card transition-shadow hover:shadow-md">
+              <Card key={booking.id} className="group overflow-hidden rounded-[1.5rem] border border-black/5 dark:border-white/5 bg-card shadow-sm transition-all duration-300 hover:border-amber-500/30 hover:shadow-md dark:bg-card/40 dark:hover:border-amber-500/30">
                 <CardContent className="p-5">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     {/* Left: Info */}
@@ -117,55 +132,57 @@ export default function ClientBookingsPage() {
                       {/* Master + Status */}
                       <div className="flex flex-wrap items-center gap-3">
                         <div className="flex items-center gap-2">
-                          <User className="size-4 text-muted-foreground" />
+                          <div className="flex size-8 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600">
+                            <User className="size-4" />
+                          </div>
                           {masterSlug ? (
                             <Link
                               to={`/masters/${masterSlug}`}
-                              className="font-semibold text-primary hover:underline"
+                              className="font-semibold text-foreground hover:text-amber-600 transition-colors"
                             >
                               {masterName}
                             </Link>
                           ) : (
-                            <span className="font-semibold">{masterName}</span>
+                            <span className="font-semibold text-foreground">{masterName}</span>
                           )}
                         </div>
-                        <Badge className={cn('text-xs font-medium', statusColors[status] || statusColors.PENDING)}>
+                        <Badge className={cn('text-xs font-semibold px-2.5 py-0.5 rounded-lg border-transparent', statusColors[status] || statusColors.PENDING)}>
                           {t(`bookings.status.${status}`, status)}
                         </Badge>
                       </div>
 
                       {/* Service */}
                       {booking.serviceName && (
-                        <p className="text-sm text-muted-foreground">{booking.serviceName}</p>
+                        <p className="font-medium text-foreground">{booking.serviceName}</p>
                       )}
 
                       {/* Date & Time */}
                       <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                        <span className="flex items-center gap-1.5">
-                          <Calendar className="size-4" />
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <Calendar className="size-4 text-amber-600/70" />
                           {start.date}
                         </span>
-                        <span className="flex items-center gap-1.5">
-                          <Clock className="size-4" />
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <Clock className="size-4 text-amber-600/70" />
                           {start.time} — {end.time}
                         </span>
                       </div>
 
                       {/* Notes */}
                       {booking.notes && (
-                        <p className="text-sm text-muted-foreground italic">
+                        <div className="mt-2 rounded-xl bg-black/5 dark:bg-white/5 p-3 text-sm text-muted-foreground italic border border-black/5 dark:border-white/5">
                           {booking.notes}
-                        </p>
+                        </div>
                       )}
                     </div>
 
                     {/* Right: Actions / Status hint */}
                     <div className="flex shrink-0 gap-2 sm:flex-col sm:items-end">
                       {isPending && (
-                        <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-300 dark:border-amber-700">
-                          <Hourglass className="mr-1 size-3" />
+                        <span className="flex items-center gap-1.5 text-xs font-medium text-amber-600 bg-amber-50 dark:bg-amber-500/10 px-2.5 py-1 rounded-lg">
+                          <Hourglass className="size-3.5" />
                           {t('bookings.status.PENDING')}
-                        </Badge>
+                        </span>
                       )}
                       {(status === 'COMPLETED' || status === 'CONFIRMED') && (
                         <BookAgainButton

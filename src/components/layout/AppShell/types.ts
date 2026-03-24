@@ -9,4 +9,5 @@ export interface AppShellNavItem {
   labelKey: string;
   icon: LucideIcon;
   roles?: Role[] | 'any-authed';
+  hideForRoles?: Role[];
 }

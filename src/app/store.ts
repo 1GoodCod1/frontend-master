@@ -14,7 +14,6 @@ import { safePersistStorage } from '@/utils/safeStorage';
 import { api } from '@/services/api';
 import { env } from '@/services/env';
 import { persistRefreshToken } from '@/features/auth/persist';
-import { saveNotifications } from '@/features/socket/persist';
 import authReducer from '@/features/auth/authSlice';
 import socketReducer from '@/features/socket/socketSlice';
 import uiReducer from '@/features/ui/uiSlice';
@@ -24,6 +23,7 @@ import {
   API_CACHE_PERSIST_VERSION,
   migrateApiCache,
 } from './persistApiCache';
+import { notificationPersistMiddleware } from './notificationPersistMiddleware';
 
 // API cache: persist only Categories/Cities (via transform)
 const apiPersistConfig = {
@@ -65,7 +65,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         ignoredActionPaths: ['meta.arg', 'payload.timestamp', 'payload.headers'],
       },
-    }).concat(api.middleware),
+    }).concat(api.middleware, notificationPersistMiddleware),
 });
 
 export const persistor = persistStore(store);
@@ -77,7 +77,6 @@ export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
 let prevRefresh: string | null = null;
-let prevNotifSig = '';
 
 store.subscribe(() => {
   const st = store.getState();
@@ -90,22 +89,6 @@ store.subscribe(() => {
       persistRefreshToken(current);
     }
     prevRefresh = current;
-  }
-
-  if (!st?.socket?.notifications) return;
-
-  const payload = {
-    unreadLeads: st.socket.unreadLeads ?? 0,
-    unreadReviews: st.socket.unreadReviews ?? 0,
-    notifications: st.socket.notifications,
-  };
-  const readCount = payload.notifications.filter((n) => n.read).length;
-  const firstNotifId = payload.notifications[0]?.id ?? '';
-  const sig = `${payload.unreadLeads}|${payload.unreadReviews}|${payload.notifications.length}|${readCount}|${firstNotifId}`;
-
-  if (sig !== prevNotifSig) {
-    saveNotifications(payload);
-    prevNotifSig = sig;
   }
 });
 

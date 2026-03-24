@@ -119,10 +119,10 @@ export default function ClientReportsPage() {
           {t('reports.selectMasterToReport', 'Подать новую жалобу на мастера')}
         </h3>
         {mastersFromLeads.length === 0 ? (
-          <Card className="border-dashed bg-muted/30">
+          <Card className="border-dashed border-black/10 bg-black/[0.02] dark:border-white/10 dark:bg-white/[0.02]">
             <CardContent className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
-              <p className="text-sm italic">{t('reports.noLeadsForReports', 'У вас пока нет мастеров, на которых можно подать жалобу')}</p>
-              <p className="text-xs">{t('reports.noLeadsForReportsDesc', '(Жалобу можно подать только на мастера, с которым вы контактировали)')}</p>
+              <p className="text-sm italic text-foreground/70">{t('reports.noLeadsForReports', 'У вас пока нет мастеров, на которых можно подать жалобу')}</p>
+              <p className="mt-1 text-xs">{t('reports.noLeadsForReportsDesc', '(Жалобу можно подать только на мастера, с которым вы контактировали)')}</p>
             </CardContent>
           </Card>
         ) : (
@@ -131,20 +131,22 @@ export default function ClientReportsPage() {
               <Button
                 key={master.id}
                 variant="outline"
-                className="h-auto flex-col items-start gap-2 p-5 text-left transition-all hover:border-destructive/50 hover:bg-destructive/5 dark:hover:bg-destructive/10"
+                className="group relative h-auto flex-col items-start gap-3 overflow-hidden rounded-xl border border-black/10 bg-card p-5 text-left text-foreground shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:bg-amber-50 hover:text-foreground hover:shadow-md dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10 dark:hover:text-foreground"
                 onClick={() => handleOpenDialog(master)}
               >
-                <div className="flex w-full items-center justify-between gap-2">
-                  <span className="text-base font-bold">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100" />
+                <div className="relative z-10 flex w-full items-center justify-between gap-2">
+                  <span className="text-base font-bold text-foreground transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500">
                     {[master.user?.firstName, master.user?.lastName].filter(Boolean).join(' ') || t('reports.unknownMaster')}
                   </span>
+                  <AlertTriangle className="size-4 text-muted-foreground transition-colors group-hover:text-amber-500" />
                 </div>
                 {master.category && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className="relative z-10 text-xs text-muted-foreground transition-colors group-hover:text-muted-foreground">
                     {getTranslatedCategoryName(t, master.category)}
                   </span>
                 )}
-                <div className="mt-1 text-[10px] font-medium uppercase tracking-wider text-destructive/80">
+                <div className="relative z-10 mt-1 flex w-full items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-600/80 opacity-80 transition-opacity group-hover:opacity-100 dark:text-amber-500/80">
                   {t('reports.clickToReport', 'Нажмите, чтобы подать жалобу')}
                 </div>
               </Button>
@@ -158,54 +160,59 @@ export default function ClientReportsPage() {
       </div>
 
       {reportsList.length === 0 ? (
-        <Card className="border-border dark:border-white/[0.08] p-10 text-center">
-          <p className="mb-2 text-lg font-semibold text-muted-foreground">{t('reports.noReports')}</p>
-          <p className="text-sm text-muted-foreground">{t('reports.noReportsDescription')}</p>
+        <Card className="flex flex-col items-center justify-center border-dashed border-black/10 p-12 text-center dark:border-white/10 dark:bg-card/5">
+          <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-amber-100/50 text-amber-500 dark:bg-amber-500/10">
+            <AlertTriangle className="size-6" />
+          </div>
+          <p className="mb-2 text-lg font-semibold text-foreground">{t('reports.noReports')}</p>
+          <p className="max-w-md text-sm text-muted-foreground">{t('reports.noReportsDescription')}</p>
         </Card>
       ) : (
         <div className="flex flex-col gap-4">
           {(reportsList as ReportItem[]).map((report) => (
-            <Card key={report.id} className="border-border dark:border-white/[0.08] bg-card/50">
-              <CardContent className="p-6">
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-10 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-                        <AlertTriangle className="size-5" />
+            <Card key={report.id} className="overflow-hidden rounded-xl border border-black/5 bg-card/50 shadow-sm transition-all hover:bg-card/80 hover:shadow-md dark:border-white/5 dark:bg-card/20 dark:hover:bg-card/40">
+              <CardContent className="p-0">
+                <div className="flex flex-col sm:flex-row">
+                  <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+                          <AlertTriangle className="size-5" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold sm:text-base">
+                            {report.master?.user?.firstName} {report.master?.user?.lastName}
+                          </h4>
+                          <p className="text-xs text-muted-foreground">
+                            {formatDateTimeString(report.createdAt ?? null, locale)}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-bold">
-                          {report.master?.user?.firstName} {report.master?.user?.lastName}
-                        </h4>
-                        <p className="text-xs text-muted-foreground">
-                          {formatDateTimeString(report.createdAt ?? null, locale)}
-                        </p>
-                      </div>
+                      <span
+                        className="rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm"
+                        style={{ backgroundColor: getStatusColor(report.status ?? 'PENDING') }}
+                      >
+                        {t(`reports.status.${report.status ?? 'PENDING'}`)}
+                      </span>
                     </div>
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm"
-                      style={{ backgroundColor: getStatusColor(report.status ?? 'PENDING') }}
-                    >
-                      {t(`reports.status.${report.status ?? 'PENDING'}`)}
-                    </span>
-                  </div>
 
-                  <div className="rounded-lg bg-muted/50 p-4">
-                    <p className="mb-2 text-sm">
-                      <strong className="text-foreground">{t('reports.reason')}:</strong> {report.reason}
-                    </p>
-                    <p className="whitespace-pre-wrap text-sm text-muted-foreground italic">
-                      &quot;{report.description}&quot;
-                    </p>
-                  </div>
-
-                  {report.notes && (
-                    <div className="border-t pt-3">
-                      <p className="text-sm text-muted-foreground">
-                        <strong className="text-foreground">{t('reports.adminNotes')}:</strong> {report.notes}
+                    <div className="rounded-lg bg-black/5 p-4 dark:bg-white/5">
+                      <p className="mb-2 text-sm">
+                        <strong className="text-foreground">{t('reports.reason')}:</strong> {report.reason}
+                      </p>
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground italic">
+                        &quot;{report.description}&quot;
                       </p>
                     </div>
-                  )}
+
+                    {report.notes && (
+                      <div className="mt-4 border-t border-black/5 pt-4 dark:border-white/5">
+                        <p className="text-sm text-muted-foreground">
+                          <strong className="text-foreground">{t('reports.adminNotes')}:</strong> {report.notes}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -215,47 +222,51 @@ export default function ClientReportsPage() {
 
       {/* Report Creation Modal */}
       <Dialog open={openDialog} onOpenChange={(open) => !open && setOpenDialog(false)}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-orange-600 dark:text-orange-500">
-              <AlertTriangle className="size-5" />
-              {t('reports.createReport')}
-            </DialogTitle>
-          </DialogHeader>
+        <DialogContent className="overflow-hidden rounded-2xl border-black/10 p-0 shadow-2xl dark:border-white/10 dark:bg-zinc-950 sm:max-w-md">
+          <div className="relative bg-gradient-to-b from-amber-50 to-transparent p-6 pb-4 dark:from-amber-950/20">
+            <DialogHeader className="space-y-3">
+              <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+                <AlertTriangle className="size-6" />
+              </div>
+              <DialogTitle className="text-center text-xl font-bold text-foreground">
+                {t('reports.createReport', 'Подать жалобу')}
+              </DialogTitle>
+            </DialogHeader>
+          </div>
 
-          <DialogBody>
+          <DialogBody className="px-6 pb-6 pt-2">
             {selectedMaster && (
-              <div className="mb-5 rounded-xl bg-amber-50/50 p-4 border border-amber-100/50 dark:bg-amber-900/10 dark:border-amber-900/20">
-                <p className="text-xs font-medium uppercase tracking-wider text-amber-700/70 dark:text-amber-400/70 mb-1">
-                  {t('reports.reportingMaster', 'Вы подаете жалобу на мастера')}:
+              <div className="mb-6 flex flex-col items-center rounded-xl border border-amber-100 bg-amber-50/50 p-4 text-center dark:border-amber-500/10 dark:bg-amber-500/5">
+                <p className="mb-1 text-xs font-medium uppercase tracking-wider text-amber-600/70 dark:text-amber-400/80">
+                  {t('reports.reportingMaster', 'Вы подаете жалобу на мастера')}
                 </p>
-                <p className="text-base font-bold text-amber-900 dark:text-amber-100">
+                <p className="text-base font-bold text-foreground">
                   {selectedMaster.user?.firstName} {selectedMaster.user?.lastName}
                 </p>
               </div>
             )}
 
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="report-reason" className="text-sm font-semibold ml-0.5">
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="report-reason" className="text-sm font-semibold">
                   {t('reports.reason')}
                 </Label>
                 <Input
                   id="report-reason"
-                  className="bg-muted/30 focus-visible:ring-amber-500"
+                  className="rounded-xl border-black/10 bg-black/5 px-4 py-2 transition-colors hover:bg-black/10 focus-visible:ring-amber-500 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-visible:ring-amber-500"
                   placeholder={t('reports.reasonPlaceholder', 'Напр. Не пришел на встречу')}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="report-description" className="text-sm font-semibold ml-0.5">
+              <div className="space-y-1.5">
+                <Label htmlFor="report-description" className="text-sm font-semibold">
                   {t('reports.description')}
                 </Label>
                 <Textarea
                   id="report-description"
-                  className="bg-muted/30 focus-visible:ring-amber-500 min-h-[120px] resize-none"
+                  className="min-h-[120px] resize-none rounded-xl border-black/10 bg-black/5 px-4 py-3 transition-colors hover:bg-black/10 focus-visible:ring-amber-500 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-visible:ring-amber-500"
                   placeholder={t('reports.descriptionPlaceholder', 'Опишите ситуацию подробнее...')}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -265,10 +276,10 @@ export default function ClientReportsPage() {
             </div>
           </DialogBody>
 
-          <DialogFooter>
+          <DialogFooter className="border-t border-black/5 bg-black/[0.02] p-6 dark:border-white/5 dark:bg-white/[0.02] sm:justify-between">
             <Button
               variant="ghost"
-              className="hover:bg-amber-100/50 dark:hover:bg-amber-900/20"
+              className="w-full rounded-xl hover:bg-black/5 sm:w-auto dark:hover:bg-white/5"
               onClick={() => setOpenDialog(false)}
             >
               {t('common.cancel')}
@@ -276,7 +287,7 @@ export default function ClientReportsPage() {
             <Button
               onClick={handleCreateReport}
               disabled={createState.isLoading || !reason || !description}
-              className="bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20 hover:from-amber-600 hover:to-orange-700 transition-all duration-300"
+              className="w-full rounded-xl bg-amber-600 text-white transition-colors hover:bg-amber-700 sm:w-auto dark:bg-amber-600 dark:hover:bg-amber-700"
             >
               {createState.isLoading ? t('common.loading') : t('reports.submit')}
             </Button>

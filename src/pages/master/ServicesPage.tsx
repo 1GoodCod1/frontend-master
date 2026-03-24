@@ -14,6 +14,8 @@ import { useAppSelector } from '@/app/hooks';
 import { selectIsVerified } from '@/features/auth/selectors';
 import { toErrorMessage } from '@/utils/errors';
 import { useMastersMyProfileQuery, useMastersUpdateServicesMutation } from '@/features/masters/mastersApi';
+import { usePromotionsMyQuery, usePromotionsDeleteMutation } from '@/features/promotions/promotionsApi';
+import type { PromotionDto } from '@/types';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { VerificationGate } from '@/components/common/VerificationGate';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -48,6 +50,17 @@ export default function ServicesPage() {
     skip: !isVerified,
   });
   const [updateServices, { isLoading: saving }] = useMastersUpdateServicesMutation();
+
+  const { data: promotionsList } = usePromotionsMyQuery(undefined, { skip: !isVerified });
+  const [deletePromotion] = usePromotionsDeleteMutation();
+
+  const promotions: PromotionDto[] = useMemo(() => {
+    if (Array.isArray(promotionsList)) return promotionsList;
+    if (promotionsList && typeof promotionsList === 'object' && 'data' in promotionsList && Array.isArray((promotionsList as { data: PromotionDto[] }).data)) {
+      return (promotionsList as { data: PromotionDto[] }).data;
+    }
+    return [];
+  }, [promotionsList]);
 
   const profileData = useMemo(() => {
     const raw = data as unknown;
@@ -173,6 +186,18 @@ export default function ServicesPage() {
   };
 
   const handleDelete = async (idx: number) => {
+    const serviceToDelete = list[idx];
+    if (serviceToDelete) {
+      const linkedPromotion = promotions.find(p => p.serviceTitle?.trim() === serviceToDelete.title.trim());
+      if (linkedPromotion) {
+        try {
+          await deletePromotion(linkedPromotion.id).unwrap();
+        } catch (e) {
+          console.error('Failed to delete associated promotion', e);
+        }
+      }
+    }
+
     const nextList = list.filter((_, i) => i !== idx);
     setList(nextList);
     setDeleteIndex(null);
@@ -326,7 +351,13 @@ export default function ServicesPage() {
           onClose={() => setDeleteIndex(null)}
           onConfirm={() => handleDelete(deleteIndex)}
           title={t('servicesPage.deleteConfirm')}
-          description={t('servicesPage.deleteMessage')}
+          description={(() => {
+            const svc = list[deleteIndex];
+            const p = svc ? promotions.find(p => p.serviceTitle?.trim() === svc.title.trim()) : null;
+            return p 
+              ? `${t('servicesPage.deleteMessage')}\n\n⚠️ ${t('servicesPage.deleteWarningWithPromotion')}`
+              : t('servicesPage.deleteMessage');
+          })()}
           confirmText={t('common.delete')}
           confirmColor="error"
         />

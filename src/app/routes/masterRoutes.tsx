@@ -28,7 +28,10 @@ export const masterRoutes = {
         },
         { path: 'bookings', element: <LazyPage><P.BookingsPage /></LazyPage> },
         { path: 'files', element: <LazyPage><P.FilesPage /></LazyPage> },
-        { path: 'portfolio', element: <LazyPage><P.PortfolioPage /></LazyPage> },
+        {
+          element: <PlanRoute min="VIP" />,
+          children: [{ path: 'portfolio', element: <LazyPage><P.PortfolioPage /></LazyPage> }],
+        },
         { path: 'security', element: <LazyPage><P.MasterSecuritySettingsPage /></LazyPage> },
         { path: 'notifications', element: <LazyPage><P.NotificationsSettingsPage /></LazyPage> },
         { path: 'verification', element: <LazyPage><P.VerificationPage /></LazyPage> },

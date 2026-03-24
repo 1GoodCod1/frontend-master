@@ -145,7 +145,7 @@ export const ChangePasswordForm: React.FC = () => {
           <Button
             type="submit"
             disabled={isSubmitting || isLoading}
-            className="mt-2 gap-2"
+            className="mt-2 gap-2 rounded-xl bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 transition-all font-semibold"
           >
             <Lock className="size-4" />
             {isSubmitting || isLoading

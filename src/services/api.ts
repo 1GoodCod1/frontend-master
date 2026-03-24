@@ -225,8 +225,8 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth(axiosBaseQuery()),
   keepUnusedDataFor: 300,
-  refetchOnMountOrArgChange: 120,
-  refetchOnFocus: true,
+  refetchOnMountOrArgChange: 300,
+  refetchOnFocus: false,
   tagTypes: [
     'Me',
     'Masters',
@@ -257,6 +257,7 @@ export const api = createApi({
     'Digest',
     'Notifications',
     'ScheduleSettings',
+    'AvailabilitySubscription',
   ],
   endpoints: () => ({}),
 });

@@ -75,7 +75,7 @@ export function AccountDataSection() {
           variant="outline"
           onClick={handleExport}
           disabled={isExporting}
-          className="gap-2"
+          className="gap-2 rounded-xl border-amber-500/30 text-amber-600 bg-amber-500/5 hover:!bg-amber-600 hover:!text-white hover:!border-amber-600 shadow-sm transition-all font-semibold"
         >
           {isExporting ? (
             <Loader2 className="size-4 animate-spin" />
@@ -88,7 +88,7 @@ export function AccountDataSection() {
         </Button>
       </div>
 
-      <div className="border-t border-border pt-6">
+      <div className="border-t border-black/5 dark:border-white/5 pt-6">
         <h3 className="mb-1 text-sm font-semibold text-destructive">
           {t('security.deleteAccountTitle')}
         </h3>
@@ -98,22 +98,30 @@ export function AccountDataSection() {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="gap-2">
+            <Button variant="outline" className="gap-2 rounded-xl border-destructive/30 text-destructive bg-destructive/5 hover:!bg-red-500 hover:!text-white hover:!border-red-500 dark:hover:!bg-red-600 transition-all shadow-sm font-semibold">
               <Trash2 className="size-4" />
               {t('security.deleteAccountButton')}
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                {t('security.deleteConfirmTitle')}
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                {t('security.deleteConfirmDescription')}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <div className="py-2">
-              <label className="mb-1.5 block text-sm font-medium">
+          <AlertDialogContent className="sm:max-w-md rounded-[2rem] p-8 border-black/5 dark:border-white/5">
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className="mb-6 flex size-20 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
+                <div className="flex size-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/20">
+                  <Trash2 className="size-7 text-red-600 dark:text-red-400" />
+                </div>
+              </div>
+              <AlertDialogHeader className="w-full">
+                <AlertDialogTitle className="text-2xl font-bold text-center">
+                  {t('security.deleteConfirmTitle')}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-center text-base mt-2">
+                  {t('security.deleteConfirmDescription')}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+            </div>
+            
+            <div className="py-6 w-full">
+              <label className="mb-2 block text-sm font-semibold text-center text-muted-foreground uppercase tracking-wider">
                 {t('security.deleteConfirmLabel')}
               </label>
               <input
@@ -121,20 +129,21 @@ export function AccountDataSection() {
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
                 placeholder="DELETE"
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full h-12 text-center text-lg tracking-[0.2em] font-bold rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] px-3 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500/30 transition-all"
               />
             </div>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setConfirmText('')}>
+
+            <AlertDialogFooter className="flex-col sm:flex-row gap-3 w-full sm:justify-center">
+              <AlertDialogCancel onClick={() => setConfirmText('')} className="flex-1 rounded-xl h-11 border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/5 dark:hover:bg-white/5 font-semibold mt-0">
                 {t('security.deleteCancel')}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDelete}
                 disabled={confirmText !== 'DELETE' || isDeleting}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="flex-1 rounded-xl h-11 bg-red-600 text-white font-semibold shadow-lg shadow-red-500/20 hover:bg-red-700 hover:shadow-xl dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 disabled:shadow-none transition-all"
               >
                 {isDeleting ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  <Loader2 className="mr-2 size-5 animate-spin" />
                 ) : null}
                 {t('security.deleteConfirmButton')}
               </AlertDialogAction>

@@ -134,6 +134,38 @@ html[data-theme="dark"] .divider-line {
   box-sizing: border-box;
 }
 
+/* Глобальное применение курсора "ручки" ко всем кликабельным элементам */
+a,
+button,
+label,
+select,
+summary,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="switch"],
+[role="checkbox"],
+[role="radio"],
+[role="combobox"],
+[role="listbox"],
+[role="option"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"] {
+  cursor: pointer;
+}
+
+/* Запрещающий курсор для неактивных кнопок */
+button:disabled,
+button[disabled],
+input:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 html {
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;

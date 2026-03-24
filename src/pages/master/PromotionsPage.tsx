@@ -303,39 +303,40 @@ export default function PromotionsPage() {
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[28rem] rounded-2xl border-border bg-card shadow-xl dark:shadow-2xl dark:shadow-black/40 p-0 gap-0 overflow-hidden">
-          <div className="bg-gradient-to-br from-rose-500/10 via-transparent to-orange-500/10 dark:from-rose-500/15 dark:to-orange-500/15 border-b border-border px-6 pt-6 pb-4">
+        <DialogContent className="sm:max-w-[32rem] overflow-hidden rounded-[1.5rem] border-0 bg-card p-0 shadow-2xl">
+          <div className="relative border-b border-black/5 px-8 pb-5 pt-7 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/50">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+              <DialogTitle className="flex items-center gap-3 text-2xl font-bold tracking-tight text-foreground">
+                <div className="h-6 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-rose-500 to-orange-500"></div>
                 {editingId ? t('promotionsPage.edit') : t('promotionsPage.create')}
               </DialogTitle>
             </DialogHeader>
           </div>
-          <div className="px-6 py-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="max-h-[65vh] overflow-y-auto px-8 py-6 custom-scrollbar">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="sm:col-span-2 space-y-2">
-                <Label htmlFor="promo-title" className="text-foreground font-medium">{t('promotionsPage.titleLabel')} *</Label>
+                <Label htmlFor="promo-title" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.titleLabel')} *</Label>
                 <Input
                   id="promo-title"
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                   placeholder={t('promotionsPage.titlePlaceholder')}
-                  className="rounded-xl bg-background border-border focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-400/50"
+                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
               </div>
               <div className="sm:col-span-2 space-y-2">
-                <Label htmlFor="promo-desc" className="text-foreground font-medium">{t('promotionsPage.descriptionLabel')}</Label>
+                <Label htmlFor="promo-desc" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.descriptionLabel')}</Label>
                 <Textarea
                   id="promo-desc"
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   placeholder={t('promotionsPage.descriptionPlaceholder')}
                   rows={3}
-                  className="rounded-xl bg-background border-border resize-none focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-400/50"
+                  className="rounded-2xl bg-slate-50/80 border-transparent p-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08] resize-none"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="promo-discount" className="text-foreground font-medium">{t('promotionsPage.discountLabel')} *</Label>
+                <Label htmlFor="promo-discount" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.discountLabel')} *</Label>
                 <Input
                   id="promo-discount"
                   type="number"
@@ -343,69 +344,66 @@ export default function PromotionsPage() {
                   max={100}
                   value={form.discount}
                   onChange={(e) => setForm((f) => ({ ...f, discount: Number(e.target.value) || 0 }))}
-                  className="rounded-xl bg-background border-border focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-400/50"
+                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
-                <p className="text-xs text-muted-foreground">{t('promotionsPage.discountHint')}</p>
+                <p className="pl-1 text-[11px] text-muted-foreground/70">{t('promotionsPage.discountHint')}</p>
               </div>
               <div className="space-y-2">
-                <Label className="text-foreground font-medium">{t('promotionsPage.serviceLabel')}</Label>
+                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.serviceLabel')}</Label>
                 <Select
                   value={form.serviceTitle || '__all__'}
                   onValueChange={(v) => setForm((f) => ({ ...f, serviceTitle: v === '__all__' ? '' : v }))}
                 >
-                  <SelectTrigger id="promo-service" className="rounded-xl bg-background border-border">
+                  <SelectTrigger id="promo-service" className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]">
                     <SelectValue placeholder={t('promotionsPage.allServices')} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border-border">
-                    <SelectItem value="__all__" className="rounded-lg" disabled={!canApplyToAll}>
+                  <SelectContent className="rounded-2xl border-none shadow-xl dark:bg-slate-800">
+                    <SelectItem value="__all__" className="rounded-xl cursor-pointer py-2 focus:bg-rose-50 dark:focus:bg-white/10" disabled={!canApplyToAll}>
                       {t('promotionsPage.allServices')}
                       {!canApplyToAll && serviceTitles.length > 0 ? ` (${t('promotionsPage.allServicesDisabled')})` : ''}
                     </SelectItem>
                     {serviceTitles.map((st) => (
-                      <SelectItem key={st} value={st} className="rounded-lg" disabled={takenServiceTitles.has(st)}>
-                        {st}
-                        {takenServiceTitles.has(st) ? ` (${t('promotionsPage.alreadyHasPromotion')})` : ''}
+                      <SelectItem key={st} value={st} className="rounded-xl cursor-pointer py-2 focus:bg-rose-50 dark:focus:bg-white/10" disabled={takenServiceTitles.has(st)}>
+                        <div className="truncate pr-2">{st}</div>
+                        {takenServiceTitles.has(st) ? <span className="text-[10px] text-rose-500"> {t('promotionsPage.alreadyHasPromotion')}</span> : ''}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('promotionsPage.serviceAlreadyHasPromotionHint')} {t('promotionsPage.onlyFixedPriceServices')}
-                </p>
                 {!form.serviceTitle && !canApplyToAll && serviceTitles.length > 0 && (
-                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+                  <p className="pl-1 text-[10px] font-medium text-amber-600 dark:text-amber-400">
                     {t('promotionsPage.allServicesAlreadyHavePromotion')}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="promo-from" className="text-foreground font-medium">{t('promotionsPage.validFromLabel')} *</Label>
+                <Label htmlFor="promo-from" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.validFromLabel')} *</Label>
                 <Input
                   id="promo-from"
                   type="date"
                   value={form.validFrom}
                   onChange={(e) => setForm((f) => ({ ...f, validFrom: e.target.value }))}
-                  className="rounded-xl bg-background border-border focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-400/50"
+                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="promo-until" className="text-foreground font-medium">{t('promotionsPage.validUntilLabel')} *</Label>
+                <Label htmlFor="promo-until" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.validUntilLabel')} *</Label>
                 <Input
                   id="promo-until"
                   type="date"
                   value={form.validUntil}
                   onChange={(e) => setForm((f) => ({ ...f, validUntil: e.target.value }))}
-                  className="rounded-xl bg-background border-border focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-400/50"
+                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
               </div>
-              <div className="sm:col-span-2 flex items-center justify-between rounded-xl bg-muted/50 dark:bg-muted/30 border border-border px-4 py-3">
-                <Label htmlFor="promo-active" className="cursor-pointer text-foreground font-medium">{t('promotionsPage.isActiveLabel')}</Label>
-                <Switch id="promo-active" checked={form.isActive} onCheckedChange={(v) => setForm((f) => ({ ...f, isActive: v }))} />
+              <div className="sm:col-span-2 mt-1 flex items-center justify-between rounded-2xl border border-transparent bg-slate-50/80 px-5 py-4 shadow-sm transition-all dark:border-white/[0.02] dark:bg-white/[0.04]">
+                <Label htmlFor="promo-active" className="cursor-pointer text-sm font-bold text-foreground">{t('promotionsPage.isActiveLabel')}</Label>
+                <Switch id="promo-active" checked={form.isActive} onCheckedChange={(v) => setForm((f) => ({ ...f, isActive: v }))} className="shadow-sm" />
               </div>
             </div>
           </div>
-          <DialogFooter className="px-6 py-4 border-t border-border bg-muted/30 dark:bg-muted/20 gap-3">
-            <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={createLoading || updateLoading} className="rounded-xl min-w-[5rem]">
+          <DialogFooter className="border-t border-black/5 bg-slate-50/50 px-8 py-5 dark:border-white/5 dark:bg-slate-900/50 sm:justify-between flex-col-reverse sm:flex-row gap-3">
+            <Button variant="ghost" onClick={() => setDialogOpen(false)} disabled={createLoading || updateLoading} className="w-full sm:w-auto rounded-2xl font-medium">
               {t('common.cancel')}
             </Button>
             <Button
@@ -418,7 +416,7 @@ export default function PromotionsPage() {
                 !form.validUntil ||
                 (!form.serviceTitle?.trim() && !canApplyToAll)
               }
-              className="rounded-xl min-w-[5rem] bg-rose-600 hover:bg-rose-700 text-white dark:bg-rose-600 dark:hover:bg-rose-500"
+              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 px-8 text-white shadow-md hover:from-rose-600 hover:to-orange-600 dark:from-rose-600 dark:to-orange-600"
             >
               {createLoading || updateLoading ? t('common.loading') : editingId ? t('common.save') : t('promotionsPage.create')}
             </Button>

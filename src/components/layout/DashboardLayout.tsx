@@ -52,7 +52,7 @@ function getItems(
     { key: 'promotions', label: t('dashboard.promotions'), to: '/dashboard/promotions', icon: <Tag className="size-5" />, minPlan: 'PREMIUM' as TariffPlan },
     { key: 'bookings', label: t('dashboard.bookings'), to: '/dashboard/bookings', icon: <Calendar className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'files', label: t('dashboard.files'), to: '/dashboard/files', icon: <Paperclip className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'portfolio', label: t('dashboard.portfolio'), to: '/dashboard/portfolio', icon: <Layers className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'portfolio', label: t('dashboard.portfolio'), to: '/dashboard/portfolio', icon: <Layers className="size-5" />, minPlan: 'VIP' as TariffPlan },
     { key: 'security', label: t('dashboard.security'), to: '/dashboard/security', icon: <Shield className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'notifications', label: t('dashboard.notifications'), to: '/dashboard/notifications', icon: <Bell className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'verification', label: t('dashboard.verification'), to: '/dashboard/verification', icon: <BadgeCheck className="size-5" />, minPlan: 'BASIC' as TariffPlan },

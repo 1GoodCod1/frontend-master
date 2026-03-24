@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { Moon, Sun, Globe, Settings } from 'lucide-react';
+import { Moon, Sun, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { SupportedLanguage } from './types';
@@ -24,46 +23,66 @@ export function AppShellSettingsMenu({
   const { t, i18n } = useTranslation();
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-9 w-9 transition-transform duration-200 ease-out hover:scale-110 active:scale-95"
-          aria-label={t('nav.settings')}
-          title={t('nav.settings')}
-        >
-          <Settings className="h-4 w-4 shrink-0" strokeWidth={2} />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        sideOffset={10}
-        className="dropdown-smooth-open dropdown-content-opaque w-52 border-0 rounded-2xl shadow-[0_10px_24px_-14px_hsl(var(--foreground)/0.45)]"
+    <div className="flex items-center gap-1">
+      {/* Theme Toggle Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onToggleColorMode}
+        className="h-9 w-9 transition-colors duration-200"
+        aria-label={colorMode === 'dark' ? t('theme.light') : t('theme.dark')}
+        title={colorMode === 'dark' ? t('theme.light') : t('theme.dark')}
       >
-        <DropdownMenuItem onClick={onToggleColorMode}>
-          {colorMode === 'dark' ? (
-            <Sun className="mr-2 h-4 w-4 shrink-0" strokeWidth={2} />
-          ) : (
-            <Moon className="mr-2 h-4 w-4 shrink-0" strokeWidth={2} />
-          )}
-          {colorMode === 'dark' ? t('theme.light') : t('theme.dark')}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem disabled>
-          <Globe className="mr-2 h-4 w-4 shrink-0" strokeWidth={2} />
-          {t('nav.language')}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onLanguageChange('en')}>
-          {i18n.language === 'en' && '✓ '}English
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onLanguageChange('ru')}>
-          {i18n.language === 'ru' && '✓ '}Русский
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onLanguageChange('ro')}>
-          {i18n.language === 'ro' && '✓ '}Română
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        {colorMode === 'dark' ? (
+          <Sun className="h-4 w-4 text-amber-500 shrink-0" strokeWidth={2} />
+        ) : (
+          <Moon className="h-4 w-4 text-slate-700 shrink-0" strokeWidth={2} />
+        )}
+      </Button>
+
+      {/* Language Selector Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 transition-colors duration-200"
+            aria-label={t('nav.language')}
+            title={t('nav.language')}
+          >
+            <div className="flex items-center gap-1">
+              <Globe className="h-4 w-4 shrink-0" strokeWidth={2} />
+            </div>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          sideOffset={10}
+          className="min-w-[140px] border border-black/5 dark:border-white/5 rounded-2xl p-2 shadow-xl bg-popover/90 backdrop-blur"
+        >
+          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+            {t('nav.language')}
+          </div>
+          <DropdownMenuItem 
+            onClick={() => onLanguageChange('en')}
+            className={`cursor-pointer rounded-xl font-medium ${i18n.language === 'en' ? 'bg-amber-500/10 text-amber-600' : ''}`}
+          >
+            English
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onLanguageChange('ru')}
+            className={`cursor-pointer rounded-xl font-medium ${i18n.language === 'ru' ? 'bg-amber-500/10 text-amber-600' : ''}`}
+          >
+            Русский
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={() => onLanguageChange('ro')}
+            className={`cursor-pointer rounded-xl font-medium ${i18n.language === 'ro' ? 'bg-amber-500/10 text-amber-600' : ''}`}
+          >
+            Română
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

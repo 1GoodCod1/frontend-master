@@ -120,11 +120,6 @@ export const chatApi = api.injectEndpoints({
           patchResult.undo();
         }
       },
-      invalidatesTags: (_r, _e, conversationId) => [
-        { type: 'ChatMessages', id: conversationId },
-        'ChatMessages',
-        'Chat',
-      ],
     }),
     closeConversation: build.mutation<ConversationDetail, string>({
       query: (conversationId) => ({
