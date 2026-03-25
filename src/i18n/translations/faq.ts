@@ -67,7 +67,7 @@ export const faq = {
       q12: {
         question: 'How can I contact support?',
         answer:
-          'You can reach us via email at support@master-hub.md, phone at +373 22 123 456, or Telegram at @master_hub_support. Visit our',
+          'You can reach us by email at supportmasterhub@gmail.com or Telegram @masterhubmd. Visit our',
         linkSuffix: 'page for more details and working hours.',
       },
     },
@@ -140,7 +140,7 @@ export const faq = {
       q12: {
         question: 'Как связаться со службой поддержки?',
         answer:
-          'Вы можете связаться с нами по email: support@master-hub.md, телефону: +373 22 123 456 или Telegram: @master_hub_support. Посетите нашу',
+          'Вы можете связаться с нами по email: supportmasterhub@gmail.com или в Telegram: @masterhubmd. Посетите нашу',
         linkSuffix: 'страницу для подробностей и рабочих часов.',
       },
     },
@@ -198,22 +198,22 @@ export const faq = {
       q9: {
         question: 'Care sunt planurile tarifare pentru meșteri?',
         answer:
-          'BASIC (gratuit): vizibilitate de bază, numere de telefon mascate. VIP: analiză (14 zile), numere complete, plasare îmbunătățită. PREMIUM: vizibilitate maximă, analiză avansată 30 zile, control disponibilitate (Disponibil/Ocupat/Offline), limită cereri active, promoții. Detalii pe pagina Planuri.',
+          'BASIC (gratuit): vizibilitate de bază, numere de telefon mascate. VIP: analiză, numere complete, plasare îmbunătățită. PREMIUM: vizibilitate maximă, analiză avansată, control disponibilitate (Disponibil/Ocupat/Offline), limită cereri active, promoții. Detalii pe pagina Planuri.',
       },
       q10: {
         question: 'Ce analiză este disponibilă pentru meșteri?',
         answer:
-          'Plan VIP: vizualizări și cereri pentru ultimele 14 zile, grafice și tendințe. Plan PREMIUM: analiză extinsă pentru 30 zile. Toți meșterii văd statisticile zilei în dashboard. Analiza vă ajută să înțelegeți audiența și să optimizați profilul.',
+          'Plan VIP: vizualizări și cereri pentru ultimele 30 de zile, grafice și tendințe. Plan PREMIUM: analiză extinsă pentru 30 zile. Toți meșterii văd statisticile zilei în dashboard. Analiza vă ajută să înțelegeți audiența și să optimizați profilul.',
       },
       q11: {
         question: 'Informațiile mele personale sunt sigure?',
         answer:
-          'Da. Luăm confidențialitatea în serios. Numărul dvs. de telefon este vizibil complet doar meșterilor cu planuri VIP sau PREMIUM. Meșterii cu BASIC văd o versiune mascată. Nu partajăm datele cu terți. Detalii în Politica de confidențialitate.',
+          'Da. Luăm confidențialitatea în serios. Numărul dvs. de telefon este vizibil complet doar meșterilor. Nu partajăm datele cu terți. Detalii în Politica de confidențialitate.',
       },
       q12: {
         question: 'Cum pot contacta suportul?',
         answer:
-          'Ne puteți contacta prin email la support@master-hub.md, telefon la +373 22 123 456 sau Telegram la @master_hub_support. Vizitați pagina noastră de',
+          'Ne puteți contacta prin email la supportmasterhub@gmail.com sau pe Telegram la @masterhubmd. Vizitați pagina noastră de',
         linkSuffix: 'Contacte pentru detalii și ore de lucru.',
       },
     },

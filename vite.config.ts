@@ -16,6 +16,10 @@ export default defineConfig(({ mode }) => ({
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',
+      injectManifest: {
+        // rollup-plugin-visualizer (--mode analyze) writes a large report; never precache it
+        globIgnores: ['**/stats.html'],
+      },
       manifest: {
         name: 'Master-Hub',
         short_name: 'Master-Hub',
@@ -36,20 +40,26 @@ export default defineConfig(({ mode }) => ({
       },
     }),
     mode === 'analyze' &&
-    visualizer({
-      filename: 'dist/stats.html',
-      gzipSize: true,
-      brotliSize: true,
-      open: true,
-    }),
+      visualizer({
+        filename: 'dist/stats.html',
+        projectRoot: path.resolve(__dirname),
+        template: 'treemap',
+        gzipSize: true,
+        brotliSize: true,
+        open: process.env.CI !== 'true',
+        title: 'Master-Hub — bundle',
+      }),
     viteCompression({
       algorithm: 'gzip',
       threshold: 256,
+      // Plugin logger uses naive `dist/` replace — breaks on Windows absolute paths (dist/A:/...)
+      verbose: false,
     }),
     viteCompression({
       algorithm: 'brotliCompress',
       ext: '.br',
       threshold: 256,
+      verbose: false,
     }),
     Sitemap({
       hostname: 'https://master-hub.md',
@@ -121,6 +131,7 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    chunkSizeWarningLimit: 300,
+    // Main app chunk ~875 kB minified; size-limit still enforces gzip/brotli budget
+    chunkSizeWarningLimit: 950,
   },
 }));

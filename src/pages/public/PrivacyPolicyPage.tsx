@@ -4,6 +4,12 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_MAILTO,
+  TELEGRAM_HANDLE,
+  TELEGRAM_URL,
+} from '@/config/support';
 
 const LAST_UPDATED = '2026-03-09';
 
@@ -67,10 +73,21 @@ export default function PrivacyPolicyPage() {
             <li>
               {t('privacy.contactEmail')}:{' '}
               <a
-                href="mailto:support@master-hub.md"
+                href={SUPPORT_MAILTO}
                 className="font-medium text-primary hover:underline"
               >
-                support@master-hub.md
+                {SUPPORT_EMAIL}
+              </a>
+            </li>
+            <li>
+              {t('contact.telegram')}:{' '}
+              <a
+                href={TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary hover:underline"
+              >
+                {TELEGRAM_HANDLE}
               </a>
             </li>
             <li>

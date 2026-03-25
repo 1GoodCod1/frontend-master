@@ -66,7 +66,11 @@ export default function FavoriteCard({ favorite, onRemove }: FavoriteCardProps) 
           variant="ghost"
           size="icon"
           className="absolute right-3 top-3 size-8 shrink-0 rounded-full bg-transparent text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/20"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); master?.id && onRemove(master.id); }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (master?.id) onRemove(master.id);
+          }}
           aria-label={t('common.delete')}
         >
           <Heart className="size-4 fill-red-500 drop-shadow-sm transition-transform group-hover:scale-110" />

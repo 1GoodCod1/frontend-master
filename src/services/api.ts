@@ -13,6 +13,7 @@ import {
 import { getSessionId } from '@/utils/sessionId';
 import { isRecord } from '@/utils/guards';
 import { unwrapEnvelope } from '@/utils/data';
+import toast from 'react-hot-toast';
 
 const isNetworkOr5xx = (status: number | undefined) =>
   status == null || status === 0 || (status >= 500 && status < 600);
@@ -215,7 +216,7 @@ export const baseQueryWithReauth =
 
       // Единая обработка 5xx и сетевых ошибок: тост с опцией повтора через refetch на экране
       if (result.error && isNetworkOr5xx(result.error.status)) {
-        import('react-hot-toast').then((m) => m.default.error(toErrorMessage(result.error!), { duration: 6000, id: 'api-error-toast' }));
+        toast.error(toErrorMessage(result.error!), { duration: 6000, id: 'api-error-toast' });
       }
 
       return result;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { Mail, Clock, Phone, AtSign, CalendarDays, Hourglass } from 'lucide-react';
+import { Mail, Clock, AtSign, CalendarDays, Hourglass } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -132,27 +132,16 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
             )}
           </div>
 
-          {(lead.master?.user?.phone || lead.master?.user?.email) && (
+          {lead.master?.user?.email && (
             <div className="flex flex-wrap items-center gap-4">
               <span className="hidden text-sm text-border sm:inline">|</span>
-              {lead.master?.user?.phone && (
-                <a
-                  href={`tel:${lead.master.user.phone}`}
-                  className="group flex items-center gap-1.5 text-sm font-semibold text-foreground no-underline transition-colors hover:text-amber-600 dark:hover:text-amber-500"
-                >
-                  <Phone className="size-4 text-amber-500/70 transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500" />
-                  {lead.master.user.phone}
-                </a>
-              )}
-              {lead.master?.user?.email && (
-                <a
-                  href={`mailto:${lead.master.user.email}`}
-                  className="group flex items-center gap-1.5 text-sm font-semibold text-foreground no-underline transition-colors hover:text-amber-600 dark:hover:text-amber-500"
-                >
-                  <AtSign className="size-4 text-amber-500/70 transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500" />
-                  {lead.master.user.email}
-                </a>
-              )}
+              <a
+                href={`mailto:${lead.master.user.email}`}
+                className="group flex items-center gap-1.5 text-sm font-semibold text-foreground no-underline transition-colors hover:text-amber-600 dark:hover:text-amber-500"
+              >
+                <AtSign className="size-4 text-amber-500/70 transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500" />
+                {lead.master.user.email}
+              </a>
             </div>
           )}
         </div>

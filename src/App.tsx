@@ -9,6 +9,7 @@ import { api } from '@/services/api';
 import { connectSocket, disconnectSocket } from '@/services/socket';
 import { clearAuth } from '@/features/auth/authSlice';
 import { REFRESH_TOKEN_KEY } from '@/features/auth/persist';
+import toast from 'react-hot-toast';
 
 const REFETCH_TAGS_ON_RECONNECT: readonly string[] = [
   'Me', 'Masters', 'Master', 'Leads', 'Reviews', 'Payments', 'Categories', 'Cities',
@@ -51,7 +52,7 @@ export function App() {
       if (e.key === REFRESH_TOKEN_KEY && e.newValue === null) {
         store.dispatch(api.util.resetApiState());
         store.dispatch(clearAuth());
-        import('react-hot-toast').then((m) => m.default('Вы вышли из системы'));
+        toast('Вы вышли из системы');
       }
     };
     window.addEventListener('storage', onStorage);
@@ -63,7 +64,7 @@ export function App() {
     const onOnline = () => {
       if (wasOfflineRef.current) {
         wasOfflineRef.current = false;
-        import('react-hot-toast').then((m) => m.default.success('Соединение восстановлено', { duration: 4000 }));
+        toast.success('Соединение восстановлено', { duration: 4000 });
         store.dispatch(api.util.invalidateTags(REFETCH_TAGS_ON_RECONNECT as Parameters<typeof api.util.invalidateTags>[0]));
       }
     };

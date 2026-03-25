@@ -1,9 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { Mail, Phone, Send } from 'lucide-react';
+import { Mail, Send } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  SUPPORT_EMAIL,
+  SUPPORT_MAILTO,
+  TELEGRAM_HANDLE,
+  TELEGRAM_URL,
+} from '@/config/support';
 
 export default function ContactsPage() {
   const { t } = useTranslation();
@@ -12,22 +18,15 @@ export default function ContactsPage() {
     {
       icon: Mail,
       title: t('contact.email'),
-      value: 'support@master-hub.md',
-      link: 'mailto:support@master-hub.md',
+      value: SUPPORT_EMAIL,
+      link: SUPPORT_MAILTO,
       description: t('contact.emailDescription'),
-    },
-    {
-      icon: Phone,
-      title: t('contact.phone'),
-      value: '+373 22 123 456',
-      link: 'tel:+37322123456',
-      description: t('contact.phoneDescription'),
     },
     {
       icon: Send,
       title: t('contact.telegram'),
-      value: '@master_hub_support',
-      link: 'https://t.me/master_hub_support',
+      value: TELEGRAM_HANDLE,
+      link: TELEGRAM_URL,
       description: t('contact.telegramDescription'),
     },
   ];

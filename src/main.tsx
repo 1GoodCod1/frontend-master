@@ -12,7 +12,7 @@ import { reportWebVitals } from '@/utils/reportWebVitals';
 import { initTracking } from '@/utils/tracking';
 import { hasAnalyticsConsent } from '@/features/cookie-consent/storage';
 import { registerSW } from 'virtual:pwa-register';
-import { LazyToaster } from '@/components/common/LazyToaster';
+import { Toaster } from 'react-hot-toast';
 
 // Preconnect to API for faster first request
 try {
@@ -33,9 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <AppProviders>
         <App />
-        <React.Suspense fallback={null}>
-          <LazyToaster position="top-right" />
-        </React.Suspense>
+        <Toaster position="top-right" />
       </AppProviders>
     </Provider>
   </React.StrictMode>

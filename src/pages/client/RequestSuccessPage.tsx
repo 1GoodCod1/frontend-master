@@ -10,7 +10,6 @@ import {
     ArrowRight,
     Clock,
     User,
-    Phone,
     Mail,
     Sparkles,
     Home,
@@ -213,19 +212,6 @@ export default function RequestSuccessPage() {
                                                 </div>
                                             )}
 
-                                            {lead.master?.user?.phone && (
-                                                <div className="flex items-center gap-3 rounded-xl bg-muted/50 dark:bg-white/[0.04] p-3">
-                                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-green-500/10 text-green-600 dark:text-green-400">
-                                                        <Phone className="h-4 w-4" />
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <p className="text-[11px] text-muted-foreground">{t('leadSuccess.masterPhone', 'Телефон мастера')}</p>
-                                                        <a href={`tel:${lead.master.user.phone}`} className="text-sm font-semibold hover:underline">
-                                                            {lead.master.user.phone}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            )}
                                         </div>
 
                                         {lead.message && (

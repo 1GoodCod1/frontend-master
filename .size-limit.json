@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Client JS (все чанки, gzip)",
+    "path": ["dist/assets/*.js"],
+    "limit": "1250 KB"
+  },
+  {
+    "name": "Client CSS (gzip)",
+    "path": ["dist/assets/*.css"],
+    "limit": "64 KB"
+  }
+]
