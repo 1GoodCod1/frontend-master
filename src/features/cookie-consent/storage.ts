@@ -1,11 +1,20 @@
+import {
+  LS_SESSION_ID_KEY,
+  LS_SESSION_ID_KEY_LEGACY,
+} from '@/constants/storage';
 import { safeStorage } from '@/utils/safeStorage';
-import { TRACKING_KEYS } from '@/utils/tracking';
+import {
+  clearConsentModeCookie,
+  setConsentModeCookie,
+} from '@/utils/prefsCookies';
+import { initTracking, removeTrackingKey, TRACKING_KEYS } from '@/utils/tracking';
 
 const KEY = 'mh_cookie_consent';
 
 export const NON_ESSENTIAL_KEYS = [
   'mastersSearchHistory',
-  'mh_session_id',
+  LS_SESSION_ID_KEY,
+  LS_SESSION_ID_KEY_LEGACY,
   'userCityName',
   TRACKING_KEYS.recentViews,
   TRACKING_KEYS.utmSource,
@@ -73,10 +82,14 @@ export function getCookiePreferences(): CookiePreferences {
 
 export function setCookieConsent(choice: CookieConsentChoice): void {
   safeStorage.setItem(KEY, choice);
+  setConsentModeCookie(choice === 'all' ? 'all' : 'necessary');
+  initTracking(choice === 'all');
 }
 
 export function setCookiePreferences(prefs: CookiePreferences): void {
   safeStorage.setItem(KEY, JSON.stringify({ mode: 'custom', prefs }));
+  setConsentModeCookie('custom');
+  initTracking(prefs.analytics);
 }
 
 export function hasConsent(): boolean {
@@ -109,21 +122,25 @@ export function hasAnalyticsConsent(): boolean {
 
 export function resetCookieConsent(): void {
   for (const k of NON_ESSENTIAL_KEYS) {
-    safeStorage.removeItem(k);
+    removeTrackingKey(k);
   }
   safeStorage.removeItem(KEY);
+  clearConsentModeCookie();
 }
 
 export function clearPreferencesData(prefs: CookiePreferences): void {
-  if (!prefs.searchHistory) safeStorage.removeItem('mastersSearchHistory');
-  if (!prefs.session) safeStorage.removeItem('mh_session_id');
-  if (!prefs.city) safeStorage.removeItem('userCityName');
-  if (!prefs.recentViews) safeStorage.removeItem(TRACKING_KEYS.recentViews);
+  if (!prefs.searchHistory) removeTrackingKey('mastersSearchHistory');
+  if (!prefs.session) {
+    removeTrackingKey(LS_SESSION_ID_KEY);
+    removeTrackingKey(LS_SESSION_ID_KEY_LEGACY);
+  }
+  if (!prefs.city) removeTrackingKey('userCityName');
+  if (!prefs.recentViews) removeTrackingKey(TRACKING_KEYS.recentViews);
   if (!prefs.analytics) {
-    safeStorage.removeItem(TRACKING_KEYS.utmSource);
-    safeStorage.removeItem(TRACKING_KEYS.utmMedium);
-    safeStorage.removeItem(TRACKING_KEYS.utmCampaign);
-    safeStorage.removeItem(TRACKING_KEYS.firstVisit);
-    safeStorage.removeItem(TRACKING_KEYS.visitCount);
+    removeTrackingKey(TRACKING_KEYS.utmSource);
+    removeTrackingKey(TRACKING_KEYS.utmMedium);
+    removeTrackingKey(TRACKING_KEYS.utmCampaign);
+    removeTrackingKey(TRACKING_KEYS.firstVisit);
+    removeTrackingKey(TRACKING_KEYS.visitCount);
   }
 }

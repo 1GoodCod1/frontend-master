@@ -52,6 +52,7 @@ export const SecurityPage = lazy(() => import('@/pages/admin/SecurityPage'));
 export const VerificationRequestsPage = lazy(() => import('@/pages/admin/VerificationRequestsPage'));
 export const DigestAdminPage = lazy(() => import('@/pages/admin/DigestAdminPage'));
 export const ReportsAdminPage = lazy(() => import('@/pages/admin/ReportsAdminPage'));
+export const CompliancePage = lazy(() => import('@/pages/admin/CompliancePage'));
 
 export const ClientDashboardPage = lazy(() => import('@/pages/client/ClientDashboardPage'));
 export const ClientBookingsPage = lazy(() => import('@/pages/client/ClientBookingsPage'));

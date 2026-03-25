@@ -274,6 +274,10 @@ export const adminApi = api.injectEndpoints({
       query: (body) => ({ url: '/admin/email/broadcast', method: 'POST', data: body }),
       invalidatesTags: ['Admin'],
     }),
+    adminComplianceOverview: build.query<unknown, void>({
+      query: () => ({ url: '/admin/compliance/overview', method: 'GET' }),
+      providesTags: ['Admin'],
+    }),
   }),
 });
 
@@ -314,4 +318,5 @@ export const {
   useAdminTemplateDefaultQuery,
   useAdminTemplateOverridesQuery,
   useAdminSetTemplateOverrideMutation,
+  useAdminComplianceOverviewQuery,
 } = adminApi;

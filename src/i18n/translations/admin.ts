@@ -30,6 +30,7 @@ export const admin = {
         security: 'Security',
         system: 'System',
         audit: 'Audit',
+        compliance: 'Compliance',
       },
       digest: {
         title: 'Digest',
@@ -458,6 +459,7 @@ export const admin = {
         security: 'Безопасность',
         system: 'Система',
         audit: 'Аудит',
+        compliance: 'Соответствие',
       },
       digest: {
         title: 'Дайджест',
@@ -886,6 +888,7 @@ export const admin = {
         security: 'Securitate',
         system: 'Sistem',
         audit: 'Audit',
+        compliance: 'Conformitate',
       },
       digest: {
         title: 'Digest',

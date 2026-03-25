@@ -19,6 +19,7 @@ import {
   FileCheck,
   Menu,
   Mailbox,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { clearUnreadLeads, clearUnreadReviews } from '@/features/socket/socketSlice';
@@ -45,6 +46,7 @@ const items: { key: string; to: string; icon: React.ReactNode }[] = [
   { key: 'security', to: '/admin/security', icon: <Shield className="size-5" /> },
   { key: 'system', to: '/admin/system', icon: <Settings className="size-5" /> },
   { key: 'audit', to: '/admin/audit', icon: <FileCheck className="size-5" /> },
+  { key: 'compliance', to: '/admin/compliance', icon: <ShieldCheck className="size-5" /> },
 ];
 
 export function AdminLayout() {

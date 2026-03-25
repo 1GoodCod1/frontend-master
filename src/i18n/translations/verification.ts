@@ -58,6 +58,9 @@ export const verification = {
       approve: 'Approve',
       reject: 'Reject',
       reviewing: 'Processing...',
+      consentText:
+        'I consent to the processing of my personal data (identity document, photos, and document number) for the purpose of account verification. My data will be encrypted; uploaded document files are deleted automatically shortly after approval, while the fact of verification is retained. I can withdraw consent at any time.',
+      consentRequired: 'You must consent to data processing to proceed',
       fileUploaded: 'File uploaded',
       fileUploadError: 'File upload failed',
       reviewed: 'Verification reviewed successfully',
@@ -128,6 +131,9 @@ export const verification = {
       approve: 'Одобрить',
       reject: 'Отклонить',
       reviewing: 'Обработка...',
+      consentText:
+        'Я даю согласие на обработку моих персональных данных (документ, удостоверяющий личность, фотографии и номер документа) в целях верификации аккаунта. Мои данные будут зашифрованы; загруженные файлы документов автоматически удаляются вскоре после одобрения заявки, при этом факт верификации сохраняется. Я могу отозвать согласие в любое время.',
+      consentRequired: 'Необходимо дать согласие на обработку данных',
       fileUploaded: 'Файл загружен',
       fileUploadError: 'Ошибка загрузки файла',
       reviewed: 'Верификация рассмотрена',
@@ -198,6 +204,9 @@ export const verification = {
       approve: 'Aprobă',
       reject: 'Respinge',
       reviewing: 'Se procesează...',
+      consentText:
+        'Sunt de acord cu prelucrarea datelor mele personale (actul de identitate, fotografiile și numărul documentului) în scopul verificării contului. Datele mele vor fi criptate; fișierele încărcate sunt șterse automat la scurt timp după aprobarea cererii, iar faptul verificării se păstrează. Pot retrage consimțământul oricând.',
+      consentRequired: 'Trebuie să acceptați prelucrarea datelor pentru a continua',
       fileUploaded: 'Fișier încărcat',
       fileUploadError: 'Încărcarea fișierului a eșuat',
       reviewed: 'Verificare revizuită',

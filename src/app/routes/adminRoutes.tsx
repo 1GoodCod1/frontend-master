@@ -26,6 +26,7 @@ export const adminRoutes = {
         { path: 'security', element: <LazyPage><P.SecurityPage /></LazyPage> },
         { path: 'verification-requests', element: <LazyPage><P.VerificationRequestsPage /></LazyPage> },
         { path: 'digest', element: <LazyPage><P.DigestAdminPage /></LazyPage> },
+        { path: 'compliance', element: <LazyPage><P.CompliancePage /></LazyPage> },
       ],
     },
   ],

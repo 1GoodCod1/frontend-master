@@ -47,6 +47,7 @@ import { leadSuccess } from './leadSuccess';
 import { referrals } from './referrals';
 import { digest } from './digest';
 import { dataGrid } from './dataGrid';
+import { compliance } from './compliance';
 
 const modules = [
   app,
@@ -97,6 +98,7 @@ const modules = [
   referrals,
   digest,
   dataGrid,
+  compliance,
 ];
 
 export const resources = {

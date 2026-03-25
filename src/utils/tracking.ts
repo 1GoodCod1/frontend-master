@@ -1,7 +1,9 @@
+import { clearHttpCookie, setHttpCookie } from '@/utils/prefsCookies';
 import { safeStorage } from '@/utils/safeStorage';
 
 // ---------------------------------------------------------------------------
-// Keys
+// Keys — same names in localStorage (safeStorage) and mirrored HTTP cookies
+// (DevTools → Application → Cookies) so they stay in sync. Reads use LS only.
 // ---------------------------------------------------------------------------
 export const TRACKING_KEYS = {
   utmSource: 'mh_utm_source',
@@ -12,6 +14,19 @@ export const TRACKING_KEYS = {
   recentViews: 'mh_recent_views',
   viewMode: 'mh_view_mode',
 } as const;
+
+const TRACKING_KEY_SET = new Set<string>(Object.values(TRACKING_KEYS));
+
+function persistTrackingKey(key: string, value: string): void {
+  safeStorage.setItem(key, value);
+  setHttpCookie(key, value);
+}
+
+/** Clears localStorage + matching HTTP cookie for keys listed in TRACKING_KEYS. */
+export function removeTrackingKey(key: string): void {
+  safeStorage.removeItem(key);
+  if (TRACKING_KEY_SET.has(key)) clearHttpCookie(key);
+}
 
 // ---------------------------------------------------------------------------
 // UTM tracking
@@ -35,9 +50,9 @@ export function captureUtmParams(): void {
 
     if (!source && !medium && !campaign) return;
 
-    if (source) safeStorage.setItem(TRACKING_KEYS.utmSource, source);
-    if (medium) safeStorage.setItem(TRACKING_KEYS.utmMedium, medium);
-    if (campaign) safeStorage.setItem(TRACKING_KEYS.utmCampaign, campaign);
+    if (source) persistTrackingKey(TRACKING_KEYS.utmSource, source);
+    if (medium) persistTrackingKey(TRACKING_KEYS.utmMedium, medium);
+    if (campaign) persistTrackingKey(TRACKING_KEYS.utmCampaign, campaign);
   } catch {
     // ignore
   }
@@ -52,9 +67,9 @@ export function getUtmParams(): UtmParams {
 }
 
 export function clearUtmParams(): void {
-  safeStorage.removeItem(TRACKING_KEYS.utmSource);
-  safeStorage.removeItem(TRACKING_KEYS.utmMedium);
-  safeStorage.removeItem(TRACKING_KEYS.utmCampaign);
+  removeTrackingKey(TRACKING_KEYS.utmSource);
+  removeTrackingKey(TRACKING_KEYS.utmMedium);
+  removeTrackingKey(TRACKING_KEYS.utmCampaign);
 }
 
 // ---------------------------------------------------------------------------
@@ -74,12 +89,18 @@ export function trackVisit(): void {
   try {
     const existing = safeStorage.getItem(TRACKING_KEYS.firstVisit);
     if (!existing) {
-      safeStorage.setItem(TRACKING_KEYS.firstVisit, new Date().toISOString());
+      persistTrackingKey(TRACKING_KEYS.firstVisit, new Date().toISOString());
+    } else {
+      // Mirror legacy LS-only installs into the HTTP cookie once values exist.
+      setHttpCookie(TRACKING_KEYS.firstVisit, existing);
     }
 
     const raw = safeStorage.getItem(TRACKING_KEYS.visitCount);
     const count = raw ? parseInt(raw, 10) : 0;
-    safeStorage.setItem(TRACKING_KEYS.visitCount, String((isNaN(count) ? 0 : count) + 1));
+    persistTrackingKey(
+      TRACKING_KEYS.visitCount,
+      String((isNaN(count) ? 0 : count) + 1)
+    );
   } catch {
     // ignore
   }
@@ -97,8 +118,8 @@ export function getVisitorInfo(): VisitorInfo {
 }
 
 export function clearVisitorInfo(): void {
-  safeStorage.removeItem(TRACKING_KEYS.firstVisit);
-  safeStorage.removeItem(TRACKING_KEYS.visitCount);
+  removeTrackingKey(TRACKING_KEYS.firstVisit);
+  removeTrackingKey(TRACKING_KEYS.visitCount);
 }
 
 // ---------------------------------------------------------------------------
@@ -112,7 +133,7 @@ export function trackRecentView(masterId: string): void {
     const filtered = ids.filter((id) => id !== masterId);
     filtered.unshift(masterId);
     if (filtered.length > MAX_RECENT_VIEWS) filtered.length = MAX_RECENT_VIEWS;
-    safeStorage.setItem(TRACKING_KEYS.recentViews, JSON.stringify(filtered));
+    persistTrackingKey(TRACKING_KEYS.recentViews, JSON.stringify(filtered));
   } catch {
     // ignore
   }
@@ -130,7 +151,7 @@ export function getRecentViews(): string[] {
 }
 
 export function clearRecentViews(): void {
-  safeStorage.removeItem(TRACKING_KEYS.recentViews);
+  removeTrackingKey(TRACKING_KEYS.recentViews);
 }
 
 // ---------------------------------------------------------------------------
@@ -144,7 +165,7 @@ export function getPersistedViewMode(): ViewMode {
 }
 
 export function setPersistedViewMode(mode: ViewMode): void {
-  safeStorage.setItem(TRACKING_KEYS.viewMode, mode);
+  persistTrackingKey(TRACKING_KEYS.viewMode, mode);
 }
 
 // ---------------------------------------------------------------------------

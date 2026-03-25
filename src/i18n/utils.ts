@@ -44,9 +44,29 @@ export function persistLanguage(lang: AppLanguage): void {
   }
 }
 
-/** Merge multiple translation slices into one. Keys must not overlap. */
+/** Deep-merge multiple translation slices into one. */
 export function mergeTranslationSlices<T extends Record<string, unknown>>(
   ...slices: Partial<T>[]
 ): T {
-  return Object.assign({}, ...slices) as T;
+  const result: Record<string, unknown> = {};
+  for (const slice of slices) {
+    for (const [key, value] of Object.entries(slice)) {
+      if (
+        value !== null &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        result[key] !== null &&
+        typeof result[key] === 'object' &&
+        !Array.isArray(result[key])
+      ) {
+        result[key] = mergeTranslationSlices(
+          result[key] as Record<string, unknown>,
+          value as Record<string, unknown>,
+        );
+      } else {
+        result[key] = value;
+      }
+    }
+  }
+  return result as T;
 }

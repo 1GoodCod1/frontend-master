@@ -10,6 +10,7 @@ import {
   useGetMyVerificationStatusQuery,
   useSubmitVerificationMutation,
 } from '@/features/verification/verificationApi';
+import { useGrantConsentMutation } from '@/features/consent/consentApi';
 import { useFilesUploadMutation } from '@/features/files/filesApi';
 import { useAuthMeQuery } from '@/features/auth/authApi';
 import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
@@ -22,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { FormikTextField } from '@/components/ui/FormikTextField';
 import { FormikSelect } from '@/components/ui/FormikSelect';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
 const documentTypes = [
@@ -59,11 +61,13 @@ export default function VerificationPage() {
     refetchOnMountOrArgChange: true,
   });
   const [submitVerification, { isLoading: isSubmitting }] = useSubmitVerificationMutation();
+  const [grantConsent] = useGrantConsentMutation();
   const [uploadFile, { isLoading: isUploading }] = useFilesUploadMutation();
   const { data: meData } = useAuthMeQuery();
 
   const userPhone = ((meData as { phone?: string })?.phone ?? '') as string;
 
+  const [consentChecked, setConsentChecked] = useState(false);
   const [documentFrontId, setDocumentFrontId] = useState('');
   const [documentBackId, setDocumentBackId] = useState('');
   const [selfieId, setSelfieId] = useState('');
@@ -293,7 +297,17 @@ export default function VerificationPage() {
                 toast.error(t('verification.documentFrontRequired'));
                 return;
               }
+              if (!consentChecked) {
+                toast.error(t('verification.consentRequired'));
+                return;
+              }
               try {
+                // Record GDPR consent before submitting verification
+                await grantConsent({
+                  consentType: 'VERIFICATION_DATA_PROCESSING',
+                  version: '1.0',
+                }).unwrap();
+
                 await submitVerification({
                   documentType: values.documentType,
                   documentNumber: values.documentNumber,
@@ -435,10 +449,25 @@ export default function VerificationPage() {
 
                   <Separator className="bg-slate-100 dark:bg-white/[0.08]" />
 
+                  <div className="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-4 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                    <Checkbox
+                      id="consent"
+                      checked={consentChecked}
+                      onCheckedChange={(v) => setConsentChecked(v === true)}
+                      className="mt-0.5"
+                    />
+                    <Label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-muted-foreground">
+                      {t('verification.consentText')}
+                    </Label>
+                  </div>
+                  {!consentChecked && (
+                    <p className="text-xs text-destructive">{t('verification.consentRequired')}</p>
+                  )}
+
                   <Button
                     type="submit"
                     size="lg"
-                    disabled={!canSubmit || isSubmitting || isUploading || !documentFrontId}
+                    disabled={!canSubmit || isSubmitting || isUploading || !documentFrontId || !consentChecked}
                     className="w-full py-6"
                   >
                     {isSubmitting ? t('verification.submitting') : t('verification.submit')}
