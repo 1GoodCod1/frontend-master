@@ -21,6 +21,26 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
     return outputArray;
 }
 
+type AxiosLikeError = { status?: number; data?: unknown };
+
+function messageFromVapidError(error: unknown): string | undefined {
+    if (!error || typeof error !== 'object') return undefined;
+    const { status, data } = error as AxiosLikeError;
+    const d = data;
+    if (status === 503) {
+        if (typeof d === 'object' && d !== null && 'message' in d) {
+            const m = (d as { message: unknown }).message;
+            if (typeof m === 'string' && m.trim()) return m;
+            if (Array.isArray(m) && typeof m[0] === 'string') return m[0];
+        }
+        return 'Push на сервере не настроен: задайте VAPID_PUBLIC_KEY и VAPID_PRIVATE_KEY в .env.docker и перезапустите контейнер API.';
+    }
+    if (status == null || status === 0) {
+        return 'Нет ответа от API. Проверьте, что сервер запущен, и VITE_API_URL (должен совпадать с адресом бэкенда).';
+    }
+    return undefined;
+}
+
 function arrayBufferToBase64(buffer: ArrayBuffer | null): string {
     if (!buffer) return '';
     const bytes = new Uint8Array(buffer);
@@ -68,10 +88,13 @@ export function useWebPush() {
 
         let key = vapidData?.publicKey;
         if (!key) {
-            const { data } = await refetchVapid();
+            const { data, error } = await refetchVapid();
             key = data?.publicKey;
             if (!key) {
-                toast.error('Уведомления недоступны. Настройте VAPID ключи на сервере (см. .env)');
+                toast.error(
+                    messageFromVapidError(error) ??
+                        'Уведомления недоступны. Задайте пару VAPID ключей на сервере (npm run generate:secrets в api-master) и перезапустите API.',
+                );
                 return;
             }
         }

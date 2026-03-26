@@ -11,6 +11,7 @@ const PATHS_BUST_HTTP_DEV = new Set([
   '/masters/filters',
   '/categories',
   '/cities',
+  '/web-push/vapid-public-key',
 ]);
 
 /** В prod не трогаем отдельные GET /categories и /cities — полагаемся на короткий max-age с API */
@@ -19,6 +20,7 @@ const PATHS_BUST_HTTP_PROD = new Set([
   '/masters/new',
   '/masters/landing-stats',
   '/masters/filters',
+  '/web-push/vapid-public-key',
 ]);
 
 const DYNAMIC_PATH_PATTERNS: RegExp[] = [
