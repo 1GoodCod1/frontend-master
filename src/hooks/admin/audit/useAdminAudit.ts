@@ -27,7 +27,8 @@ export function useAdminAudit() {
     [logs.data, page, limit],
   );
 
-  const totalLogs = allLogs.length;
+  /** Total rows server-side (all pages), not current page length. */
+  const totalLogs = meta.total;
 
   const logsData = useMemo(
     () => ({

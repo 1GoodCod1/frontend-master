@@ -1,8 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64"><svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="master-hub">
-  <rect width="64" height="64" rx="16" fill="#020617"></rect>
-  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-size="36" font-weight="600" fill="#F8FAFC" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
-    mh
-  </text>
-</svg></svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
-@media (prefers-color-scheme: dark) { :root { filter: none; } }
-</style></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="MasterHub">
+  <defs>
+    <linearGradient id="favGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E97525"/>
+      <stop offset="100%" stop-color="#F08A3D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="64" height="64" rx="16" fill="url(#favGrad)"/>
+
+  <!-- M-House -->
+  <path d="M10,54 L10,33 L21,12 L32,33 L43,12 L54,33 L54,54 Z"
+        fill="none" stroke="white" stroke-width="4.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

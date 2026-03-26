@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type AuthView = 'login' | 'register' | 'forgot';
@@ -53,14 +52,13 @@ function AuthLeftPanel({ view }: { view: AuthView }) {
           to="/"
           className="inline-flex items-center gap-2.5"
         >
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-[10px]"
-            style={{
-              background: 'linear-gradient(135deg, #f97316, #c85a00)',
-            }}
-          >
-            <Briefcase size={17} color="#fff" />
-          </div>
+          <img
+            src="/brand/favicon.svg"
+            alt=""
+            className="h-9 w-9"
+            width={36}
+            height={36}
+          />
           <span className="text-[1.15rem] font-extrabold tracking-tight text-white">
             Master<span className="text-[#f97316]">Hub</span>
           </span>

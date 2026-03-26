@@ -1,6 +1,6 @@
 {
-  "name": "Master-Hub",
-  "short_name": "Master-Hub",
+  "name": "MasterHub",
+  "short_name": "MasterHub",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#ed8133",
+  "background_color": "#ed8133",
   "display": "standalone"
 }

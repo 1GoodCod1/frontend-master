@@ -5,7 +5,7 @@ import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SectionCard } from '@/components/ui/SectionCard';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
   TooltipContent,
@@ -116,73 +116,73 @@ export default function AuditPage() {
               </TabsTrigger>
             </TabsList>
 
-          {tab === 0 && (
-            <StatsTab
-              timeframe={timeframe}
-              onTimeframeChange={setTimeframe}
-              stats={stats}
-            />
-          )}
+            <TabsContent value="0">
+              <StatsTab
+                timeframe={timeframe}
+                onTimeframeChange={setTimeframe}
+                stats={stats}
+              />
+            </TabsContent>
 
-          {tab === 1 && (
-            logs.isLoading ? (
-              <LoadingState />
-            ) : logs.isError ? (
-              <ErrorState error={logs.error} onRetry={logs.refetch} />
-            ) : (
-              <>
-                <div className="mb-4 flex justify-end">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={exportToCSV}
-                          disabled={!allLogs.length}
-                          className="gap-2"
-                        >
-                          <Download className="size-4" />
-                          {t('admin.audit.export')}
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{t('admin.audit.exportTooltip')}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-                <PaginatedDataGrid
-                  data={logsData}
-                  loading={logs.isLoading}
-                  error={logs.error}
-                  page={page}
-                  limit={limit}
-                  onPageChange={(p, l) => {
-                    setPage(p);
-                    setLimit(l);
-                  }}
-                  columns={logColumns}
-                  dataGridProps={{
-                    onRowDoubleClick: (row) => setSelectedLog(row as AuditLogRow),
-                    rowHeight: 70,
-                    getRowClassName: (_row, index) => index % 2 === 0 ? 'even-row' : 'odd-row',
-                  }}
-                />
-                
-                {!logs.isLoading && allLogs.length === 0 && (
-                  <AuditEmptyState />
-                )}
-              </>
-            )
-          )}
+            <TabsContent value="1">
+              {logs.isLoading ? (
+                <LoadingState />
+              ) : logs.isError ? (
+                <ErrorState error={logs.error} onRetry={logs.refetch} />
+              ) : (
+                <>
+                  <div className="mb-4 flex justify-end">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={exportToCSV}
+                            disabled={!allLogs.length}
+                            className="gap-2"
+                          >
+                            <Download className="size-4" />
+                            {t('admin.audit.export')}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>{t('admin.audit.exportTooltip')}</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <PaginatedDataGrid
+                    data={logsData}
+                    loading={logs.isLoading}
+                    error={logs.error}
+                    page={page}
+                    limit={limit}
+                    onPageChange={(p, l) => {
+                      setPage(p);
+                      setLimit(l);
+                    }}
+                    columns={logColumns}
+                    dataGridProps={{
+                      onRowDoubleClick: (row) => setSelectedLog(row as AuditLogRow),
+                      rowHeight: 70,
+                      getRowClassName: (_row, index) => index % 2 === 0 ? 'even-row' : 'odd-row',
+                    }}
+                  />
 
-          {tab === 2 && (
-            <StreamTab
-              streamLimit={streamLimit}
-              onStreamLimitChange={setStreamLimit}
-              stream={stream}
-              streamData={streamData}
-            />
-          )}
+                  {!logs.isLoading && allLogs.length === 0 && (
+                    <AuditEmptyState />
+                  )}
+                </>
+              )}
+            </TabsContent>
+
+            <TabsContent value="2">
+              <StreamTab
+                streamLimit={streamLimit}
+                onStreamLimitChange={setStreamLimit}
+                stream={stream}
+                streamData={streamData}
+              />
+            </TabsContent>
           </Tabs>
         </SectionCard>
 

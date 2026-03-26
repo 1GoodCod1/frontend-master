@@ -312,56 +312,61 @@ export default function DashboardPage() {
 
           {/* Leads Funnel / Distribution */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="shadow-sm">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <BarChart3 className="size-5 text-indigo-500" />
+            <Card className="relative overflow-hidden border shadow-sm transition-all duration-500 border-indigo-500/20 dark:border-indigo-500/10">
+              <div className="absolute -bottom-10 -left-10 p-24 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-3xl z-0 pointer-events-none opacity-50"></div>
+              <CardHeader className="pb-2 relative z-10">
+                <CardTitle className="text-lg flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                    <BarChart3 className="size-4.5" />
+                  </div>
                   {t('dashboard.leadsFunnel', 'Воронка заявок')}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6 pt-4">
+              <CardContent className="space-y-5 pt-4 relative z-10">
                 {[
-                  { label: t('dashboard.statusNew', 'Новые'), count: newLeads, color: 'bg-blue-500', max: total || 1 },
-                  { label: t('dashboard.statusInProgress', 'В работе'), count: inProgress, color: 'bg-amber-500', max: total || 1 },
-                  { label: t('dashboard.statusClosed', 'Завершено (Успешно)'), count: closed, color: 'bg-emerald-500', max: total || 1 },
-                  { label: t('dashboard.statusSpam', 'Отклонено / Спам'), count: spam, color: 'bg-destructive', max: total || 1 },
+                  { label: t('dashboard.statusNew', 'Новые'), count: newLeads, color: 'bg-blue-500 dark:bg-blue-400', max: total || 1 },
+                  { label: t('dashboard.statusInProgress', 'В работе'), count: inProgress, color: 'bg-amber-500 dark:bg-amber-400', max: total || 1 },
+                  { label: t('dashboard.statusClosed', 'Завершено (Успешно)'), count: closed, color: 'bg-emerald-500 dark:bg-emerald-400', max: total || 1 },
+                  { label: t('dashboard.statusSpam', 'Отклонено / Спам'), count: spam, color: 'bg-rose-500 dark:bg-rose-400', max: total || 1 },
                 ].map((stat, idx) => (
-                  <div key={idx} className="space-y-2">
+                  <div key={idx} className="space-y-2.5">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-medium text-foreground">{stat.label}</span>
-                      <span className="text-muted-foreground font-semibold">{stat.count}</span>
+                      <span className="font-semibold text-muted-foreground">{stat.label}</span>
+                      <span className="text-foreground font-black tracking-tight">{stat.count}</span>
                     </div>
-                    <Progress value={(stat.count / stat.max) * 100} className={cn("h-2 [&>div]:" + stat.color)} />
+                    <Progress value={(stat.count / stat.max) * 100} className={cn("h-2 rounded-full bg-muted/50 dark:bg-muted/10 [&>div]:" + stat.color)} />
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-32 bg-amber-500/5 dark:bg-amber-500/10 rounded-full blur-3xl -mx-10 -my-10 z-0 pointer-events-none"></div>
+            <Card className="relative overflow-hidden border shadow-sm transition-all duration-500 border-amber-500/20 dark:border-amber-500/10">
+              <div className="absolute -top-10 -right-10 p-24 bg-amber-500/10 dark:bg-amber-500/20 rounded-full blur-3xl z-0 pointer-events-none opacity-50"></div>
               <CardHeader className="pb-2 relative z-10">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="size-5 text-amber-500" />
+                <CardTitle className="text-lg flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                    <Users className="size-4.5" />
+                  </div>
                   {t('dashboard.profileSummary', 'Сводка профиля')}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-4 space-y-4 relative z-10">
-                <div className="flex justify-between items-center p-3 rounded-lg bg-card/50 border border-border/50">
-                  <span className="text-muted-foreground text-sm">{t('dashboard.viewsThisWeek', 'Просмотры за неделю')}</span>
-                  <span className="font-bold text-lg">{viewsThisWeek}</span>
+              <CardContent className="pt-4 space-y-3 relative z-10">
+                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition-all duration-300">
+                  <span className="text-muted-foreground text-sm font-medium">{t('dashboard.viewsThisWeek', 'Просмотры за неделю')}</span>
+                  <span className="font-black text-xl tracking-tight text-amber-600 dark:text-amber-400">{viewsThisWeek}</span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-lg bg-card/50 border border-border/50">
-                  <span className="text-muted-foreground text-sm">{t('dashboard.viewsThisMonth', 'Просмотры за месяц')}</span>
-                  <span className="font-bold text-lg">{viewsThisMonth}</span>
+                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition-all duration-300">
+                  <span className="text-muted-foreground text-sm font-medium">{t('dashboard.viewsThisMonth', 'Просмотры за месяц')}</span>
+                  <span className="font-black text-xl tracking-tight text-amber-600 dark:text-amber-400">{viewsThisMonth}</span>
                 </div>
-                <div className="pt-4 w-full">
+                <div className="pt-3 w-full">
                   <Button
                     variant="outline"
-                    className="w-full justify-between hover:bg-muted/50 group rounded-xl"
+                    className="w-full h-11 justify-between hover:bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400 group rounded-xl shadow-sm transition-all"
                     onClick={() => setViewsHistoryOpen(true)}
                   >
-                    <span className="flex items-center gap-2">
-                      <History className="size-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    <span className="flex items-center gap-2 font-bold tracking-tight">
+                      <History className="size-4 opacity-70 group-hover:scale-110 transition-transform" />
                       {t('dashboard.viewsHistory.showHistory', 'История просмотров')}
                     </span>
                     <Eye className="size-4 opacity-50" />
@@ -381,49 +386,58 @@ export default function DashboardPage() {
 
           {/* Status Control Card */}
           <Card className={cn(
-            "shadow-lg border-2 transition-all duration-300 relative overflow-hidden",
+            "relative overflow-hidden transition-all duration-500 border shadow-sm",
             isOnline
-              ? "border-emerald-500/50 dark:border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 to-transparent dark:from-emerald-500/10 shadow-emerald-500/10"
-              : ""
+              ? "border-teal-500/20 dark:border-teal-500/10 bg-card"
+              : "border-rose-500/20 dark:border-rose-500/10 bg-card"
           )}>
-            {isOnline && <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl -mr-16 -mt-16 animate-pulse z-0 pointer-events-none"></div>}
+            {isOnline && (
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-3xl animate-pulse z-0 pointer-events-none" />
+            )}
 
-            <CardHeader className="pb-4 relative z-10">
-              <CardTitle className="text-lg flex items-center justify-between">
-                <span>{t('dashboard.statusControl', 'Статус')}</span>
+            <CardContent className="p-5 sm:p-6 relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                    {t('dashboard.statusControl', 'Статус')}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-3.5 w-3.5">
+                      {isOnline && (
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75 hidden sm:inline-flex"></span>
+                      )}
+                      <span className={cn(
+                        "relative inline-flex rounded-full h-3.5 w-3.5 border border-background",
+                        isOnline ? "bg-teal-500" : "bg-muted-foreground/40"
+                      )}></span>
+                    </span>
+                    <span className={cn(
+                      "text-xl sm:text-2xl font-bold tracking-tight",
+                      isOnline ? "text-teal-600 dark:text-teal-400" : "text-muted-foreground"
+                    )}>
+                      {isOnline ? 'Online' : 'Offline'}
+                    </span>
+                  </div>
+                </div>
+                
                 <Switch
                   checked={isOnline}
                   onCheckedChange={handleToggleOnlineStatus}
                   disabled={isUpdatingStatus}
                   className={cn(
-                    "data-[state=checked]:bg-emerald-500 scale-110 shadow-inner",
-                    isOnline ? "shadow-emerald-500/30" : ""
+                    "scale-125 transition-all",
+                    isOnline 
+                      ? "data-[state=checked]:bg-teal-500 shadow-md shadow-teal-500/25" 
+                      : "dark:bg-muted-foreground/30"
                   )}
                 />
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6 relative z-10">
-              <div className="flex items-center gap-4">
-                <OnlineStatusBadge
-                  isOnline={isOnline}
-                  lastActivityAt={masterData?.lastActivityAt}
-                  variant="dot"
-                  size="medium"
-                  showLabel={true}
-                />
-              </div>
-
-              <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">
-                {isOnline
-                  ? t('dashboard.onlineStatusDescription', 'Вы в сети и видны клиентам. Ваш профиль будет отображаться выше в поиске.')
-                  : t('dashboard.offlineStatusDescription', 'Вы не в сети. Клиенты не могут найти вас напрямую или сделать быстрый заказ.')}
               </div>
 
               {statusUpdateSuccess && (
-                <Alert className="border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 py-2.5 animate-in fade-in slide-in-from-top-2">
-                  <CheckCircle className="size-4" />
-                  <AlertDescription className="ml-2">{t('dashboard.statusUpdated', 'Статус обновлен')}</AlertDescription>
-                </Alert>
+                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-teal-600 dark:text-teal-400 animate-in fade-in slide-in-from-bottom-2">
+                  <CheckCircle className="size-3.5" />
+                  <span>{t('dashboard.statusUpdated', 'Статус обновлен')}</span>
+                </div>
               )}
             </CardContent>
           </Card>

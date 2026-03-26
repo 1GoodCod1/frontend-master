@@ -116,6 +116,9 @@ export const admin = {
         liveUpdates: 'Live - Updates every 5 seconds',
         noLogsYet: 'No logs yet',
         close: 'Close',
+        streamRecentActivity: 'Recent activity (last {{count}} events)',
+        actorSystem: 'System',
+        actorUnknown: 'Unknown',
       },
       system: {
         title: 'System',
@@ -545,6 +548,9 @@ export const admin = {
         liveUpdates: 'Обновления каждые 5 сек',
         noLogsYet: 'Записей пока нет',
         close: 'Закрыть',
+        streamRecentActivity: 'Последняя активность ({{count}} событий)',
+        actorSystem: 'Система',
+        actorUnknown: 'Неизвестно',
       },
       system: {
         title: 'Система',
@@ -974,6 +980,9 @@ export const admin = {
         liveUpdates: 'Actualizări la 5 secunde',
         noLogsYet: 'Nicio înregistrare încă',
         close: 'Închide',
+        streamRecentActivity: 'Activitate recentă (ultimele {{count}} evenimente)',
+        actorSystem: 'Sistem',
+        actorUnknown: 'Necunoscut',
       },
       system: {
         title: 'Sistem',

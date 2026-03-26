@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="master-hub">
-  <rect width="64" height="64" rx="16" fill="#020617"/>
-  <text x="50%" y="54%"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        font-size="36"
-        font-weight="600"
-        fill="#F8FAFC"
-        font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
-    mh
-  </text>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="MasterHub">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E97525"/>
+      <stop offset="100%" stop-color="#F08A3D"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- M-House -->
+  <path d="M80,432 L80,264 L168,96 L256,264 L344,96 L432,264 L432,432 Z"
+        fill="none" stroke="white" stroke-width="36"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

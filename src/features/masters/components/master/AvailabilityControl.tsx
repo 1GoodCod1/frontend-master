@@ -75,59 +75,55 @@ export function AvailabilityControl({
 
   return (
     <Card className={cn(
-      "relative overflow-hidden transition-all duration-500",
+      "relative overflow-hidden transition-all duration-500 shadow-sm border",
       isAvailable
-        ? "border-emerald-500/30 dark:border-emerald-500/20"
-        : "border-amber-500/30 dark:border-amber-500/20"
+        ? "border-teal-500/20 dark:border-teal-500/10 bg-card"
+        : "border-rose-500/20 dark:border-rose-500/10 bg-card"
     )}>
-      {/* Decorative background glow */}
+      {/* Subtle Glow */}
       <div className={cn(
-        "absolute -top-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500",
-        isAvailable ? "bg-emerald-500" : "bg-amber-500"
+        "absolute -top-32 -right-32 w-64 h-64 rounded-full blur-[4rem] opacity-30 pointer-events-none transition-colors duration-700",
+        isAvailable ? "bg-teal-400/20 dark:bg-teal-500/10" : "bg-rose-400/20 dark:bg-rose-500/10"
       )} />
 
-      <CardHeader className="pb-4 relative z-10">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2.5">
+      <CardHeader className="p-5 sm:p-6 pb-2 relative z-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
             <div className={cn(
-              "flex items-center justify-center size-8 rounded-lg transition-colors duration-300",
-              isAvailable
-                ? "bg-emerald-500/10 dark:bg-emerald-500/15"
-                : "bg-amber-500/10 dark:bg-amber-500/15"
+              "flex items-center justify-center size-10 rounded-xl shadow-sm transition-all duration-500 text-white shrink-0",
+              isAvailable ? "bg-teal-500 dark:bg-teal-600" : "bg-muted-foreground"
             )}>
-              <Signal className={cn(
-                "size-4 transition-colors duration-300",
-                isAvailable ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
-              )} />
+              <Signal className="size-5" />
             </div>
-            {t('dashboard.availabilityControl.title', 'Статус доступности')}
-          </CardTitle>
+            <CardTitle className="text-lg font-bold tracking-tight">
+              {t('dashboard.availabilityControl.title', 'Статус доступности')}
+            </CardTitle>
+          </div>
           <Badge
             variant="outline"
             className={cn(
-              "px-3 py-1 text-xs font-semibold rounded-full transition-all duration-300 border",
+              "px-3 py-1 text-xs font-bold tracking-wide uppercase rounded-full border-2 w-fit",
               isAvailable
-                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 dark:border-emerald-500/20"
-                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 dark:border-amber-500/20"
+                ? "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-500/10 dark:text-teal-400 dark:border-teal-500/30"
+                : "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/30"
             )}
           >
             {isAvailable ? (
-              <CheckCircle className="mr-1.5 size-3" />
+              <span className="flex items-center gap-1.5"><CheckCircle className="size-3.5" /> {status}</span>
             ) : (
-              <Ban className="mr-1.5 size-3" />
+              <span className="flex items-center gap-1.5"><Ban className="size-3.5" /> {status}</span>
             )}
-            {status}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-5 relative z-10">
+      <CardContent className="p-5 sm:p-6 pt-4 relative z-10 space-y-6">
         {/* Alerts */}
         {error && (
-          <Alert variant="destructive" className="py-2.5 animate-in fade-in slide-in-from-top-1">
-            <AlertDescription className="flex items-center justify-between gap-2">
-              <span className="text-sm">{error}</span>
-              <Button variant="ghost" size="sm" onClick={() => setError(null)} className="h-6 w-6 p-0 shrink-0 hover:bg-destructive/20 rounded-full">
+          <Alert variant="destructive" className="py-2.5 px-4 rounded-xl border-destructive/20 bg-destructive/5 animate-in fade-in slide-in-from-top-1">
+            <AlertDescription className="flex items-center justify-between gap-3">
+              <span className="text-sm font-medium">{error}</span>
+              <Button variant="ghost" size="sm" onClick={() => setError(null)} className="h-6 w-6 p-0 shrink-0 hover:bg-destructive/10 rounded-full">
                 ×
               </Button>
             </AlertDescription>
@@ -135,82 +131,94 @@ export function AvailabilityControl({
         )}
 
         {success && (
-          <Alert className="border-emerald-500/30 bg-emerald-500/10 py-2.5 animate-in fade-in slide-in-from-top-1">
-            <CheckCircle className="size-4 text-emerald-600 dark:text-emerald-400" />
-            <AlertDescription className="ml-2 text-sm text-emerald-700 dark:text-emerald-300">
+          <Alert className="border-teal-500/20 bg-teal-500/5 py-2.5 px-4 rounded-xl animate-in fade-in slide-in-from-top-1">
+            <CheckCircle className="size-4 text-teal-600 dark:text-teal-400" />
+            <AlertDescription className="ml-2 text-sm font-medium text-teal-700 dark:text-teal-400">
               {t('dashboard.availabilityControl.success', 'Статус успешно обновлён')}
             </AlertDescription>
           </Alert>
         )}
 
         {/* Status Toggle Buttons */}
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-muted/50 dark:bg-muted/30 border border-border/50">
+        <div className={cn(
+          "flex p-1 rounded-xl bg-muted/40 dark:bg-muted/20 border transition-colors duration-500",
+          isAvailable ? "border-teal-500/20 dark:border-teal-500/10" : "border-rose-500/20 dark:border-rose-500/10"
+        )}>
           <Button
             type="button"
             variant="ghost"
-            size="sm"
             disabled={isUpdating}
             onClick={() => handleStatusChange('AVAILABLE')}
             className={cn(
-              "relative h-10 rounded-lg font-medium transition-all duration-300",
+              "flex-1 relative h-10 rounded-lg font-medium transition-all duration-300 text-sm",
               isAvailable
-                ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/20 dark:shadow-emerald-500/10"
-                : "hover:bg-muted text-muted-foreground"
+                ? "bg-teal-500 text-white shadow-sm hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
-            <CheckCircle className="mr-1.5 size-4" />
+            <CheckCircle className="mr-2 size-4" />
             {t('dashboard.availabilityControl.available', 'Доступен')}
           </Button>
           <Button
             type="button"
             variant="ghost"
-            size="sm"
             disabled={isUpdating}
             onClick={() => handleStatusChange('BUSY')}
             className={cn(
-              "relative h-10 rounded-lg font-medium transition-all duration-300",
+              "flex-1 relative h-10 rounded-lg font-medium transition-all duration-300 text-sm",
               !isAvailable
-                ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20 dark:shadow-amber-500/10"
-                : "hover:bg-muted text-muted-foreground"
+                ? "bg-rose-500 text-white shadow-sm hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
-            <Ban className="mr-1.5 size-4" />
+            <Ban className="mr-2 size-4" />
             {t('dashboard.availabilityControl.busy', 'Занят')}
           </Button>
         </div>
 
         {/* Active Leads Progress */}
-        <div className="space-y-3 p-4 rounded-xl bg-muted/30 dark:bg-muted/20 border border-border/50">
+        <div className={cn(
+          "flex flex-col gap-4 p-5 rounded-2xl bg-muted/30 dark:bg-muted/10 border shadow-sm transition-colors duration-500",
+          isAvailable ? "border-teal-500/20 dark:border-teal-500/10" : "border-rose-500/20 dark:border-rose-500/10"
+        )}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Users className="size-4 text-muted-foreground" />
-              <span className="text-sm font-medium text-foreground">
+            <div className="flex items-center gap-2.5">
+              <Users className="size-4.5 text-muted-foreground" />
+              <span className="text-sm font-semibold text-foreground">
                 {t('dashboard.availabilityControl.activeLeads', 'Активные заявки')}
               </span>
             </div>
-            <span className={cn(
-              "text-sm font-bold tabular-nums",
-              isAtLimit ? "text-destructive" : "text-foreground"
-            )}>
-              {currentActiveLeads} / {maxLeads}
-            </span>
+            <div className="flex items-baseline gap-1">
+              <span className={cn(
+                "text-2xl font-bold tracking-tight",
+                isAtLimit ? "text-destructive" : "text-foreground"
+              )}>
+                {currentActiveLeads}
+              </span>
+              <span className="text-sm font-semibold text-muted-foreground">/ {maxLeads}</span>
+            </div>
           </div>
 
           <Progress
             value={leadsProgress}
             className={cn(
-              "h-2",
+              "h-2.5 rounded-full overflow-hidden bg-muted/50 dark:bg-muted/30",
               isAtLimit
                 ? "[&>div]:bg-destructive"
                 : isAvailable
-                  ? "[&>div]:bg-emerald-500"
-                  : "[&>div]:bg-amber-500"
+                  ? "[&>div]:bg-teal-500 dark:[&>div]:bg-teal-400"
+                  : "[&>div]:bg-rose-500 dark:[&>div]:bg-rose-400"
             )}
           />
 
-          <div className="flex items-center gap-3 pt-1">
-            <div className="flex items-center gap-2 flex-1">
-              <span className="text-xs text-muted-foreground whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+            <div className={cn(
+              "flex flex-1 items-center justify-between bg-background border rounded-xl px-4 h-11 sm:h-10 shadow-sm transition-all duration-300",
+              isAvailable 
+                ? "border-teal-500/30 focus-within:border-teal-500/60 focus-within:ring-1 focus-within:ring-teal-500/20 shadow-teal-500/5" 
+                : "border-rose-500/30 focus-within:border-rose-500/60 focus-within:ring-1 focus-within:ring-rose-500/20 shadow-rose-500/5"
+            )}>
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider shrink-0">
                 {t('dashboard.availabilityControl.maxLeads', 'Лимит')}:
               </span>
               <Input
@@ -220,23 +228,22 @@ export function AvailabilityControl({
                 value={maxLeads}
                 onChange={handleMaxLeadsChange}
                 disabled={isUpdating}
-                className="h-8 w-16 text-center text-sm rounded-lg bg-background border-border/60 focus-visible:ring-1 focus-visible:ring-primary/30"
+                className="h-full border-none bg-transparent text-right font-black text-lg focus-visible:ring-0 px-0 w-16"
               />
             </div>
             <Button
-              variant="outline"
-              size="sm"
+              variant={maxLeads !== maxActiveLeads ? "default" : "outline"}
               onClick={() => handleUpdate(status, maxLeads)}
               disabled={isUpdating || maxLeads === maxActiveLeads}
               className={cn(
-                "h-8 shrink-0 rounded-lg text-sm font-medium transition-all duration-200",
+                "h-11 sm:h-10 px-6 rounded-xl text-sm font-bold transition-all duration-300 shadow-sm shrink-0 w-full sm:w-[130px]",
                 maxLeads !== maxActiveLeads && !isUpdating
-                  ? "border-primary/30 text-primary hover:bg-primary/5 dark:hover:bg-primary/10"
-                  : ""
+                  ? "bg-primary text-primary-foreground hover:animate-pulse shadow-primary/20"
+                  : "bg-muted/50 text-muted-foreground border-transparent"
               )}
             >
               {isUpdating ? (
-                <RefreshCw className="mr-1.5 size-3.5 animate-spin" />
+                <RefreshCw className="mr-2 size-4 animate-spin" />
               ) : null}
               {t('dashboard.availabilityControl.updateLimit', 'Обновить')}
             </Button>
@@ -248,21 +255,18 @@ export function AvailabilityControl({
           <Alert
             variant="default"
             className={cn(
-              "py-3 rounded-xl animate-in fade-in slide-in-from-top-1",
+              "py-3.5 px-4 rounded-xl animate-in fade-in slide-in-from-bottom-2 border-0",
               status === 'BUSY'
-                ? "border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10"
-                : "border-destructive/30 bg-destructive/5 dark:bg-destructive/10"
+                ? "bg-amber-500/10 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300"
+                : "bg-destructive/10 text-destructive dark:bg-destructive/10 dark:text-red-400"
             )}
           >
             <AlertTriangle className={cn(
-              "size-4",
+              "size-4.5 mt-0.5",
               status === 'BUSY' ? "text-amber-600 dark:text-amber-400" : "text-destructive"
             )} />
             <AlertTitle className="sr-only">Info</AlertTitle>
-            <AlertDescription className={cn(
-              "ml-2 text-sm",
-              status === 'BUSY' ? "text-amber-700 dark:text-amber-300" : "text-destructive dark:text-red-400"
-            )}>
+            <AlertDescription className="ml-2.5 text-[13px] font-medium leading-relaxed">
               {status === 'BUSY'
                 ? t('dashboard.availabilityControl.busyInfo', 'Вы отмечены как занят. Клиенты не могут отправить вам новые заявки.')
                 : t('dashboard.availabilityControl.limitReached', 'Лимит активных заявок достигнут. Статус автоматически сменится на «Занят».')}
