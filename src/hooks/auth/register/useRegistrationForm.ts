@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
@@ -10,6 +10,18 @@ import { isRecord } from '@/utils/guards';
 import { unwrapEnvelope } from '@/utils/data';
 import { toErrorMessage } from '@/utils/errors';
 import type { RegisterFormValues, RegisterRole } from '.';
+
+function yupErrorsToRecord(err: yup.ValidationError): Record<string, string> {
+  const out: Record<string, string> = {};
+  if (err.inner.length) {
+    err.inner.forEach((e) => {
+      if (e.path) out[e.path] = e.message;
+    });
+  } else if (err.path) {
+    out[err.path] = err.message;
+  }
+  return out;
+}
 
 export function useRegistrationForm(selectedRole: RegisterRole) {
   const { t } = useTranslation();
@@ -45,6 +57,31 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
 
   const isClient = selectedRole === 'CLIENT';
 
+  const stepSchemas = useMemo(() => {
+    const emailPassword = yup.object({
+      email: yup.string().email(t('Invalid email')).required(t('Email is required')),
+      password: yup
+        .string()
+        .required(t('Password is required'))
+        .min(10, t('auth.register.passwordMinLength'))
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{10,}$/,
+          t('auth.register.passwordFormat')
+        ),
+    });
+    const phoneName = yup.object({
+      phone: yup.string().required(t('Phone is required')),
+      firstName: yup.string().optional(),
+      lastName: yup.string().optional(),
+    });
+    const masterProfile = yup.object({
+      city: yup.string().optional(),
+      category: yup.string().optional(),
+      description: yup.string().optional(),
+    });
+    return { emailPassword, phoneName, masterProfile };
+  }, [t]);
+
   const validationSchema = useMemo(
     () =>
       yup.object({
@@ -70,6 +107,29 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
           }),
       }),
     [t, isClient]
+  );
+
+  const totalSteps = isClient ? 2 : 3;
+
+  const validateRegistrationStep = useCallback(
+    async (step: number, values: RegisterFormValues): Promise<Record<string, string>> => {
+      try {
+        if (step === 0) {
+          await stepSchemas.emailPassword.validate(values, { abortEarly: false });
+        } else if (step === 1) {
+          await stepSchemas.phoneName.validate(values, { abortEarly: false });
+        } else if (step === 2 && !isClient) {
+          await stepSchemas.masterProfile.validate(values, { abortEarly: false });
+        }
+        return {};
+      } catch (e) {
+        if (e instanceof yup.ValidationError) {
+          return yupErrorsToRecord(e);
+        }
+        return {};
+      }
+    },
+    [isClient, stepSchemas]
   );
 
   const initialValues = useMemo<RegisterFormValues>(
@@ -116,5 +176,7 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
     cities,
     categories,
     referralInfo,
+    totalSteps,
+    validateRegistrationStep,
   };
 }

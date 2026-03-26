@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
@@ -63,40 +63,26 @@ export default function RegisterPage() {
             {!isClient && (
               <PremiumAfterVerificationBanner />
             )}
-            <AnimatePresence mode="wait">
-              <Formik<RegisterFormValues>
-                key={`${selectedRole}-${i18n.language}`}
-                initialValues={form.initialValues}
-                validationSchema={form.validationSchema}
-                onSubmit={form.onSubmit}
-                enableReinitialize
-              >
-                {({ handleSubmit }) => (
-                  <motion.form
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }}
-                    method="post"
-                    noValidate
-                    className="flex flex-col gap-3.5"
-                  >
-                    <RegisterForm
-                      isClient={isClient}
-                      isSubmitting={form.isSubmitting}
-                      optionsLoading={form.optionsLoading}
-                      cities={form.cities}
-                      categories={form.categories}
-                      referralInfo={form.referralInfo}
-                    />
-                  </motion.form>
-                )}
-              </Formik>
-            </AnimatePresence>
+            <Formik<RegisterFormValues>
+              key={`${selectedRole}-${i18n.language}`}
+              initialValues={form.initialValues}
+              validationSchema={form.validationSchema}
+              onSubmit={form.onSubmit}
+              enableReinitialize
+              validateOnChange={false}
+              validateOnBlur={false}
+            >
+              <RegisterForm
+                isClient={isClient}
+                isSubmitting={form.isSubmitting}
+                optionsLoading={form.optionsLoading}
+                cities={form.cities}
+                categories={form.categories}
+                referralInfo={form.referralInfo}
+                totalSteps={form.totalSteps}
+                validateRegistrationStep={form.validateRegistrationStep}
+              />
+            </Formik>
           </motion.div>
         </div>
       </div>

@@ -7,10 +7,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Mail, Phone, Lock, User, MapPin, Tag, FileText, Eye, EyeOff, ArrowRight, Gift } from 'lucide-react';
-import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import type { RegisterFormValues } from '@/hooks/auth/register';
+import { Mail, Phone, Lock, User, MapPin, Tag, FileText, Eye, EyeOff, ArrowRight, Gift, ChevronLeft } from 'lucide-react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
+import { useFormikContext } from 'formik';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface CityOption {
   id?: string;
@@ -29,6 +33,12 @@ interface ReferralInfo {
   referrerName?: string;
 }
 
+const STEP_FIELDS: Record<number, (keyof RegisterFormValues)[]> = {
+  0: ['email', 'password'],
+  1: ['phone', 'firstName', 'lastName'],
+  2: ['city', 'category', 'description'],
+};
+
 interface RegisterFormProps {
   isClient: boolean;
   isSubmitting: boolean;
@@ -36,6 +46,8 @@ interface RegisterFormProps {
   cities: CityOption[];
   categories: CategoryOption[];
   referralInfo?: ReferralInfo;
+  totalSteps: number;
+  validateRegistrationStep: (step: number, values: RegisterFormValues) => Promise<Record<string, string>>;
 }
 
 export default function RegisterForm({
@@ -45,9 +57,15 @@ export default function RegisterForm({
   cities,
   categories,
   referralInfo,
+  totalSteps,
+  validateRegistrationStep,
 }: RegisterFormProps) {
   const { t } = useTranslation();
   const [showPass, setShowPass] = useState(false);
+  const [step, setStep] = useState(0);
+  const { values, setErrors, setTouched, handleSubmit } = useFormikContext<RegisterFormValues>();
+
+  const lastStepIndex = totalSteps - 1;
 
   const getCityLabel = (c: CityOption) => {
     const slug = c.slug ?? c.value;
@@ -63,8 +81,55 @@ export default function RegisterForm({
   const cityOptions = cities.map((c) => ({ value: getCityValue(c), label: getCityLabel(c) }));
   const categoryOptions = categories.map((c) => ({ value: getCategoryValue(c), label: getCategoryLabel(c) }));
 
+  const stepTitleKey =
+    step === 0
+      ? 'auth.register.wizardStepCredentials'
+      : step === 1
+        ? 'auth.register.wizardStepContact'
+        : 'auth.register.wizardStepMasterProfile';
+
+  const handleNext = useCallback(async () => {
+    const fieldKeys = STEP_FIELDS[step] ?? [];
+    const touchMap = fieldKeys.reduce<Record<string, boolean>>((acc, f) => {
+      acc[f] = true;
+      return acc;
+    }, {});
+    setTouched(touchMap, false);
+
+    const stepErrors = await validateRegistrationStep(step, values);
+    if (Object.keys(stepErrors).length > 0) {
+      setErrors(stepErrors);
+      return;
+    }
+    setErrors({});
+    setStep((s) => Math.min(s + 1, lastStepIndex));
+  }, [step, values, validateRegistrationStep, setErrors, setTouched, lastStepIndex]);
+
+  const handleBack = useCallback(() => {
+    setErrors({});
+    setStep((s) => Math.max(0, s - 1));
+  }, [setErrors]);
+
+  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (step < lastStepIndex) {
+      void handleNext();
+    } else {
+      void handleSubmit(e);
+    }
+  };
+
+  const showMasterFields = !isClient && step === 2;
+  const showNameFields = step === 1;
+  const showCredentials = step === 0;
+
   return (
-    <div className="flex flex-col gap-3.5">
+    <form
+      method="post"
+      noValidate
+      onSubmit={onFormSubmit}
+      className="flex flex-col gap-4"
+    >
       {referralInfo && (
         <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-800 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-200">
           <Gift className="size-4 shrink-0" />
@@ -75,125 +140,182 @@ export default function RegisterForm({
           </span>
         </div>
       )}
-      <AuthFormField
-        name="email"
-        label={t('auth.register.email')}
-        type="email"
-        placeholder="example@mail.com"
-        autoComplete="email"
-        icon={<Mail size={15} />}
-      />
-      <AuthFormField
-        name="phone"
-        label={t('auth.register.phone')}
-        type="tel"
-        placeholder="+373 (__) ___-__"
-        autoComplete="tel"
-        icon={<Phone size={15} />}
-      />
-      <AuthFormField
-        name="password"
-        label={t('auth.register.password')}
-        type={showPass ? 'text' : 'password'}
-        placeholder={t('auth.register.passwordHintMin')}
-        autoComplete="new-password"
-        icon={<Lock size={15} />}
-        endAdornment={
-          <span className="flex items-center gap-1">
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    className="flex shrink-0 items-center justify-center rounded-full p-1 bg-amber-100 text-amber-700 ring-1 ring-amber-200/60 transition-all hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:ring-amber-700/60 dark:hover:bg-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-[#111111]"
-                    aria-label={t('auth.register.passwordHint')}
-                  >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
-                    </svg>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="top"
-                  className="max-w-[240px] border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-lg dark:border-slate-700 dark:bg-[#1a1a1a] dark:text-slate-200"
-                >
-                  <p className="mb-2 text-xs font-semibold">
-                    {t('auth.register.passwordHintTitle')}
-                  </p>
-                  <ul className="list-inside list-disc space-y-1 text-xs text-slate-700 dark:text-slate-300">
-                    <li>{t('auth.register.passwordHintMin')}</li>
-                    <li>{t('auth.register.passwordHintUppercase')}</li>
-                    <li>{t('auth.register.passwordHintLowercase')}</li>
-                    <li>{t('auth.register.passwordHintDigit')}</li>
-                    <li>{t('auth.register.passwordHintSpecial')}</li>
-                  </ul>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <button
-              type="button"
-              onClick={() => setShowPass(!showPass)}
-              aria-label={showPass ? 'Hide password' : 'Show password'}
-            >
-              {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
-            </button>
-          </span>
-        }
-      />
-      <div className="grid grid-cols-2 gap-3">
-        <AuthFormField
-          name="firstName"
-          label={t('auth.register.firstName')}
-          placeholder="Иван"
-          icon={<User size={15} />}
-        />
-        <AuthFormField
-          name="lastName"
-          label={t('auth.register.lastName')}
-          placeholder="Иванов"
-          icon={<User size={15} />}
-        />
+
+      <div className="space-y-2">
+        <div className="flex gap-1.5" role="progressbar" aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={totalSteps}>
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                'h-1 flex-1 rounded-full transition-all duration-300 ease-out',
+                i <= step ? 'bg-[#f97316] shadow-[0_0_12px_rgba(249,115,22,0.35)]' : 'bg-muted'
+              )}
+            />
+          ))}
+        </div>
+        <p className="text-center text-[0.78rem] font-medium text-muted-foreground">
+          {t(stepTitleKey)}
+        </p>
       </div>
 
-      {!isClient && (
-        <>
-          <div className="grid grid-cols-2 gap-3">
-            <AuthFormSelect
-              name="city"
-              label={t('auth.register.city')}
-              placeholder={t('auth.register.notSelected')}
-              options={cityOptions}
-              icon={<MapPin size={15} />}
-              disabled={optionsLoading || cities.length === 0}
-            />
-            <AuthFormSelect
-              name="category"
-              label={t('auth.register.category')}
-              placeholder={t('auth.register.notSelected')}
-              options={categoryOptions}
-              icon={<Tag size={15} />}
-              disabled={optionsLoading || categories.length === 0}
-            />
-          </div>
-          <AuthFormTextarea
-            name="description"
-            label={t('auth.register.description')}
-            placeholder="..."
-            rows={3}
-            icon={<FileText size={15} />}
-          />
-        </>
-      )}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${step}-${isClient ? 'c' : 'm'}`}
+          initial={{ opacity: 0, x: 14 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -14 }}
+          transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex min-h-[1px] flex-col gap-3.5"
+        >
+          {showCredentials && (
+            <>
+              <AuthFormField
+                name="email"
+                label={t('auth.register.email')}
+                type="email"
+                placeholder="example@mail.com"
+                autoComplete="email"
+                icon={<Mail size={15} />}
+              />
+              <AuthFormField
+                name="password"
+                label={t('auth.register.password')}
+                type={showPass ? 'text' : 'password'}
+                placeholder={t('auth.register.passwordHintMin')}
+                autoComplete="new-password"
+                icon={<Lock size={15} />}
+                endAdornment={
+                  <span className="flex items-center gap-1">
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            className="flex shrink-0 items-center justify-center rounded-full p-1 bg-amber-100 text-amber-700 ring-1 ring-amber-200/60 transition-all hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:ring-amber-700/60 dark:hover:bg-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-[#111111]"
+                            aria-label={t('auth.register.passwordHint')}
+                          >
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <circle cx="12" cy="12" r="10" />
+                              <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
+                            </svg>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="top"
+                          className="max-w-[240px] border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-lg dark:border-slate-700 dark:bg-[#1a1a1a] dark:text-slate-200"
+                        >
+                          <p className="mb-2 text-xs font-semibold">
+                            {t('auth.register.passwordHintTitle')}
+                          </p>
+                          <ul className="list-inside list-disc space-y-1 text-xs text-slate-700 dark:text-slate-300">
+                            <li>{t('auth.register.passwordHintMin')}</li>
+                            <li>{t('auth.register.passwordHintUppercase')}</li>
+                            <li>{t('auth.register.passwordHintLowercase')}</li>
+                            <li>{t('auth.register.passwordHintDigit')}</li>
+                            <li>{t('auth.register.passwordHintSpecial')}</li>
+                          </ul>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <button
+                      type="button"
+                      onClick={() => setShowPass(!showPass)}
+                      aria-label={showPass ? 'Hide password' : 'Show password'}
+                    >
+                      {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </span>
+                }
+              />
+            </>
+          )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="auth-primary-btn"
-      >
-        {isSubmitting ? t('auth.register.creating') : t('auth.register.submit')}
-        <ArrowRight size={15} />
-      </button>
+          {showNameFields && (
+            <>
+              <AuthFormField
+                name="phone"
+                label={t('auth.register.phone')}
+                type="tel"
+                placeholder="+373 (__) ___-__"
+                autoComplete="tel"
+                icon={<Phone size={15} />}
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <AuthFormField
+                  name="firstName"
+                  label={t('auth.register.firstName')}
+                  placeholder="Иван"
+                  icon={<User size={15} />}
+                />
+                <AuthFormField
+                  name="lastName"
+                  label={t('auth.register.lastName')}
+                  placeholder="Иванов"
+                  icon={<User size={15} />}
+                />
+              </div>
+            </>
+          )}
+
+          {showMasterFields && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <AuthFormSelect
+                  name="city"
+                  label={t('auth.register.city')}
+                  placeholder={t('auth.register.notSelected')}
+                  options={cityOptions}
+                  icon={<MapPin size={15} />}
+                  disabled={optionsLoading || cities.length === 0}
+                />
+                <AuthFormSelect
+                  name="category"
+                  label={t('auth.register.category')}
+                  placeholder={t('auth.register.notSelected')}
+                  options={categoryOptions}
+                  icon={<Tag size={15} />}
+                  disabled={optionsLoading || categories.length === 0}
+                />
+              </div>
+              <AuthFormTextarea
+                name="description"
+                label={t('auth.register.description')}
+                placeholder="..."
+                rows={3}
+                icon={<FileText size={15} />}
+              />
+            </>
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="flex flex-col gap-2.5 pt-0.5">
+        <div className="flex gap-2">
+          {step > 0 && (
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={isSubmitting}
+              className="auth-outline-btn inline-flex flex-1 items-center justify-center gap-1.5 px-3 py-2.5"
+            >
+              <ChevronLeft size={16} />
+              {t('auth.register.wizardBack')}
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={cn('auth-primary-btn', step > 0 ? 'flex-[1.35]' : 'w-full')}
+          >
+            {isSubmitting
+              ? t('auth.register.creating')
+              : step < lastStepIndex
+                ? t('auth.register.wizardNext')
+                : t('auth.register.submit')}
+            {!isSubmitting && <ArrowRight size={15} />}
+          </button>
+        </div>
+      </div>
 
       <div className="auth-divider text-center">
         <p className="mb-3 text-[0.82rem] text-muted-foreground">
@@ -203,6 +325,6 @@ export default function RegisterForm({
           {t('auth.login.title')}
         </RouterLink>
       </div>
-    </div>
+    </form>
   );
 }
