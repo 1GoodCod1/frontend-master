@@ -84,7 +84,10 @@ export function useWebPush() {
     }, []);
 
     const subscribe = useCallback(async () => {
-        if (!('serviceWorker' in navigator)) return;
+        if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) {
+            toast.error('Service Worker не активен. В dev-режиме включите devOptions.enabled в vite.config.ts или соберите production build.');
+            return;
+        }
 
         let key = vapidData?.publicKey;
         if (!key) {

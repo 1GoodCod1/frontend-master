@@ -4,6 +4,7 @@ import type { LoginDto, RegisterDto, RefreshTokenDto, MeResponse } from '@/types
 import { setMe, setTokens, clearAuth } from './authSlice';
 import {
   persistRefreshToken,
+  persistRememberMe,
   setLogoutFlag,
   markHttpOnlySessionHint,
 } from './persist';
@@ -89,15 +90,17 @@ export const authApi = api.injectEndpoints({
     authLogin: build.mutation<unknown, LoginDto>({
       query: (body) => ({ url: '/auth/login', method: 'POST', data: body }),
       invalidatesTags: ['Me'],
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           const t = extractTokens(data);
+          const rememberMe = !!arg.rememberMe;
 
           if (t.accessToken) {
+            persistRememberMe(rememberMe);
             const refreshToken = env.useHttpOnly ? '' : (t.refreshToken ?? '');
             dispatch(setTokens({ accessToken: t.accessToken, refreshToken }));
-            if (t.refreshToken) persistRefreshToken(String(t.refreshToken));
+            if (t.refreshToken) persistRefreshToken(String(t.refreshToken), rememberMe);
             if (env.useHttpOnly) markHttpOnlySessionHint(true);
             try {
               await dispatch(
@@ -163,6 +166,7 @@ export const authApi = api.injectEndpoints({
         dispatch(api.util.resetApiState());
         dispatch(clearAuth());
         persistRefreshToken(null);
+        persistRememberMe(false);
         if (env.useHttpOnly) markHttpOnlySessionHint(false);
         setLogoutFlag();
         try {

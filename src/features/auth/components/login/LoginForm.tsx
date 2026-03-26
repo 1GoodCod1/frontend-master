@@ -1,5 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useField } from 'formik';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { AuthFormField } from '@/features/auth/components/AuthFormField';
@@ -11,6 +12,7 @@ interface LoginFormProps {
 export default function LoginForm({ isSubmitting }: LoginFormProps) {
   const { t } = useTranslation();
   const [showPass, setShowPass] = useState(false);
+  const [rememberField, , rememberHelpers] = useField<boolean>('rememberMe');
 
   return (
     <div className="flex flex-col gap-4">
@@ -39,7 +41,16 @@ export default function LoginForm({ isSubmitting }: LoginFormProps) {
           </button>
         }
       />
-      <div className="-mt-1 flex justify-end">
+      <div className="-mt-1 flex items-center justify-between">
+        <label className="flex cursor-pointer items-center gap-2 text-[0.82rem] text-muted-foreground select-none">
+          <input
+            type="checkbox"
+            checked={rememberField.value}
+            onChange={(e) => rememberHelpers.setValue(e.target.checked)}
+            className="h-3.5 w-3.5 rounded border-border accent-primary"
+          />
+          {t('auth.login.rememberMe')}
+        </label>
         <RouterLink to="/forgot-password" className="auth-link">
           {t('auth.login.forgotPassword')}
         </RouterLink>

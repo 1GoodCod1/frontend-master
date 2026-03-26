@@ -30,6 +30,7 @@ export function useLoginForm() {
     () => ({
       email: '',
       password: '',
+      rememberMe: false,
     }),
     []
   );
