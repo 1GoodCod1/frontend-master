@@ -58,6 +58,12 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
   const isClient = selectedRole === 'CLIENT';
 
   const stepSchemas = useMemo(() => {
+    const legalConsentField = {
+      acceptedLegal: yup
+        .boolean()
+        .oneOf([true], t('auth.register.legalConsentRequired'))
+        .required(t('auth.register.legalConsentRequired')),
+    };
     const emailPassword = yup.object({
       email: yup.string().email(t('Invalid email')).required(t('Email is required')),
       password: yup
@@ -74,12 +80,14 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
       firstName: yup.string().optional(),
       lastName: yup.string().optional(),
     });
+    const phoneNameWithConsent = phoneName.shape(legalConsentField);
     const masterProfile = yup.object({
       city: yup.string().optional(),
       category: yup.string().optional(),
       description: yup.string().optional(),
     });
-    return { emailPassword, phoneName, masterProfile };
+    const masterProfileWithConsent = masterProfile.shape(legalConsentField);
+    return { emailPassword, phoneName, phoneNameWithConsent, masterProfile, masterProfileWithConsent };
   }, [t]);
 
   const validationSchema = useMemo(
@@ -95,6 +103,10 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{10,}$/,
             t('auth.register.passwordFormat')
           ),
+        acceptedLegal: yup
+          .boolean()
+          .oneOf([true], t('auth.register.legalConsentRequired'))
+          .required(t('auth.register.legalConsentRequired')),
         role: yup.mixed<RegisterRole>().oneOf(['CLIENT', 'MASTER'] as const).required(),
         firstName: yup.string().optional(),
         lastName: yup.string().optional(),
@@ -117,9 +129,11 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
         if (step === 0) {
           await stepSchemas.emailPassword.validate(values, { abortEarly: false });
         } else if (step === 1) {
-          await stepSchemas.phoneName.validate(values, { abortEarly: false });
+          await (isClient ? stepSchemas.phoneNameWithConsent : stepSchemas.phoneName).validate(values, {
+            abortEarly: false,
+          });
         } else if (step === 2 && !isClient) {
-          await stepSchemas.masterProfile.validate(values, { abortEarly: false });
+          await stepSchemas.masterProfileWithConsent.validate(values, { abortEarly: false });
         }
         return {};
       } catch (e) {
@@ -137,6 +151,7 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
       email: '',
       phone: '',
       password: '',
+      acceptedLegal: false,
       role: selectedRole,
       firstName: '',
       lastName: '',
@@ -147,7 +162,8 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
 
   const handleSubmit = async (values: RegisterFormValues, helpers: FormikHelpers<RegisterFormValues>) => {
     try {
-      await register({ ...values, referralCode: effectiveRefCode }).unwrap();
+      const { acceptedLegal: _acceptedLegal, ...payload } = values;
+      await register({ ...payload, referralCode: effectiveRefCode }).unwrap();
       toast.success(t('Account created successfully'));
 
       if (values.role === 'CLIENT') {

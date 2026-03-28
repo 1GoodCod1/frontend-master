@@ -11,9 +11,11 @@ import { cn } from '@/lib/utils';
 import type { RegisterFormValues } from '@/hooks/auth/register';
 import { Mail, Phone, Lock, User, MapPin, Tag, FileText, Eye, EyeOff, ArrowRight, Gift, ChevronLeft } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { useFormikContext } from 'formik';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface CityOption {
@@ -33,11 +35,16 @@ interface ReferralInfo {
   referrerName?: string;
 }
 
-const STEP_FIELDS: Record<number, (keyof RegisterFormValues)[]> = {
-  0: ['email', 'password'],
-  1: ['phone', 'firstName', 'lastName'],
-  2: ['city', 'category', 'description'],
-};
+function getStepFieldKeys(step: number, isClient: boolean): (keyof RegisterFormValues)[] {
+  if (step === 0) return ['email', 'password'];
+  if (step === 1) {
+    const base: (keyof RegisterFormValues)[] = ['phone', 'firstName', 'lastName'];
+    if (isClient) return [...base, 'acceptedLegal'];
+    return base;
+  }
+  if (step === 2) return ['city', 'category', 'description', 'acceptedLegal'];
+  return [];
+}
 
 interface RegisterFormProps {
   isClient: boolean;
@@ -63,7 +70,8 @@ export default function RegisterForm({
   const { t } = useTranslation();
   const [showPass, setShowPass] = useState(false);
   const [step, setStep] = useState(0);
-  const { values, setErrors, setTouched, handleSubmit } = useFormikContext<RegisterFormValues>();
+  const { values, errors, touched, setErrors, setTouched, setFieldValue, handleSubmit } =
+    useFormikContext<RegisterFormValues>();
 
   const lastStepIndex = totalSteps - 1;
 
@@ -89,7 +97,7 @@ export default function RegisterForm({
         : 'auth.register.wizardStepMasterProfile';
 
   const handleNext = useCallback(async () => {
-    const fieldKeys = STEP_FIELDS[step] ?? [];
+    const fieldKeys = getStepFieldKeys(step, isClient);
     const touchMap = fieldKeys.reduce<Record<string, boolean>>((acc, f) => {
       acc[f] = true;
       return acc;
@@ -103,7 +111,7 @@ export default function RegisterForm({
     }
     setErrors({});
     setStep((s) => Math.min(s + 1, lastStepIndex));
-  }, [step, values, validateRegistrationStep, setErrors, setTouched, lastStepIndex]);
+  }, [step, isClient, values, validateRegistrationStep, setErrors, setTouched, lastStepIndex]);
 
   const handleBack = useCallback(() => {
     setErrors({});
@@ -122,6 +130,48 @@ export default function RegisterForm({
   const showMasterFields = !isClient && step === 2;
   const showNameFields = step === 1;
   const showCredentials = step === 0;
+
+  const legalConsentBlock = (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-start gap-3 rounded-lg border border-slate-200/80 bg-slate-50/50 p-3.5 dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <Checkbox
+          id="register-accepted-legal"
+          checked={values.acceptedLegal}
+          onCheckedChange={(v) => setFieldValue('acceptedLegal', v === true)}
+          className="mt-0.5"
+        />
+        <Label
+          htmlFor="register-accepted-legal"
+          className="cursor-pointer text-left text-[0.8125rem] font-normal leading-relaxed text-muted-foreground"
+        >
+          <Trans
+            i18nKey="auth.register.legalConsent"
+            components={{
+              privacy: (
+                <RouterLink
+                  to="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-amber-700 underline underline-offset-2 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300"
+                />
+              ),
+              terms: (
+                <RouterLink
+                  to="/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-amber-700 underline underline-offset-2 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300"
+                />
+              ),
+            }}
+          />
+        </Label>
+      </div>
+      {touched.acceptedLegal && errors.acceptedLegal && (
+        <p className="text-xs text-destructive">{errors.acceptedLegal}</p>
+      )}
+    </div>
+  );
 
   return (
     <form
@@ -254,6 +304,7 @@ export default function RegisterForm({
                   icon={<User size={15} />}
                 />
               </div>
+              {isClient && legalConsentBlock}
             </>
           )}
 
@@ -284,6 +335,7 @@ export default function RegisterForm({
                 rows={3}
                 icon={<FileText size={15} />}
               />
+              {legalConsentBlock}
             </>
           )}
         </motion.div>

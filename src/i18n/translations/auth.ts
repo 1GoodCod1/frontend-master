@@ -74,6 +74,9 @@ export const auth = {
         registrationFailed: 'Registration failed',
         phoneRequired: 'Phone is required',
         haveAccount: 'Already have an account?',
+        legalConsent:
+          'I agree to the <privacy>Privacy Policy</privacy> and <terms>Terms of Use</terms>.',
+        legalConsentRequired: 'You must accept the Privacy Policy and Terms of Use.',
         submit: 'Submit',
         creating: 'Creating...',
         wizardStepCredentials: 'Email & password',
@@ -247,6 +250,10 @@ export const auth = {
         registrationFailed: 'Ошибка регистрации',
         phoneRequired: 'Телефон обязателен',
         haveAccount: 'Уже есть аккаунт?',
+        legalConsent:
+          'Я соглашаюсь с <privacy>Политикой конфиденциальности</privacy> и <terms>Условиями использования</terms>.',
+        legalConsentRequired:
+          'Необходимо принять Политику конфиденциальности и Условия использования.',
         submit: 'Отправить',
         creating: 'Создание...',
         wizardStepCredentials: 'Почта и пароль',
@@ -421,6 +428,10 @@ export const auth = {
         registrationFailed: 'Înregistrare eșuată',
         phoneRequired: 'Telefonul este obligatoriu',
         haveAccount: 'Ai deja cont?',
+        legalConsent:
+          'Sunt de acord cu <privacy>Politica de confidențialitate</privacy> și <terms>Termenii și condițiile</terms>.',
+        legalConsentRequired:
+          'Trebuie să accepți Politica de confidențialitate și Termenii și condițiile.',
         submit: 'Trimite',
         creating: 'Se creează...',
         wizardStepCredentials: 'Email și parolă',
