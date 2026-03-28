@@ -1,11 +1,11 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import type { CategoryDto } from '@/types';
+import type { MastersFilterItem } from '@/types';
 import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
 
 interface HeroCategoryPillsProps {
-  categories: CategoryDto[];
+  categories: MastersFilterItem[];
   effectiveCityId: string | undefined;
   getCitySlugForUrl: (cityId: string) => string;
   isDark: boolean;

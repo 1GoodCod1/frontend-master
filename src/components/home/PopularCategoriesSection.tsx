@@ -6,14 +6,14 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ErrorState } from '@/components/common/States';
-import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesApi';
+import { useMastersFiltersQuery } from '@/features/masters/mastersApi';
+import { publicCachePolicy } from '@/config/publicCache';
 import { useUserCity } from '@/hooks/useUserCity';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
-import type { CategoryDto } from '@/types';
+import type { MastersFilterItem } from '@/types';
 import { CATEGORY_META, CATEGORY_DEFAULT_META } from '@/constants';
 import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
-import { getLucideIconByName } from '@/utils/lucideIconByName';
 
 function CategoryCardSkeleton() {
     return (
@@ -27,13 +27,19 @@ function CategoryCardSkeleton() {
 
 export const PopularCategoriesSection = () => {
     const { t, i18n } = useTranslation();
-    const { data, isLoading, isError, error, refetch } = useCategoriesWithCountsQuery();
+    const { data: filtersData, isLoading, isError, error, refetch } = useMastersFiltersQuery(
+      undefined,
+      {
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: publicCachePolicy.mastersFiltersRefetchOnFocus,
+      },
+    );
     const { citySlug } = useUserCity();
     const [expanded, setExpanded] = useState(false);
     const isLg = useMediaQuery('(min-width: 1024px)');
     const initialVisible = isLg ? 12 : 6;
 
-    const categories = (data ?? []) as CategoryDto[];
+    const categories = filtersData?.categories ?? [];
     const visibleCategories = expanded ? categories : categories.slice(0, initialVisible);
     const hasMore = categories.length > initialVisible;
 
@@ -83,11 +89,10 @@ export const PopularCategoriesSection = () => {
             </div>
 
             <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-4">
-                {visibleCategories.map((cat: CategoryDto, index: number) => {
+                {visibleCategories.map((cat: MastersFilterItem, index: number) => {
                     const meta = CATEGORY_META[cat.slug] ?? CATEGORY_DEFAULT_META;
-                    const fromApi = getLucideIconByName(cat.iconKey);
-                    const Icon = fromApi ?? meta.icon;
-                    const mastersCount = cat._count?.masters ?? 0;
+                    const Icon = meta.icon;
+                    const mastersCount = cat.count ?? 0;
 
                     const translatedName = getTranslatedCategoryName(t, cat, i18n.language);
 
@@ -122,21 +127,15 @@ export const PopularCategoriesSection = () => {
                                         meta.gradient,
                                     )}
                                 >
-                                    {cat.iconUrl ? (
-                                        <img
-                                            src={cat.iconUrl}
-                                            alt=""
-                                            className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 object-contain"
-                                        />
-                                    ) : fromApi || !cat.icon ? (
-                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
-                                    ) : (
+                                    {(cat.icon && String(cat.icon).trim()) ? (
                                         <span
                                             className="text-lg sm:text-xl lg:text-2xl leading-none"
                                             aria-hidden
                                         >
                                             {cat.icon}
                                         </span>
+                                    ) : (
+                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-white" />
                                     )}
                                 </div>
 

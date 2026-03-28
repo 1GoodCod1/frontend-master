@@ -2,8 +2,8 @@ import { useMemo, useState, useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Users, ArrowRight, ChevronRight } from 'lucide-react';
-import { useMastersLandingStatsQuery } from '@/features/masters/mastersApi';
-import { useCategoriesWithCountsQuery } from '@/features/categories/categoriesApi';
+import { useMastersLandingStatsQuery, useMastersFiltersQuery } from '@/features/masters/mastersApi';
+import { publicCachePolicy } from '@/config/publicCache';
 import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useUserCity } from '@/hooks/useUserCity';
@@ -12,7 +12,6 @@ import { safeStorage } from '@/utils/safeStorage';
 import { useSearchHistory } from '@/hooks/useSearchHistory';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import type { CategoryDto } from '@/types';
 import type { SearchSuggestionEvent } from '@/features/masters/components/search/SearchInputWithHistory';
 
 import { HeroSearchForm } from './hero/HeroSearchForm';
@@ -30,7 +29,11 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
   const navigate = useNavigate();
   const isDark = useIsDark();
   const { data: landingStats } = useMastersLandingStatsQuery();
-  const { data: categories = [] } = useCategoriesWithCountsQuery();
+  const { data: filtersData } = useMastersFiltersQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: publicCachePolicy.mastersFiltersRefetchOnFocus,
+  });
+  const categories = filtersData?.categories ?? [];
   const { data: citiesFromDb = [] } = useCitiesListQuery({ isActive: true });
   const { cityId: detectedCityId } = useUserCity();
   const { add: addSearchHistory } = useSearchHistory();
@@ -47,7 +50,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
       cities.find((c) => c.id === cityIdOrSlug || c.slug === cityIdOrSlug)?.slug ?? cityIdOrSlug,
     [cities],
   );
-  const heroCategories = (categories as CategoryDto[]).slice(0, 6);
+  const heroCategories = categories.slice(0, 6);
 
   const stats = useMemo(() => {
     if (!landingStats) {

@@ -45,7 +45,18 @@ export function extractItems<T = unknown>(resp: unknown): T[] {
   if (!root || typeof root !== 'object') return [];
 
   const r = root as Record<string, unknown>;
-  const arrayKeys = ['items', 'rows', 'leads', 'masters', 'reviews', 'payments', 'logs', 'users'];
+  const arrayKeys = [
+    'items',
+    'rows',
+    'leads',
+    'masters',
+    'reviews',
+    'payments',
+    'logs',
+    'users',
+    'categories',
+    'cities',
+  ];
   for (const key of arrayKeys) {
     if (Array.isArray(r[key])) return r[key] as T[];
   }

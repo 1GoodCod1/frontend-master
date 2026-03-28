@@ -20,6 +20,8 @@ const PATHS_BUST_HTTP_PROD = new Set([
   '/masters/new',
   '/masters/landing-stats',
   '/masters/filters',
+  '/categories',
+  '/cities',
   '/web-push/vapid-public-key',
 ]);
 
