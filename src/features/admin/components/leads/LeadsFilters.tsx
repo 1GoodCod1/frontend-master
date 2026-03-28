@@ -47,7 +47,7 @@ export default function RequestsFilters({
                 size="sm"
                 onClick={onExport}
                 disabled={!allLeadsLength}
-                className="gap-2 border-0 bg-amber-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
+                className="gap-2 border-0 bg-amber-600 text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
               >
                 <Download className="size-4" />
                 Export requests

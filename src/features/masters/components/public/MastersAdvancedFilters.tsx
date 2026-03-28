@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { CircleDot, Tag, Star } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -50,13 +49,7 @@ export function MastersAdvancedFilters({
   const { t } = useTranslation();
 
   return (
-    <motion.div
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: 'auto', opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="overflow-hidden"
-    >
+    <div className="overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-200 dark:border-white/[0.08]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06]">
           <div className="flex items-center gap-3">
@@ -200,6 +193,6 @@ export function MastersAdvancedFilters({
           }}
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

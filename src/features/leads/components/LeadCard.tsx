@@ -64,7 +64,7 @@ export function RequestCard({
   const clientName = lead?.clientName || t('leads.client');
 
   const cardClass = cn(
-    'overflow-hidden min-w-0 w-full transition-all duration-300',
+    'overflow-hidden min-w-0 w-full transition duration-300',
     'rounded-xl border border-slate-200 dark:border-white/[0.08]',
     'bg-white dark:bg-black/40 dark:backdrop-blur-xl',
     'shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none',

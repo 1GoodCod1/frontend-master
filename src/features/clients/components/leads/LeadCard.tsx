@@ -44,7 +44,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
   }, [lead.files]);
 
   return (
-    <Card className="group flex flex-col min-w-0 w-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
+    <Card className="group flex flex-col min-w-0 w-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none" />
       
       <CardContent className="relative flex min-w-0 flex-col gap-6 p-5 sm:p-6">
@@ -155,7 +155,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
             onOpenModal={onOpenReviewModal}
             reviewsSubmittedMasterIds={reviewsSubmittedMasterIds}
           />
-          <Button size="default" asChild className="rounded-xl border-0 bg-amber-600 font-semibold text-white shadow-lg shadow-amber-500/20 transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 ml-auto">
+          <Button size="default" asChild className="rounded-xl border-0 bg-amber-600 font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 ml-auto">
             <RouterLink
               to={`/masters/${masterSlugOrId}${status === 'CLOSED' ? '?review=1' : ''}`}
             >

@@ -53,7 +53,7 @@ export function ProfileViewsHistoryModal({
             <button
               onClick={() => setPeriod('week')}
               className={cn(
-                'flex items-center justify-center gap-2 h-9 rounded-lg text-sm font-medium transition-all duration-200',
+                'flex items-center justify-center gap-2 h-9 rounded-lg text-sm font-medium transition duration-200',
                 period === 'week'
                   ? 'bg-white dark:bg-white/10 text-foreground shadow-sm border border-border/50'
                   : 'text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-white/5',
@@ -65,7 +65,7 @@ export function ProfileViewsHistoryModal({
             <button
               onClick={() => setPeriod('month')}
               className={cn(
-                'flex items-center justify-center gap-2 h-9 rounded-lg text-sm font-medium transition-all duration-200',
+                'flex items-center justify-center gap-2 h-9 rounded-lg text-sm font-medium transition duration-200',
                 period === 'month'
                   ? 'bg-white dark:bg-white/10 text-foreground shadow-sm border border-border/50'
                   : 'text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-white/5',

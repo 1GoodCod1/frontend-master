@@ -3,7 +3,7 @@
 import { cleanupOutdatedCaches, precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { clientsClaim } from 'workbox-core';
 import { NavigationRoute, registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
+import { NetworkFirst, StaleWhileRevalidate, CacheFirst } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 
 declare const self: ServiceWorkerGlobalScope;
@@ -19,7 +19,23 @@ precacheAndRoute(self.__WB_MANIFEST);
 // SPA: serve index.html for all navigation requests (offline support)
 registerRoute(new NavigationRoute(createHandlerBoundToURL('/index.html')));
 
-// Runtime cache: API GET requests (categories, cities, masters)
+// Runtime cache: frequently-changing API data (filters, categories, cities) — network-first, short TTL
+const FRESH_API_PATHS = ['/masters/filters', '/categories', '/cities', '/masters/popular', '/masters/new', '/masters/landing-stats'];
+registerRoute(
+  ({ url, request }) =>
+    request.method === 'GET' &&
+    url.pathname.startsWith('/api/') &&
+    FRESH_API_PATHS.some((p) => url.pathname.includes(p)),
+  new NetworkFirst({
+    cacheName: 'api-fresh',
+    networkTimeoutSeconds: 5,
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 30, maxAgeSeconds: 60 * 2 }), // 2 minutes
+    ],
+  }),
+);
+
+// Runtime cache: other API GET requests — stale-while-revalidate
 registerRoute(
   ({ url, request }) =>
     url.pathname.startsWith('/api/') && request.method === 'GET',

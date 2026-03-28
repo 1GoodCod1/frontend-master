@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { Mail, Send } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -38,13 +37,8 @@ export default function ContactsPage() {
         description={t('contact.subtitle')}
         keywords="контакты Master-Hub, поддержка Moldova"
       />
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="min-h-screen bg-background py-8 md:py-12"
-    >
-      <div className="container max-w-2xl mx-auto px-4">
+      <div className="mh-page-enter min-h-screen bg-background py-8 md:py-12">
+        <div className="container max-w-2xl mx-auto px-4">
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl md:text-4xl font-semibold text-foreground mb-3">
             {t('contact.title')}
@@ -58,13 +52,12 @@ export default function ContactsPage() {
           {contacts.map((contact, index) => {
             const Icon = contact.icon;
             return (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08, duration: 0.35 }}
+                className="mh-page-enter"
+                style={{ animationDelay: `${index * 80}ms` }}
               >
-                <Card className="border-border overflow-hidden transition-all duration-250 hover:shadow-lg hover:-translate-y-0.5">
+                <Card className="border-border overflow-hidden transition duration-250 hover:shadow-lg hover:-translate-y-0.5">
                   <CardContent className="p-6">
                     <div className="flex flex-row gap-4 items-start">
                       <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-primary text-primary-foreground shrink-0">
@@ -88,17 +81,12 @@ export default function ContactsPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.35 }}
-          className="mt-10 text-center"
-        >
+        <div className="mh-page-enter mt-10 text-center" style={{ animationDelay: '240ms' }}>
           <Card className="border-border">
             <CardContent className="p-6">
               <p className="text-primary font-semibold text-lg mb-2 leading-relaxed">
@@ -109,9 +97,9 @@ export default function ContactsPage() {
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
+        </div>
       </div>
-    </motion.div>
     </>
   );
 }

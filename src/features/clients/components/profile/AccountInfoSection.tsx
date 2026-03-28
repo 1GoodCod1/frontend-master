@@ -24,7 +24,7 @@ export default function AccountInfoSection({
   const { t } = useTranslation();
 
   return (
-    <Card className="group relative h-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition-all duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
+    <Card className="group relative h-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none z-0" />
       <CardContent className="relative z-10 p-6 sm:p-8">
         <h3 className="mb-6 flex items-center gap-3 text-xl font-bold text-foreground">

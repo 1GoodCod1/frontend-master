@@ -38,6 +38,8 @@ dist-ssr
 # Vite
 /public/vite.svg
 /dist
+# Отчёт bundle analyzer: npm run CC → dist/stats.html (весь dist не коммитим; не выкладывать stats вручную)
+dist/stats.html
 /node_modules
 /.next/
 /out/

@@ -39,6 +39,7 @@ export default function ChatInput({
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [uploadFiles, { isLoading: isUploading }] = useFilesUploadManyMutation();
+  const [emojiPopoverOpen, setEmojiPopoverOpen] = useState(false);
 
   const defaultPlaceholder = t('common.writeMessage');
 
@@ -168,7 +169,7 @@ export default function ChatInput({
         </div>
       )}
 
-      <div className="flex items-center gap-1.5 sm:gap-2 p-2 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-white/5 shadow-sm focus-within:ring-2 focus-within:ring-orange-500/20 focus-within:border-orange-500/40 dark:focus-within:ring-orange-500/15 dark:focus-within:border-orange-500/30 transition-all">
+      <div className="flex items-center gap-1.5 sm:gap-2 p-2 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-white/5 shadow-sm focus-within:ring-2 focus-within:ring-orange-500/20 focus-within:border-orange-500/40 dark:focus-within:ring-orange-500/15 dark:focus-within:border-orange-500/30 transition">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -196,7 +197,7 @@ export default function ChatInput({
           accept="image/*,.pdf,.doc,.docx,.txt"
         />
 
-        <Popover>
+        <Popover open={emojiPopoverOpen} onOpenChange={setEmojiPopoverOpen}>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -216,14 +217,26 @@ export default function ChatInput({
             </Tooltip>
           </TooltipProvider>
           <PopoverContent className="w-auto p-0 border-0 shadow-none" align="start" side="top">
-            <Suspense fallback={<div className="w-[320px] h-[360px] flex items-center justify-center"><span className="size-6 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" /></div>}>
-              <LazyEmojiPicker
-                onEmojiClick={handleEmojiClick}
-                theme={typeof document !== 'undefined' && document.documentElement?.classList?.contains('dark') ? THEME_DARK : THEME_LIGHT}
-                width={320}
-                height={360}
-              />
-            </Suspense>
+            {emojiPopoverOpen && (
+              <Suspense
+                fallback={
+                  <div className="w-[320px] h-[360px] flex items-center justify-center">
+                    <span className="size-6 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+                  </div>
+                }
+              >
+                <LazyEmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  theme={
+                    typeof document !== 'undefined' && document.documentElement?.classList?.contains('dark')
+                      ? THEME_DARK
+                      : THEME_LIGHT
+                  }
+                  width={320}
+                  height={360}
+                />
+              </Suspense>
+            )}
           </PopoverContent>
         </Popover>
 
@@ -243,7 +256,7 @@ export default function ChatInput({
         <Button
           type="button"
           size="icon"
-          className="size-9 sm:size-10 shrink-0 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30 hover:shadow-orange-500/40 hover:opacity-95 transition-all"
+          className="size-9 sm:size-10 shrink-0 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30 hover:shadow-orange-500/40 hover:opacity-95 transition"
           onClick={handleSend}
           disabled={!canSend}
         >

@@ -17,8 +17,28 @@ export default defineConfig(({ mode }) => ({
       srcDir: 'src',
       filename: 'sw.ts',
       injectManifest: {
-        // rollup-plugin-visualizer (--mode analyze) writes a large report; never precache it
-        globIgnores: ['**/stats.html'],
+        // Отчёт анализатора (npm run CC) — не в precache
+        // Тяжёлые/редкие JS-чанки — runtime после первого визита (меньше ~ precache, офлайн-админка без предзагрузки)
+        globIgnores: [
+          '**/stats.html',
+          '**/assets/AuditPage-*.js',
+          '**/assets/UsersPage-*.js',
+          '**/assets/MastersAdminPage-*.js',
+          '**/assets/RequestsAdminPage-*.js',
+          '**/assets/ReviewsAdminPage-*.js',
+          '**/assets/ReportsAdminPage-*.js',
+          '**/assets/PaymentsAdminPage-*.js',
+          '**/assets/CategoriesAdminPage-*.js',
+          '**/assets/CitiesAdminPage-*.js',
+          '**/assets/TariffAdminPage-*.js',
+          '**/assets/AnalyticsAdminPage-*.js',
+          '**/assets/SystemPage-*.js',
+          '**/assets/DigestAdminPage-*.js',
+          '**/assets/VerificationRequestsPage-*.js',
+          '**/assets/CompliancePage-*.js',
+          '**/assets/chart-vendor-*.js',
+          '**/assets/emoji-picker-react*.js',
+        ],
       },
       manifest: {
         name: 'Master-Hub',

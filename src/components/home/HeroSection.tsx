@@ -31,6 +31,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
   const { data: filtersData } = useMastersFiltersQuery(undefined, {
     refetchOnMountOrArgChange: true,
     refetchOnFocus: publicCachePolicy.mastersFiltersRefetchOnFocus,
+    pollingInterval: publicCachePolicy.mastersFiltersPollingInterval,
   });
   const categories = filtersData?.categories ?? [];
   const cities = useMemo(() => filtersData?.cities ?? [], [filtersData?.cities]);
@@ -135,7 +136,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
             {/* Badge */}
             <div
               className={cn(
-                'inline-flex items-center gap-2 self-start px-4 py-2 rounded-full backdrop-blur-sm border transition-all duration-500',
+                'inline-flex items-center gap-2 self-start px-4 py-2 rounded-full backdrop-blur-sm border transition duration-500',
                 isDark
                   ? 'bg-[#E97525]/15 border-[#E97525]/30'
                   : 'bg-primary/12 border-primary/25'
@@ -150,7 +151,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
             {/* Heading */}
             <div
               className={cn(
-                'rounded-xl p-5 sm:p-6 transition-all duration-500',
+                'rounded-xl p-5 sm:p-6 transition duration-500',
                 isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white/60 border border-gray-200/80 shadow-sm'
               )}
             >
@@ -210,7 +211,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
 
             {/* CTA Buttons */}
             <div className="flex items-center flex-wrap gap-4">
-              <Button asChild className="group flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-semibold hover:scale-105 active:scale-100 transition-all duration-200">
+              <Button asChild className="group flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-semibold hover:scale-105 active:scale-100 transition duration-200">
                 <RouterLink to="/masters">
                   <Users size={17} />
                   {t('home.findMasters')}
@@ -222,7 +223,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
                   asChild
                   variant="outline"
                   className={cn(
-                    'flex items-center gap-2.5 px-7 py-3.5 rounded-2xl border transition-all duration-200',
+                    'flex items-center gap-2.5 px-7 py-3.5 rounded-2xl border transition duration-200',
                     isDark
                       ? 'bg-white/[0.04] border-white/10 text-white/70 hover:bg-white/8'
                       : 'bg-secondary/80 border-border text-foreground/70 hover:bg-muted'

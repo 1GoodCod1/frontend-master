@@ -1,5 +1,4 @@
 import { useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Formik } from 'formik';
 import ResetPasswordHeader from '@/features/auth/components/reset-password/ResetPasswordHeader';
 import ResetPasswordForm from '@/features/auth/components/reset-password/ResetPasswordForm';
@@ -17,17 +16,13 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen bg-background py-8 md:py-12">
         <div className="container max-w-md mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-          >
+          <div className="mh-page-enter">
             <Card className="border-border dark:border-white/[0.08]">
               <CardContent className="p-6 md:p-8">
                 <InvalidTokenView />
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
     );
@@ -36,11 +31,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-background py-8 md:py-12">
       <div className="container max-w-md mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-        >
+        <div className="mh-page-enter">
           <Card className="border-border">
             <CardContent className="p-6 md:p-8">
               <ResetPasswordHeader />
@@ -59,7 +50,7 @@ export default function ResetPasswordPage() {
               </Formik>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

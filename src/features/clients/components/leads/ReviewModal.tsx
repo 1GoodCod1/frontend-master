@@ -94,13 +94,13 @@ export default function ReviewModal({
                     <button
                       key={v}
                       type="button"
-                      className="rounded-lg p-1 transition-all duration-150 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring"
+                      className="rounded-lg p-1 transition duration-150 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring"
                       onClick={() => onRatingChange(v)}
                       aria-label={`${v} star${v > 1 ? 's' : ''}`}
                     >
                       <Star
                         className={cn(
-                          'size-9 transition-all duration-150',
+                          'size-9 transition duration-150',
                           v <= rating
                             ? 'fill-amber-400 text-amber-400 drop-shadow-sm'
                             : 'text-muted-foreground/30 hover:text-amber-300',
@@ -148,7 +148,7 @@ export default function ReviewModal({
                 size="sm"
                 disabled={photos.length >= 5}
                 className={cn(
-                  'gap-2 transition-all duration-150',
+                  'gap-2 transition duration-150',
                   photos.length < 5
                     ? 'border-border text-muted-foreground hover:border-amber-500/50 hover:bg-amber-50/50 hover:text-amber-700 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10 dark:hover:text-amber-400'
                     : 'opacity-50',

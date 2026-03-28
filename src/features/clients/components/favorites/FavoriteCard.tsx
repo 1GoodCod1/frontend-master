@@ -20,7 +20,7 @@ export default function FavoriteCard({ favorite, onRemove }: FavoriteCardProps) 
   const fullName = [master?.user?.firstName, master?.user?.lastName].filter(Boolean).join(' ').trim() || master?.displayName || t('reports.unknownMaster', 'Unknown Master');
 
   return (
-    <Card className="group relative flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
+    <Card className="group relative flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100" />
       
       <div className="relative flex items-center gap-4 p-5">

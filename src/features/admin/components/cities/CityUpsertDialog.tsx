@@ -149,7 +149,7 @@ export default function CityUpsertDialog({
                   type="button"
                   onClick={() => submitForm()}
                   disabled={isSubmitting}
-                  className="min-w-[7rem] border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
+                  className="min-w-[7rem] border-0 bg-amber-600 text-white shadow-md transition hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
                 >
                   {mode === 'create' ? 'Create' : 'Save'}
                 </Button>

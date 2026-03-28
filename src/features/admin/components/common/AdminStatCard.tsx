@@ -33,7 +33,7 @@ export function AdminStatCard({
   return (
     <Card
       className={cn(
-        'animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards transition-all hover:-translate-y-1 hover:shadow-lg border-2',
+        'animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards transition hover:-translate-y-1 hover:shadow-lg border-2',
         delayClass,
         cardClassName,
         className,

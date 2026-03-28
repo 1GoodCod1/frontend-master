@@ -117,7 +117,7 @@ export default function VerificationPage() {
         <div className="mb-8">
           <PageHeader title={t('verification.title')} subtitle={t('verification.verifiedSubtitle')} />
         </div>
-        <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 text-center">
+        <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300 text-center">
           <CardContent className="flex flex-col items-center px-6 pt-10 pb-10">
             <CheckCircle className="mb-4 size-20 text-emerald-600 dark:text-emerald-500" />
             <h2 className="text-xl font-bold">{t('verification.verified')}</h2>
@@ -148,7 +148,7 @@ export default function VerificationPage() {
           <PageHeader title={t('verification.title')} subtitle={t('verification.pendingSubtitle')} />
         </div>
 
-        <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+        <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
           <CardContent className="space-y-6 p-6">
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Hourglass className="size-14 shrink-0 text-amber-500 dark:text-amber-400" />
@@ -283,7 +283,7 @@ export default function VerificationPage() {
         </Alert>
       )}
 
-      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
         <CardContent className="p-6">
           <Formik
             initialValues={{
@@ -354,7 +354,7 @@ export default function VerificationPage() {
                   <div className="space-y-2">
                     <Label className="font-semibold">{t('verification.documentFrontSide')} *</Label>
                     <div className="flex flex-wrap items-center gap-3">
-                      <Button type="button" asChild disabled={isUploading} className="gap-2 border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
+                      <Button type="button" asChild disabled={isUploading} className="gap-2 border-0 bg-amber-50 text-amber-700 shadow-sm transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
                         <Label className="cursor-pointer">
                           <Upload className="size-4" />
                           {documentFrontId ? t('verification.changeFile') : t('verification.upload')}
@@ -389,7 +389,7 @@ export default function VerificationPage() {
                       {t('verification.documentBackSide')} ({t('verification.optional')})
                     </Label>
                     <div className="flex flex-wrap items-center gap-3">
-                      <Button type="button" asChild disabled={isUploading} className="gap-2 border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
+                      <Button type="button" asChild disabled={isUploading} className="gap-2 border-0 bg-amber-50 text-amber-700 shadow-sm transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
                         <Label className="cursor-pointer">
                           <Upload className="size-4" />
                           {documentBackId ? t('verification.changeFile') : t('verification.upload')}
@@ -421,7 +421,7 @@ export default function VerificationPage() {
                       {t('verification.selfie')} ({t('verification.optional')})
                     </Label>
                     <div className="flex flex-wrap items-center gap-3">
-                      <Button type="button" asChild disabled={isUploading} className="gap-2 border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
+                      <Button type="button" asChild disabled={isUploading} className="gap-2 border-0 bg-amber-50 text-amber-700 shadow-sm transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
                         <Label className="cursor-pointer">
                           <Upload className="size-4" />
                           {selfieId ? t('verification.changeFile') : t('verification.upload')}

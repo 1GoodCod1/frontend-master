@@ -68,7 +68,7 @@ export default function EarlyBirdBanner({ remainingSlots, totalSlots }: EarlyBir
           <div className="relative h-3 w-full rounded-full bg-slate-200/80 dark:bg-white/10 overflow-hidden">
             <div
               className={cn(
-                'absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out',
+                'absolute inset-y-0 left-0 rounded-full transition duration-700 ease-out',
                 'bg-gradient-to-r from-amber-400 via-orange-400 to-red-400',
                 'dark:from-amber-500 dark:via-orange-500 dark:to-red-500',
               )}

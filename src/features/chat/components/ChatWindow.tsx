@@ -1,4 +1,5 @@
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo, useState, useCallback } from 'react';
+import { Virtuoso, type Components } from 'react-virtuoso';
 import { ArrowLeft, MoreVertical } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
@@ -39,6 +40,11 @@ import {
   useMastersUpdateAutoresponderSettingsMutation,
 } from '@/features/masters/mastersApi';
 import { MasterChatSettingsDialog } from './MasterChatSettingsDialog';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
+
+type ChatTimelineItem =
+  | { kind: 'date'; dateKey: string; createdAt: string }
+  | { kind: 'msg'; message: ChatMessageType };
 
 export default function ChatWindow({
   conversationId,
@@ -48,8 +54,7 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const didInitialScrollRef = useRef<string | null>(null);
+  const reduceMotion = useReducedMotionPreference();
   const lastMarkedRef = useRef<string | null>(null);
   const isValid = isValidConversationId(conversationId);
   const validConversationId = isValid ? conversationId : undefined;
@@ -125,37 +130,6 @@ export default function ChatWindow({
     markAsReadWs(validConversationId);
   }, [validConversationId, isValid, markAsRead, dispatch]);
 
-  const prevMessagesLengthRef = useRef(0);
-  const prevConversationRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    const messages = messagesData?.messages ?? [];
-    const conversationKey = validConversationId ?? '';
-    if (messages.length === 0) return;
-
-    if (prevConversationRef.current !== conversationKey) {
-      prevConversationRef.current = conversationKey;
-      prevMessagesLengthRef.current = 0;
-    }
-
-    const prevLen = prevMessagesLengthRef.current;
-    const messagesIncreased = messages.length > prevLen;
-    prevMessagesLengthRef.current = messages.length;
-
-    const shouldScroll = prevLen === 0 || messagesIncreased;
-
-    if (prevLen === 0) {
-      didInitialScrollRef.current = conversationKey;
-    }
-
-    if (shouldScroll) {
-      messagesEndRef.current?.scrollIntoView({
-        behavior: prevLen === 0 ? 'auto' : 'smooth',
-        block: 'end',
-      });
-    }
-  }, [messagesData?.messages, validConversationId]);
-
   const handleSend = async (content: string, fileIds?: string[]) => {
     if (!isValid || !validConversationId || !canSendMessages) return;
     try {
@@ -193,6 +167,61 @@ export default function ChatWindow({
     }
     return Array.from(groups.entries()).map(([dateKey, msgs]) => ({ dateKey, msgs }));
   }, [messages]);
+
+  const chatTimeline = useMemo((): ChatTimelineItem[] => {
+    const items: ChatTimelineItem[] = [];
+    for (const { dateKey, msgs } of messagesByDate) {
+      if (msgs.length === 0) continue;
+      items.push({
+        kind: 'date',
+        dateKey,
+        createdAt: msgs[0].createdAt,
+      });
+      for (const msg of msgs) {
+        items.push({ kind: 'msg', message: msg });
+      }
+    }
+    return items;
+  }, [messagesByDate]);
+
+  const renderMessage = useCallback(
+    (msg: ChatMessageType) => {
+      const isOwn =
+        (currentUserRole === SENDER_TYPE.CLIENT && msg.senderType === SENDER_TYPE.CLIENT) ||
+        (currentUserRole === SENDER_TYPE.MASTER && msg.senderType === SENDER_TYPE.MASTER);
+
+      return (
+        <ChatMessage
+          message={msg}
+          isOwn={isOwn}
+          showAvatar={true}
+          avatarUrl={isOwn ? undefined : otherParty?.avatar}
+          senderName={isOwn ? 'Я' : otherParty?.name}
+        />
+      );
+    },
+    [currentUserRole, otherParty?.avatar, otherParty?.name],
+  );
+
+  const virtuosoComponents = useMemo<Components<ChatTimelineItem, undefined>>(
+    () => ({
+      Footer: () =>
+        typingUsers.length > 0 ? (
+          <div className="flex items-end gap-2 mt-2 pb-1">
+            <Avatar className="size-8 shrink-0">
+              <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} alt="" />
+              <AvatarFallback className="text-[10px] bg-slate-500 text-white">
+                {(otherParty?.name ?? '?').slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2">
+              <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
+            </div>
+          </div>
+        ) : null,
+    }),
+    [typingUsers.length, otherParty, t],
+  );
 
   if (!isValid) {
     return (
@@ -302,7 +331,7 @@ export default function ChatWindow({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-auto bg-muted/10 px-3 sm:px-4 py-3 sm:py-4 dark:bg-white/[0.02]">
+      <div className="flex-1 min-h-0 flex flex-col bg-muted/10 px-3 sm:px-4 py-3 sm:py-4 dark:bg-white/[0.02]">
         {loadingMessages ? (
           <div className="space-y-4 p-4">
             {[1, 2, 3, 4].map((i) => (
@@ -333,57 +362,41 @@ export default function ChatWindow({
             )}
           </div>
         ) : (
-          <>
-            {messagesByDate.map(({ dateKey, msgs }, index) => (
-              <div key={dateKey}>
-                <div
-                  className={cn(
-                    'flex items-center justify-center',
-                    index === 0 ? 'mt-0 mb-4' : 'my-4'
-                  )}
-                >
-                  <span className="px-3 py-1 rounded-full bg-muted/60 text-muted-foreground text-xs border border-slate-200/40 dark:border-transparent">
-                    {getMessageDateLabel(msgs[0].createdAt, {
-                      today: t('common.today'),
-                      yesterday: t('common.yesterday'),
-                    })}
-                  </span>
-                </div>
-                {msgs.map((msg: ChatMessageType) => {
-                  const isOwn =
-                    (currentUserRole === SENDER_TYPE.CLIENT &&
-                      msg.senderType === SENDER_TYPE.CLIENT) ||
-                    (currentUserRole === SENDER_TYPE.MASTER &&
-                      msg.senderType === SENDER_TYPE.MASTER);
-
-                  return (
-                    <ChatMessage
-                      key={msg.id}
-                      message={msg}
-                      isOwn={isOwn}
-                      showAvatar={true}
-                      avatarUrl={isOwn ? undefined : otherParty?.avatar}
-                      senderName={isOwn ? 'Я' : otherParty?.name}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-            {typingUsers.length > 0 && (
-              <div className="flex items-end gap-2 mt-2">
-                <Avatar className="size-8 shrink-0">
-                  <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} alt="" />
-                  <AvatarFallback className="text-[10px] bg-slate-500 text-white">
-                    {(otherParty?.name ?? '?').slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2">
-                  <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </>
+          <Virtuoso<ChatTimelineItem, undefined>
+            key={validConversationId}
+            className="min-h-0 flex-1"
+            style={{ height: '100%' }}
+            data={chatTimeline}
+            alignToBottom
+            followOutput={reduceMotion ? 'auto' : 'smooth'}
+            defaultItemHeight={72}
+            increaseViewportBy={{ top: 120, bottom: 200 }}
+            computeItemKey={(index, item) =>
+              item.kind === 'date' ? `date-${item.dateKey}-${index}` : item.message.id
+            }
+            components={virtuosoComponents}
+            itemContent={(index, item) => {
+              if (item.kind === 'date') {
+                const isFirst = index === 0;
+                return (
+                  <div
+                    className={cn(
+                      'flex items-center justify-center',
+                      isFirst ? 'mt-0 mb-4' : 'my-4',
+                    )}
+                  >
+                    <span className="px-3 py-1 rounded-full bg-muted/60 text-muted-foreground text-xs border border-slate-200/40 dark:border-transparent">
+                      {getMessageDateLabel(item.createdAt, {
+                        today: t('common.today'),
+                        yesterday: t('common.yesterday'),
+                      })}
+                    </span>
+                  </div>
+                );
+              }
+              return renderMessage(item.message);
+            }}
+          />
         )}
       </div>
 

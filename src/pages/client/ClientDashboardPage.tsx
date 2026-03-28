@@ -254,7 +254,7 @@ export default function ClientDashboardPage() {
                     "absolute left-5 top-5 -translate-x-1/2 flex h-2.5 w-2.5 items-center justify-center rounded-full ring-[3px] ring-background",
                     dotColor
                   )} />
-                  <div className="flex-1 rounded-xl border-0 bg-white dark:bg-white/[0.04] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none transition-all duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:hover:bg-white/[0.07]">
+                  <div className="flex-1 rounded-xl border-0 bg-white dark:bg-white/[0.04] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.06)] dark:shadow-none transition duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] dark:hover:bg-white/[0.07]">
                     <div className="flex justify-between items-center mb-2">
                       <span className={cn('text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md', labelColor)}>
                         {item.type === 'BOOKING'

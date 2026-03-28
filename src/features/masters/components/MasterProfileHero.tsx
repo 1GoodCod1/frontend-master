@@ -111,14 +111,15 @@ export const MasterProfileHero = ({
 
   return (
     <TooltipProvider>
-      {/* Hero Banner — gradient like Figma */}
-      <div className="relative bg-gradient-to-br from-amber-500 via-amber-400 to-orange-400 dark:from-amber-600 dark:via-amber-500 dark:to-orange-500 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full -translate-y-1/2" />
-          <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full translate-y-1/2" />
-        </div>
+      {/* Hero: same horizontal rhythm as main content (container), not full-bleed */}
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-0 pb-0">
+        <div className="relative rounded-t-none rounded-b-2xl sm:rounded-b-3xl bg-gradient-to-br from-amber-500 via-amber-400 to-orange-400 dark:from-amber-600 dark:via-amber-500 dark:to-orange-500 overflow-hidden shadow-sm">
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full -translate-y-1/2" />
+            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full translate-y-1/2" />
+          </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-6 sm:pt-5 sm:pb-8 relative">
+          <div className="relative px-4 sm:px-6 pt-3 pb-6 sm:pt-4 sm:pb-8">
           <RouterLink
             to="/masters"
             className="inline-flex items-center gap-1.5 text-white hover:text-white/90 mb-4 text-sm transition-colors"
@@ -216,7 +217,7 @@ export const MasterProfileHero = ({
                     onClick={onToggleFavorite}
                     disabled={favoriteLoading}
                     className={cn(
-                      'flex items-center gap-2 rounded-xl border transition-all',
+                      'flex items-center gap-2 rounded-xl border transition',
                       isFavorite
                         ? 'bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600 dark:bg-red-500 dark:border-red-500 dark:text-white dark:hover:bg-red-600 dark:hover:border-red-600'
                         : 'border-gray-200 dark:border-white/40 bg-white dark:bg-white/25 text-amber-600 dark:text-white hover:bg-gray-50 dark:hover:bg-white/35'
@@ -275,6 +276,7 @@ export const MasterProfileHero = ({
               </div>
             ))}
           </div>
+        </div>
         </div>
       </div>
 

@@ -258,7 +258,7 @@ export default function RequestDetailsDialog({
                         <button
                           key={f.id}
                           type="button"
-                          className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-white/[0.08] aspect-square cursor-pointer transition-all hover:border-amber-500/60 hover:shadow-md p-0 bg-transparent"
+                          className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-white/[0.08] aspect-square cursor-pointer transition hover:border-amber-500/60 hover:shadow-md p-0 bg-transparent"
                           onClick={() => window.open(f.url, '_blank')}
                         >
                           <img
@@ -311,7 +311,7 @@ export default function RequestDetailsDialog({
         <DialogFooter>
           <Button
             onClick={onClose}
-            className="border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40"
+            className="border-0 bg-amber-50 text-amber-700 shadow-sm transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40"
           >
             {t('common.close')}
           </Button>

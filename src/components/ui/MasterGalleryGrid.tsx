@@ -74,7 +74,7 @@ export function MasterGalleryGrid({
               key={f.id}
               className={
                 isGalleryVariant
-                  ? 'overflow-hidden border border-[#f5f4eb] dark:border-white/[0.08] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-[#e8e6dd] dark:hover:border-amber-500/40 cursor-pointer touch-manipulation'
+                  ? 'overflow-hidden border border-[#f5f4eb] dark:border-white/[0.08] transition duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-[#e8e6dd] dark:hover:border-amber-500/40 cursor-pointer touch-manipulation'
                   : 'overflow-hidden border-border'
               }
             >
@@ -123,7 +123,7 @@ export function MasterGalleryGrid({
                           <Button
                             type="button"
                             size="icon"
-                            className="size-8 border-0 bg-emerald-500/90 dark:bg-emerald-600/90 backdrop-blur-sm shadow-lg ring-1 ring-emerald-600/30 dark:ring-emerald-400/30 text-white hover:bg-emerald-600 dark:hover:bg-emerald-500 hover:scale-110 transition-all duration-200"
+                            className="size-8 border-0 bg-emerald-500/90 dark:bg-emerald-600/90 backdrop-blur-sm shadow-lg ring-1 ring-emerald-600/30 dark:ring-emerald-400/30 text-white hover:bg-emerald-600 dark:hover:bg-emerald-500 hover:scale-110 transition duration-200"
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -143,7 +143,7 @@ export function MasterGalleryGrid({
                           <Button
                             type="button"
                             size="icon"
-                            className="size-8 border-0 bg-red-500/90 dark:bg-red-600/90 backdrop-blur-sm shadow-lg ring-1 ring-red-600/30 dark:ring-red-400/30 text-white hover:bg-red-600 dark:hover:bg-red-500 hover:scale-110 transition-all duration-200"
+                            className="size-8 border-0 bg-red-500/90 dark:bg-red-600/90 backdrop-blur-sm shadow-lg ring-1 ring-red-600/30 dark:ring-red-400/30 text-white hover:bg-red-600 dark:hover:bg-red-500 hover:scale-110 transition duration-200"
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();

@@ -135,7 +135,7 @@ export default function ReferralPage() {
                           r.status === REFERRAL_STATUS.QUALIFIED ||
                           r.status === REFERRAL_STATUS.REWARDED;
                         return (
-                            <Card key={r.id} className="overflow-hidden shadow-sm transition-all hover:shadow-md">
+                            <Card key={r.id} className="overflow-hidden shadow-sm transition hover:shadow-md">
                                 <CardHeader className="p-4 pb-2 flex-row justify-between items-start space-y-0 relative z-10">
                                     <div>
                                         <CardTitle className="text-base">

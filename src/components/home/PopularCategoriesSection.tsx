@@ -17,7 +17,7 @@ import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
 
 function CategoryCardSkeleton() {
     return (
-        <div className="rounded-xl sm:rounded-2xl bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20 p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center gap-1.5 sm:gap-2 lg:gap-3">
+        <div className="rounded-xl sm:rounded-2xl bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:border-white/[0.08] dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20 p-3 sm:p-4 lg:p-5 flex flex-col items-center justify-center gap-1.5 sm:gap-2 lg:gap-3">
             <Skeleton className="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-xl sm:rounded-2xl" />
             <Skeleton className="h-3 w-16 sm:h-3.5 sm:w-20 lg:h-4 lg:w-24" />
             <Skeleton className="h-2.5 w-12 sm:h-3 sm:w-14 lg:h-3 lg:w-16" />
@@ -25,13 +25,18 @@ function CategoryCardSkeleton() {
     );
 }
 
-export const PopularCategoriesSection = () => {
+type PopularCategoriesSectionProps = {
+  className?: string;
+};
+
+export const PopularCategoriesSection = ({ className }: PopularCategoriesSectionProps) => {
     const { t, i18n } = useTranslation();
     const { data: filtersData, isLoading, isError, error, refetch } = useMastersFiltersQuery(
       undefined,
       {
         refetchOnMountOrArgChange: true,
         refetchOnFocus: publicCachePolicy.mastersFiltersRefetchOnFocus,
+        pollingInterval: publicCachePolicy.mastersFiltersPollingInterval,
       },
     );
     const { citySlug } = useUserCity();
@@ -45,7 +50,7 @@ export const PopularCategoriesSection = () => {
 
     if (isLoading) {
         return (
-            <div className="mb-6 md:mb-8">
+            <div className={cn('mb-6 md:mb-8', className)}>
                 <div className="mb-6 text-center">
                     <Skeleton className="h-8 w-72 mx-auto mb-2" />
                     <Skeleton className="h-4 w-60 mx-auto" />
@@ -61,7 +66,7 @@ export const PopularCategoriesSection = () => {
 
     if (isError) {
         return (
-            <div className="mb-6 md:mb-8">
+            <div className={cn('mb-6 md:mb-8', className)}>
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1.5">
                         {t('home.popularCategories.title')}
@@ -78,7 +83,7 @@ export const PopularCategoriesSection = () => {
     if (!categories.length) return null;
 
     return (
-        <div className="mb-6 md:mb-8">
+        <div className={cn('mb-6 md:mb-8', className)}>
             <div className="mb-8 text-center">
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1.5">
                     {t('home.popularCategories.title')}
@@ -114,9 +119,9 @@ export const PopularCategoriesSection = () => {
                                 to={`/masters?category=${cat.slug}${citySlug ? `&city=${citySlug}` : ''}`}
                                 className={cn(
                                     'group flex flex-col items-center justify-center gap-1.5 sm:gap-2 lg:gap-3 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 h-full min-h-0',
-                                    'bg-white/95 shadow-md shadow-black/5 dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20',
-                                    'hover:-translate-y-1 hover:shadow-lg hover:shadow-black/8',
-                                    'transition-all duration-300 cursor-pointer'
+                                    'bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:border-white/[0.08] dark:bg-white/[0.06] dark:shadow-lg dark:shadow-black/20',
+                                    'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
+                                    'transition duration-300 cursor-pointer'
                                 )}
                             >
                                 <div

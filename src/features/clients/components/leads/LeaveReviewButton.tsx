@@ -30,7 +30,7 @@ export default function LeaveReviewButton({
     <Button
       size="sm"
       onClick={() => onOpenModal(lead)}
-      className="border-0 bg-amber-600 text-white font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
+      className="border-0 bg-amber-600 text-white font-semibold shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
     >
       {t('reviews.leaveReview')}
     </Button>

@@ -39,9 +39,10 @@ export function shouldBustHttpCacheForPublicGetPath(pathWithoutQuery: string): b
 }
 
 export const publicCachePolicy = {
-  /** RTK: список фильтров реже пересобирается в prod */
-  mastersFiltersKeepUnusedDataFor: isProductionBuild ? 300 : 120,
+  /** RTK: список фильтров — TTL кэша */
+  mastersFiltersKeepUnusedDataFor: isProductionBuild ? 120 : 60,
   mastersPopularKeepUnusedDataFor: isProductionBuild ? 300 : 60,
-  mastersFiltersRefetchOnFocus: !isProductionBuild,
+  mastersFiltersPollingInterval: 120_000,
+  mastersFiltersRefetchOnFocus: true,
   mastersPopularRefetchOnFocus: !isProductionBuild,
 } as const;

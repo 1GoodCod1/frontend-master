@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Wallet, Building2, ArrowLeft } from 'lucide-react';
 import { usePaymentOptionsPage } from '@/hooks/payments';
@@ -71,12 +70,7 @@ export default function PaymentOptionsPage() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="container max-w-4xl mx-auto py-6 md:py-8 px-4"
-    >
+    <div className="mh-page-enter container max-w-4xl mx-auto py-6 md:py-8 px-4">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Button variant="ghost" size="sm" asChild className="self-start">
@@ -179,6 +173,6 @@ export default function PaymentOptionsPage() {
           )}
         </DialogContent>
       </Dialog>
-    </motion.div>
+    </div>
   );
 }

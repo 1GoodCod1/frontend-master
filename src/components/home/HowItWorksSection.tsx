@@ -47,7 +47,7 @@ export const HowItWorksSection = () => {
               'relative flex flex-col items-center text-center px-2 py-3 sm:px-4 sm:py-5 md:px-5 md:py-6 rounded-lg sm:rounded-xl border-0 min-w-0',
               'bg-card shadow-md shadow-black/5',
               'dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
-              'transition-all duration-250 hover:shadow-lg',
+              'transition duration-250 hover:shadow-lg',
               'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
               'hover:-translate-y-0.5'
             )}

@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   Search,
   UserPlus,
@@ -44,13 +43,11 @@ function StepCard({
   index: number;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ delay: index * 0.08, duration: 0.35 }}
+    <div
+      className="mh-page-enter"
+      style={{ animationDelay: `${index * 80}ms` }}
     >
-      <Card className="h-full text-center border-border transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-primary/30">
+      <Card className="h-full text-center border-border transition duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-primary/30">
         <CardContent className="p-6">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-4">
             <Icon className="h-10 w-10" />
@@ -63,7 +60,7 @@ function StepCard({
           </p>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }
 
@@ -77,12 +74,7 @@ export default function HowItWorksPage() {
         description={t('howItWorks.subtitle')}
         keywords="как работает Master-Hub, найти мастера Moldova"
       />
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="container max-w-5xl mx-auto py-8 md:py-12 px-4"
-    >
+      <div className="mh-page-enter container max-w-5xl mx-auto py-8 md:py-12 px-4">
       <div className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
           {t('howItWorks.title')}
@@ -130,13 +122,7 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ delay: 0.1, duration: 0.35 }}
-        className="mt-12 rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-8 text-center"
-      >
+      <div className="mh-page-enter mt-12 rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-8 text-center">
         <h3 className="text-xl font-bold mb-3 tracking-tight text-foreground">
           {t('howItWorks.ready.title')}
         </h3>
@@ -149,8 +135,8 @@ export default function HowItWorksPage() {
             <ArrowRight className="h-4 w-4" />
           </RouterLink>
         </Button>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
     </>
   );
 }

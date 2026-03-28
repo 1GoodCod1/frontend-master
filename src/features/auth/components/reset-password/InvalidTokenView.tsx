@@ -21,14 +21,14 @@ export default function InvalidTokenView() {
       <div className="flex flex-col gap-4">
         <RouterLink
           to="/forgot-password"
-          className="inline-flex w-full items-center justify-center rounded-lg h-12 px-5 py-2 text-sm font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
+          className="inline-flex w-full items-center justify-center rounded-lg h-12 px-5 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
         >
           {t('auth.forgotPassword.title')}
         </RouterLink>
         <div className="text-center">
           <RouterLink
             to="/login"
-            className="inline-flex items-center justify-center rounded-lg h-11 px-5 py-2 text-sm font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
+            className="inline-flex items-center justify-center rounded-lg h-11 px-5 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
           >
             {t('auth.login.title')}
           </RouterLink>

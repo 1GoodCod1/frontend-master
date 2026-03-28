@@ -9,7 +9,9 @@ if (typeof window !== 'undefined') {
     now = Date.now();
     listeners.forEach((cb) => cb());
   }, intervalMs);
-  if (id.unref) id.unref();
+  // id.unref() is Node.js-only and a no-op in browsers — use pagehide to release
+  // the interval so the browser can garbage-collect and allow CPU idle states.
+  window.addEventListener('pagehide', () => clearInterval(id), { once: true });
 }
 
 function subscribe(cb: () => void) {

@@ -82,7 +82,7 @@ export default function FilesPage() {
         <PageHeader title={t('files.title')} subtitle={t('files.subtitle')} />
       </div>
 
-      <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+      <Card className="mb-6 overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
         <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-blue-500/10 p-2 text-blue-600 dark:text-blue-500">
@@ -93,7 +93,7 @@ export default function FilesPage() {
               <p className="mt-0.5 text-sm text-muted-foreground">{t('files.uploadSubtitle')}</p>
             </div>
           </div>
-          <Button asChild disabled={up.isLoading || reached || !isVerified} className="border-0 font-semibold bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500">
+          <Button asChild disabled={up.isLoading || reached || !isVerified} className="border-0 font-semibold bg-amber-600 text-white shadow-md transition hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500">
             <label className="flex cursor-pointer items-center gap-2">
               <CloudUpload className="size-4" />
               {!isVerified
@@ -122,7 +122,7 @@ export default function FilesPage() {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
         <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-500">

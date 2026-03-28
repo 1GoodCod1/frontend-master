@@ -21,7 +21,7 @@ export default function RoleTabs({ value, onChange }: RoleTabsProps) {
         type="button"
         onClick={() => onChange('CLIENT')}
         className={cn(
-          'flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-0 py-2.5 text-[0.82rem] font-medium transition-all',
+          'flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-0 py-2.5 text-[0.82rem] font-medium transition',
           value === 0
             ? 'bg-white text-[#f97316] font-bold shadow-[0_1px_6px_rgba(0,0,0,0.15)] dark:bg-[#252525] dark:text-[#f97316]'
             : 'bg-transparent text-muted-foreground'
@@ -34,7 +34,7 @@ export default function RoleTabs({ value, onChange }: RoleTabsProps) {
         type="button"
         onClick={() => onChange('MASTER')}
         className={cn(
-          'flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-0 py-2.5 text-[0.82rem] font-medium transition-all',
+          'flex flex-1 items-center justify-center gap-1.5 rounded-[10px] px-0 py-2.5 text-[0.82rem] font-medium transition',
           value === 1
             ? 'bg-white text-[#f97316] font-bold shadow-[0_1px_6px_rgba(0,0,0,0.15)] dark:bg-[#252525] dark:text-[#f97316]'
             : 'bg-transparent text-muted-foreground'

@@ -75,7 +75,7 @@ export function AccountDataSection() {
           variant="outline"
           onClick={handleExport}
           disabled={isExporting}
-          className="gap-2 rounded-xl border-amber-500/30 text-amber-600 bg-amber-500/5 hover:!bg-amber-600 hover:!text-white hover:!border-amber-600 shadow-sm transition-all font-semibold"
+          className="gap-2 rounded-xl border-amber-500/30 text-amber-600 bg-amber-500/5 hover:!bg-amber-600 hover:!text-white hover:!border-amber-600 shadow-sm transition font-semibold"
         >
           {isExporting ? (
             <Loader2 className="size-4 animate-spin" />
@@ -98,7 +98,7 @@ export function AccountDataSection() {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="gap-2 rounded-xl border-destructive/30 text-destructive bg-destructive/5 hover:!bg-red-500 hover:!text-white hover:!border-red-500 dark:hover:!bg-red-600 transition-all shadow-sm font-semibold">
+            <Button variant="outline" className="gap-2 rounded-xl border-destructive/30 text-destructive bg-destructive/5 hover:!bg-red-500 hover:!text-white hover:!border-red-500 dark:hover:!bg-red-600 transition shadow-sm font-semibold">
               <Trash2 className="size-4" />
               {t('security.deleteAccountButton')}
             </Button>
@@ -129,7 +129,7 @@ export function AccountDataSection() {
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
                 placeholder="DELETE"
-                className="w-full h-12 text-center text-lg tracking-[0.2em] font-bold rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] px-3 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500/30 transition-all"
+                className="w-full h-12 text-center text-lg tracking-[0.2em] font-bold rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] px-3 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500/30 transition"
               />
             </div>
 
@@ -140,7 +140,7 @@ export function AccountDataSection() {
               <AlertDialogAction
                 onClick={handleDelete}
                 disabled={confirmText !== 'DELETE' || isDeleting}
-                className="flex-1 rounded-xl h-11 bg-red-600 text-white font-semibold shadow-lg shadow-red-500/20 hover:bg-red-700 hover:shadow-xl dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 disabled:shadow-none transition-all"
+                className="flex-1 rounded-xl h-11 bg-red-600 text-white font-semibold shadow-lg shadow-red-500/20 hover:bg-red-700 hover:shadow-xl dark:bg-red-600 dark:hover:bg-red-700 disabled:opacity-50 disabled:shadow-none transition"
               >
                 {isDeleting ? (
                   <Loader2 className="mr-2 size-5 animate-spin" />

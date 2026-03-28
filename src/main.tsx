@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from '@/app/store';
 import { App } from '@/App';
 import { env } from '@/services/env';
-import '@/i18n';
+import { loadExtendedTranslations } from '@/i18n';
 import { AppProviders } from '@/app/AppProviders';
 import '@/styles/index.css';
 import { bootstrapAuth } from '@/features/auth/bootstrap';
@@ -14,7 +14,6 @@ import { hasAnalyticsConsent } from '@/features/cookie-consent/storage';
 import { registerSW } from 'virtual:pwa-register';
 import { Toaster } from 'react-hot-toast';
 
-// Preconnect to API for faster first request
 try {
   const apiOrigin = new URL(env.apiUrl).origin;
   if (!document.querySelector(`link[rel="preconnect"][href="${apiOrigin}"]`)) {
@@ -28,30 +27,37 @@ try {
   // ignore invalid API URL
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <AppProviders>
-        <App />
-        <Toaster position="top-right" />
-      </AppProviders>
-    </Provider>
-  </React.StrictMode>
-);
+void loadExtendedTranslations()
+  .then(() => {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <AppProviders>
+          <App />
+          <Toaster position="top-right" />
+        </AppProviders>
+      </Provider>
+    </React.StrictMode>,
+  );
 
-// Run auth bootstrap in background (refresh token if present)
-void bootstrapAuth(store);
+  void bootstrapAuth(store);
 
-// Capture UTM params and track visits (respects cookie consent)
-initTracking(hasAnalyticsConsent());
+  initTracking(hasAnalyticsConsent());
+  // Collect Core Web Vitals (CLS, INP, LCP, FCP, TTFB)
+  reportWebVitals();
 
-// Collect Core Web Vitals (CLS, INP, LCP, FCP, TTFB)
-reportWebVitals();
-
-// Register service worker for PWA (offline, install)
-registerSW({
-  immediate: true,
-  onOfflineReady() {
-    console.warn('App ready to work offline');
-  },
-});
+  registerSW({
+    immediate: true,
+    onOfflineReady() {
+      console.warn('App ready to work offline');
+    },
+  });
+  })
+  .catch((err) => {
+    console.error('Failed to load translations', err);
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+      <div style={{ padding: '2rem', fontFamily: 'system-ui' }}>
+        <p>Не удалось загрузить переводы. Обновите страницу.</p>
+      </div>,
+    );
+  });

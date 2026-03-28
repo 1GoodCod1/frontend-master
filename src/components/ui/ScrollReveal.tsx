@@ -1,5 +1,6 @@
 import { motion, type Variants } from 'framer-motion';
 import { type ReactNode } from 'react';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 
 interface ScrollRevealProps {
     children: ReactNode;
@@ -55,7 +56,12 @@ export function ScrollReveal({
     threshold = 0.15,
     once = true,
 }: ScrollRevealProps) {
+    const reduceMotion = useReducedMotionPreference();
     const variants = getVariants(direction, distance);
+
+    if (reduceMotion) {
+        return <div className={className}>{children}</div>;
+    }
 
     return (
         <motion.div

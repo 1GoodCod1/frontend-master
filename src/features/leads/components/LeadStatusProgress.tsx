@@ -60,7 +60,7 @@ export function LeadStatusProgress({ status, className, compact = false }: LeadS
                             <div className="flex flex-1 min-w-0 justify-center">
                                 <div
                                     className={cn(
-                                        'flex items-center justify-center rounded-full transition-all duration-300 shrink-0 ring-2 ring-transparent',
+                                        'flex items-center justify-center rounded-full transition duration-300 shrink-0 ring-2 ring-transparent',
                                         compact ? 'h-7 w-7' : 'h-9 w-9',
                                         isCompleted && 'bg-amber-500 text-white ring-amber-500/30 dark:ring-amber-500/20',
                                         isCurrent && 'bg-amber-500 text-white ring-4 ring-amber-500/30 dark:ring-amber-500/25',
@@ -77,7 +77,7 @@ export function LeadStatusProgress({ status, className, compact = false }: LeadS
                             {!isLast && (
                                 <div
                                     className={cn(
-                                        'flex-1 min-w-[32px] max-w-[72px] h-1 rounded-full transition-all duration-500 mx-1',
+                                        'flex-1 min-w-[32px] max-w-[72px] h-1 rounded-full transition duration-500 mx-1',
                                         lineActive
                                             ? 'bg-amber-500 dark:bg-amber-500/90'
                                             : 'bg-slate-200 dark:bg-white/10',

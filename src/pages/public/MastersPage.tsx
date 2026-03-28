@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { RecentlyViewed } from '@/components/home/recommendations/RecentlyViewed';
 import { useMastersPage } from '@/features/masters/hooks';
@@ -57,12 +56,7 @@ export default function MastersPage() {
         description={t('masters.subtitle')}
         keywords={t('home.seoKeywords')}
       />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className="container max-w-7xl mx-auto py-3 sm:py-5 md:py-6 lg:py-8 px-3 sm:px-4"
-      >
+      <div className="mh-page-enter container max-w-7xl mx-auto py-3 sm:py-5 md:py-6 lg:py-8 px-3 sm:px-4">
         <MastersPageHeader
           viewMode={viewMode}
           onViewModeChange={setViewMode}
@@ -119,7 +113,7 @@ export default function MastersPage() {
             onNext={() => setQuery((s) => ({ ...s, page: s.page + 1 }))}
           />
         )}
-      </motion.div>
+      </div>
     </>
   );
 }

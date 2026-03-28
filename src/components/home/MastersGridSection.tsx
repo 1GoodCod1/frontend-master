@@ -19,11 +19,12 @@ interface MastersGridSectionProps {
   horizontalScroll?: boolean;
   sectionBg?: boolean;
   sectionBadge?: 'popular' | 'new';
+  className?: string;
 }
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl border border-border p-4 space-y-3">
+    <div className="rounded-xl border border-gray-200/80 bg-[#F9FAFB] shadow-sm p-4 space-y-3 dark:border-white/[0.08] dark:bg-[hsl(43,16%,12%)]">
       <Skeleton className="h-14 w-14 rounded-full" />
       <Skeleton className="h-6 w-[70%]" />
       <Skeleton className="h-5 w-[50%]" />
@@ -50,13 +51,14 @@ export const MastersGridSection = ({
   iconBgColor,
   horizontalScroll = false,
   sectionBadge,
+  className,
 }: MastersGridSectionProps) => {
   const { t } = useTranslation();
   const list = masters.slice(0, horizontalScroll ? 12 : 4);
   const skeletonCount = horizontalScroll ? 6 : 4;
 
   return (
-    <div className="mb-6 md:mb-8">
+    <div className={cn('mb-6 md:mb-8', className)}>
       <div className="mb-4">
         <div className="flex flex-row items-start gap-3">
           <div

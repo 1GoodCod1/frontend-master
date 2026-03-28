@@ -25,7 +25,7 @@ export default function NotificationsSettingsPage() {
       </div>
 
       {!isPremium ? (
-        <Card className="overflow-hidden border-amber-200/60 dark:border-amber-600/30 bg-amber-500/5 dark:bg-amber-500/10 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none transition-all duration-300">
+        <Card className="overflow-hidden border-amber-200/60 dark:border-amber-600/30 bg-amber-500/5 dark:bg-amber-500/10 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none transition duration-300">
           <CardContent className="flex flex-col items-center gap-4 py-10 text-center sm:flex-row sm:text-left">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-amber-500/20">
               <Crown className="size-7 text-amber-600 dark:text-amber-400" />
@@ -37,7 +37,7 @@ export default function NotificationsSettingsPage() {
               <p className="text-sm text-muted-foreground">
                 {t('notificationSettings.premiumRequiredDesc')}
               </p>
-              <Button asChild className="mt-4 border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500">
+              <Button asChild className="mt-4 border-0 bg-amber-600 text-white shadow-md transition hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500">
                 <RouterLink to="/plans">{t('notificationSettings.viewPlans')}</RouterLink>
               </Button>
             </div>

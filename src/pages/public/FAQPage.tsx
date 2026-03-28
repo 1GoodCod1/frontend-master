@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Users, Wrench, HelpCircle } from 'lucide-react';
 import {
   Accordion,
@@ -62,12 +61,7 @@ export default function FAQPage() {
         description={t('faq.subtitle')}
         keywords="FAQ Master-Hub, вопросы, Moldova мастера"
       />
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="container max-w-3xl mx-auto py-6 md:py-8 px-4"
-    >
+      <div className="mh-page-enter container max-w-3xl mx-auto py-6 md:py-8 px-4">
       <PageHeader title={t('faq.title')} subtitle={t('faq.subtitle')} />
 
       <div className="space-y-10">
@@ -123,7 +117,7 @@ export default function FAQPage() {
           );
         })}
       </div>
-    </motion.div>
+    </div>
     </>
   );
 }

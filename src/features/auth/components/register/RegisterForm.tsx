@@ -16,7 +16,6 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { AnimatePresence, motion } from 'framer-motion';
 
 interface CityOption {
   id?: string;
@@ -219,7 +218,7 @@ export default function RegisterForm({
             <div
               key={i}
               className={cn(
-                'h-1 flex-1 rounded-full transition-all duration-300 ease-out',
+                'h-1 flex-1 rounded-full transition duration-300 ease-out',
                 i <= step ? 'bg-[#f97316] shadow-[0_0_12px_rgba(249,115,22,0.35)]' : 'bg-muted'
               )}
             />
@@ -230,15 +229,10 @@ export default function RegisterForm({
         </p>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`${step}-${isClient ? 'c' : 'm'}`}
-          initial={{ opacity: 0, x: 14 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -14 }}
-          transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex min-h-[1px] flex-col gap-3.5"
-        >
+      <div
+        key={`${step}-${isClient ? 'c' : 'm'}`}
+        className="mh-view-swap flex min-h-[1px] flex-col gap-3.5"
+      >
           {showCredentials && (
             <>
               <AuthFormField
@@ -263,7 +257,7 @@ export default function RegisterForm({
                         <TooltipTrigger asChild>
                           <button
                             type="button"
-                            className="flex shrink-0 items-center justify-center rounded-full p-1 bg-amber-100 text-amber-700 ring-1 ring-amber-200/60 transition-all hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:ring-amber-700/60 dark:hover:bg-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-[#111111]"
+                            className="flex shrink-0 items-center justify-center rounded-full p-1 bg-amber-100 text-amber-700 ring-1 ring-amber-200/60 transition hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:ring-amber-700/60 dark:hover:bg-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-[#111111]"
                             aria-label={t('auth.register.passwordHint')}
                           >
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -366,8 +360,7 @@ export default function RegisterForm({
               {legalConsentBlock}
             </>
           )}
-        </motion.div>
-      </AnimatePresence>
+      </div>
 
       <div className="flex flex-col gap-2.5 pt-0.5">
         <div className="flex gap-2">

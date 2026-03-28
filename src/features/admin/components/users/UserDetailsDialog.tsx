@@ -99,8 +99,8 @@ export default function UserDetailsDialog({
   const tariffUpper = String(effectiveTariff).toUpperCase();
 
   // Premium card styling without ugly black borders
-  const blockClass = "group flex flex-col justify-center rounded-2xl bg-slate-50/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
-  const rowBlockClass = "group flex items-center gap-4 rounded-2xl bg-slate-50/80 p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
+  const blockClass = "group flex flex-col justify-center rounded-2xl bg-slate-50/80 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
+  const rowBlockClass = "group flex items-center gap-4 rounded-2xl bg-slate-50/80 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
@@ -428,7 +428,7 @@ export default function UserDetailsDialog({
             <Button
               type="button"
               onClick={onVerify}
-              className={`w-full sm:w-auto font-medium shadow-sm transition-all ${
+              className={`w-full sm:w-auto font-medium shadow-sm transition ${
                 user?.isVerified
                   ? 'border border-amber-600/30 bg-white text-amber-700 hover:bg-amber-50 dark:border-amber-500/40 dark:bg-transparent dark:text-amber-400 dark:hover:bg-amber-500/10'
                   : 'bg-amber-600 text-white hover:bg-amber-700 hover:shadow-md dark:bg-amber-600 dark:hover:bg-amber-500'

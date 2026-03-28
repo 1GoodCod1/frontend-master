@@ -47,7 +47,7 @@ export function LeadFilesGallery({ files, sectionHeader }: LeadFilesGalleryProps
 
   if (files.length === 0) {
     return (
-      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
         {sectionHeader(
           <Paperclip className="size-5" />,
           t('leads.files'),
@@ -64,7 +64,7 @@ export function LeadFilesGallery({ files, sectionHeader }: LeadFilesGalleryProps
   }
 
   return (
-    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
       {sectionHeader(
         <Paperclip className="size-5" />,
         t('leads.files'),
@@ -82,7 +82,7 @@ export function LeadFilesGallery({ files, sectionHeader }: LeadFilesGalleryProps
                 return (
                   <Card
                     key={file?.path ?? item?.id ?? index}
-                    className="overflow-hidden border border-slate-200 dark:border-white/[0.08] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-amber-500/40 cursor-pointer touch-manipulation"
+                    className="overflow-hidden border border-slate-200 dark:border-white/[0.08] transition duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-amber-500/40 cursor-pointer touch-manipulation"
                     onClick={() => openLightbox(index)}
                   >
                     <LazyImage
@@ -107,7 +107,7 @@ export function LeadFilesGallery({ files, sectionHeader }: LeadFilesGalleryProps
                 return (
                   <Card
                     key={file?.path ?? item?.id}
-                    className="overflow-hidden border border-slate-200 dark:border-white/[0.08] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-amber-500/40 cursor-pointer touch-manipulation"
+                    className="overflow-hidden border border-slate-200 dark:border-white/[0.08] transition duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-amber-500/40 cursor-pointer touch-manipulation"
                     onClick={() => window.open(url, '_blank')}
                   >
                     <div className="flex h-32 sm:h-36 items-center justify-center bg-slate-50 dark:bg-muted/50">

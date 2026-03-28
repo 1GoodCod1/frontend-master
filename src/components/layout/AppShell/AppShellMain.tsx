@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { OTHER_PUBLIC_PATHS, paths } from '@/constants/routes';
 import { cn } from '@/lib/utils';
 import { Footer } from '../Footer';
@@ -22,6 +23,7 @@ export function AppShellMain({
   isDashboardOrAdmin,
   isHomePage,
 }: Props) {
+  const reduceMotion = useReducedMotionPreference();
   const { pathname } = useLocation();
   const masterPrefix = `${paths.masters}/`;
   const isMasterDetailsPage =
@@ -46,10 +48,10 @@ export function AppShellMain({
     <>
       {!isLoggingOut && (
         <motion.main
-          initial={{ opacity: 0 }}
+          initial={reduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: reduceMotion ? 0 : 0.2 }}
           className={cn(
             'flex min-h-[calc(100dvh-3.5rem)] min-w-0 flex-col overflow-x-hidden transition-colors',
             isPublicPage || isAuthPage ? 'bg-[hsl(var(--background))] dark:bg-[#171510]' : 'bg-background',

@@ -22,7 +22,7 @@ export function HeroCategoryPills({
   return (
     <div
       className={cn(
-        'rounded-xl p-4 transition-all duration-500',
+        'rounded-xl p-4 transition duration-500',
         isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white/40 border border-gray-200/60'
       )}
     >
@@ -38,7 +38,7 @@ export function HeroCategoryPills({
               key={cat.id}
               to={`/masters?category=${cat.slug}${effectiveCityId ? `&city=${getCitySlugForUrl(effectiveCityId)}` : ''}`}
               className={cn(
-                'flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs transition-all duration-200',
+                'flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs transition duration-200',
                 'hover:text-primary',
                 isDark
                   ? 'bg-white/[0.04] border border-white/8 hover:bg-primary/10 hover:border-primary/30'

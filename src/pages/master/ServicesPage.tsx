@@ -247,7 +247,7 @@ export default function ServicesPage() {
           {displayList.map((service, idx) => (
             <Card
               key={idx}
-              className="overflow-hidden border-2 border-border/80 transition-all hover:border-emerald-500/40 hover:shadow-lg dark:hover:border-emerald-500/30"
+              className="overflow-hidden border-2 border-border/80 transition hover:border-emerald-500/40 hover:shadow-lg dark:hover:border-emerald-500/30"
             >
               <CardContent className="p-0">
                 {editingIndex === idx && formService ? (

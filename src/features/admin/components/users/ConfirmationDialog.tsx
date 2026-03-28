@@ -174,7 +174,7 @@ export default function ConfirmationDialog({
             type="button"
             variant={confirmVariant}
             className={cn(
-              'min-w-[7rem] shadow-md transition-all hover:shadow-lg',
+              'min-w-[7rem] shadow-md transition hover:shadow-lg',
               confirmVariant === 'default' && confirmClassName && 'border-0 text-white',
               confirmClassName,
             )}

@@ -66,7 +66,7 @@ export default function ClientBookingsPage() {
           size="sm"
           onClick={() => setStatusFilter('ALL')}
           className={cn(
-            "rounded-xl transition-all font-medium",
+            "rounded-xl transition font-medium",
             statusFilter === 'ALL' 
               ? "bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-500/20" 
               : "border-black/5 dark:border-white/5 hover:border-amber-500/30 hover:text-amber-600 hover:bg-amber-500/5 shadow-sm"
@@ -81,7 +81,7 @@ export default function ClientBookingsPage() {
             size="sm"
             onClick={() => setStatusFilter(s)}
             className={cn(
-              "rounded-xl transition-all font-medium",
+              "rounded-xl transition font-medium",
               statusFilter === s 
                 ? "bg-amber-600 hover:bg-amber-700 text-white shadow-lg shadow-amber-500/20" 
                 : "border-black/5 dark:border-white/5 hover:border-amber-500/30 hover:text-amber-600 hover:bg-amber-500/5 shadow-sm"
@@ -93,7 +93,7 @@ export default function ClientBookingsPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <Card className="group relative overflow-hidden rounded-[2rem] border border-black/5 bg-card shadow-sm transition-all duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30 text-center">
+        <Card className="group relative overflow-hidden rounded-[2rem] border border-black/5 bg-card shadow-sm transition duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none z-0" />
           <CardContent className="relative z-10 p-12 flex flex-col items-center">
             <div className="mb-6 flex size-20 items-center justify-center rounded-[1.5rem] bg-amber-50 dark:bg-amber-500/10 group-hover:scale-110 transition-transform duration-500">
@@ -105,7 +105,7 @@ export default function ClientBookingsPage() {
             <p className="mb-8 text-sm text-muted-foreground/80">
               {t('clientDashboard.noBookingsSubtitle')}
             </p>
-            <Button asChild className="rounded-xl px-6 bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:bg-amber-700 hover:-translate-y-0.5 transition-all text-sm font-semibold h-11">
+            <Button asChild className="rounded-xl px-6 bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:bg-amber-700 hover:-translate-y-0.5 transition text-sm font-semibold h-11">
               <Link to="/masters">
                 <Search className="mr-2 size-4" />
                 {t('clientDashboard.browseMasters')}
@@ -124,7 +124,7 @@ export default function ClientBookingsPage() {
             const isPending = status === 'PENDING';
 
             return (
-              <Card key={booking.id} className="group overflow-hidden rounded-[1.5rem] border border-black/5 dark:border-white/5 bg-card shadow-sm transition-all duration-300 hover:border-amber-500/30 hover:shadow-md dark:bg-card/40 dark:hover:border-amber-500/30">
+              <Card key={booking.id} className="group overflow-hidden rounded-[1.5rem] border border-black/5 dark:border-white/5 bg-card shadow-sm transition duration-300 hover:border-amber-500/30 hover:shadow-md dark:bg-card/40 dark:hover:border-amber-500/30">
                 <CardContent className="p-5">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     {/* Left: Info */}

@@ -32,14 +32,14 @@ export default function ResetPasswordForm({
         type="submit"
         size="lg"
         disabled={isSubmitting}
-        className="w-full py-6 text-base font-semibold rounded-lg shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
+        className="w-full py-6 text-base font-semibold rounded-lg shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
       >
         {isSubmitting ? '...' : t('auth.resetPassword.submit')}
       </Button>
       <div className="mt-6 border-t border-border dark:border-white/[0.08] pt-6 text-center">
         <RouterLink
           to="/login"
-          className="inline-flex items-center justify-center rounded-lg h-11 px-5 py-2 text-sm font-semibold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
+          className="inline-flex items-center justify-center rounded-lg h-11 px-5 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-700 dark:text-white dark:hover:bg-amber-600"
         >
           {t('auth.login.title')}
         </RouterLink>

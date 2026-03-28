@@ -18,7 +18,7 @@ export default function FavoritesEmptyState() {
       <p className="mx-auto max-w-sm text-sm text-muted-foreground">
         {t('favorites.noFavoritesDescription')}
       </p>
-      <Button asChild size="default" className="mt-6 rounded-xl bg-amber-600 text-white shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700">
+      <Button asChild size="default" className="mt-6 rounded-xl bg-amber-600 text-white shadow-lg shadow-amber-500/20 transition hover:scale-[1.02] hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700">
         <RouterLink to="/masters">{t('clientDashboard.browseMasters')}</RouterLink>
       </Button>
     </Card>

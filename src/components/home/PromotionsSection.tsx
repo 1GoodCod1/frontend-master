@@ -63,7 +63,7 @@ export function PromotionsSection() {
                         return (
                             <ScrollReveal key={promo.id} delay={idx * 0.06} duration={0.4}>
                                 <Card
-                                    className="group relative overflow-hidden border-border transition-all duration-300 hover:shadow-lg hover:border-rose-500/50 cursor-pointer"
+                                    className="group relative overflow-hidden border-border transition duration-300 hover:shadow-lg hover:border-rose-500/50 cursor-pointer"
                                     onClick={() => {
                                         if (master?.slug || master?.id) {
                                             nav(`/masters/${master.slug || master.id}`);
@@ -128,7 +128,7 @@ export function PromotionsSection() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="flex items-center gap-1 text-xs font-medium text-rose-600 dark:text-rose-400 group-hover:gap-2 transition-all">
+                                            <div className="flex items-center gap-1 text-xs font-medium text-rose-600 dark:text-rose-400 group-hover:gap-2 transition">
                                                 {t('common.details', 'Подробнее')}
                                                 <ArrowRight className="size-3.5" />
                                             </div>

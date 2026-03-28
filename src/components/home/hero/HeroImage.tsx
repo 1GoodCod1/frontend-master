@@ -14,7 +14,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
   return (
     <div className="relative flex items-center justify-center order-first lg:order-none mt-6 sm:mt-8 lg:mt-16">
       <div
-        className="absolute inset-0 rounded-2xl sm:rounded-[2rem] lg:rounded-[3rem] blur-2xl sm:blur-3xl transition-all duration-500"
+        className="absolute inset-0 rounded-2xl sm:rounded-[2rem] lg:rounded-[3rem] blur-2xl sm:blur-3xl transition duration-500"
         style={{
           background: isDark
             ? 'radial-gradient(ellipse, hsl(var(--primary)/0.08), transparent 70%)'
@@ -26,14 +26,14 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
         {/* Main card */}
         <div
           className={cn(
-            'relative rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border overflow-hidden transition-all duration-500',
+            'relative rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border overflow-hidden transition duration-500',
             isDark
               ? 'bg-[#1a1a1a] border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.4)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.5)]'
               : 'bg-card border-gray-200 shadow-lg shadow-black/5'
           )}
         >
           {/* Card top bar */}
-          <div className="flex items-center justify-between px-3 sm:px-4 md:px-5 py-2 sm:py-3 transition-all duration-500">
+          <div className="flex items-center justify-between px-3 sm:px-4 md:px-5 py-2 sm:py-3 transition duration-500">
             <div className="flex gap-1 sm:gap-1.5">
               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500" />
               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-400" />
@@ -41,7 +41,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
             </div>
             <div
               className={cn(
-                'flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs transition-all duration-500',
+                'flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs transition duration-500',
                 isDark ? 'bg-white/5 text-white/40' : 'bg-primary/10 text-foreground/80'
               )}
             >
@@ -56,7 +56,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
           {/* Image area */}
           <div
             className={cn(
-              'relative h-48 sm:h-64 md:h-72 lg:h-80 xl:h-[22rem] transition-all duration-500',
+              'relative h-48 sm:h-64 md:h-72 lg:h-80 xl:h-[22rem] transition duration-500',
               isDark ? 'bg-[#1a1a1a]' : 'bg-muted/50'
             )}
           >
@@ -69,7 +69,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
               draggable={false}
             />
             <div
-              className="absolute inset-0 transition-all duration-500"
+              className="absolute inset-0 transition duration-500"
               style={{
                 background: isDark
                   ? 'linear-gradient(to top, #1a1a1a 10%, transparent 60%)'
@@ -79,7 +79,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
             {/* Floating badge */}
             <div
               className={cn(
-                'absolute top-2 right-2 sm:top-3 sm:right-3 lg:top-4 lg:right-4 flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl backdrop-blur-md transition-all duration-500',
+                'absolute top-2 right-2 sm:top-3 sm:right-3 lg:top-4 lg:right-4 flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl backdrop-blur-md transition duration-500',
                 isDark ? 'bg-[#1a1a1a]/90' : 'bg-card/90'
               )}
             >
@@ -101,7 +101,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
         {/* Floating stat cards — visible from md */}
         <div
           className={cn(
-            'absolute -left-2 sm:-left-4 lg:-left-8 top-12 sm:top-16 px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl shadow-xl hidden md:block transition-all duration-500',
+            'absolute -left-2 sm:-left-4 lg:-left-8 top-12 sm:top-16 px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl shadow-xl hidden md:block transition duration-500',
             isDark ? 'bg-[#1a1a1a] border border-white/[0.06] shadow-lg shadow-black/30' : 'bg-white/95 shadow-md shadow-black/5'
           )}
         >
@@ -118,7 +118,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
 
         <div
           className={cn(
-            'absolute -right-2 sm:-right-4 lg:-right-6 bottom-4 sm:bottom-6 px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl shadow-xl hidden md:block transition-all duration-500',
+            'absolute -right-2 sm:-right-4 lg:-right-6 bottom-4 sm:bottom-6 px-3 py-2 sm:px-4 sm:py-3 rounded-xl sm:rounded-2xl shadow-xl hidden md:block transition duration-500',
             isDark ? 'bg-[#1a1a1a] border border-white/[0.06] shadow-lg shadow-black/30' : 'bg-white/95 shadow-md shadow-black/5'
           )}
         >

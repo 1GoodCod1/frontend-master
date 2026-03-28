@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
@@ -59,12 +58,7 @@ export default function LoginPage() {
   return (
     <AuthLayout view="login">
       <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mx-auto w-full max-w-[360px]"
-        >
+        <div className="mh-page-enter mx-auto w-full max-w-[360px]">
           <LoginHeader />
           <Formik<LoginFormValues>
             initialValues={form.initialValues}
@@ -85,7 +79,7 @@ export default function LoginPage() {
               </form>
             )}
           </Formik>
-        </motion.div>
+        </div>
       </div>
     </AuthLayout>
   );

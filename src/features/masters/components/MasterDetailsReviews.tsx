@@ -377,7 +377,7 @@ export const MasterDetailsReviews = ({
                       </div>
                       <div className="flex-1 h-2 rounded-full bg-gray-200 dark:bg-white/10 overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-amber-500 transition-all duration-300"
+                          className="h-full rounded-full bg-amber-500 transition duration-300"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -403,7 +403,7 @@ export const MasterDetailsReviews = ({
                 return (
                   <Card
                     key={reviewId}
-                    className="border border-[#f5f4eb] dark:border-white/[0.08] transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-[#e8e6dd] dark:hover:border-amber-500/40"
+                    className="border border-[#f5f4eb] dark:border-white/[0.08] transition duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-[#e8e6dd] dark:hover:border-amber-500/40"
                   >
                     <CardContent className="p-4 space-y-3">
                       <div className="flex flex-wrap items-center justify-between gap-2">

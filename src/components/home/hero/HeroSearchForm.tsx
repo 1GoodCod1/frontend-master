@@ -41,7 +41,7 @@ export function HeroSearchForm({
     <form onSubmit={onSubmit}>
       <div
         className={cn(
-          'flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl backdrop-blur-md border transition-all duration-500 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.15)]',
+          'flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl backdrop-blur-md border transition duration-500 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.15)]',
           isDark
             ? 'bg-white/[0.06] border border-white/10 shadow-lg shadow-black/20'
             : 'bg-white/90 border border-gray-200 shadow-md shadow-black/5',
@@ -91,7 +91,7 @@ export function HeroSearchForm({
         <Button
           type="submit"
           size="sm"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition duration-200 bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]"
         >
           {t('home.searchButton')} <ChevronRight size={16} />
         </Button>

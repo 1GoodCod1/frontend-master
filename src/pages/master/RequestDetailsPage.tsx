@@ -114,13 +114,13 @@ export default function RequestDetailsPage() {
           subtitle={lead?.createdAt ? formatDateTimeString(lead.createdAt as string, getLocaleFromLanguage(i18n.language)) : ''}
           actions={
             <div className="flex flex-wrap items-center gap-3">
-              <Button asChild className="gap-2 border border-slate-200 bg-white font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 hover:text-slate-900 dark:border-white/[0.08] dark:bg-transparent dark:text-amber-400 dark:hover:bg-white/[0.05]">
+              <Button asChild className="gap-2 border border-slate-200 bg-white font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-slate-900 dark:border-white/[0.08] dark:bg-transparent dark:text-amber-400 dark:hover:bg-white/[0.05]">
                 <RouterLink to="/dashboard/leads">
                   <ArrowLeft className="size-4" />
                   {t('common.back')}
                 </RouterLink>
               </Button>
-              <Button onClick={handleOpenChat} disabled={isCreatingChat} className="gap-2 border-0 font-semibold bg-amber-600 text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-lg dark:bg-amber-700 dark:hover:bg-amber-600">
+              <Button onClick={handleOpenChat} disabled={isCreatingChat} className="gap-2 border-0 font-semibold bg-amber-600 text-white shadow-md transition hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-lg dark:bg-amber-700 dark:hover:bg-amber-600">
                 {isCreatingChat ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
@@ -147,7 +147,7 @@ export default function RequestDetailsPage() {
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-6 md:gap-8">
-          <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 sticky top-6">
+          <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300 sticky top-6">
             {sectionHeader(
               <Filter className="size-5" />,
               t('leads.management'),

@@ -44,7 +44,7 @@ export function AppShellNavMobile({
               <Button
                 key={item.to}
                 variant="ghost"
-                className="justify-start rounded-lg py-6 gap-3 transition-all duration-200 hover:bg-accent/60 hover:translate-x-0.5 hover:font-semibold active:translate-x-0"
+                className="justify-start rounded-lg py-6 gap-3 transition duration-200 hover:bg-accent/60 hover:translate-x-0.5 hover:font-semibold active:translate-x-0"
                 asChild
               >
                 <RouterLink to={item.to} onClick={onClose} className="transition-colors duration-200">
@@ -58,7 +58,7 @@ export function AppShellNavMobile({
             <>
               <Button
                 variant="ghost"
-                className="justify-start rounded-lg py-6 gap-3 transition-all duration-200 dark:text-amber-400 dark:font-semibold dark:hover:text-amber-300 hover:font-semibold"
+                className="justify-start rounded-lg py-6 gap-3 transition duration-200 dark:text-amber-400 dark:font-semibold dark:hover:text-amber-300 hover:font-semibold"
                 asChild
               >
                 <RouterLink to="/login" onClick={onClose} className="transition-colors duration-200">
@@ -67,7 +67,7 @@ export function AppShellNavMobile({
                 </RouterLink>
               </Button>
               <Button
-                className="mt-2 rounded-xl gap-3 bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300 dark:shadow-[0_0_20px_rgba(251,191,36,0.25)] transition-all duration-200"
+                className="mt-2 rounded-xl gap-3 bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300 dark:shadow-[0_0_20px_rgba(251,191,36,0.25)] transition duration-200"
                 asChild
               >
                 <RouterLink to="/register" onClick={onClose} className="transition-colors duration-200">
@@ -80,7 +80,7 @@ export function AppShellNavMobile({
           {isAuthed && (
             <Button
               variant="ghost"
-              className="justify-start rounded-lg py-6 text-foreground transition-all duration-200 hover:bg-accent/60 hover:translate-x-0.5 hover:font-semibold hover:text-destructive active:translate-x-0"
+              className="justify-start rounded-lg py-6 text-foreground transition duration-200 hover:bg-accent/60 hover:translate-x-0.5 hover:font-semibold hover:text-destructive active:translate-x-0"
               onClick={() => {
                 onClose();
                 onLogout();
@@ -92,7 +92,7 @@ export function AppShellNavMobile({
           <div className="my-4 border-t border-border" />
           <Button
             variant="ghost"
-            className="justify-start rounded-lg py-6 gap-3 transition-all duration-200 hover:bg-accent/60 hover:translate-x-0.5 hover:font-semibold active:translate-x-0"
+            className="justify-start rounded-lg py-6 gap-3 transition duration-200 hover:bg-accent/60 hover:translate-x-0.5 hover:font-semibold active:translate-x-0"
             onClick={() => {
               onToggleColorMode();
               onClose();
@@ -111,7 +111,7 @@ export function AppShellNavMobile({
               <button
                 key={lang}
                 type="button"
-                className="py-1.5 text-left rounded-md transition-all duration-200 hover:bg-accent/50 hover:translate-x-0.5 hover:text-foreground hover:font-medium px-2 -mx-2"
+                className="py-1.5 text-left rounded-md transition duration-200 hover:bg-accent/50 hover:translate-x-0.5 hover:text-foreground hover:font-medium px-2 -mx-2"
                 onClick={() => {
                   onLanguageChange(lang);
                   onClose();

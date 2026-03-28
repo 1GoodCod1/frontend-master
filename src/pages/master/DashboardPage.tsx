@@ -315,7 +315,7 @@ export default function DashboardPage() {
 
           {/* Leads Funnel / Distribution */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="relative overflow-hidden border shadow-sm transition-all duration-500 border-indigo-500/20 dark:border-indigo-500/10">
+            <Card className="relative overflow-hidden border shadow-sm transition duration-500 border-indigo-500/20 dark:border-indigo-500/10">
               <div className="absolute -bottom-10 -left-10 p-24 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-3xl z-0 pointer-events-none opacity-50"></div>
               <CardHeader className="pb-2 relative z-10">
                 <CardTitle className="text-lg flex items-center gap-2.5">
@@ -343,7 +343,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="relative overflow-hidden border shadow-sm transition-all duration-500 border-amber-500/20 dark:border-amber-500/10">
+            <Card className="relative overflow-hidden border shadow-sm transition duration-500 border-amber-500/20 dark:border-amber-500/10">
               <div className="absolute -top-10 -right-10 p-24 bg-amber-500/10 dark:bg-amber-500/20 rounded-full blur-3xl z-0 pointer-events-none opacity-50"></div>
               <CardHeader className="pb-2 relative z-10">
                 <CardTitle className="text-lg flex items-center gap-2.5">
@@ -354,18 +354,18 @@ export default function DashboardPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4 space-y-3 relative z-10">
-                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition-all duration-300">
+                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition duration-300">
                   <span className="text-muted-foreground text-sm font-medium">{t('dashboard.viewsThisWeek', 'Просмотры за неделю')}</span>
                   <span className="font-black text-xl tracking-tight text-amber-600 dark:text-amber-400">{viewsThisWeek}</span>
                 </div>
-                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition-all duration-300">
+                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition duration-300">
                   <span className="text-muted-foreground text-sm font-medium">{t('dashboard.viewsThisMonth', 'Просмотры за месяц')}</span>
                   <span className="font-black text-xl tracking-tight text-amber-600 dark:text-amber-400">{viewsThisMonth}</span>
                 </div>
                 <div className="pt-3 w-full">
                   <Button
                     variant="outline"
-                    className="w-full h-11 justify-between hover:bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400 group rounded-xl shadow-sm transition-all"
+                    className="w-full h-11 justify-between hover:bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400 group rounded-xl shadow-sm transition"
                     onClick={() => setViewsHistoryOpen(true)}
                   >
                     <span className="flex items-center gap-2 font-bold tracking-tight">
@@ -389,7 +389,7 @@ export default function DashboardPage() {
 
           {/* Status Control Card */}
           <Card className={cn(
-            "relative overflow-hidden transition-all duration-500 border shadow-sm",
+            "relative overflow-hidden transition duration-500 border shadow-sm",
             isOnline
               ? "border-teal-500/20 dark:border-teal-500/10 bg-card"
               : "border-rose-500/20 dark:border-rose-500/10 bg-card"
@@ -428,7 +428,7 @@ export default function DashboardPage() {
                   onCheckedChange={handleToggleOnlineStatus}
                   disabled={isUpdatingStatus}
                   className={cn(
-                    "scale-125 transition-all",
+                    "scale-125 transition",
                     isOnline 
                       ? "data-[state=checked]:bg-teal-500 shadow-md shadow-teal-500/25" 
                       : "dark:bg-muted-foreground/30"
@@ -466,7 +466,7 @@ export default function DashboardPage() {
                 <p className="text-sm text-muted-foreground">
                   {t('dashboard.availabilityControl.premiumOnly', 'Настройки доступности (Готов взять заявку, Занят и т.д.) и лимит заявок доступны только для Premium.')}
                 </p>
-                <Button asChild className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20 transition-all rounded-xl">
+                <Button asChild className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20 transition rounded-xl">
                   <Link to="/plans" className="flex items-center justify-center gap-2">
                     <Rocket className="size-4" />
                     {t('dashboard.unlockFeature', 'Разблокировать с Premium')}

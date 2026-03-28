@@ -38,14 +38,14 @@ export function DataGridToolbar({
             size="sm"
             onClick={onExport}
             disabled={exportDisabled}
-            className="gap-1.5 border-0 bg-amber-600 text-white shadow-sm transition-all hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
+            className="gap-1.5 border-0 bg-amber-600 text-white shadow-sm transition hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
           >
             <Download className="size-4" />
             Export
           </Button>
         )}
         {onRefresh && (
-          <Button type="button" size="sm" onClick={onRefresh} className="gap-1.5 border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
+          <Button type="button" size="sm" onClick={onRefresh} className="gap-1.5 border-0 bg-amber-50 text-amber-700 shadow-sm transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40">
             <RefreshCw className="size-4" />
             Refresh
           </Button>

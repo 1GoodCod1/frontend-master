@@ -21,7 +21,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   return (
     <Card
       className={cn(
-        'relative overflow-hidden transition-all duration-250 border-slate-200 dark:border-[#2c2a24] hover:border-violet-500/30 hover:shadow-[0_4px_20px_rgba(139,92,246,0.08)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]',
+        'relative overflow-hidden transition duration-250 border-slate-200 dark:border-[#2c2a24] hover:border-violet-500/30 hover:shadow-[0_4px_20px_rgba(139,92,246,0.08)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)]',
         icon && 'border-l-4 border-l-violet-500/50',
         className
       )}

@@ -82,7 +82,7 @@ export function useAppShell() {
     (!isAuthed || (isAuthed && Boolean(role)));
 
   const navLinkBaseClass =
-    'inline-flex items-center gap-2 text-sm font-medium rounded-none px-3 py-2 h-14 transition-all duration-200';
+    'inline-flex items-center gap-2 text-sm font-medium rounded-none px-3 py-2 h-14 transition duration-200';
 
   const navLinkClass = (isActive: boolean) =>
     cn(

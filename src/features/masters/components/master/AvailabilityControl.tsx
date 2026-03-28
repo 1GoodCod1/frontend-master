@@ -80,7 +80,7 @@ export function AvailabilityControl({
 
   return (
     <Card className={cn(
-      "relative overflow-hidden transition-all duration-500 shadow-sm border",
+      "relative overflow-hidden transition duration-500 shadow-sm border",
       isAvailable
         ? "border-teal-500/20 dark:border-teal-500/10 bg-card"
         : "border-rose-500/20 dark:border-rose-500/10 bg-card"
@@ -95,7 +95,7 @@ export function AvailabilityControl({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className={cn(
-              "flex items-center justify-center size-10 rounded-xl shadow-sm transition-all duration-500 text-white shrink-0",
+              "flex items-center justify-center size-10 rounded-xl shadow-sm transition duration-500 text-white shrink-0",
               isAvailable ? "bg-teal-500 dark:bg-teal-600" : "bg-muted-foreground"
             )}>
               <Signal className="size-5" />
@@ -155,7 +155,7 @@ export function AvailabilityControl({
             disabled={isUpdating}
             onClick={() => handleStatusChange(AVAILABILITY_STATUS.AVAILABLE)}
             className={cn(
-              "flex-1 relative h-10 rounded-lg font-medium transition-all duration-300 text-sm",
+              "flex-1 relative h-10 rounded-lg font-medium transition duration-300 text-sm",
               isAvailable
                 ? "bg-teal-500 text-white shadow-sm hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -170,7 +170,7 @@ export function AvailabilityControl({
             disabled={isUpdating}
             onClick={() => handleStatusChange(AVAILABILITY_STATUS.BUSY)}
             className={cn(
-              "flex-1 relative h-10 rounded-lg font-medium transition-all duration-300 text-sm",
+              "flex-1 relative h-10 rounded-lg font-medium transition duration-300 text-sm",
               !isAvailable
                 ? "bg-rose-500 text-white shadow-sm hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -218,7 +218,7 @@ export function AvailabilityControl({
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
             <div className={cn(
-              "flex flex-1 items-center justify-between bg-background border rounded-xl px-4 h-11 sm:h-10 shadow-sm transition-all duration-300",
+              "flex flex-1 items-center justify-between bg-background border rounded-xl px-4 h-11 sm:h-10 shadow-sm transition duration-300",
               isAvailable 
                 ? "border-teal-500/30 focus-within:border-teal-500/60 focus-within:ring-1 focus-within:ring-teal-500/20 shadow-teal-500/5" 
                 : "border-rose-500/30 focus-within:border-rose-500/60 focus-within:ring-1 focus-within:ring-rose-500/20 shadow-rose-500/5"
@@ -241,7 +241,7 @@ export function AvailabilityControl({
               onClick={() => handleUpdate(status, maxLeads)}
               disabled={isUpdating || maxLeads === maxActiveLeads}
               className={cn(
-                "h-11 sm:h-10 px-6 rounded-xl text-sm font-bold transition-all duration-300 shadow-sm shrink-0 w-full sm:w-[130px]",
+                "h-11 sm:h-10 px-6 rounded-xl text-sm font-bold transition duration-300 shadow-sm shrink-0 w-full sm:w-[130px]",
                 maxLeads !== maxActiveLeads && !isUpdating
                   ? "bg-primary text-primary-foreground hover:animate-pulse shadow-primary/20"
                   : "bg-muted/50 text-muted-foreground border-transparent"

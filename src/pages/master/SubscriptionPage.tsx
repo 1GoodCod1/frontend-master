@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
     Crown,
@@ -142,12 +141,7 @@ export default function SubscriptionPage() {
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
-            className="space-y-6"
-        >
+        <div className="mh-page-enter space-y-6">
             {/* Header */}
             <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">
@@ -160,7 +154,7 @@ export default function SubscriptionPage() {
 
             {/* Current Plan Card */}
             <Card className={cn(
-                'overflow-hidden relative border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300',
+                'overflow-hidden relative border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300',
                 effectivePlan === 'VIP' && 'border-amber-200/50 dark:border-amber-600/30',
                 effectivePlan === 'PREMIUM' && 'border-teal-200/50 dark:border-teal-600/30'
             )}>
@@ -217,7 +211,7 @@ export default function SubscriptionPage() {
                             <Button
                                 asChild
                                 size="lg"
-                                className="shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
+                                className="shadow-lg hover:shadow-xl transition hover:-translate-y-0.5"
                             >
                                 <RouterLink to="/plans">
                                     <ArrowUpCircle className="h-4 w-4" />
@@ -231,10 +225,7 @@ export default function SubscriptionPage() {
 
             {/* Pending Upgrade Alert */}
             {pendingUpgrade && (
-                <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                >
+                <div className="mh-view-swap">
                     <Alert className="border-amber-300 dark:border-amber-600/40 bg-amber-50/80 dark:bg-amber-900/20">
                         <ArrowUpCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         <AlertDescription className="flex flex-col gap-3">
@@ -270,13 +261,13 @@ export default function SubscriptionPage() {
                             </div>
                         </AlertDescription>
                     </Alert>
-                </motion.div>
+                </div>
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upgrade Section */}
                 {effectivePlan !== 'PREMIUM' && !pendingUpgrade && (
-                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 border-teal-200/50 dark:border-teal-600/30">
+                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300 border-teal-200/50 dark:border-teal-600/30">
                         <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20 pointer-events-none" />
                         <CardHeader className="relative">
                             <CardTitle className="flex items-center gap-2 text-teal-700 dark:text-teal-300">
@@ -292,7 +283,7 @@ export default function SubscriptionPage() {
                             <Button
                                 size="lg"
                                 className={cn(
-                                    'w-full font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5',
+                                    'w-full font-semibold shadow-lg hover:shadow-xl transition hover:-translate-y-0.5',
                                     'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white'
                                 )}
                                 onClick={effectivePlan === 'BASIC' ? () => navigate('/plans') : handleUpgrade}
@@ -310,7 +301,7 @@ export default function SubscriptionPage() {
 
                 {/* Cancel Subscription Section */}
                 {isActive && (
-                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-foreground">
                                 <XCircle className="h-5 w-5 text-muted-foreground" />
@@ -363,7 +354,7 @@ export default function SubscriptionPage() {
                 )}
 
                 {/* Plan Benefits */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-foreground">
                             <CheckCircle className="h-5 w-5 text-green-500" />
@@ -392,7 +383,7 @@ export default function SubscriptionPage() {
                 </Card>
 
                 {/* Payment History Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-foreground">
                             <CreditCard className="h-5 w-5 text-muted-foreground" />
@@ -446,6 +437,6 @@ export default function SubscriptionPage() {
                     </CardContent>
                 </Card>
             </div>
-        </motion.div>
+        </div>
     );
 }

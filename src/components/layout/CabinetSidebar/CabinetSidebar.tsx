@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, Rocket, X } from 'lucide-react';
@@ -38,6 +39,7 @@ export function CabinetSidebar({
   isMobileOpen = false,
   onMobileClose,
 }: CabinetSidebarProps) {
+  const reduceMotion = useReducedMotionPreference();
   const { t } = useTranslation();
   const location = useLocation();
   const me = useAppSelector(selectMe);
@@ -74,7 +76,7 @@ export function CabinetSidebar({
       {isMobileOpen && (
         <button
           onClick={onMobileClose}
-          className="absolute top-3 right-3 md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition-all"
+          className="absolute top-3 right-3 md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition"
         >
           <X size={16} />
         </button>
@@ -102,10 +104,10 @@ export function CabinetSidebar({
           <AnimatePresence>
             {!collapsed && (
               <motion.div
-                initial={{ opacity: 0, x: -10 }}
+                initial={reduceMotion ? false : { opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.15 }}
+                transition={{ duration: reduceMotion ? 0 : 0.15 }}
                 className="min-w-0 flex-1 overflow-hidden"
               >
                 <p
@@ -142,10 +144,10 @@ export function CabinetSidebar({
       <AnimatePresence>
         {!collapsed && showPremiumBanner && plan === 'PREMIUM' && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
+            initial={reduceMotion ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: reduceMotion ? 0 : 0.2 }}
             className="mx-3 mt-3 overflow-hidden"
           >
             <div className="relative rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 p-3 overflow-hidden">
@@ -173,9 +175,10 @@ export function CabinetSidebar({
         <AnimatePresence>
           {!collapsed && (
             <motion.p
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.15 }}
               className="px-3 pt-1 pb-2 text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest"
             >
               {sectionLabel}
@@ -195,19 +198,22 @@ export function CabinetSidebar({
           const navButton = (
             <div
               className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 relative group',
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition duration-150 relative group',
                 selected
                   ? 'bg-violet-50 dark:bg-violet-950/20 text-violet-700 dark:text-violet-300'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-muted hover:text-foreground',
                 collapsed ? 'justify-center' : ''
               )}
             >
-              {selected && (
-                <motion.div
-                  layoutId="cabinetActiveIndicator"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-violet-600 rounded-r-full"
-                />
-              )}
+              {selected &&
+                (reduceMotion ? (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-violet-600 rounded-r-full" />
+                ) : (
+                  <motion.div
+                    layoutId="cabinetActiveIndicator"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-violet-600 rounded-r-full"
+                  />
+                ))}
               <span
                 className={cn(
                   'shrink-0 transition-colors flex items-center justify-center',
@@ -219,10 +225,10 @@ export function CabinetSidebar({
               <AnimatePresence>
                 {!collapsed && (
                   <motion.span
-                    initial={{ opacity: 0 }}
+                    initial={reduceMotion ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.15 }}
                     className="flex-1 text-left truncate"
                   >
                     {item.label}
@@ -267,16 +273,16 @@ export function CabinetSidebar({
       <div className="relative hidden md:flex shrink-0">
         <motion.aside
           animate={{ width: collapsed ? 72 : 256 }}
-          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.4, 0, 0.2, 1] }}
           className="flex flex-col h-full bg-[hsl(var(--cabinet-sidebar-bg))] border-r border-[hsl(var(--cabinet-sidebar-border))] overflow-hidden transition-colors duration-300"
         >
           {sidebarContent}
         </motion.aside>
         <motion.button
           onClick={onToggle}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="absolute -right-3.5 top-8 z-30 w-7 h-7 bg-[hsl(var(--cabinet-sidebar-bg))] border border-[hsl(var(--cabinet-sidebar-border))] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all"
+          whileHover={reduceMotion ? undefined : { scale: 1.05 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.95 }}
+          className="absolute -right-3.5 top-8 z-30 w-7 h-7 bg-[hsl(var(--cabinet-sidebar-bg))] border border-[hsl(var(--cabinet-sidebar-border))] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition"
         >
           {collapsed ? (
             <ChevronRight size={12} className="text-slate-500 dark:text-slate-400" />
@@ -291,17 +297,18 @@ export function CabinetSidebar({
         {isMobileOpen && (
           <>
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
               onClick={onMobileClose}
               className="fixed inset-0 bg-black/50 z-40 md:hidden"
             />
             <motion.aside
-              initial={{ x: -280 }}
+              initial={reduceMotion ? false : { x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: reduceMotion ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
               className="fixed top-0 left-0 h-full w-72 bg-[hsl(var(--cabinet-sidebar-bg))] z-50 md:hidden overflow-hidden"
             >
               <div className="relative h-full">{sidebarContent}</div>

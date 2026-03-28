@@ -18,7 +18,7 @@ export function HeroTrustBadges({ isDark }: HeroTrustBadgesProps) {
   return (
     <div
       className={cn(
-        'flex flex-wrap items-center gap-0 rounded-xl px-4 py-3 transition-all duration-500',
+        'flex flex-wrap items-center gap-0 rounded-xl px-4 py-3 transition duration-500',
         isDark ? 'bg-white/[0.04] border border-white/[0.06]' : 'bg-white/50 border border-gray-200/60'
       )}
     >

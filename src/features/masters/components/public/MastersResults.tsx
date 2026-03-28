@@ -1,6 +1,6 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
+import { VirtuosoGrid } from 'react-virtuoso';
 import {
   MastersCardSkeleton,
   MastersMapSkeleton,
@@ -15,6 +15,13 @@ const MastersMap = lazy(() =>
     default: m.MastersMap,
   })),
 );
+
+/** Совпадает с прежней CSS-сеткой карточек */
+const GRID_LIST_CLASS =
+  'grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]';
+
+/** Ниже порога — обычный map, без оверхеда виртуализации (типичная страница ~20 карточек) */
+const VIRTUOSO_GRID_THRESHOLD = 20;
 
 interface MastersResultsProps {
   viewMode: 'list' | 'map';
@@ -31,6 +38,27 @@ interface MastersResultsProps {
   onClearFilters: () => void;
 }
 
+function MasterCardItem({
+  m,
+  promotionDiscountByMasterId,
+}: {
+  m: PublicMaster;
+  promotionDiscountByMasterId: Record<string, number>;
+}) {
+  return (
+    <MasterCard
+      master={{
+        ...m,
+        displayName:
+          `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim() ||
+          'Master',
+      }}
+      compact
+      promotionDiscount={m?.id ? promotionDiscountByMasterId[m.id] : undefined}
+    />
+  );
+}
+
 export function MastersResults({
   viewMode,
   items,
@@ -40,6 +68,18 @@ export function MastersResults({
   onClearFilters,
 }: MastersResultsProps) {
   const { t } = useTranslation();
+
+  const mapMasters = useMemo(
+    () =>
+      items.map((m) => ({
+        ...m,
+        slug: m.slug ?? undefined,
+        displayName:
+          `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim() ||
+          'Master',
+      })),
+    [items],
+  );
 
   if (list.isLoading) {
     return viewMode === 'list' ? (
@@ -83,58 +123,42 @@ export function MastersResults({
         )}
       </div>
 
-      <AnimatePresence mode="wait">
-        {viewMode === 'list' ? (
-          <motion.div
-            key="list"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className="grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
+      {viewMode === 'list' ? (
+        <div key="list" className="mh-view-swap">
+          {items.length >= VIRTUOSO_GRID_THRESHOLD ? (
+            <VirtuosoGrid<PublicMaster>
+              useWindowScroll
+              data={items}
+              listClassName={GRID_LIST_CLASS}
+              itemClassName="min-w-0"
+              increaseViewportBy={{ top: 600, bottom: 800 }}
+              computeItemKey={(_, m) => m.id}
+              itemContent={(_index, m) => (
+                <div className="min-w-0 h-full">
+                  <MasterCardItem m={m} promotionDiscountByMasterId={promotionDiscountByMasterId} />
+                </div>
+              )}
+            />
+          ) : (
+            <div className={GRID_LIST_CLASS}>
               {items.map((m) => (
                 <div key={m.id} className="min-w-0 h-full">
-                  <MasterCard
-                    master={{
-                      ...m,
-                      displayName:
-                        `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim() ||
-                        'Master',
-                    }}
-                    compact
-                    promotionDiscount={
-                      m?.id ? promotionDiscountByMasterId[m.id] : undefined
-                    }
-                  />
+                  <MasterCardItem m={m} promotionDiscountByMasterId={promotionDiscountByMasterId} />
                 </div>
               ))}
             </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="map"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-            className="h-[400px] sm:h-[450px] md:h-[500px]"
-          >
-            <Suspense fallback={<MastersMapSkeleton />}>
-              <MastersMap
-                masters={items.map((m) => ({
-                  ...m,
-                  slug: m.slug ?? undefined,
-                  displayName:
-                    `${m?.user?.firstName || ''} ${m?.user?.lastName || ''}`.trim() ||
-                    'Master',
-                }))}
-                className="h-full"
-              />
-            </Suspense>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
+      ) : (
+        <div
+          key="map"
+          className="mh-view-swap h-[400px] sm:h-[450px] md:h-[500px]"
+        >
+          <Suspense fallback={<MastersMapSkeleton />}>
+            <MastersMap masters={mapMasters} className="h-full" />
+          </Suspense>
+        </div>
+      )}
     </>
   );
 }

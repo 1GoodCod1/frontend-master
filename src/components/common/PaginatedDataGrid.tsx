@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { TableVirtuoso } from 'react-virtuoso';
 import { MoreHorizontal } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,6 +27,7 @@ import { DataGridToolbar } from './DataGridToolbar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { isRecord } from '@/utils/guards';
+import { useIsMdUp } from '@/hooks/useMediaQuery';
 
 type Extracted = {
   rows: Record<string, unknown>[];
@@ -33,6 +35,12 @@ type Extracted = {
   page?: number;
   limit?: number;
 };
+
+/** Сколько колонок показывать на узких экранах (меньше DOM на слабых устройствах) */
+const COMPACT_MAX_COLUMNS = 6;
+
+/** Виртуализировать тело таблицы при большом числе строк на странице */
+const VIRTUAL_TABLE_ROW_THRESHOLD = 20;
 
 
 /**
@@ -169,6 +177,12 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
     return inferColumns(extracted.rows, preferredColumns ?? []);
   }, [columns, extracted.rows, preferredColumns]);
 
+  const isMdUp = useIsMdUp();
+  const visibleCols = useMemo(() => {
+    if (isMdUp) return cols;
+    return cols.slice(0, COMPACT_MAX_COLUMNS);
+  }, [cols, isMdUp]);
+
   const filteredRows = useMemo<RowWithId[]>(() => {
     if (!quickFilter.trim()) return rows;
     const q = quickFilter.toLowerCase();
@@ -195,6 +209,8 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
     () => getVisiblePages(currentPage, totalPages),
     [currentPage, totalPages],
   );
+
+  const useVirtualTable = filteredRows.length >= VIRTUAL_TABLE_ROW_THRESHOLD;
 
   const selectionModel = dataGridProps?.rowSelectionModel ?? [];
   const setSelectionModel = dataGridProps?.onRowSelectionModelChange;
@@ -255,53 +271,47 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
           </div>
         )}
 
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/50 dark:bg-white/[0.03] hover:bg-muted/50 dark:hover:bg-muted/50 border-b-2 border-amber-500/30 dark:border-amber-500/20">
-              {hasSelection && (
-                <TableHead className="w-10 px-2">
-                  <Checkbox
-                    checked={allSelected || (someSelected ? 'indeterminate' : false)}
-                    onCheckedChange={toggleAll}
-                    aria-label="Select all"
-                  />
-                </TableHead>
-              )}
-              {cols.map((col) => (
-                <TableHead
-                  key={col.field}
-                  className={cn(col.cellClassName, 'font-semibold')}
-                  style={{
-                    minWidth: col.minWidth ?? col.width,
-                    width: col.width,
-                    maxWidth: col.flex ? undefined : col.width,
-                  }}
-                >
-                  {col.headerName}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredRows.map((row, index) => {
-              const rowId = (row as { __rowId: string | number }).__rowId;
-              const rowClassName = dataGridProps?.getRowClassName?.(row, index);
+        {useVirtualTable ? (
+          <TableVirtuoso<RowWithId>
+            data={filteredRows}
+            style={{ height: '100%' }}
+            className="w-full"
+            defaultItemHeight={52}
+            increaseViewportBy={{ top: 160, bottom: 240 }}
+            computeItemKey={(_, row) => String(row.__rowId)}
+            fixedHeaderContent={() => (
+              <tr className="bg-muted/50 dark:bg-white/[0.03] hover:bg-muted/50 dark:hover:bg-muted/50 border-b-2 border-amber-500/30 dark:border-amber-500/20">
+                {hasSelection && (
+                  <th className="h-10 w-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                    <Checkbox
+                      checked={allSelected || (someSelected ? 'indeterminate' : false)}
+                      onCheckedChange={toggleAll}
+                      aria-label="Select all"
+                    />
+                  </th>
+                )}
+                {visibleCols.map((col) => (
+                  <th
+                    key={col.field}
+                    className={cn(
+                      'h-10 px-2 text-left align-middle font-semibold text-muted-foreground',
+                      col.cellClassName,
+                    )}
+                    style={{
+                      minWidth: col.minWidth ?? col.width,
+                      width: col.width,
+                      maxWidth: col.flex ? undefined : col.width,
+                    }}
+                  >
+                    {col.headerName}
+                  </th>
+                ))}
+              </tr>
+            )}
+            itemContent={(_index, row) => {
+              const rowId = row.__rowId;
               return (
-                <TableRow
-                  key={String(rowId)}
-                  className={cn(
-                    'cursor-default',
-                    (dataGridProps?.onRowDoubleClick || dataGridProps?.onRowClick) && 'cursor-pointer',
-                    rowClassName,
-                  )}
-                  onClick={() => dataGridProps?.onRowClick?.(row)}
-                  onDoubleClick={() => dataGridProps?.onRowDoubleClick?.(row)}
-                  style={
-                    dataGridProps?.rowHeight
-                      ? { minHeight: dataGridProps.rowHeight, maxHeight: dataGridProps.rowHeight }
-                      : undefined
-                  }
-                >
+                <>
                   {hasSelection && (
                     <TableCell className="w-10 px-2" onClick={(e) => e.stopPropagation()}>
                       <Checkbox
@@ -311,7 +321,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
                       />
                     </TableCell>
                   )}
-                  {cols.map((col) => {
+                  {visibleCols.map((col) => {
                     const value = col.valueGetter
                       ? col.valueGetter({ row, value: row[col.field], id: rowId })
                       : row[col.field];
@@ -338,11 +348,125 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
                       </TableCell>
                     );
                   })}
-                </TableRow>
+                </>
               );
-            })}
-          </TableBody>
-        </Table>
+            }}
+            components={{
+              TableRow: ({ item, ...props }) => {
+                const row = item as RowWithId;
+                const idx = filteredRows.findIndex((r) => r.__rowId === row.__rowId);
+                const rowClassName = dataGridProps?.getRowClassName?.(row, idx >= 0 ? idx : 0);
+                return (
+                  <tr
+                    {...props}
+                    className={cn(
+                      'border-b border-slate-200 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted dark:border-white/[0.08]',
+                      'cursor-default',
+                      (dataGridProps?.onRowDoubleClick || dataGridProps?.onRowClick) && 'cursor-pointer',
+                      rowClassName,
+                    )}
+                    onClick={() => dataGridProps?.onRowClick?.(row)}
+                    onDoubleClick={() => dataGridProps?.onRowDoubleClick?.(row)}
+                    style={
+                      dataGridProps?.rowHeight
+                        ? { minHeight: dataGridProps.rowHeight, maxHeight: dataGridProps.rowHeight }
+                        : undefined
+                    }
+                  />
+                );
+              },
+            }}
+          />
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50 dark:bg-white/[0.03] hover:bg-muted/50 dark:hover:bg-muted/50 border-b-2 border-amber-500/30 dark:border-amber-500/20">
+                {hasSelection && (
+                  <TableHead className="w-10 px-2">
+                    <Checkbox
+                      checked={allSelected || (someSelected ? 'indeterminate' : false)}
+                      onCheckedChange={toggleAll}
+                      aria-label="Select all"
+                    />
+                  </TableHead>
+                )}
+                {visibleCols.map((col) => (
+                  <TableHead
+                    key={col.field}
+                    className={cn(col.cellClassName, 'font-semibold')}
+                    style={{
+                      minWidth: col.minWidth ?? col.width,
+                      width: col.width,
+                      maxWidth: col.flex ? undefined : col.width,
+                    }}
+                  >
+                    {col.headerName}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredRows.map((row, index) => {
+                const rowId = (row as { __rowId: string | number }).__rowId;
+                const rowClassName = dataGridProps?.getRowClassName?.(row, index);
+                return (
+                  <TableRow
+                    key={String(rowId)}
+                    className={cn(
+                      'cursor-default',
+                      (dataGridProps?.onRowDoubleClick || dataGridProps?.onRowClick) && 'cursor-pointer',
+                      rowClassName,
+                    )}
+                    onClick={() => dataGridProps?.onRowClick?.(row)}
+                    onDoubleClick={() => dataGridProps?.onRowDoubleClick?.(row)}
+                    style={
+                      dataGridProps?.rowHeight
+                        ? { minHeight: dataGridProps.rowHeight, maxHeight: dataGridProps.rowHeight }
+                        : undefined
+                    }
+                  >
+                    {hasSelection && (
+                      <TableCell className="w-10 px-2" onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={selectionModel.includes(rowId)}
+                          onCheckedChange={() => toggleRow(rowId)}
+                          aria-label="Select row"
+                        />
+                      </TableCell>
+                    )}
+                    {visibleCols.map((col) => {
+                      const value = col.valueGetter
+                        ? col.valueGetter({ row, value: row[col.field], id: rowId })
+                        : row[col.field];
+                      const params: GridRenderCellParams = { row, value, id: rowId };
+                      const content = col.renderCell
+                        ? col.renderCell(params)
+                        : value != null
+                          ? String(value)
+                          : '—';
+                      return (
+                        <TableCell
+                          key={col.field}
+                          className={cn(
+                            'align-middle py-3',
+                            col.cellClassName,
+                            col.cellClassName?.includes('center') && 'justify-center text-center',
+                          )}
+                          style={{
+                            minWidth: col.minWidth ?? col.width,
+                            width: col.width,
+                          }}
+                        >
+                          {content}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
 
         {filteredRows.length === 0 && !loading && (
           <div className="flex items-center justify-center py-12 text-muted-foreground">
@@ -376,7 +500,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
         <div className="flex flex-wrap items-center justify-center gap-1 sm:justify-end">
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-1 rounded-md border-0 bg-amber-50 text-amber-700 px-3 py-1.5 text-sm font-medium transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-1 rounded-md border-0 bg-amber-50 text-amber-700 px-3 py-1.5 text-sm font-medium transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:pointer-events-none disabled:opacity-50"
             disabled={currentPage <= 1}
             onClick={() => onPageChange(currentPage - 1, limit)}
           >
@@ -396,7 +520,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
                 key={item}
                 type="button"
                 className={cn(
-                  'inline-flex min-w-8 items-center justify-center rounded-md px-2 py-1.5 text-sm font-medium transition-all',
+                  'inline-flex min-w-8 items-center justify-center rounded-md px-2 py-1.5 text-sm font-medium transition',
                   item === currentPage
                     ? 'bg-amber-600 text-white shadow-sm dark:bg-amber-600'
                     : 'border-0 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40',
@@ -409,7 +533,7 @@ export function PaginatedDataGrid(props: PaginatedDataGridProps) {
           )}
           <button
             type="button"
-            className="inline-flex items-center justify-center gap-1 rounded-md border-0 bg-amber-50 text-amber-700 px-3 py-1.5 text-sm font-medium transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-1 rounded-md border-0 bg-amber-50 text-amber-700 px-3 py-1.5 text-sm font-medium transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:pointer-events-none disabled:opacity-50"
             disabled={currentPage >= totalPages}
             onClick={() => onPageChange(currentPage + 1, limit)}
           >

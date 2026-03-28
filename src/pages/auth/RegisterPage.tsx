@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
@@ -51,12 +50,7 @@ export default function RegisterPage() {
     <AuthLayout view="register">
       <div className="flex flex-1 flex-col overflow-y-auto">
         <div className="mx-auto w-full max-w-[420px] px-6 py-10 md:max-w-[440px] md:px-11 md:py-11">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-col gap-4"
-          >
+          <div className="mh-page-enter flex flex-col gap-4">
             <RegisterHeader />
             <RoleTabs
               value={selectedRole === USER_ROLE.CLIENT ? 0 : 1}
@@ -85,7 +79,7 @@ export default function RegisterPage() {
                 validateRegistrationStep={form.validateRegistrationStep}
               />
             </Formik>
-          </motion.div>
+          </div>
         </div>
       </div>
     </AuthLayout>

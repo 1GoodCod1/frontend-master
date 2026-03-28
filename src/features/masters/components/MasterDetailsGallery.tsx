@@ -65,7 +65,7 @@ export const MasterDetailsGallery = ({
               return (
                 <Card
                   key={f.id}
-                  className="overflow-hidden border border-[#f5f4eb] dark:border-white/[0.08] transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-[#e8e6dd] dark:hover:border-amber-500/40 cursor-pointer touch-manipulation"
+                  className="overflow-hidden border border-[#f5f4eb] dark:border-white/[0.08] transition duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] hover:border-[#e8e6dd] dark:hover:border-amber-500/40 cursor-pointer touch-manipulation"
                   onClick={() => openLightbox(index)}
                 >
                   <LazyImage

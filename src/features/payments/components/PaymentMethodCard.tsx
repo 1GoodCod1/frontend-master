@@ -34,7 +34,7 @@ export function PaymentMethodCard({
   return (
     <Card
       className={cn(
-        'relative h-full rounded-2xl border-2 p-6 transition-all border-[#f5f4eb] dark:border-white/[0.08]',
+        'relative h-full rounded-2xl border-2 p-6 transition border-[#f5f4eb] dark:border-white/[0.08]',
         isAction && 'hover:border-primary/50 dark:hover:border-primary/50',
         className
       )}

@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { MessageCircle, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useGetConversationsQuery, type Conversation } from '@/features/chat/chatApi';
 import {
@@ -103,7 +102,7 @@ export default function ChatList({
             placeholder={t(`${ns}.chatSearchPlaceholder`)}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-foreground placeholder:text-slate-400 dark:placeholder:text-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500/50 dark:focus:ring-orange-500/20 dark:focus:border-orange-500/40 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-foreground placeholder:text-slate-400 dark:placeholder:text-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500/50 dark:focus:ring-orange-500/20 dark:focus:border-orange-500/40 transition"
           />
         </div>
       </div>
@@ -114,7 +113,7 @@ export default function ChatList({
             type="button"
             onClick={() => setActiveTab('all')}
             className={cn(
-              'px-3 py-1.5 rounded-lg text-sm transition-all',
+              'px-3 py-1.5 rounded-lg text-sm transition',
               activeTab === 'all'
                 ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400'
                 : 'text-muted-foreground hover:bg-muted/50',
@@ -126,7 +125,7 @@ export default function ChatList({
             type="button"
             onClick={() => setActiveTab('unread')}
             className={cn(
-              'px-3 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5',
+              'px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5',
               activeTab === 'unread'
                 ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400'
                 : 'text-muted-foreground hover:bg-muted/50',
@@ -153,12 +152,10 @@ export default function ChatList({
 
               return (
                 <li key={conv.id} className="px-1 first:pt-0 last:pb-0">
-                  <motion.button
+                  <button
                     type="button"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
                     className={cn(
-                      'flex w-full items-center gap-3 p-3 rounded-2xl transition-all duration-200 cursor-pointer text-left border',
+                      'flex w-full items-center gap-3 p-3 rounded-2xl transition-transform duration-200 cursor-pointer text-left border hover:scale-[1.01] active:scale-[0.99]',
                       isSelected
                         ? 'bg-gradient-to-r from-orange-500/15 to-amber-500/10 border-orange-500/30'
                         : 'hover:bg-muted/50 border-slate-200/40 dark:border-transparent',
@@ -220,7 +217,7 @@ export default function ChatList({
                         {conv.unreadCount > 99 ? '99+' : conv.unreadCount}
                       </span>
                     )}
-                  </motion.button>
+                  </button>
                 </li>
               );
             })}

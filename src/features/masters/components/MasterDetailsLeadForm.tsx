@@ -244,7 +244,7 @@ export const MasterDetailsLeadForm = ({
           {!subscribed ? (
             <Button
               size="lg"
-              className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+              className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition"
               onClick={handleSubscribe}
               disabled={isSubscribing}
             >
@@ -355,7 +355,7 @@ export const MasterDetailsLeadForm = ({
 
         <Button
           size="lg"
-          className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all "
+          className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition "
           onClick={handleSubmitLead}
           disabled={isSubmitting || !message.trim()}
         >

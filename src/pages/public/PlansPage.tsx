@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { CreditCard } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectRole } from '@/features/auth/selectors';
@@ -54,12 +53,7 @@ export default function PlansPage() {
       <>
         <SEOHead title={t('plans.adminView.title')} noindex />
         <div className="w-full max-w-md mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex justify-center"
-        >
+        <div className="mh-page-enter flex justify-center">
           <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
             <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
@@ -78,7 +72,7 @@ export default function PlansPage() {
               </Button>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
       </>
     );
@@ -89,12 +83,7 @@ export default function PlansPage() {
       <>
         <SEOHead title={t('plans.becomeMaster.title')} noindex />
         <div className="w-full max-w-2xl mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex justify-center"
-        >
+        <div className="mh-page-enter flex justify-center">
           <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
             <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
@@ -121,7 +110,7 @@ export default function PlansPage() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
       </>
     );
@@ -138,12 +127,7 @@ export default function PlansPage() {
         description={t('plans.subtitle')}
         keywords="тарифы Master-Hub, планы для мастеров, Moldova"
       />
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-      className="min-h-screen bg-gray-50/50 dark:bg-transparent"
-    >
+      <div className="mh-page-enter min-h-screen bg-gray-50/50 dark:bg-transparent">
       <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-[max(3rem,env(safe-area-inset-bottom,0px))] sm:pb-16">
         <div className="text-center mb-8 sm:mb-12 pt-6 sm:pt-8 md:pt-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 tracking-tight">
@@ -212,7 +196,7 @@ export default function PlansPage() {
 
         <PlansComparisonTable />
       </div>
-    </motion.div>
+    </div>
     </>
   );
 }

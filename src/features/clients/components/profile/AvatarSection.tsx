@@ -43,14 +43,14 @@ export default function AvatarSection({
   };
 
   return (
-    <Card className="group h-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition-all duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
+    <Card className="group h-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
       <CardContent className="relative flex min-h-[400px] flex-col items-center justify-center p-8 text-center">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none" />
         <div className="group/avatar relative mb-8 z-10">
           <Avatar
             key={avatarPath ?? 'no-avatar'}
             className={cn(
-              "size-48 border-[6px] border-background transition-all duration-500 group-hover/avatar:scale-105",
+              "size-48 border-[6px] border-background transition duration-500 group-hover/avatar:scale-105",
               hasAvatar ? "shadow-2xl ring-4 ring-amber-500/20" : "shadow-xl ring-1 ring-black/5 dark:ring-white/5"
             )}
           >
@@ -81,7 +81,7 @@ export default function AvatarSection({
             <Button
               onClick={handleEditClick}
               disabled={uploadLoading || !phoneVerified}
-              className="w-full gap-2 rounded-xl bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 transition-all font-semibold"
+              className="w-full gap-2 rounded-xl bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 transition font-semibold"
             >
               <Upload className="size-4" />
               {uploadLoading ? t('common.loading') : t('clientProfile.uploadAvatar', 'Загрузить фото')}
@@ -92,7 +92,7 @@ export default function AvatarSection({
                 variant="outline"
                 onClick={handleEditClick}
                 disabled={uploadLoading || !phoneVerified}
-                className="w-full gap-2 rounded-xl border-amber-500/30 text-amber-600 bg-amber-500/5 hover:bg-amber-600 hover:text-white shadow-sm transition-all font-semibold"
+                className="w-full gap-2 rounded-xl border-amber-500/30 text-amber-600 bg-amber-500/5 hover:bg-amber-600 hover:text-white shadow-sm transition font-semibold"
               >
                 <Upload className="size-4" />
                 {t('clientProfile.changeAvatar', 'Сменить фото')}
@@ -101,7 +101,7 @@ export default function AvatarSection({
                 variant="outline"
                 onClick={handleRemoveClick}
                 disabled={removeLoading || !phoneVerified}
-                className="w-full gap-2 rounded-xl border-destructive/30 text-destructive bg-destructive/5 hover:bg-destructive hover:text-white transition-all shadow-sm font-semibold"
+                className="w-full gap-2 rounded-xl border-destructive/30 text-destructive bg-destructive/5 hover:bg-destructive hover:text-white transition shadow-sm font-semibold"
               >
                 {removeLoading ? (
                   <Loader2 className="size-4 animate-spin" />

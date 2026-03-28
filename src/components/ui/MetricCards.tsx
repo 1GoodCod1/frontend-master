@@ -88,7 +88,7 @@ export function MetricCards({ data }: { data: unknown }) {
         <Card
           key={m.key}
           className={cn(
-            'border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md'
+            'border-border bg-card transition duration-200 hover:-translate-y-0.5 hover:shadow-md'
           )}
         >
           <CardContent className="pt-6">

@@ -98,7 +98,7 @@ export default function RequestsPage() {
         <PageHeader title={t('leads.title')} subtitle={t('leads.subtitle')} />
       </div>
 
-      <Card className="overflow-hidden rounded-lg sm:rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl transition-all duration-300">
+      <Card className="overflow-hidden rounded-lg sm:rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl transition duration-300">
         <div className="flex flex-col gap-4 border-b border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 px-3 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-amber-500/15 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">

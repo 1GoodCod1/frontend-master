@@ -20,7 +20,7 @@ export function MastersCardSkeleton() {
 export function MastersMapSkeleton() {
   return (
     <div
-      className="rounded-xl border border-gray-200 dark:border-white/[0.08] bg-card animate-pulse"
+      className="rounded-xl border border-gray-200 dark:border-white/[0.08] bg-card motion-safe:animate-pulse"
       style={{ minHeight: 400 }}
     >
       <div className="flex items-center justify-center h-full min-h-[400px]">

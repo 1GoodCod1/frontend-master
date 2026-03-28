@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Formik } from 'formik';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import ForgotPasswordHeader from '@/features/auth/components/forgot-password/ForgotPasswordHeader';
@@ -11,12 +10,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout view="forgot">
       <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mx-auto w-full max-w-[360px]"
-        >
+        <div className="mh-page-enter mx-auto w-full max-w-[360px]">
           <ForgotPasswordHeader />
           <Formik<ForgotPasswordFormValues>
             initialValues={form.initialValues}
@@ -30,7 +24,7 @@ export default function ForgotPasswordPage() {
               </form>
             )}
           </Formik>
-        </motion.div>
+        </div>
       </div>
     </AuthLayout>
   );

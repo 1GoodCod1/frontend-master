@@ -93,7 +93,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
                       onClick={() =>
                         slugOrId(m) && navigate(`/masters/${slugOrId(m)}`)
                       }
-                      className="relative h-9 w-9 shrink-0 rounded-full p-[2.5px] transition-all duration-200 hover:scale-105 hover:shadow-[0_4px_16px_rgba(233,117,37,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                      className="relative h-9 w-9 shrink-0 rounded-full p-[2.5px] transition duration-200 hover:scale-105 hover:shadow-[0_4px_16px_rgba(233,117,37,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                       style={{
                         background: `linear-gradient(135deg, ${RECENTLY_VIEWED_ACCENT}, #f08a3d)`,
                         boxShadow: '0 2px 8px rgba(233,117,37,0.25)',

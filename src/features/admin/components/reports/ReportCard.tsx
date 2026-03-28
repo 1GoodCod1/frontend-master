@@ -82,7 +82,7 @@ export default function ReportCard({ report, onOpenDialog }: ReportCardProps) {
   return (
     <Card
       className={`
-        p-6 rounded-lg border-2 cursor-pointer transition-all duration-300
+        p-6 rounded-lg border-2 cursor-pointer transition duration-300
         hover:-translate-y-0.5 hover:shadow-lg
         ${report.status === 'PENDING' ? 'border-amber-500/50' : 'border-border'}
       `}

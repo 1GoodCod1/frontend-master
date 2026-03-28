@@ -131,7 +131,7 @@ export default function ClientReportsPage() {
               <Button
                 key={master.id}
                 variant="outline"
-                className="group relative h-auto flex-col items-start gap-3 overflow-hidden rounded-xl border border-black/10 bg-card p-5 text-left text-foreground shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:bg-amber-50 hover:text-foreground hover:shadow-md dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10 dark:hover:text-foreground"
+                className="group relative h-auto flex-col items-start gap-3 overflow-hidden rounded-xl border border-black/10 bg-card p-5 text-left text-foreground shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:bg-amber-50 hover:text-foreground hover:shadow-md dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10 dark:hover:text-foreground"
                 onClick={() => handleOpenDialog(master)}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100" />
@@ -170,7 +170,7 @@ export default function ClientReportsPage() {
       ) : (
         <div className="flex flex-col gap-4">
           {(reportsList as ReportItem[]).map((report) => (
-            <Card key={report.id} className="overflow-hidden rounded-xl border border-black/5 bg-card/50 shadow-sm transition-all hover:bg-card/80 hover:shadow-md dark:border-white/5 dark:bg-card/20 dark:hover:bg-card/40">
+            <Card key={report.id} className="overflow-hidden rounded-xl border border-black/5 bg-card/50 shadow-sm transition hover:bg-card/80 hover:shadow-md dark:border-white/5 dark:bg-card/20 dark:hover:bg-card/40">
               <CardContent className="p-0">
                 <div className="flex flex-col sm:flex-row">
                   <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">

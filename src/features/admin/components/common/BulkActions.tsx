@@ -13,7 +13,7 @@ export default function BulkActions({ bulkIdsLength, onCreate, onToggle, onDelet
     <div className="flex flex-wrap items-center gap-2">
       <Button
         onClick={onCreate}
-        className="border-0 bg-amber-600 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
+        className="border-0 bg-amber-600 text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-700 dark:hover:bg-amber-600"
       >
         Create
       </Button>
@@ -21,7 +21,7 @@ export default function BulkActions({ bulkIdsLength, onCreate, onToggle, onDelet
       <Button
         onClick={onToggle}
         disabled={!bulkIdsLength}
-        className="border-0 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:opacity-50"
+        className="border-0 bg-amber-50 text-amber-700 shadow-sm transition hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:hover:bg-amber-800/40 disabled:opacity-50"
       >
         Toggle selected
       </Button>

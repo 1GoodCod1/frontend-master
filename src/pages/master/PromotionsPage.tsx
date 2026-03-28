@@ -262,7 +262,7 @@ export default function PromotionsPage() {
           {promotions.map((p) => {
             const status = statusInfo(p);
             return (
-              <Card key={p.id} className="overflow-hidden border-border dark:border-white/[0.08] transition-all hover:shadow-md">
+              <Card key={p.id} className="overflow-hidden border-border dark:border-white/[0.08] transition hover:shadow-md">
                 <CardContent className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
@@ -321,7 +321,7 @@ export default function PromotionsPage() {
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                   placeholder={t('promotionsPage.titlePlaceholder')}
-                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
               </div>
               <div className="sm:col-span-2 space-y-2">
@@ -332,7 +332,7 @@ export default function PromotionsPage() {
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   placeholder={t('promotionsPage.descriptionPlaceholder')}
                   rows={3}
-                  className="rounded-2xl bg-slate-50/80 border-transparent p-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08] resize-none"
+                  className="rounded-2xl bg-slate-50/80 border-transparent p-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08] resize-none"
                 />
               </div>
               <div className="space-y-2">
@@ -344,7 +344,7 @@ export default function PromotionsPage() {
                   max={100}
                   value={form.discount}
                   onChange={(e) => setForm((f) => ({ ...f, discount: Number(e.target.value) || 0 }))}
-                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
                 <p className="pl-1 text-[11px] text-muted-foreground/70">{t('promotionsPage.discountHint')}</p>
               </div>
@@ -354,7 +354,7 @@ export default function PromotionsPage() {
                   value={form.serviceTitle || '__all__'}
                   onValueChange={(v) => setForm((f) => ({ ...f, serviceTitle: v === '__all__' ? '' : v }))}
                 >
-                  <SelectTrigger id="promo-service" className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]">
+                  <SelectTrigger id="promo-service" className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]">
                     <SelectValue placeholder={t('promotionsPage.allServices')} />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl border-none shadow-xl dark:bg-slate-800">
@@ -383,7 +383,7 @@ export default function PromotionsPage() {
                   type="date"
                   value={form.validFrom}
                   onChange={(e) => setForm((f) => ({ ...f, validFrom: e.target.value }))}
-                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
               </div>
               <div className="space-y-2">
@@ -393,10 +393,10 @@ export default function PromotionsPage() {
                   type="date"
                   value={form.validUntil}
                   onChange={(e) => setForm((f) => ({ ...f, validUntil: e.target.value }))}
-                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition-all focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
                 />
               </div>
-              <div className="sm:col-span-2 mt-1 flex items-center justify-between rounded-2xl border border-transparent bg-slate-50/80 px-5 py-4 shadow-sm transition-all dark:border-white/[0.02] dark:bg-white/[0.04]">
+              <div className="sm:col-span-2 mt-1 flex items-center justify-between rounded-2xl border border-transparent bg-slate-50/80 px-5 py-4 shadow-sm transition dark:border-white/[0.02] dark:bg-white/[0.04]">
                 <Label htmlFor="promo-active" className="cursor-pointer text-sm font-bold text-foreground">{t('promotionsPage.isActiveLabel')}</Label>
                 <Switch id="promo-active" checked={form.isActive} onCheckedChange={(v) => setForm((f) => ({ ...f, isActive: v }))} className="shadow-sm" />
               </div>

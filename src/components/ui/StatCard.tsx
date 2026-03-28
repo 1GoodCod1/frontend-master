@@ -39,7 +39,7 @@ export function StatCard({
     <Card
       className={cn(
         'border-0 shadow-[0_2px_6px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.25)]',
-        hover && 'h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-lg'
+        hover && 'h-full transition duration-200 hover:-translate-y-1 hover:shadow-lg'
       )}
     >
       <CardContent className="pt-6">

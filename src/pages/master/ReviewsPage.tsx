@@ -65,7 +65,7 @@ export default function ReviewsPage() {
         <PageHeader title={t('reviews.title')} subtitle={t('reviews.subtitle')} />
       </div>
 
-      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300 animate-in fade-in duration-200">
+      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300 animate-in fade-in duration-200">
         <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-500">
@@ -110,7 +110,7 @@ export default function ReviewsPage() {
               {filteredAndSortedItems.map((review, idx) => (
                 <Card
                   key={String(review.id ?? idx)}
-                  className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/30 dark:backdrop-blur-sm shadow-[0_2px_10px_-3px_rgba(6,81,237,0.06)] hover:shadow-[0_6px_24px_rgb(0,0,0,0.06)] dark:shadow-none dark:hover:bg-white/[0.03] transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards"
+                  className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/30 dark:backdrop-blur-sm shadow-[0_2px_10px_-3px_rgba(6,81,237,0.06)] hover:shadow-[0_6px_24px_rgb(0,0,0,0.06)] dark:shadow-none dark:hover:bg-white/[0.03] transition duration-300 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards"
                   style={{ animationDelay: `${Math.min(idx * 50, 300)}ms` }}
                 >
                   <CardContent className="p-5 sm:p-6">

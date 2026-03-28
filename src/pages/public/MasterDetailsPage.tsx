@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useAppSelector } from '@/app/hooks';
 import { useMastersByIdQuery } from '@/features/masters/mastersApi';
 import { usePromotionForMasterQuery } from '@/features/promotions/promotionsApi';
@@ -192,11 +191,7 @@ export default function MasterDetailsPage() {
         ogType="profile"
         ogImage={avatarUrl?.startsWith('http') ? avatarUrl : undefined}
       />
-      <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
-    >
+      <div className="mh-page-enter">
       <MasterProfileHero
         title={title}
         avatarUrl={avatarUrl}
@@ -223,7 +218,7 @@ export default function MasterDetailsPage() {
         responseRate={responseRate}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-8 sm:pb-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left column — tabs + content */}
           <div className="lg:col-span-2 space-y-6">
@@ -234,7 +229,7 @@ export default function MasterDetailsPage() {
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={cn(
-                    'flex-1 min-w-[100px] py-2.5 rounded-xl text-sm font-medium transition-all',
+                    'flex-1 min-w-[100px] py-2.5 rounded-xl text-sm font-medium transition',
                     activeTab === tab
                       ? 'bg-[hsl(var(--button-bg))] dark:bg-[#E97525] text-white shadow-sm'
                       : 'bg-transparent text-gray-700 dark:text-gray-400 border border-transparent hover:bg-gray-50 dark:hover:bg-white/5'
@@ -374,7 +369,7 @@ export default function MasterDetailsPage() {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
     </>
   );
 }

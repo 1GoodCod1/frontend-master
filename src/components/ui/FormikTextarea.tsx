@@ -40,7 +40,7 @@ export function FormikTextarea({
                 rows={rows}
                 {...field}
                 className={cn(
-                    "rounded-xl border-border/50 bg-background/50 hover:border-primary/30 focus-visible:ring-primary/20 transition-all duration-300",
+                    "rounded-xl border-border/50 bg-background/50 hover:border-primary/30 focus-visible:ring-primary/20 transition duration-300",
                     showError && "border-red-500 focus-visible:ring-red-500 dark:border-red-400 dark:focus-visible:ring-red-400"
                 )}
             />

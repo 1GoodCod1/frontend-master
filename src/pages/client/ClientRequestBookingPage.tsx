@@ -158,7 +158,7 @@ export default function ClientRequestBookingPage() {
                         key={index}
                         variant={isSelected ? 'default' : 'outline'}
                         className={cn(
-                          'cursor-pointer transition-all',
+                          'cursor-pointer transition',
                           !available && 'opacity-50 cursor-not-allowed',
                         )}
                         onClick={() => available && setSelectedSlotIndex(index)}

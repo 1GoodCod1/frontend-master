@@ -179,7 +179,7 @@ export function ReviewsSection({ masterId }: ReviewsSectionProps) {
                         <button
                           key={rf.id}
                           type="button"
-                          className="group relative h-20 w-20 overflow-hidden rounded-lg border border-border transition-all hover:ring-2 hover:ring-primary/30"
+                          className="group relative h-20 w-20 overflow-hidden rounded-lg border border-border transition hover:ring-2 hover:ring-primary/30"
                           onClick={() => window.open(src, '_blank')}
                         >
                           <img src={src} alt="Review photo" className="h-full w-full object-cover transition-transform group-hover:scale-110" />

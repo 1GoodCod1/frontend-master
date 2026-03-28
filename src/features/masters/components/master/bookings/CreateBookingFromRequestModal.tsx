@@ -171,7 +171,7 @@ export function CreateBookingFromRequestModal({
                           onClick={() => available && setSelectedSlotIndex(index)}
                           disabled={!available}
                           className={cn(
-                            'h-9 px-3.5 rounded-xl text-sm font-medium border transition-all duration-150',
+                            'h-9 px-3.5 rounded-xl text-sm font-medium border transition duration-150',
                             isSelected
                               ? 'bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/25'
                               : available

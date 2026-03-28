@@ -29,7 +29,7 @@ export function HeroStats({ stats, isDark }: HeroStatsProps) {
           <div
             key={stat.labelKey}
             className={cn(
-              'relative group px-6 py-5 rounded-2xl transition-all duration-300 overflow-hidden',
+              'relative group px-6 py-5 rounded-2xl transition duration-300 overflow-hidden',
               isDark
                 ? 'bg-white/[0.06] shadow-lg shadow-black/20'
                 : 'bg-white/95 shadow-md shadow-black/5'

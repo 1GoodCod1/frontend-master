@@ -195,6 +195,69 @@ body {
   transition: background-color 0.3s ease, color 0.2s ease;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  body,
+  #root {
+    transition: none;
+  }
+}
+
+/* Лёгкие входы без Framer Motion (страницы / переключение видов) */
+@keyframes mh-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.mh-page-enter {
+  animation: mh-fade-in 0.35s ease-out both;
+}
+.mh-view-swap {
+  animation: mh-fade-in 0.22s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mh-page-enter,
+  .mh-view-swap {
+    animation: none;
+  }
+}
+
+/* ===== Weak device / reduced-motion global performance rules ===== */
+@media (prefers-reduced-motion: reduce) {
+  /*
+   * Backdrop-blur creates a separate compositor layer + GPU sampler per element.
+   * On weak GPUs (Intel HD, integrated) this makes scrolling choppy.
+   * Disable globally when the user has requested reduced motion.
+   */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /*
+   * Decorative elements (blur orbs, pulsing dots) have pointer-events: none.
+   * No need to animate them when user prefers less motion.
+   */
+  .pointer-events-none {
+    animation: none !important;
+    filter: none !important;
+  }
+
+  /*
+   * Disable all infinite / long-running CSS transitions on interactive elements.
+   * Covers hover:shadow, hover:scale patterns from transition-all.
+   */
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 #root {
   min-height: 100vh;
   min-height: 100dvh;

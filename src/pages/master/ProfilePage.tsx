@@ -158,7 +158,7 @@ export default function ProfilePage() {
               {/* Main Content Column */}
               <div className="lg:col-span-8 flex flex-col gap-6 md:gap-8">
                 {/* Basic Info Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
                   <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
                     <div className="flex items-center gap-3">
                       <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-500">
@@ -178,7 +178,7 @@ export default function ProfilePage() {
                 </Card>
 
                 {/* About Me Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
                   <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
                     <div className="flex items-center gap-3">
                       <div className="rounded-lg bg-blue-500/10 p-2 text-blue-600 dark:text-blue-500">
@@ -204,7 +204,7 @@ export default function ProfilePage() {
               {/* Sidebar Column */}
               <div className="lg:col-span-4 flex flex-col gap-6 md:gap-8">
                 {/* Professional Details Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition-all duration-300">
+                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
                   <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
                     <div className="flex items-center gap-3">
                       <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-500">
@@ -267,7 +267,7 @@ export default function ProfilePage() {
                       type="submit"
                       disabled={!!isLocked || upd.isLoading}
                       size="lg"
-                      className="w-full relative group overflow-hidden border-0 bg-amber-600 text-white shadow-md transition-all hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
+                      className="w-full relative group overflow-hidden border-0 bg-amber-600 text-white shadow-md transition hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
                     >
                       <span className="relative flex items-center justify-center font-semibold">
                         <Save className="mr-2 size-5" />

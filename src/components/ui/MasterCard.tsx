@@ -127,11 +127,11 @@ export const MasterCard = React.memo(function MasterCard({
       onMouseEnter={handleMouseEnter}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group relative w-full h-full flex flex-col rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer',
+        'group relative w-full h-full flex flex-col rounded-2xl overflow-hidden transition duration-300 cursor-pointer',
         'outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-        'bg-white dark:bg-[hsl(43,16%,12%)]',
-        'shadow-[0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]',
-        'hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]',
+        'bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:border-white/[0.08] dark:bg-[hsl(43,16%,12%)]',
+        'dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]',
+        'hover:-translate-y-1 hover:shadow-md hover:shadow-black/8 dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]',
       )}
     >
       {/* Header with avatar + info */}
@@ -153,7 +153,7 @@ export const MasterCard = React.memo(function MasterCard({
           </div>
           {master?.isOnline === true && (
             <div
-              className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white dark:border-[hsl(43,16%,12%)] z-10"
+              className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-[#F9FAFB] dark:border-[hsl(43,16%,12%)] z-10"
               title={t('masters.availableNow')}
             />
           )}
@@ -250,7 +250,7 @@ export const MasterCard = React.memo(function MasterCard({
           <button
             onClick={handleContactClick}
             className={cn(
-              'w-full h-7 min-[480px]:h-8 sm:h-9 rounded-xl flex items-center justify-center gap-1 min-[480px]:gap-1.5 transition-all duration-200 active:scale-[0.98] font-medium text-[10px] min-[480px]:text-[11px] sm:text-[12px]',
+              'w-full h-7 min-[480px]:h-8 sm:h-9 rounded-xl flex items-center justify-center gap-1 min-[480px]:gap-1.5 transition duration-200 active:scale-[0.98] font-medium text-[10px] min-[480px]:text-[11px] sm:text-[12px]',
               'bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]',
               'dark:bg-[#E97525] dark:hover:bg-[#d4691f]',
               'shadow-sm hover:shadow-md',

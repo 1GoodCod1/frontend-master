@@ -33,7 +33,7 @@ export function MastersPageHeader({
         <div className="flex rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden">
           <button
             onClick={() => onViewModeChange('list')}
-            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 min-h-[44px] sm:min-h-0 text-sm font-medium transition-all ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 min-h-[44px] sm:min-h-0 text-sm font-medium transition ${
               viewMode === 'list'
                 ? 'bg-[hsl(var(--button-bg))] text-white'
                 : 'bg-card hover:bg-primary/10 text-muted-foreground'
@@ -44,7 +44,7 @@ export function MastersPageHeader({
           </button>
           <button
             onClick={() => onViewModeChange('map')}
-            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 min-h-[44px] sm:min-h-0 text-sm font-medium transition-all ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-2 min-h-[44px] sm:min-h-0 text-sm font-medium transition ${
               viewMode === 'map'
                 ? 'bg-[hsl(var(--button-bg))] text-white'
                 : 'bg-card hover:bg-primary/10 text-muted-foreground'

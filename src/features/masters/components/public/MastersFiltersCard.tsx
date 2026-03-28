@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { Search, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -241,8 +240,7 @@ export function MastersFiltersCard({
               </div>
             </div>
 
-            <AnimatePresence>
-              {showAdvanced && (
+            {showAdvanced && (
                 <MastersAdvancedFilters
                   query={query}
                   priceRange={priceRange}
@@ -261,7 +259,6 @@ export function MastersFiltersCard({
                   onPriceMaxLocalChange={setPriceMaxLocal}
                 />
               )}
-            </AnimatePresence>
           </>
         )}
       </CardContent>

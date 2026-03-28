@@ -49,7 +49,7 @@ export const MasterDetailsHeader = ({
               onClick={onToggleFavorite}
               disabled={favoriteLoading}
               className={cn(
-                'transition-all duration-300 ease-out',
+                'transition duration-300 ease-out',
                 isFavorite
                   ? 'border-[#DC143C] bg-[#DC143C]/10 text-[#DC143C] hover:bg-[#DC143C]/20 hover:border-[#B22222]'
                   : 'border-border hover:border-primary hover:bg-accent',
@@ -63,7 +63,7 @@ export const MasterDetailsHeader = ({
             >
               <Heart
                 className={cn(
-                  'h-6 w-6 transition-all',
+                  'h-6 w-6 transition',
                   isFavorite &&
                     'fill-[#DC143C] text-[#DC143C] drop-shadow-[0_0_6px_rgba(220,20,60,0.6)]'
                 )}
@@ -71,7 +71,7 @@ export const MasterDetailsHeader = ({
             </Button>
           )}
           {isClient && !isOwnProfile && (
-            <Button asChild className="font-semibold transition-all hover:-translate-y-0.5">
+            <Button asChild className="font-semibold transition hover:-translate-y-0.5">
               <a href="#lead-form" data-master-slug={slug}>
                 <CalendarDays className="h-4 w-4" />
                 {t('masterDetails.leaveRequest', 'Leave request')}
