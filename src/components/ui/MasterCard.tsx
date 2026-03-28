@@ -21,6 +21,7 @@ import { mastersApi } from '@/features/masters/mastersApi';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 import { ACCENT, ACCENT_LIGHT } from '@/constants/theme';
 import { useMasterCardData } from './masterCard/useMasterCardData';
 import { MasterCardBadges } from './masterCard/MasterCardBadges';
@@ -84,7 +85,7 @@ export const MasterCard = React.memo(function MasterCard({
 
   const handleContactClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isAuthed && role === 'CLIENT') {
+    if (isAuthed && role === USER_ROLE.CLIENT) {
       navigateToMaster();
     } else {
       nav(`/register?redirect=${encodeURIComponent(`/masters/${master.slug ?? master.id}`)}`);

@@ -9,9 +9,12 @@ import {
   SUPPORT_MAILTO,
   TELEGRAM_HANDLE,
   TELEGRAM_URL,
+  COMPANY_NAME,
+  COMPANY_IDNO,
+  COMPANY_ADDRESS,
 } from '@/config/support';
 
-const LAST_UPDATED = '2026-03-09';
+const LAST_UPDATED = '2026-03-28';
 
 export default function TermsOfUsePage() {
   const { t } = useTranslation();
@@ -53,7 +56,7 @@ export default function TermsOfUsePage() {
             {t('terms.lastUpdated')}: {LAST_UPDATED}
           </p>
 
-          <p className="leading-7">{t('terms.intro')}</p>
+          <p className="leading-7">{t('terms.intro', { COMPANY_NAME, IDNO: COMPANY_IDNO, LEGAL_ADDRESS: COMPANY_ADDRESS })}</p>
 
           {sections.map((section, index) => (
             <div key={index} className="space-y-2">

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import type { CreateLeadDto } from '@/types';
 import { toErrorMessage } from '@/utils/errors';
 import type { LeadSubmissionFormData, LeadSubmissionState } from '.';
+import { USER_ROLE } from '@/constants/roles';
 
 export function useLeadSubmission(masterId: string | undefined, isAuthed: boolean, role: string | null): LeadSubmissionState {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ export function useLeadSubmission(masterId: string | undefined, isAuthed: boolea
     const [createLead, { isLoading }] = useLeadsCreateMutation();
 
     const handleSendLead = async (formData: LeadSubmissionFormData) => {
-        if (!isAuthed || role !== 'CLIENT') {
+        if (!isAuthed || role !== USER_ROLE.CLIENT) {
             toast.error(t('common.actionRequiresClient', 'Only authorized clients can send requests. Please register or log in.'));
             navigate('/register');
             return;

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import type { LeadNotifyChannelInput } from '@/constants/leadNotifyChannel';
 
 export * from './chat';
 export * from './leads';
@@ -68,7 +69,7 @@ export type UpdateMasterDto = {
   services?: MasterServiceItem[];
 };
 
-export type LeadNotifyChannel = 'telegram' | 'whatsapp' | 'both' | 'none';
+export type LeadNotifyChannel = LeadNotifyChannelInput;
 
 export type UpdateNotificationSettingsDto = {
   telegramChatId?: string | null;
@@ -158,6 +159,8 @@ export type FileDto = {
   mimetype: string;
   size: number;
   createdAt?: string;
+  /** Prisma FileType, если API отдаёт назначение файла */
+  type?: import('@/constants/fileType').FileType | null;
 };
 
 export const PAID_TARIFFS = ['VIP', 'PREMIUM'] as const;

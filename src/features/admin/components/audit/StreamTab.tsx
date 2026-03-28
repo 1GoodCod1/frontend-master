@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { formatTimeOnly, getLocaleFromLanguage } from '@/utils/date';
+import { USER_ROLE } from '@/constants/roles';
+import { CONSENT_TYPE } from '@/constants/consentType';
 
 type StreamUser = {
   email?: string | null;
@@ -19,6 +21,7 @@ type AuditStreamLog = {
   id?: string;
   action?: string | null;
   entity?: string | null;
+  entityId?: string | null;
   ip?: string | null;
   actorId?: string | null;
   userId?: string | null;
@@ -48,7 +51,7 @@ function maskEmail(email: string): string {
 }
 
 function isAdminActor(u: NonNullable<StreamUser>): boolean {
-  return String(u.role ?? '').toUpperCase() === 'ADMIN';
+  return String(u.role ?? '').toUpperCase() === USER_ROLE.ADMIN;
 }
 
 function maskPhoneLast4(phone: string): string {
@@ -150,11 +153,22 @@ export default function StreamTab({
                     <div className="flex flex-row flex-wrap items-start justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
                         <Badge variant="secondary" className="font-semibold text-xs bg-primary/10 text-primary">
-                          {log.action || 'UNKNOWN'}
+                          {t(`admin.users.auditAction_${log.action}`, log.action || 'UNKNOWN')}
                         </Badge>
                         <Badge variant="outline" className="font-medium text-xs border-purple-500/30 text-purple-600 dark:text-purple-400">
                           {log.entity || 'UNKNOWN'}
                         </Badge>
+                        {log.action?.startsWith('CONSENT_') &&
+                          log.entityId != null &&
+                          log.entityId !== '' &&
+                          (Object.values(CONSENT_TYPE) as string[]).includes(String(log.entityId)) && (
+                          <Badge variant="outline" className="font-medium text-xs border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+                            {t(
+                              `admin.users.consentTypeLabels_${String(log.entityId)}`,
+                              String(log.entityId),
+                            )}
+                          </Badge>
+                        )}
                         {log.ip && (
                           <span className="text-xs text-muted-foreground font-mono truncate">
                             {log.ip}

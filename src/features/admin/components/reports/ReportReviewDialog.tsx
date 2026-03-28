@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { getStatusColor, getStatusBgColor } from '@/utils/reports';
 import { useIsDark } from '@/hooks/useIsDark';
+import { REPORT_ACTION } from '@/constants/reportAction';
 
 type ReportLike = {
   id: string;
@@ -116,12 +117,12 @@ export default function ReportReviewDialog({
                   <SelectValue placeholder={t('admin.reports.action')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="NO_ACTION">{t('admin.reports.actions.NO_ACTION')}</SelectItem>
-                  <SelectItem value="BAN_CLIENT">{t('admin.reports.actions.BAN_CLIENT')}</SelectItem>
-                  <SelectItem value="BAN_MASTER">{t('admin.reports.actions.BAN_MASTER')}</SelectItem>
-                  <SelectItem value="BAN_IP">{t('admin.reports.actions.BAN_IP')}</SelectItem>
-                  <SelectItem value="WARNING_CLIENT">{t('admin.reports.actions.WARNING_CLIENT')}</SelectItem>
-                  <SelectItem value="WARNING_MASTER">{t('admin.reports.actions.WARNING_MASTER')}</SelectItem>
+                  <SelectItem value={REPORT_ACTION.NO_ACTION}>{t('admin.reports.actions.NO_ACTION')}</SelectItem>
+                  <SelectItem value={REPORT_ACTION.BAN_CLIENT}>{t('admin.reports.actions.BAN_CLIENT')}</SelectItem>
+                  <SelectItem value={REPORT_ACTION.BAN_MASTER}>{t('admin.reports.actions.BAN_MASTER')}</SelectItem>
+                  <SelectItem value={REPORT_ACTION.BAN_IP}>{t('admin.reports.actions.BAN_IP')}</SelectItem>
+                  <SelectItem value={REPORT_ACTION.WARNING_CLIENT}>{t('admin.reports.actions.WARNING_CLIENT')}</SelectItem>
+                  <SelectItem value={REPORT_ACTION.WARNING_MASTER}>{t('admin.reports.actions.WARNING_MASTER')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

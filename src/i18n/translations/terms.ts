@@ -5,10 +5,10 @@ export const terms = {
       subtitle: 'Rules and conditions for using the Master-Hub platform.',
       lastUpdated: 'Last updated',
       intro:
-        'Welcome to Master-Hub. These Terms of Use ("Terms") govern your access to and use of our website, platform and related services. By registering, browsing or using our services, you agree to these Terms. If you do not agree, please do not use our services.',
+        'Welcome to Master-Hub, operated by {{COMPANY_NAME}}, IDNO {{IDNO}}, registered at {{LEGAL_ADDRESS}}, Republic of Moldova ("we", "us", "our"). These Terms of Use ("Terms") govern your access to and use of our website, platform and related services. By registering, browsing or using our services, you agree to these Terms. If you do not agree, please do not use our services.',
       section1Title: '1. Acceptance and Eligibility',
       section1P1:
-        'By creating an account or using Master-Hub, you confirm that you are at least 16 years of age (or the age of legal capacity in your jurisdiction) and that you have the authority to enter into these Terms. If you are using the platform on behalf of a business, you represent that you have the authority to bind that entity.',
+        'By creating an account or using Master-Hub, you confirm that you are at least 18 years of age and that you have the authority to enter into these Terms. If you are using the platform on behalf of a business, you represent that you have the authority to bind that entity.',
       section2Title: '2. Description of Services',
       section2P1:
         'Master-Hub is a marketplace that connects clients seeking services with verified masters (specialists). We provide the platform, profile pages, request and booking tools, reviews, plans and payment processing. We do not employ masters or guarantee the quality of work performed by third parties; we only facilitate the connection.',
@@ -20,7 +20,7 @@ export const terms = {
         'Masters must provide true information about their skills, categories and availability. Clients must use the platform in good faith when sending requests and booking services. Both parties must comply with applicable laws. Prohibited conduct includes: false or misleading information; harassment; spam; circumventing our fees or systems; scraping or automated access without permission; distributing malware; or using the platform for illegal purposes.',
       section5Title: '5. Plans, Payments and Refunds',
       section5P1:
-        'Subscription plans (e.g. BASIC, VIP, PREMIUM) and their features are described on the Plans page. Fees are charged in accordance with the selected plan and billing cycle. Payment processing is carried out by third-party providers; their terms also apply. Refund policy for subscription fees is as stated at the time of purchase or in separate policy. We may change plan prices with reasonable notice; continued use after a price change constitutes acceptance.',
+        'Subscription plans (e.g. BASIC, VIP, PREMIUM) and their features are described on the Plans page. Fees are charged in accordance with the selected plan and billing cycle. Payment processing is carried out by third-party providers; their terms also apply. In accordance with the Law on Consumer Protection of the Republic of Moldova, you have the right to withdraw from a paid subscription within 14 calendar days of purchase without giving any reason, unless the service has been fully performed with your prior express consent. Refund policy for subscription fees is as stated at the time of purchase or in a separate policy. We may change plan prices with reasonable notice; continued use after a price change constitutes acceptance.',
       section6Title: '6. Content and Intellectual Property',
       section6P1:
         'You retain ownership of content you upload (photos, descriptions, reviews). By uploading, you grant us a non-exclusive, worldwide, royalty-free licence to use, display and distribute that content in connection with the platform. You must not upload content that infringes third-party rights or that is illegal, offensive or harmful. We may remove content that violates these Terms or our policies without prior notice.',
@@ -52,10 +52,10 @@ export const terms = {
       subtitle: 'Правила и условия использования платформы Master-Hub.',
       lastUpdated: 'Последнее обновление',
       intro:
-        'Добро пожаловать на Master-Hub. Настоящие Условия использования («Условия») регулируют ваш доступ к нашему сайту, платформе и связанным услугам. Регистрируясь, просматривая или используя сервисы, вы соглашаетесь с этими Условиями. Если вы не согласны, пожалуйста, не используйте наши услуги.',
+        'Добро пожаловать на Master-Hub, управляемый {{COMPANY_NAME}}, IDNO {{IDNO}}, зарегистрированный по адресу: {{LEGAL_ADDRESS}}, Республика Молдова («мы», «нас», «наш»). Настоящие Условия использования («Условия») регулируют ваш доступ к нашему сайту, платформе и связанным услугам. Регистрируясь, просматривая или используя сервисы, вы соглашаетесь с этими Условиями. Если вы не согласны, пожалуйста, не используйте наши услуги.',
       section1Title: '1. Принятие и правоспособность',
       section1P1:
-        'Создавая учётную запись или используя Master-Hub, вы подтверждаете, что вам не менее 16 лет (или возраста дееспособности по вашему законодательству) и что вы имеете право заключать настоящие Условия. Если вы используете платформу от имени организации, вы подтверждаете, что имеете полномочия действовать от её имени.',
+        'Создавая учётную запись или используя Master-Hub, вы подтверждаете, что вам исполнилось 18 лет и что вы имеете право заключать настоящие Условия. Если вы используете платформу от имени организации, вы подтверждаете, что имеете полномочия действовать от её имени.',
       section2Title: '2. Описание услуг',
       section2P1:
         'Master-Hub — маркетплейс, соединяющий клиентов, ищущих услуги, с проверенными мастерами (специалистами). Мы предоставляем платформу, профили, инструменты заявок и бронирований, отзывы, тарифы и приём платежей. Мы не являемся работодателями мастеров и не гарантируем качество работ третьих лиц; мы лишь обеспечиваем связь между сторонами.',
@@ -67,7 +67,7 @@ export const terms = {
         'Мастера обязаны указывать достоверную информацию о навыках, категориях и доступности. Клиенты обязаны добросовестно использовать платформу при отправке заявок и бронировании. Обе стороны обязаны соблюдать применимое законодательство. Запрещается: введение в заблуждение; преследование; спам; обход комиссий или систем; сбор данных или автоматизированный доступ без разрешения; распространение вредоносного ПО; использование платформы в незаконных целях.',
       section5Title: '5. Тарифы, платежи и возвраты',
       section5P1:
-        'Тарифные планы (например, BASIC, VIP, PREMIUM) и их условия описаны на странице Тарифы. Оплата взимается в соответствии с выбранным планом и циклом оплаты. Обработка платежей осуществляется сторонними провайдерами; их условия также применяются. Политика возврата средств по подписке указана при покупке или в отдельном документе. Мы можем изменить цены с предварительным уведомлением; продолжение использования после изменения цен означает согласие.',
+        'Тарифные планы (например, BASIC, VIP, PREMIUM) и их условия описаны на странице Тарифы. Оплата взимается в соответствии с выбранным планом и циклом оплаты. Обработка платежей осуществляется сторонними провайдерами; их условия также применяются. В соответствии с Законом о защите прав потребителей Республики Молдова вы имеете право отказаться от платной подписки в течение 14 календарных дней с момента покупки без указания причин, если услуга не была полностью оказана с вашего предварительного согласия. Политика возврата средств по подписке указана при покупке или в отдельном документе. Мы можем изменить цены с предварительным уведомлением; продолжение использования после изменения цен означает согласие.',
       section6Title: '6. Контент и интеллектуальная собственность',
       section6P1:
         'Вы сохраняете права на загружаемый контент (фото, описания, отзывы). Загружая контент, вы предоставляете нам неисключительную, всемирную, безвозмездную лицензию на использование, отображение и распространение в связи с платформой. Запрещается загружать контент, нарушающий права третьих лиц или являющийся незаконным, оскорбительным или вредным. Мы вправе удалять контент, нарушающий Условия или политики, без предварительного уведомления.',
@@ -99,10 +99,10 @@ export const terms = {
       subtitle: 'Reguli și condiții pentru utilizarea platformei Master-Hub.',
       lastUpdated: 'Ultima actualizare',
       intro:
-        'Bine ați venit la Master-Hub. Acești Termeni și condiții («Termenii») reglementează accesul și utilizarea site-ului, platformei și serviciilor conexe. Prin înregistrare, navigare sau utilizare a serviciilor, acceptați acești Termeni. Dacă nu sunteți de acord, vă rugăm să nu folosiți serviciile.',
+        'Bine ați venit la Master-Hub, operat de {{COMPANY_NAME}}, IDNO {{IDNO}}, înregistrat la {{LEGAL_ADDRESS}}, Republica Moldova («noi», «nostru»). Acești Termeni și condiții («Termenii») reglementează accesul și utilizarea site-ului, platformei și serviciilor conexe. Prin înregistrare, navigare sau utilizare a serviciilor, acceptați acești Termeni. Dacă nu sunteți de acord, vă rugăm să nu folosiți serviciile.',
       section1Title: '1. Acceptare și eligibilitate',
       section1P1:
-        'Prin crearea unui cont sau utilizarea Master-Hub, confirmați că aveți cel puțin 16 ani (sau vârsta capacității legale în jurisdicția dvs.) și că aveți autoritatea de a încheia acești Termeni. Dacă utilizați platforma în numele unei afaceri, declarați că aveți autoritatea de a obliga acea entitate.',
+        'Prin crearea unui cont sau utilizarea Master-Hub, confirmați că aveți cel puțin 18 ani și că aveți autoritatea de a încheia acești Termeni. Dacă utilizați platforma în numele unei afaceri, declarați că aveți autoritatea de a obliga acea entitate.',
       section2Title: '2. Descrierea serviciilor',
       section2P1:
         'Master-Hub este o piață care conectează clienții care caută servicii cu meșteri verificați (specialiști). Oferim platforma, paginile de profil, instrumentele pentru cereri și rezervări, recenzii, planuri și procesare plăți. Nu angajăm meșteri și nu garantăm calitatea lucrărilor terților; facilităm doar conexiunea.',
@@ -114,7 +114,7 @@ export const terms = {
         'Meșterii trebuie să furnizeze informații adevărate despre competențe, categorii și disponibilitate. Clienții trebuie să folosească platforma în bună credință la trimiterea cererilor și rezervări. Ambele părți trebuie să respecte legile aplicabile. Este interzis: informații false sau înșelătoare; hărțuire; spam; ocolirea taxelor sau sistemelor; colectare automată sau acces fără permisiune; distribuire malware; utilizarea platformei în scopuri ilegale.',
       section5Title: '5. Planuri, plăți și rambursări',
       section5P1:
-        'Planurile de abonament (ex. BASIC, VIP, PREMIUM) și caracteristicile lor sunt descrise pe pagina Planuri. Taxele se aplică conform planului și ciclului de facturare ales. Procesarea plăților este efectuată de furnizori terți; se aplică și termenii lor. Politica de rambursare pentru abonamente este cea indicată la cumpărare sau în politică separată. Putem modifica prețurile cu un preaviz rezonabil; utilizarea continuă după modificare constituie acceptare.',
+        'Planurile de abonament (ex. BASIC, VIP, PREMIUM) și caracteristicile lor sunt descrise pe pagina Planuri. Taxele se aplică conform planului și ciclului de facturare ales. Procesarea plăților este efectuată de furnizori terți; se aplică și termenii lor. Conform Legii privind protecția consumatorilor a Republicii Moldova, aveți dreptul de a vă retrage dintr-un abonament plătit în termen de 14 zile calendaristice de la cumpărare, fără a indica motive, cu excepția cazului în care serviciul a fost prestat integral cu consimțământul dvs. prealabil expres. Politica de rambursare pentru abonamente este cea indicată la cumpărare sau în politică separată. Putem modifica prețurile cu un preaviz rezonabil; utilizarea continuă după modificare constituie acceptare.',
       section6Title: '6. Conținut și proprietate intelectuală',
       section6P1:
         'Păstrați dreptul asupra conținutului încărcat (fotografii, descrieri, recenzii). Prin încărcare, ne acordați o licență neexclusivă, mondială, gratuită de utilizare, afișare și distribuire în legătură cu platforma. Nu trebuie să încărcați conținut care încalcă drepturile terților sau care este ilegal, ofensiv sau dăunător. Putem elimina conținut care încalcă acești Termeni sau politicile fără notificare prealabilă.',

@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
 
 interface MasterProfileHeroProps {
   title: string;
@@ -74,15 +75,15 @@ export const MasterProfileHero = ({
   const { t } = useTranslation();
   const avatarSrc = mediaUrl(avatarUrl);
 
-  const showUnavailable = !isMasterAvailable || availabilityStatus !== 'AVAILABLE';
+  const showUnavailable = !isMasterAvailable || availabilityStatus !== AVAILABILITY_STATUS.AVAILABLE;
   const unavailableLabel =
-    availabilityStatus === 'BUSY'
+    availabilityStatus === AVAILABILITY_STATUS.BUSY
       ? t('masterDetails.masterIsBusy', 'Busy')
-      : availabilityStatus === 'OFFLINE'
+      : availabilityStatus === AVAILABILITY_STATUS.OFFLINE
         ? t('masterDetails.masterIsOffline', 'Offline')
         : t('masterDetails.leadsLimitReached', 'Full');
   const unavailableTooltip =
-    availabilityStatus === 'AVAILABLE'
+    availabilityStatus === AVAILABILITY_STATUS.AVAILABLE
       ? t('masterDetails.leadsLimitDescription', { currentActiveLeads, maxActiveLeads })
       : t('masterDetails.unavailableDescription', 'Subscribe to be notified when available.');
 

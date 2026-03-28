@@ -23,6 +23,7 @@ import { ProfileViewsHistoryModal } from '@/features/masters/components/master/P
 import { Progress } from '@/components/ui/progress';
 import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
 import { MasterPendingBookingsCard } from '@/features/bookings/components/MasterPendingBookingsCard';
+import { AVAILABILITY_STATUS, type AvailabilityStatus } from '@/constants/availabilityStatus';
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ color?: string; name?: string; value?: number; dataKey?: string }>; label?: string }) {
   if (active && payload && payload.length) {
@@ -72,12 +73,16 @@ export default function DashboardPage() {
   }, []);
 
   type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' };
-  type AvailabilityData = { availabilityStatus?: 'AVAILABLE' | 'BUSY' | 'OFFLINE'; maxActiveLeads?: number; currentActiveLeads?: number };
+  type AvailabilityData = {
+    availabilityStatus?: AvailabilityStatus;
+    maxActiveLeads?: number;
+    currentActiveLeads?: number;
+  };
   const masterData: MasterProfileData = ((profile.data as { data?: MasterProfileData } | undefined)?.data ?? profile.data ?? {}) as MasterProfileData;
   const isOnline = masterData?.isOnline || false;
 
   const availabilityData: AvailabilityData = ((availability.data as { data?: AvailabilityData } | undefined)?.data ?? availability.data ?? {}) as AvailabilityData;
-  const currentStatus = availabilityData?.availabilityStatus || 'AVAILABLE';
+  const currentStatus = availabilityData?.availabilityStatus || AVAILABILITY_STATUS.AVAILABLE;
   const maxActiveLeads = availabilityData?.maxActiveLeads || 5;
   const currentActiveLeads = availabilityData?.currentActiveLeads || 0;
 

@@ -14,6 +14,7 @@ import {
   getPaymentErrorMessage,
   VALID_PLANS,
 } from './utils';
+import { USER_ROLE } from '@/constants/roles';
 
 export function usePaymentOptionsPage() {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export function usePaymentOptionsPage() {
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);
-  const isMaster = isAuthed && role === 'MASTER';
+  const isMaster = isAuthed && role === USER_ROLE.MASTER;
 
   const planFromQuery = getPlanFromSearchParams(searchParams);
   const isPendingUpgrade = getIsPendingFromSearchParams(searchParams);

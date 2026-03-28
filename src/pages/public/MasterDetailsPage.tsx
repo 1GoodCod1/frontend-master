@@ -30,6 +30,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { trackRecentView } from '@/utils/tracking';
 import { hasRecentViewsConsent } from '@/features/cookie-consent/storage';
+import { USER_ROLE } from '@/constants/roles';
+import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
 
 type TabId = 'about' | 'services' | 'gallery' | 'reviews';
 
@@ -58,7 +60,7 @@ export default function MasterDetailsPage() {
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
   const me = useAppSelector((s) => s.auth.me);
-  const isClient = isAuthed && role === 'CLIENT';
+  const isClient = isAuthed && role === USER_ROLE.CLIENT;
 
   const masterQuery = useMastersByIdQuery(
     { id: slugOrId },
@@ -74,10 +76,11 @@ export default function MasterDetailsPage() {
   const currentUserMasterId = getCurrentUserMasterId(me);
   const isOwnProfile = Boolean(isAuthed && masterId && currentUserMasterId === masterId);
 
-  const availabilityStatus = m?.availabilityStatus || 'AVAILABLE';
+  const availabilityStatus = m?.availabilityStatus || AVAILABILITY_STATUS.AVAILABLE;
   const currentActiveLeads = m?.currentActiveLeads || 0;
   const maxActiveLeads = m?.maxActiveLeads || 5;
-  const isMasterAvailable = availabilityStatus === 'AVAILABLE' && currentActiveLeads < maxActiveLeads;
+  const isMasterAvailable =
+    availabilityStatus === AVAILABILITY_STATUS.AVAILABLE && currentActiveLeads < maxActiveLeads;
 
   const reviewsQuery = useReviewsForMasterQuery(
     { masterId: masterId ?? '', status: 'VISIBLE' },
@@ -310,7 +313,7 @@ export default function MasterDetailsPage() {
                   error={reviewsQuery.error}
                   onRetry={reviewsQuery.refetch}
                   isClient={isClient}
-                  isMaster={role === 'MASTER' && isOwnProfile}
+                  isMaster={role === USER_ROLE.MASTER && isOwnProfile}
                   canCreateReview={canCreateReviewQuery.data ?? undefined}
                   reviewSubmission={reviewSubmission}
                 />
@@ -321,7 +324,7 @@ export default function MasterDetailsPage() {
           {/* Right sidebar */}
           <div className="space-y-4">
             {/* Lead form / CTA */}
-            {!isOwnProfile && m?.user?.isVerified && role !== 'ADMIN' && (
+            {!isOwnProfile && m?.user?.isVerified && role !== USER_ROLE.ADMIN && (
               <div id="lead-form" className="lg:sticky lg:top-24 space-y-3">
                 <MasterDetailsLeadForm
                   isAuthed={isAuthed}

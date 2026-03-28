@@ -31,6 +31,7 @@ import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { cn } from '@/lib/utils';
+import { SENDER_TYPE } from '@/constants/senderType';
 import {
   useMastersGetQuickRepliesQuery,
   useMastersReplaceQuickRepliesMutation,
@@ -68,7 +69,7 @@ export default function ChatWindow({
   const [sendMessage] = useSendMessageMutation();
   const [markAsRead] = useMarkAsReadMutation();
 
-  const isMaster = currentUserRole === 'MASTER';
+  const isMaster = currentUserRole === SENDER_TYPE.MASTER;
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const { data: quickRepliesData } = useMastersGetQuickRepliesQuery(undefined, {
@@ -254,7 +255,7 @@ export default function ChatWindow({
                   .slice(0, 2) ?? '?'}
               </AvatarFallback>
             </Avatar>
-            {currentUserRole === 'CLIENT' && otherParty?.isOnline && (
+            {currentUserRole === SENDER_TYPE.CLIENT && otherParty?.isOnline && (
               <span className="absolute bottom-0 left-0 size-2.5 rounded-full border-2 border-white dark:border-white/10 bg-emerald-500" />
             )}
           </div>
@@ -267,7 +268,7 @@ export default function ChatWindow({
               <Badge variant="destructive" className="text-[10px]">
                 {t('common.closedChat')}
               </Badge>
-            ) : currentUserRole === 'CLIENT' && otherParty ? (
+            ) : currentUserRole === SENDER_TYPE.CLIENT && otherParty ? (
               <OnlineStatusBadge
                 isOnline={otherParty.isOnline}
                 lastActivityAt={otherParty.lastActivityAt}
@@ -350,8 +351,10 @@ export default function ChatWindow({
                 </div>
                 {msgs.map((msg: ChatMessageType) => {
                   const isOwn =
-                    (currentUserRole === 'CLIENT' && msg.senderType === 'CLIENT') ||
-                    (currentUserRole === 'MASTER' && msg.senderType === 'MASTER');
+                    (currentUserRole === SENDER_TYPE.CLIENT &&
+                      msg.senderType === SENDER_TYPE.CLIENT) ||
+                    (currentUserRole === SENDER_TYPE.MASTER &&
+                      msg.senderType === SENDER_TYPE.MASTER);
 
                   return (
                     <ChatMessage
@@ -427,12 +430,12 @@ export default function ChatWindow({
           )}
         >
           <p className="font-medium">
-            {currentUserRole === 'MASTER'
+            {currentUserRole === SENDER_TYPE.MASTER
               ? t('common.chatNoActiveLeadMaster')
               : t('common.chatNoActiveLead')}
           </p>
           <p className="mt-1.5 text-slate-600 dark:text-slate-400">
-            {currentUserRole === 'MASTER'
+            {currentUserRole === SENDER_TYPE.MASTER
               ? t('common.chatNoActiveLeadHintMaster')
               : t('common.chatNoActiveLeadHint')}
           </p>

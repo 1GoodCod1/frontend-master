@@ -9,6 +9,7 @@ import { useAppSelector } from '@/app/hooks';
 import { selectPlan } from '@/features/auth/selectors';
 import { hasMinPlan } from '@/features/auth/plan';
 import type { UpdateNotificationSettingsDto } from '@/types';
+import { LEAD_NOTIFY_CHANNEL_INPUT } from '@/constants/leadNotifyChannel';
 
 export function useNotificationSettings() {
   const { t } = useTranslation();
@@ -30,7 +31,9 @@ export function useNotificationSettings() {
   const [form, setForm] = useState<UpdateNotificationSettingsDto>({
     telegramChatId: settings.telegramChatId ?? null,
     whatsappPhone: settings.whatsappPhone ?? null,
-    leadNotifyChannel: (settings.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ?? 'both',
+    leadNotifyChannel:
+      (settings.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ??
+      LEAD_NOTIFY_CHANNEL_INPUT.both,
     notifyTariffSms: settings.notifyTariffSms ?? true,
     notifyTariffInApp: settings.notifyTariffInApp ?? true,
   });
@@ -41,7 +44,9 @@ export function useNotificationSettings() {
       setForm({
         telegramChatId: data.telegramChatId ?? null,
         whatsappPhone: data.whatsappPhone ?? null,
-        leadNotifyChannel: (data.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ?? 'both',
+        leadNotifyChannel:
+          (data.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ??
+          LEAD_NOTIFY_CHANNEL_INPUT.both,
         notifyTariffSms: data.notifyTariffSms ?? true,
         notifyTariffInApp: data.notifyTariffInApp ?? true,
       });

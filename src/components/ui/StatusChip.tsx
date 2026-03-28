@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { StatusChipKind } from '@/types/ui';
+import { USER_ROLE } from '@/constants/roles';
 
 type StatusChipSize = 'small' | 'medium';
 
@@ -8,8 +9,8 @@ function mapVariantAndClass(kind: StatusChipKind, value: string): { variant?: 'd
   const v = String(value || '').toUpperCase();
 
   if (kind === 'role') {
-    if (v === 'ADMIN') return { variant: 'secondary' };
-    if (v === 'MASTER') return { variant: 'default' };
+    if (v === USER_ROLE.ADMIN) return { variant: 'secondary' };
+    if (v === USER_ROLE.MASTER) return { variant: 'default' };
     return { variant: 'outline' };
   }
 

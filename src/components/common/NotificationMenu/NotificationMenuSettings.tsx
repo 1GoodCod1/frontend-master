@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 
 type NotificationSettings = {
   autoPinLeadStatusUpdates: boolean;
@@ -22,7 +23,8 @@ export function NotificationMenuSettings({
   onSettingsChange,
 }: Props) {
   const { t } = useTranslation();
-  const isAdminOrMaster = role === 'ADMIN' || role === 'MASTER';
+  const isAdminOrMaster =
+    role === USER_ROLE.ADMIN || role === USER_ROLE.MASTER;
   const switchClassName =
     'h-6 w-11 border border-border/70 shadow-[inset_0_0_0_1px_hsl(var(--background)/0.15)] data-[state=unchecked]:bg-zinc-400/70 dark:data-[state=unchecked]:bg-zinc-700 data-[state=checked]:bg-emerald-500 dark:data-[state=checked]:bg-emerald-500';
 
@@ -60,7 +62,7 @@ export function NotificationMenuSettings({
                 }
               />
             </div>
-            {role === 'ADMIN' && (
+            {role === USER_ROLE.ADMIN && (
               <>
                 <div className="flex items-center justify-between gap-4 rounded-lg px-2.5 py-2">
                   <Label

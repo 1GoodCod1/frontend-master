@@ -2,6 +2,7 @@ import { Phone } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { mediaUrl } from '@/utils/media';
+import { USER_ROLE } from '@/constants/roles';
 
 type AdminUserCellUser = {
   role?: string | null;
@@ -30,7 +31,7 @@ export default function UserCell({ user }: UserCellProps) {
         {avatarSrc && <AvatarImage src={avatarSrc} className="object-cover" />}
         <AvatarFallback className="rounded-lg p-0 bg-transparent">
           <AvatarPlaceholder
-            role={user.role?.toUpperCase() === 'MASTER' ? 'master' : 'client'}
+            role={user.role?.toUpperCase() === USER_ROLE.MASTER ? 'master' : 'client'}
             height={56}
             fillParent
           />

@@ -19,6 +19,7 @@ import { Textarea } from '@/components/ui/textarea';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
 import { isRecord } from '@/utils/guards';
+import { USER_ROLE } from '@/constants/roles';
 
 interface ReviewItem {
   id: string;
@@ -64,7 +65,7 @@ export function ReviewsSection({ masterId }: ReviewsSectionProps) {
     isRecord(me) && isRecord(me.masterProfile) && typeof me.masterProfile.id === 'string'
       ? me.masterProfile.id
       : undefined;
-  const isMasterOwner = role === 'MASTER' && masterProfileId === masterId;
+  const isMasterOwner = role === USER_ROLE.MASTER && masterProfileId === masterId;
 
   const handleVote = async (reviewId: string, hasVoted: boolean) => {
     if (!me) {

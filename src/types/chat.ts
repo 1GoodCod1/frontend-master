@@ -1,6 +1,8 @@
 /** Chat domain types — shared between API, components and socket. */
 
-export type ChatUserRole = 'CLIENT' | 'MASTER';
+import type { SenderType } from '@/constants/senderType';
+
+export type ChatUserRole = SenderType;
 
 export interface ChatFile {
   id: string;

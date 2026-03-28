@@ -11,6 +11,7 @@ import RoleTabs from '@/features/auth/components/register/RoleTabs';
 import RegisterForm from '@/features/auth/components/register/RegisterForm';
 import PremiumAfterVerificationBanner from '@/features/auth/components/register/PremiumAfterVerificationBanner';
 import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '@/hooks/auth/register';
+import { USER_ROLE } from '@/constants/roles';
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
@@ -26,9 +27,10 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (!isAuthed || !role) return;
-    if (role === 'ADMIN') navigate('/admin', { replace: true });
-    else if (role === 'MASTER') navigate('/dashboard', { replace: true });
-    else if (role === 'CLIENT') navigate('/client-dashboard', { replace: true });
+    if (role === USER_ROLE.ADMIN) navigate('/admin', { replace: true });
+    else if (role === USER_ROLE.MASTER) navigate('/dashboard', { replace: true });
+    else if (role === USER_ROLE.CLIENT)
+      navigate('/client-dashboard', { replace: true });
   }, [isAuthed, role, navigate]);
 
   if (restoring) {
@@ -43,7 +45,7 @@ export default function RegisterPage() {
 
   if (isAuthed) return <Navigate to="/" replace />;
 
-  const isClient = selectedRole === 'CLIENT';
+  const isClient = selectedRole === USER_ROLE.CLIENT;
 
   return (
     <AuthLayout view="register">
@@ -57,7 +59,7 @@ export default function RegisterPage() {
           >
             <RegisterHeader />
             <RoleTabs
-              value={selectedRole === 'CLIENT' ? 0 : 1}
+              value={selectedRole === USER_ROLE.CLIENT ? 0 : 1}
               onChange={setSelectedRole}
             />
             {!isClient && (

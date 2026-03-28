@@ -8,6 +8,7 @@ import { MAX_NOTIFICATIONS, DEDUPE_WINDOW_MS } from './types';
 import { now, makeId, isNotificationIdFromBackend, pickId, pruneRecent } from './utils';
 import { dedupeKey, stableIdentity } from './dedupe';
 import { makeTitle, makeMessage, shouldAutoPin } from './formatters';
+import { NOTIFICATION_EVENT_TYPE } from '@/constants/notificationEventType';
 
 // Re-export types and utilities so existing imports from socketSlice keep working
 export type { SocketEventType, SocketEvent, NotificationItem } from './types';
@@ -20,7 +21,9 @@ function normalizePersistedNotifications(list: unknown): NotificationItem[] {
     .filter(Boolean)
     .map((n) => {
       const obj = isRecord(n) ? n : {};
-      const type = (obj.type as import('./types').SocketEventType) ?? 'system_update';
+      const type =
+        (obj.type as import('./types').SocketEventType) ??
+        NOTIFICATION_EVENT_TYPE.system_update;
       return {
         id: String(obj.id ?? makeId()),
         type,
@@ -99,16 +102,23 @@ const slice = createSlice({
 
       const entityId = pickId(evt.payload);
 
-      if (evt.type === 'new_lead' || evt.type === 'lead_sent' || evt.type === 'admin_new_lead') {
+      if (
+        evt.type === NOTIFICATION_EVENT_TYPE.new_lead ||
+        evt.type === NOTIFICATION_EVENT_TYPE.lead_sent ||
+        evt.type === NOTIFICATION_EVENT_TYPE.admin_new_lead
+      ) {
         state.unreadLeads += 1;
         if (entityId) state.recent.leads[entityId] = t;
       }
       // new_chat_message — no unread counter tracking (handled by chatSlice)
-      if (evt.type === 'new_review' || evt.type === 'admin_new_review') {
+      if (
+        evt.type === NOTIFICATION_EVENT_TYPE.new_review ||
+        evt.type === NOTIFICATION_EVENT_TYPE.admin_new_review
+      ) {
         state.unreadReviews += 1;
         if (entityId) state.recent.reviews[entityId] = t;
       }
-      if (evt.type === 'lead_status_updated') {
+      if (evt.type === NOTIFICATION_EVENT_TYPE.lead_status_updated) {
         if (entityId) state.recent.leads[entityId] = t;
       }
 
@@ -146,10 +156,17 @@ const slice = createSlice({
         const wasUnread = !n.read;
         n.read = true;
         if (wasUnread) {
-          if (n.type === 'new_lead' || n.type === 'lead_sent' || n.type === 'admin_new_lead') {
+          if (
+            n.type === NOTIFICATION_EVENT_TYPE.new_lead ||
+            n.type === NOTIFICATION_EVENT_TYPE.lead_sent ||
+            n.type === NOTIFICATION_EVENT_TYPE.admin_new_lead
+          ) {
             state.unreadLeads = Math.max(0, state.unreadLeads - 1);
           }
-          if (n.type === 'new_review' || n.type === 'admin_new_review') {
+          if (
+            n.type === NOTIFICATION_EVENT_TYPE.new_review ||
+            n.type === NOTIFICATION_EVENT_TYPE.admin_new_review
+          ) {
             state.unreadReviews = Math.max(0, state.unreadReviews - 1);
           }
         }
@@ -179,8 +196,19 @@ const slice = createSlice({
       // unreadLeads/unreadReviews — they are cleared by visiting the page and must persist across F5.
       const hadNoNotifications = state.notifications.length === 0;
       if (hadNoNotifications && apiItems.length > 0) {
-        state.unreadLeads = merged.filter((n) => !n.read && (n.type === 'new_lead' || n.type === 'lead_sent' || n.type === 'admin_new_lead')).length;
-        state.unreadReviews = merged.filter((n) => !n.read && (n.type === 'new_review' || n.type === 'admin_new_review')).length;
+        state.unreadLeads = merged.filter(
+          (n) =>
+            !n.read &&
+            (n.type === NOTIFICATION_EVENT_TYPE.new_lead ||
+              n.type === NOTIFICATION_EVENT_TYPE.lead_sent ||
+              n.type === NOTIFICATION_EVENT_TYPE.admin_new_lead),
+        ).length;
+        state.unreadReviews = merged.filter(
+          (n) =>
+            !n.read &&
+            (n.type === NOTIFICATION_EVENT_TYPE.new_review ||
+              n.type === NOTIFICATION_EVENT_TYPE.admin_new_review),
+        ).length;
       }
     },
 

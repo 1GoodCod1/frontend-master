@@ -18,9 +18,15 @@ import { Switch } from '@/components/ui/switch';
 import { useNotificationSettings } from '@/hooks/master/useNotificationSettings';
 import { useMastersCreateTelegramConnectLinkMutation } from '@/features/masters/mastersApi';
 import type { LeadNotifyChannel } from '@/types';
+import { LEAD_NOTIFY_CHANNEL_INPUT } from '@/constants/leadNotifyChannel';
 
 const iconClass = 'size-5';
-const LEAD_CHANNEL_OPTIONS: LeadNotifyChannel[] = ['telegram', 'whatsapp', 'both', 'none'];
+const LEAD_CHANNEL_OPTIONS: LeadNotifyChannel[] = [
+  LEAD_NOTIFY_CHANNEL_INPUT.telegram,
+  LEAD_NOTIFY_CHANNEL_INPUT.whatsapp,
+  LEAD_NOTIFY_CHANNEL_INPUT.both,
+  LEAD_NOTIFY_CHANNEL_INPUT.none,
+];
 const POLL_INTERVAL_MS = 3000;
 const POLL_DURATION_MS = 60000;
 
@@ -87,7 +93,7 @@ export function NotificationChannelsForm() {
                 {t('notificationSettings.leadChannel.description')}
               </p>
               <Select
-                value={form.leadNotifyChannel ?? 'both'}
+                value={form.leadNotifyChannel ?? LEAD_NOTIFY_CHANNEL_INPUT.both}
                 onValueChange={(v) => updateForm({ leadNotifyChannel: v as LeadNotifyChannel })}
               >
                 <SelectTrigger>

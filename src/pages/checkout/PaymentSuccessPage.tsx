@@ -8,6 +8,7 @@ import { usePaymentsSimulateMiaSandboxMutation } from '@/features/payments/payme
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingState } from '@/components/common/States';
+import { USER_ROLE } from '@/constants/roles';
 
 export default function PaymentSuccessPage() {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ export default function PaymentSuccessPage() {
   const orderId = searchParams.get('orderId');
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
-  const isMaster = isAuthed && role === 'MASTER';
+  const isMaster = isAuthed && role === USER_ROLE.MASTER;
   const [simulateMia] = usePaymentsSimulateMiaSandboxMutation();
   const simulateDoneRef = useRef(false);
   const [simulateSettled, setSimulateSettled] = useState(false);

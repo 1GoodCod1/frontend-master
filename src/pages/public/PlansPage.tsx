@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { isRecord } from '@/utils/guards';
+import { USER_ROLE } from '@/constants/roles';
 
 export default function PlansPage() {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export default function PlansPage() {
         }
       : null;
 
-  if (role === 'ADMIN') {
+  if (role === USER_ROLE.ADMIN) {
     return (
       <>
         <SEOHead title={t('plans.adminView.title')} noindex />

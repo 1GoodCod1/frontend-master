@@ -23,6 +23,7 @@ import { VerificationRequiredBanner } from '@/components/common/VerificationRequ
 import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 
 function getItems(t: ReturnType<typeof useTranslation>['t']): CabinetNavItem[] {
   return [
@@ -100,7 +101,12 @@ export function ClientDashboardLayout() {
       )}>
         <div className="min-w-0 px-4 md:px-6 py-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
-          {role === 'CLIENT' && <VerificationRequiredBanner role="CLIENT" isVerified={isVerified} />}
+          {role === USER_ROLE.CLIENT && (
+            <VerificationRequiredBanner
+              role={USER_ROLE.CLIENT}
+              isVerified={isVerified}
+            />
+          )}
           <Outlet />
         </div>
       </main>

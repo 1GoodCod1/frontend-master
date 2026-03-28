@@ -4,12 +4,28 @@ import {
   LayoutDashboard,
   Shield,
 } from 'lucide-react';
+import { USER_ROLE } from '@/constants/roles';
 import type { AppShellNavItem } from './types';
 
 export const APP_SHELL_NAV_ITEMS: AppShellNavItem[] = [
   { to: '/masters', labelKey: 'nav.masters', icon: Users },
-  { to: '/plans', labelKey: 'nav.plans', icon: CreditCard, hideForRoles: ['CLIENT'] },
-  { to: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['MASTER'] },
-  { to: '/client-dashboard', labelKey: 'nav.clientDashboard', icon: LayoutDashboard, roles: ['CLIENT'] },
-  { to: '/admin', labelKey: 'nav.admin', icon: Shield, roles: ['ADMIN'] },
+  {
+    to: '/plans',
+    labelKey: 'nav.plans',
+    icon: CreditCard,
+    hideForRoles: [USER_ROLE.CLIENT],
+  },
+  {
+    to: '/dashboard',
+    labelKey: 'nav.dashboard',
+    icon: LayoutDashboard,
+    roles: [USER_ROLE.MASTER],
+  },
+  {
+    to: '/client-dashboard',
+    labelKey: 'nav.clientDashboard',
+    icon: LayoutDashboard,
+    roles: [USER_ROLE.CLIENT],
+  },
+  { to: '/admin', labelKey: 'nav.admin', icon: Shield, roles: [USER_ROLE.ADMIN] },
 ];

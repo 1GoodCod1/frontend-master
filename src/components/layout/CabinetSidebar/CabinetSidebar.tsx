@@ -9,6 +9,7 @@ import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { mediaUrl } from '@/utils/media';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 
 export interface CabinetNavItem {
   key: string;
@@ -89,7 +90,7 @@ export function CabinetSidebar({
                 {initials}
               </AvatarFallback>
             </Avatar>
-            {role === 'MASTER' && (
+            {role === USER_ROLE.MASTER && (
               <div
                 className={cn(
                   'absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[hsl(var(--cabinet-sidebar-bg))]',
@@ -113,7 +114,7 @@ export function CabinetSidebar({
                 >
                   {displayName || '—'}
                 </p>
-                {role === 'MASTER' && (
+                {role === USER_ROLE.MASTER && (
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span
                       className={cn(

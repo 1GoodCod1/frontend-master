@@ -11,6 +11,7 @@ import {
 } from '@/utils/chat';
 import type { ChatListProps } from '@/types/chat';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 
 type ChatTab = 'all' | 'unread';
 
@@ -20,7 +21,7 @@ export default function ChatList({
   userRole,
 }: ChatListProps) {
   const { t } = useTranslation();
-  const ns = userRole === 'CLIENT' ? 'clientDashboard' : 'dashboard';
+  const ns = userRole === USER_ROLE.CLIENT ? 'clientDashboard' : 'dashboard';
 
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState<ChatTab>('all');
@@ -184,7 +185,7 @@ export default function ChatList({
                           {otherParty?.name?.[0]?.toUpperCase() ?? '?'}
                         </AvatarFallback>
                       </Avatar>
-                      {userRole === 'CLIENT' && otherParty?.isOnline && (
+                      {userRole === USER_ROLE.CLIENT && otherParty?.isOnline && (
                         <span className="absolute bottom-0 right-0 size-3 bg-emerald-500 border-2 border-background rounded-full" />
                       )}
                     </div>

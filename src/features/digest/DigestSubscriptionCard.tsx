@@ -10,6 +10,7 @@ import {
   useDigestSubscribeMutation,
   useDigestUnsubscribeMutation,
 } from './digestApi';
+import { USER_ROLE } from '@/constants/roles';
 
 export function DigestSubscriptionCard() {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ export function DigestSubscriptionCard() {
   }
 
   const description =
-    role === 'MASTER'
+    role === USER_ROLE.MASTER
       ? t('digest.descriptionMaster')
       : t('digest.descriptionClient');
 

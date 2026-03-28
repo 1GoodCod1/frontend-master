@@ -3,6 +3,7 @@ import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRestoring, selectRole } from '@/features/auth/selectors';
 import { useAuthMeQuery } from '@/features/auth/authApi';
 import { LoadingState } from '@/components/common/States';
+import { USER_ROLE } from '@/constants/roles';
 
 export function ClientRoute() {
   const isAuthed = useAppSelector(selectIsAuthed);
@@ -14,15 +15,15 @@ export function ClientRoute() {
   if (!isAuthed) return <Navigate to="/login" replace />;
   if (!role) return <LoadingState fullScreen />;
 
-  if (role === 'CLIENT') {
+  if (role === USER_ROLE.CLIENT) {
     return (
       <div className="animate-in fade-in duration-200">
         <Outlet />
       </div>
     );
   }
-  if (role === 'MASTER') return <Navigate to="/dashboard" replace />;
-  if (role === 'ADMIN') return <Navigate to="/admin" replace />;
+  if (role === USER_ROLE.MASTER) return <Navigate to="/dashboard" replace />;
+  if (role === USER_ROLE.ADMIN) return <Navigate to="/admin" replace />;
 
   return <Navigate to="/" replace />;
 }

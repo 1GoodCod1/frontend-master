@@ -5,6 +5,7 @@ import { selectIsAuthed, selectRole, selectRestoring, selectPlan } from './selec
 import { LoadingState } from '@/components/common/States';
 import { TariffPlan, hasMinPlan } from '@/features/auth/plan';
 import { useAuthMeQuery } from './authApi';
+import { USER_ROLE } from '@/constants/roles';
 
 function WaitingForRole() {
   return (
@@ -22,11 +23,11 @@ export function PublicRoute() {
 
   useEffect(() => {
     if (!restoring && isAuthed && role) {
-      if (role === 'ADMIN') {
+      if (role === USER_ROLE.ADMIN) {
         navigate('/admin', { replace: true });
-      } else if (role === 'MASTER') {
+      } else if (role === USER_ROLE.MASTER) {
         navigate('/dashboard', { replace: true });
-      } else if (role === 'CLIENT') {
+      } else if (role === USER_ROLE.CLIENT) {
         navigate('/client-dashboard', { replace: true });
       }
     }
@@ -70,7 +71,7 @@ export function PlanRoute({ min }: { min: TariffPlan }) {
   if (restoring) return <LoadingState label="Restoring session..." fullScreen />;
   if (!isAuthed) return <Navigate to="/login" replace />;
   if (!role || !plan) return <WaitingForRole />;
-  if (role !== 'MASTER') return <Navigate to="/" replace />;
+  if (role !== USER_ROLE.MASTER) return <Navigate to="/" replace />;
 
   if (!hasMinPlan(plan, min)) {
     return <Navigate to="/dashboard" replace />;
@@ -97,7 +98,7 @@ export function MasterRoute() {
   }
   if (!isAuthed) return <Navigate to="/login" replace />;
   if (!role) return <WaitingForRole />;
-  if (role !== 'MASTER') return <Navigate to="/" replace />;
+  if (role !== USER_ROLE.MASTER) return <Navigate to="/" replace />;
 
   return (
     <div className="animate-in fade-in duration-200">
@@ -120,7 +121,7 @@ export function AdminRoute() {
   }
   if (!isAuthed) return <Navigate to="/login" replace />;
   if (!role) return <WaitingForRole />;
-  if (role !== 'ADMIN') return <Navigate to="/" replace />;
+  if (role !== USER_ROLE.ADMIN) return <Navigate to="/" replace />;
 
   return (
     <div className="animate-in fade-in duration-200">

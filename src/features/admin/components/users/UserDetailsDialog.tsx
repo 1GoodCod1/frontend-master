@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Mail, Phone, CheckCircle, Ban, Clock, Calendar, LogIn, Star, Eye, Briefcase, MapPin } from 'lucide-react';
+import { Mail, Phone, CheckCircle, Ban, Clock, Calendar, LogIn, Star, Eye, Briefcase, MapPin, ShieldCheck, Activity } from 'lucide-react';
+import { useAdminUserConsentsQuery, useAdminUserAuditLogsQuery } from '@/features/admin/adminApi';
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,7 @@ import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useNow } from '@/hooks/useNow';
+import { USER_ROLE } from '@/constants/roles';
 
 type UserDetailsUser = {
   role?: string | null;
@@ -66,6 +68,15 @@ export default function UserDetailsDialog({
   const isDark = useIsDark();
   const now = useNow();
 
+  const userId = (user?.id ?? '') as string;
+  const { data: consents } = useAdminUserConsentsQuery(userId, {
+    skip: !open || !userId,
+  });
+  const { data: auditData } = useAdminUserAuditLogsQuery(
+    { userId, limit: 20 },
+    { skip: !open || !userId },
+  );
+
   if (!user) return null;
   const role = (user.role ?? 'USER') as string;
 
@@ -103,7 +114,7 @@ export default function UserDetailsDialog({
                 <img src={avatarSrc} alt="" className="size-full object-cover" />
               ) : (
                 <AvatarPlaceholder
-                  role={role === 'MASTER' ? 'master' : 'client'}
+                  role={role === USER_ROLE.MASTER ? 'master' : 'client'}
                   height={112}
                   fillParent
                 />
@@ -141,7 +152,7 @@ export default function UserDetailsDialog({
             </div>
           </section>
 
-          {user.role === 'MASTER' && user.masterProfile && (
+          {user.role === USER_ROLE.MASTER && user.masterProfile && (
             <section className="space-y-4 pt-2">
               <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
                 <Briefcase className="size-4" />
@@ -285,6 +296,105 @@ export default function UserDetailsDialog({
               </div>
             </section>
           )}
+
+          {/* Consents Section (GDPR) */}
+          <section className="space-y-4 pt-2">
+            <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+              <ShieldCheck className="size-4" />
+              {t('admin.users.consentsSection')}
+            </h3>
+            {consents && consents.length > 0 ? (
+              <div className="overflow-hidden rounded-xl border border-border/40">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border/40 bg-slate-50/80 dark:bg-white/[0.03]">
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.consentType')}</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.consentDate')}</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.consentVersion')}</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.consentIp')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {consents.map((c) => (
+                      <tr key={c.id} className="border-b border-border/20 last:border-0">
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              className={`border-0 px-2 py-0.5 text-[10px] font-bold uppercase ${
+                                c.granted && !c.revokedAt
+                                  ? 'bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
+                                  : 'bg-rose-500/15 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400'
+                              }`}
+                            >
+                              {c.granted && !c.revokedAt ? t('admin.users.consentGranted') : t('admin.users.consentRevoked')}
+                            </Badge>
+                            <span className="text-xs font-medium text-foreground">
+                              {t(`admin.users.consentTypeLabels_${c.consentType}`, c.consentType)}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground">
+                          {formatDateTimeLong(c.createdAt, locale)}
+                        </td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground">
+                          v{c.version}
+                        </td>
+                        <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
+                          {c.ipAddress || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center rounded-2xl border border-dashed border-border/40 bg-slate-50/50 p-4 text-sm text-muted-foreground dark:bg-white/[0.02]">
+                {t('admin.users.consentNoData')}
+              </div>
+            )}
+          </section>
+
+          {/* Recent Activity (audit logs) */}
+          <section className="space-y-4 pt-2">
+            <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+              <Activity className="size-4" />
+              {t('admin.users.recentActivitySection')}
+            </h3>
+            {auditData?.logs && auditData.logs.length > 0 ? (
+              <div className="overflow-hidden rounded-xl border border-border/40">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border/40 bg-slate-50/80 dark:bg-white/[0.03]">
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.auditAction')}</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.auditDate')}</th>
+                      <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{t('admin.users.auditIp')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {auditData.logs.map((log) => (
+                      <tr key={log.id} className="border-b border-border/20 last:border-0">
+                        <td className="px-3 py-2">
+                          <span className="text-xs font-medium text-foreground">
+                            {t(`admin.users.auditAction_${log.action}`, log.action)}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground">
+                          {formatDateTimeLong(log.createdAt, locale)}
+                        </td>
+                        <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
+                          {log.ip || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center rounded-2xl border border-dashed border-border/40 bg-slate-50/50 p-4 text-sm text-muted-foreground dark:bg-white/[0.02]">
+                {t('admin.users.auditNoData')}
+              </div>
+            )}
+          </section>
         </DialogBody>
 
         <DialogFooter className="flex-col-reverse gap-3 border-t border-black/5 dark:border-white/5 bg-slate-50/50 px-6 py-5 dark:bg-slate-900/50 sm:flex-row sm:justify-between sm:gap-2">

@@ -7,6 +7,8 @@ import { api } from '@/services/api';
 import { playNotificationSound } from '@/utils/audio';
 import { isRecord } from '@/utils/guards';
 import type { RootState } from '@/app/store';
+import { NOTIFICATION_CATEGORY_TO_EVENT_TYPE } from '@/constants/notificationCategoryToEventType';
+import { NOTIFICATION_EVENT_TYPE } from '@/constants/notificationEventType';
 
 let socket: Socket | null = null;
 
@@ -50,40 +52,6 @@ export async function connectSocket(store: Store<RootState>) {
   });
 
   type MappedType = import('@/features/socket/socketSlice').SocketEventType;
-  const backendTypeMap: Record<string, MappedType> = {
-    // Existing
-    NEW_LEAD: 'new_lead',
-    NEW_REVIEW: 'new_review',
-    LEAD_STATUS_UPDATED: 'lead_status_updated',
-    LEAD_SENT: 'lead_sent',
-    NEW_CHAT_MESSAGE: 'new_chat_message',
-    // Subscription & payments
-    SUBSCRIPTION_EXPIRING: 'subscription_expiring',
-    SUBSCRIPTION_EXPIRED: 'subscription_expired',
-    PAYMENT_SUCCESS: 'payment_success',
-    PAYMENT_FAILED: 'payment_failed',
-    // Verification
-    VERIFICATION_APPROVED: 'verification_approved',
-    VERIFICATION_REJECTED: 'verification_rejected',
-    // Admin
-    ADMIN_NEW_VERIFICATION: 'admin_new_verification',
-    ADMIN_NEW_REPORT: 'admin_new_report',
-    ADMIN_NEW_USER: 'admin_new_user',
-    ADMIN_NEW_MASTER: 'admin_new_master',
-    ADMIN_SYSTEM_ALERT: 'admin_system_alert',
-    ADMIN_NEW_LEAD: 'admin_new_lead',
-    ADMIN_NEW_REVIEW: 'admin_new_review',
-    ADMIN_NEW_PAYMENT: 'admin_new_payment',
-    // Client
-    MASTER_RESPONDED: 'master_responded',
-    MASTER_AVAILABLE: 'master_available',
-    BOOKING_PENDING: 'booking_pending',
-    BOOKING_CONFIRMED: 'booking_confirmed',
-    BOOKING_CANCELLED: 'booking_cancelled',
-    // System
-    SYSTEM_MAINTENANCE: 'system_maintenance',
-    SYSTEM_UPDATE: 'system_update',
-  };
 
   const handleNotification = (p: unknown) => {
     const root = isRecord(p) ? p : {};
@@ -91,7 +59,8 @@ export async function connectSocket(store: Store<RootState>) {
     const rawType = root.type ?? data.type;
     // Map backend type or use as-is if already lowercase (from in-app notification service)
     const mapped = rawType
-      ? backendTypeMap[String(rawType).toUpperCase()] ?? (rawType as MappedType)
+      ? NOTIFICATION_CATEGORY_TO_EVENT_TYPE[String(rawType).toUpperCase()] ??
+        (rawType as MappedType)
       : undefined;
     if (!mapped) return;
     // Keep full payload when backend sends title/message (in-app and admin notifications)
@@ -102,33 +71,56 @@ export async function connectSocket(store: Store<RootState>) {
     // Cache invalidation by event type. No toasts — all events go to NotificationMenu only.
     // NOTE: Mutations already invalidate their own tags. Socket events only invalidate
     // tags of OTHER domains that might be affected by the event.
-    if (mapped === 'new_lead' || mapped === 'admin_new_lead') {
+    if (
+      mapped === NOTIFICATION_EVENT_TYPE.new_lead ||
+      mapped === NOTIFICATION_EVENT_TYPE.admin_new_lead
+    ) {
       store.dispatch(
         api.util.invalidateTags(['Leads', 'Analytics']),
       );
-    } else if (mapped === 'lead_status_updated') {
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.lead_status_updated) {
       // Client needs 'Leads' (their lead list) + 'Reviews' (reviewsCanCreate re-eval after CLOSED).
       // Master's mutation already invalidated their own 'Leads', but the CLIENT needs to know.
       store.dispatch(api.util.invalidateTags(['Leads', 'Bookings', 'Reviews', 'Analytics']));
-    } else if (mapped === 'lead_sent') {
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.lead_sent) {
       store.dispatch(api.util.invalidateTags(['Leads']));
-    } else if (mapped === 'new_chat_message') {
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.new_chat_message) {
       store.dispatch(api.util.invalidateTags(['Chat', 'ChatMessages']));
-    } else if (mapped === 'new_review' || mapped === 'admin_new_review') {
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.new_review ||
+      mapped === NOTIFICATION_EVENT_TYPE.admin_new_review
+    ) {
       store.dispatch(api.util.invalidateTags(['Reviews', 'Analytics']));
-    } else if (mapped === 'payment_success' || mapped === 'payment_failed' || mapped === 'admin_new_payment') {
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.payment_success ||
+      mapped === NOTIFICATION_EVENT_TYPE.payment_failed ||
+      mapped === NOTIFICATION_EVENT_TYPE.admin_new_payment
+    ) {
       store.dispatch(api.util.invalidateTags(['Payments']));
-    } else if (mapped === 'subscription_expiring' || mapped === 'subscription_expired') {
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.subscription_expiring ||
+      mapped === NOTIFICATION_EVENT_TYPE.subscription_expired
+    ) {
       store.dispatch(api.util.invalidateTags(['Me', 'Tariffs']));
-    } else if (mapped === 'verification_approved' || mapped === 'verification_rejected') {
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.verification_approved ||
+      mapped === NOTIFICATION_EVENT_TYPE.verification_rejected
+    ) {
       store.dispatch(api.util.invalidateTags(['Me', 'Verification']));
-    } else if (mapped === 'admin_new_verification') {
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.admin_new_verification) {
       store.dispatch(api.util.invalidateTags(['Admin', 'Verification', 'VerificationStats']));
-    } else if (mapped === 'admin_new_report') {
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.admin_new_report) {
       store.dispatch(api.util.invalidateTags(['Reports']));
-    } else if (mapped === 'admin_new_user' || mapped === 'admin_new_master') {
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.admin_new_user ||
+      mapped === NOTIFICATION_EVENT_TYPE.admin_new_master
+    ) {
       store.dispatch(api.util.invalidateTags(['Users']));
-    } else if (mapped === 'booking_pending' || mapped === 'booking_confirmed' || mapped === 'booking_cancelled') {
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.booking_pending ||
+      mapped === NOTIFICATION_EVENT_TYPE.booking_confirmed ||
+      mapped === NOTIFICATION_EVENT_TYPE.booking_cancelled
+    ) {
       store.dispatch(api.util.invalidateTags(['Bookings']));
     }
 
@@ -137,7 +129,11 @@ export async function connectSocket(store: Store<RootState>) {
     const state = store.getState();
     const playSoundEnabled = state.socket?.notificationSettings?.playSound ?? true;
 
-    if (playSoundEnabled && mapped !== 'system_maintenance' && mapped !== 'system_update') {
+    if (
+      playSoundEnabled &&
+      mapped !== NOTIFICATION_EVENT_TYPE.system_maintenance &&
+      mapped !== NOTIFICATION_EVENT_TYPE.system_update
+    ) {
       playNotificationSound();
     }
   };

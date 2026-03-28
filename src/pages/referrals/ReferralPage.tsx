@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
+import { REFERRAL_STATUS } from '@/constants/referralStatus';
 
 /**
  * Referral program page — shared by both Client and Master dashboards.
@@ -130,7 +131,9 @@ export default function ReferralPage() {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {(referrals ?? []).map((r) => {
-                        const isQualified = r.status === 'QUALIFIED' || r.status === 'REWARDED';
+                        const isQualified =
+                          r.status === REFERRAL_STATUS.QUALIFIED ||
+                          r.status === REFERRAL_STATUS.REWARDED;
                         return (
                             <Card key={r.id} className="overflow-hidden shadow-sm transition-all hover:shadow-md">
                                 <CardHeader className="p-4 pb-2 flex-row justify-between items-start space-y-0 relative z-10">

@@ -11,6 +11,7 @@ import {
   useSubmitVerificationMutation,
 } from '@/features/verification/verificationApi';
 import { useGrantConsentMutation } from '@/features/consent/consentApi';
+import { CONSENT_TYPE } from '@/constants/consentType';
 import { useFilesUploadMutation } from '@/features/files/filesApi';
 import { useAuthMeQuery } from '@/features/auth/authApi';
 import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
@@ -304,7 +305,7 @@ export default function VerificationPage() {
               try {
                 // Record GDPR consent before submitting verification
                 await grantConsent({
-                  consentType: 'VERIFICATION_DATA_PROCESSING',
+                  consentType: CONSENT_TYPE.VERIFICATION_DATA_PROCESSING,
                   version: '1.0',
                 }).unwrap();
 

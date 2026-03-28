@@ -13,9 +13,14 @@ import { usersApi } from '@/features/users/usersApi';
 import i18n from '@/i18n';
 import { isRecord } from '@/utils/guards';
 import { unwrapEnvelope } from '@/utils/data';
+import { USER_ROLE } from '@/constants/roles';
 
 function isRole(v: unknown): v is NonNullable<MeResponse['role']> {
-  return v === 'CLIENT' || v === 'MASTER' || v === 'ADMIN';
+  return (
+    v === USER_ROLE.CLIENT ||
+    v === USER_ROLE.MASTER ||
+    v === USER_ROLE.ADMIN
+  );
 }
 
 function extractTokens(resp: unknown): { accessToken?: string; refreshToken?: string } {

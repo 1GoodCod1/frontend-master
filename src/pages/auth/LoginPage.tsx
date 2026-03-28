@@ -10,6 +10,7 @@ import LoginHeader from '@/features/auth/components/login/LoginHeader';
 import LoginForm from '@/features/auth/components/login/LoginForm';
 import { useLoginForm, type LoginFormValues } from '@/hooks/auth/login';
 import { Button } from '@/components/ui/button';
+import { USER_ROLE } from '@/constants/roles';
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -22,15 +23,17 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isAuthed || !role) return;
-    if (role === 'ADMIN') navigate('/admin', { replace: true });
-    else if (role === 'MASTER') navigate('/dashboard', { replace: true });
-    else if (role === 'CLIENT') navigate('/client-dashboard', { replace: true });
+    if (role === USER_ROLE.ADMIN) navigate('/admin', { replace: true });
+    else if (role === USER_ROLE.MASTER) navigate('/dashboard', { replace: true });
+    else if (role === USER_ROLE.CLIENT)
+      navigate('/client-dashboard', { replace: true });
   }, [isAuthed, role, navigate]);
 
   if (isAuthed && role) {
-    if (role === 'ADMIN') return <Navigate to="/admin" replace />;
-    if (role === 'MASTER') return <Navigate to="/dashboard" replace />;
-    if (role === 'CLIENT') return <Navigate to="/client-dashboard" replace />;
+    if (role === USER_ROLE.ADMIN) return <Navigate to="/admin" replace />;
+    if (role === USER_ROLE.MASTER) return <Navigate to="/dashboard" replace />;
+    if (role === USER_ROLE.CLIENT)
+      return <Navigate to="/client-dashboard" replace />;
   }
 
   if (restoring) {

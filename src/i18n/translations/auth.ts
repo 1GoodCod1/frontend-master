@@ -74,6 +74,8 @@ export const auth = {
         registrationFailed: 'Registration failed',
         phoneRequired: 'Phone is required',
         haveAccount: 'Already have an account?',
+        ageConsent: 'I confirm that I am at least 18 years old.',
+        ageConsentRequired: 'You must confirm that you are at least 18 years old.',
         legalConsent:
           'I agree to the <privacy>Privacy Policy</privacy> and <terms>Terms of Use</terms>.',
         legalConsentRequired: 'You must accept the Privacy Policy and Terms of Use.',
@@ -250,6 +252,8 @@ export const auth = {
         registrationFailed: 'Ошибка регистрации',
         phoneRequired: 'Телефон обязателен',
         haveAccount: 'Уже есть аккаунт?',
+        ageConsent: 'Я подтверждаю, что мне исполнилось 18 лет.',
+        ageConsentRequired: 'Необходимо подтвердить, что вам исполнилось 18 лет.',
         legalConsent:
           'Я соглашаюсь с <privacy>Политикой конфиденциальности</privacy> и <terms>Условиями использования</terms>.',
         legalConsentRequired:
@@ -428,6 +432,8 @@ export const auth = {
         registrationFailed: 'Înregistrare eșuată',
         phoneRequired: 'Telefonul este obligatoriu',
         haveAccount: 'Ai deja cont?',
+        ageConsent: 'Confirm că am cel puțin 18 ani.',
+        ageConsentRequired: 'Trebuie să confirmați că aveți cel puțin 18 ani.',
         legalConsent:
           'Sunt de acord cu <privacy>Politica de confidențialitate</privacy> și <terms>Termenii și condițiile</terms>.',
         legalConsentRequired:

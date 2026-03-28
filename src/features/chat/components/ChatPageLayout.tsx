@@ -7,10 +7,11 @@ import { useAppSelector, useAppStore } from '@/app/hooks';
 import { selectMe } from '@/features/auth/selectors';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { connectChatSocket, disconnectChatSocket } from '@/services/chatSocket';
+import type { ChatUserRole } from '@/types/chat';
 
 const DISCONNECT_DEFER_MS = 50;
 
-export type ChatUserRole = 'MASTER' | 'CLIENT';
+export type { ChatUserRole };
 
 export interface ChatPageLayoutProps {
   basePath: '/dashboard' | '/client-dashboard';

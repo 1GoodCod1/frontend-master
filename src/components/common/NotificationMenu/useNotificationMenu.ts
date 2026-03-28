@@ -13,6 +13,7 @@ import type { NotificationItem } from '@/features/socket/socketSlice';
 import type { TabKey } from './types';
 import { filterByTab } from './utils';
 import { NOTIFICATION_MENU_MAX_VISIBLE } from '@/constants';
+import { USER_ROLE } from '@/constants/roles';
 import {
   useGetNotificationsQuery,
   useMarkNotificationAsReadMutation,
@@ -57,7 +58,7 @@ export function useNotificationMenu() {
   );
 
   const effectiveTab: TabKey =
-    role === 'CLIENT' && tab === 'reviews' ? 'all' : tab;
+    role === USER_ROLE.CLIENT && tab === 'reviews' ? 'all' : tab;
 
   const filtered = useMemo(() => {
     const base = notifications.filter((n) => filterByTab(n.type, effectiveTab));

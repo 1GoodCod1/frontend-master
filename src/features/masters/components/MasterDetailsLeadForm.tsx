@@ -27,6 +27,8 @@ import { Textarea } from '@/components/ui/textarea';
 import type { RequestSubmissionState as LeadSubmissionState } from '@/hooks/requests';
 import { partitionLeadImageFiles } from '@/utils/leadImageUpload';
 import { toErrorMessage } from '@/utils/errors';
+import { USER_ROLE } from '@/constants/roles';
+import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
 
 interface MasterDetailsLeadFormProps {
   isAuthed: boolean;
@@ -52,7 +54,7 @@ export const MasterDetailsLeadForm = ({
 
   const { data: subData } = useLeadsCheckAvailabilitySubscriptionQuery(
     { masterId },
-    { skip: !isAuthed || role !== 'CLIENT' || !masterId },
+    { skip: !isAuthed || role !== USER_ROLE.CLIENT || !masterId },
   );
   const subscribed = !!subData?.subscribed;
 
@@ -64,7 +66,7 @@ export const MasterDetailsLeadForm = ({
   const { data: activeLeadData } = useLeadsActiveToMasterQuery(
     { masterId, userId },
     {
-      skip: !isAuthed || role !== 'CLIENT' || !userId,
+      skip: !isAuthed || role !== USER_ROLE.CLIENT || !userId,
       refetchOnMountOrArgChange: true,
     },
   );
@@ -187,9 +189,9 @@ export const MasterDetailsLeadForm = ({
     );
   }
 
-  if (role === 'MASTER' || role === 'ADMIN') return null;
+  if (role === USER_ROLE.MASTER || role === USER_ROLE.ADMIN) return null;
 
-  if (!isAuthed || role !== 'CLIENT') {
+  if (!isAuthed || role !== USER_ROLE.CLIENT) {
     return (
       <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
         <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-5 text-center">
@@ -219,7 +221,7 @@ export const MasterDetailsLeadForm = ({
 
   // ─── Master is unavailable (BUSY or at lead limit) ───
   if (!isMasterAvailable) {
-    const isBusy = availabilityStatus === 'BUSY';
+    const isBusy = availabilityStatus === AVAILABILITY_STATUS.BUSY;
 
     return (
       <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">

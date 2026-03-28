@@ -27,6 +27,58 @@ export const adminApi = api.injectEndpoints({
       query: ({ id }) => ({ url: `/admin/users/${id}`, method: 'PUT' }),
       invalidatesTags: ['Users'],
     }),
+    adminUserConsents: build.query<
+      { id: string; consentType: string; granted: boolean; version: string; ipAddress: string | null; userAgent: string | null; revokedAt: string | null; createdAt: string }[],
+      string
+    >({
+      query: (userId) => ({ url: `/admin/users/${userId}/consents`, method: 'GET' }),
+      transformResponse: (raw: unknown) => {
+        const r = raw && typeof raw === 'object' && 'data' in raw
+          ? (raw as { data?: unknown }).data
+          : raw;
+        return Array.isArray(r) ? r : [];
+      },
+    }),
+    adminUserAuditLogs: build.query<
+      {
+        logs: { id: string; action: string; entity: string | null; entityId: string | null; actorId: string | null; ip: string | null; ua: string | null; createdAt: string }[];
+        meta: { total: number; page: number; limit: number; totalPages: number };
+      },
+      { userId: string; page?: number; limit?: number }
+    >({
+      query: ({ userId, page, limit }) => ({
+        url: `/admin/users/${userId}/audit-logs`,
+        method: 'GET',
+        params: { page: page ?? 1, limit: limit ?? 20 },
+      }),
+      transformResponse: (raw: unknown) => {
+        type AuditLogRow = {
+          id: string;
+          action: string;
+          entity: string | null;
+          entityId: string | null;
+          actorId: string | null;
+          ip: string | null;
+          ua: string | null;
+          createdAt: string;
+        };
+        const r = raw && typeof raw === 'object' && 'data' in raw
+          ? (raw as { data?: unknown }).data
+          : raw;
+        const d = r && typeof r === 'object' && 'logs' in r
+          ? (r as { logs: unknown[]; meta?: { total?: number; page?: number; limit?: number; totalPages?: number } })
+          : { logs: [], meta: undefined };
+        return {
+          logs: (Array.isArray(d.logs) ? d.logs : []) as AuditLogRow[],
+          meta: {
+            total: d.meta?.total ?? 0,
+            page: d.meta?.page ?? 1,
+            limit: d.meta?.limit ?? 20,
+            totalPages: d.meta?.totalPages ?? 0,
+          },
+        };
+      },
+    }),
     adminMasters: build.query<
       unknown,
       (PagedQuery & { verified?: boolean; featured?: boolean; tariff?: string; q?: string }) | void
@@ -319,4 +371,6 @@ export const {
   useAdminTemplateOverridesQuery,
   useAdminSetTemplateOverrideMutation,
   useAdminComplianceOverviewQuery,
+  useAdminUserConsentsQuery,
+  useAdminUserAuditLogsQuery,
 } = adminApi;

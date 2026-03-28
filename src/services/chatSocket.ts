@@ -11,6 +11,7 @@ import { selectAccessToken } from '@/features/auth/selectors';
 import { chatApi } from '@/features/chat/chatApi';
 import type { ChatMessage, MessagesResponse, Conversation } from '@/features/chat/chatApi';
 import type { RootState, AppDispatch } from '@/app/store';
+import { USER_ROLE } from '@/constants/roles';
 
 let chatSocket: Socket | null = null;
 
@@ -109,7 +110,10 @@ export function connectChatSocket(store: { dispatch: AppDispatch; getState: () =
     store.dispatch(setTyping({
       conversationId: data.conversationId,
       userId: data.userId,
-      userRole: data.userRole === 'CLIENT' || data.userRole === 'MASTER' ? data.userRole : 'CLIENT',
+      userRole:
+        data.userRole === USER_ROLE.CLIENT || data.userRole === USER_ROLE.MASTER
+          ? data.userRole
+          : USER_ROLE.CLIENT,
       isTyping: data.isTyping,
     }));
   });

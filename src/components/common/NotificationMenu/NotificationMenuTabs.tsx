@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import type { NotificationItem } from '@/features/socket/socketSlice';
 import type { TabKey } from './types';
 import { NotificationList } from './NotificationList';
+import { USER_ROLE } from '@/constants/roles';
 
 const TAB_TRIGGER_CLASS =
   'flex-1 min-w-0 rounded-lg text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:font-semibold hover:text-foreground text-xs px-2 py-2 transition-colors cursor-pointer';
@@ -57,7 +58,7 @@ export function NotificationMenuTabs({
 
   return (
     <Tabs
-      value={role === 'CLIENT' && tab === 'reviews' ? 'all' : tab}
+      value={role === USER_ROLE.CLIENT && tab === 'reviews' ? 'all' : tab}
       onValueChange={(v) => onTabChange(v as TabKey)}
       className="w-full"
     >
@@ -68,17 +69,17 @@ export function NotificationMenuTabs({
         <TabsTrigger value="leads" className={TAB_TRIGGER_CLASS}>
           <TabWithBadge label={t('notifications.leads')} count={unreadByTab.leads} />
         </TabsTrigger>
-        {(role === 'ADMIN' || role === 'MASTER') && (
+        {(role === USER_ROLE.ADMIN || role === USER_ROLE.MASTER) && (
           <TabsTrigger value="reviews" className={TAB_TRIGGER_CLASS}>
             <TabWithBadge label={t('notifications.reviews')} count={unreadByTab.reviews} />
           </TabsTrigger>
         )}
-        {(role === 'ADMIN' || role === 'MASTER') && (
+        {(role === USER_ROLE.ADMIN || role === USER_ROLE.MASTER) && (
           <TabsTrigger value="payments" className={TAB_TRIGGER_CLASS}>
             <TabWithBadge label={t('notifications.payments')} count={unreadByTab.payments} />
           </TabsTrigger>
         )}
-        {role === 'ADMIN' && (
+        {role === USER_ROLE.ADMIN && (
           <TabsTrigger value="system" className={TAB_TRIGGER_CLASS}>
             <TabWithBadge label={t('notifications.system')} count={unreadByTab.system} />
           </TabsTrigger>

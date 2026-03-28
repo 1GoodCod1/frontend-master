@@ -16,6 +16,7 @@ import { isRecord } from '@/utils/guards';
 import { unwrapEnvelope } from '@/utils/data';
 import { toErrorMessage } from '@/utils/errors';
 import { getMasterIdFromProfile } from './utils';
+import { USER_ROLE } from '@/constants/roles';
 
 export function usePlansLogic() {
     const { t } = useTranslation();
@@ -29,8 +30,8 @@ export function usePlansLogic() {
         usePaymentsCancelTariffAtPeriodEndMutation();
     const [claimFreePlan, claimState] = useMastersClaimFreePlanMutation();
 
-    const isClient = isAuthed && role === 'CLIENT';
-    const isMaster = isAuthed && role === 'MASTER';
+    const isClient = isAuthed && role === USER_ROLE.CLIENT;
+    const isMaster = isAuthed && role === USER_ROLE.MASTER;
 
     const myProfile = useMastersMyProfileQuery(undefined, { skip: !isMaster });
     const myTariff = useMastersMyTariffQuery(undefined, { skip: !isMaster });

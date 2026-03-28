@@ -1,10 +1,7 @@
 import { api } from '@/services/api';
+import type { ConsentType } from '@/constants/consentType';
 
-export type ConsentType =
-  | 'VERIFICATION_DATA_PROCESSING'
-  | 'PRIVACY_POLICY'
-  | 'TERMS_OF_SERVICE'
-  | 'MARKETING';
+export type { ConsentType };
 
 export interface UserConsent {
   id: string;

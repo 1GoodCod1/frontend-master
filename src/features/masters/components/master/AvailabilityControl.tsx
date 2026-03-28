@@ -8,11 +8,15 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
+import type { AvailabilityStatus } from '@/constants/availabilityStatus';
 
-type AvailabilityStatus = 'AVAILABLE' | 'BUSY';
+type AvailabilityToggle =
+  | typeof AVAILABILITY_STATUS.AVAILABLE
+  | typeof AVAILABILITY_STATUS.BUSY;
 
 interface AvailabilityControlProps {
-  currentStatus: 'AVAILABLE' | 'BUSY' | 'OFFLINE';
+  currentStatus: AvailabilityStatus;
   maxActiveLeads: number;
   currentActiveLeads: number;
   onUpdate: (status: string, maxLeads?: number) => Promise<void>;
@@ -25,8 +29,9 @@ export function AvailabilityControl({
   onUpdate,
 }: AvailabilityControlProps) {
   const { t } = useTranslation();
-  const displayStatus = currentStatus === 'OFFLINE' ? 'BUSY' : currentStatus;
-  const [status, setStatus] = useState<AvailabilityStatus>(displayStatus);
+  const displayStatus =
+    currentStatus === AVAILABILITY_STATUS.OFFLINE ? AVAILABILITY_STATUS.BUSY : currentStatus;
+  const [status, setStatus] = useState<AvailabilityToggle>(displayStatus);
 
   useEffect(() => {
     setStatus(displayStatus);
@@ -36,7 +41,7 @@ export function AvailabilityControl({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleStatusChange = async (newStatus: AvailabilityStatus) => {
+  const handleStatusChange = async (newStatus: AvailabilityToggle) => {
     if (!newStatus) return;
     setStatus(newStatus);
     await handleUpdate(newStatus, maxLeads);
@@ -69,7 +74,7 @@ export function AvailabilityControl({
     }
   };
 
-  const isAvailable = status === 'AVAILABLE';
+  const isAvailable = status === AVAILABILITY_STATUS.AVAILABLE;
   const leadsProgress = maxLeads > 0 ? (currentActiveLeads / maxLeads) * 100 : 0;
   const isAtLimit = currentActiveLeads >= maxLeads && isAvailable;
 
@@ -148,7 +153,7 @@ export function AvailabilityControl({
             type="button"
             variant="ghost"
             disabled={isUpdating}
-            onClick={() => handleStatusChange('AVAILABLE')}
+            onClick={() => handleStatusChange(AVAILABILITY_STATUS.AVAILABLE)}
             className={cn(
               "flex-1 relative h-10 rounded-lg font-medium transition-all duration-300 text-sm",
               isAvailable
@@ -163,7 +168,7 @@ export function AvailabilityControl({
             type="button"
             variant="ghost"
             disabled={isUpdating}
-            onClick={() => handleStatusChange('BUSY')}
+            onClick={() => handleStatusChange(AVAILABILITY_STATUS.BUSY)}
             className={cn(
               "flex-1 relative h-10 rounded-lg font-medium transition-all duration-300 text-sm",
               !isAvailable
@@ -251,23 +256,23 @@ export function AvailabilityControl({
         </div>
 
         {/* Warning Alerts */}
-        {(status === 'BUSY' || isAtLimit) && (
+        {(status === AVAILABILITY_STATUS.BUSY || isAtLimit) && (
           <Alert
             variant="default"
             className={cn(
               "py-3.5 px-4 rounded-xl animate-in fade-in slide-in-from-bottom-2 border-0",
-              status === 'BUSY'
+              status === AVAILABILITY_STATUS.BUSY
                 ? "bg-amber-500/10 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300"
                 : "bg-destructive/10 text-destructive dark:bg-destructive/10 dark:text-red-400"
             )}
           >
             <AlertTriangle className={cn(
               "size-4.5 mt-0.5",
-              status === 'BUSY' ? "text-amber-600 dark:text-amber-400" : "text-destructive"
+              status === AVAILABILITY_STATUS.BUSY ? "text-amber-600 dark:text-amber-400" : "text-destructive"
             )} />
             <AlertTitle className="sr-only">Info</AlertTitle>
             <AlertDescription className="ml-2.5 text-[13px] font-medium leading-relaxed">
-              {status === 'BUSY'
+              {status === AVAILABILITY_STATUS.BUSY
                 ? t('dashboard.availabilityControl.busyInfo', 'Вы отмечены как занят. Клиенты не могут отправить вам новые заявки.')
                 : t('dashboard.availabilityControl.limitReached', 'Лимит активных заявок достигнут. Статус автоматически сменится на «Занят».')}
             </AlertDescription>

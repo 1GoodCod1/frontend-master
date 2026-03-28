@@ -3,11 +3,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { USER_ROLE } from '@/constants/roles';
 
-type Role = 'MASTER' | 'CLIENT';
+type BannerRole = typeof USER_ROLE.MASTER | typeof USER_ROLE.CLIENT;
 
 interface VerificationRequiredBannerProps {
-  role: Role;
+  role: BannerRole;
   isVerified: boolean;
 }
 
@@ -18,12 +19,14 @@ export function VerificationRequiredBanner({
   const { t } = useTranslation();
 
   if (isVerified) return null;
-  if (role !== 'MASTER' && role !== 'CLIENT') return null;
+  if (role !== USER_ROLE.MASTER && role !== USER_ROLE.CLIENT) return null;
 
   const verificationPath =
-    role === 'MASTER' ? '/dashboard/verification' : '/client-dashboard/profile';
+    role === USER_ROLE.MASTER
+      ? '/dashboard/verification'
+      : '/client-dashboard/profile';
   const messageKey =
-    role === 'MASTER'
+    role === USER_ROLE.MASTER
       ? 'verificationBanner.messageMaster'
       : 'verificationBanner.messageClient';
 

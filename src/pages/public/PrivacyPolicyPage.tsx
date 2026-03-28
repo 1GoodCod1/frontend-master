@@ -9,16 +9,19 @@ import {
   SUPPORT_MAILTO,
   TELEGRAM_HANDLE,
   TELEGRAM_URL,
+  COMPANY_NAME,
+  COMPANY_IDNO,
+  COMPANY_ADDRESS,
 } from '@/config/support';
 
-const LAST_UPDATED = '2026-03-09';
+const LAST_UPDATED = '2026-03-28';
 
 export default function PrivacyPolicyPage() {
   const { t } = useTranslation();
 
   const sections = [
     { title: t('privacy.section1Title'), p: [t('privacy.section1P1'), t('privacy.section1P2'), t('privacy.section1P3')] },
-    { title: t('privacy.section2Title'), p: [t('privacy.section2P1')] },
+    { title: t('privacy.section2Title'), p: [t('privacy.section2P1'), t('privacy.section2P2')] },
     { title: t('privacy.section3Title'), p: [t('privacy.section3P1')] },
     { title: t('privacy.section3aTitle'), p: [t('privacy.section3aP1')] },
     { title: t('privacy.section4Title'), p: [t('privacy.section4P1')] },
@@ -52,7 +55,7 @@ export default function PrivacyPolicyPage() {
             {t('privacy.lastUpdated')}: {LAST_UPDATED}
           </p>
 
-          <p className="leading-7">{t('privacy.intro')}</p>
+          <p className="leading-7">{t('privacy.intro', { COMPANY_NAME, IDNO: COMPANY_IDNO, LEGAL_ADDRESS: COMPANY_ADDRESS })}</p>
 
           {sections.map((section, index) => (
             <div key={index} className="space-y-2">

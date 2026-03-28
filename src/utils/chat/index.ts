@@ -1,4 +1,5 @@
 import type { Conversation, ConversationDetail, ChatUserRole, OtherPartyDisplay } from '@/types/chat';
+import { USER_ROLE } from '@/constants/roles';
 import { MIN_CONVERSATION_ID_LENGTH } from '@/features/chat/constants';
 import { mediaUrl } from '@/utils/media';
 
@@ -92,7 +93,7 @@ export function getOtherPartyFromConversation(
   userRole: ChatUserRole
 ): OtherPartyDisplay | null {
   if (!conversation) return null;
-  if (userRole === 'MASTER') {
+  if (userRole === USER_ROLE.MASTER) {
     return {
       name: conversation.lead.clientName || conversation.clientPhone || 'Клиент',
       avatar: conversation.client?.avatarFile?.path,
@@ -108,7 +109,7 @@ export function getOtherPartyFromConversation(
 
 /** Contact key for grouping: one chat per master (for client) or per client (for master). */
 export function getContactKey(conversation: Conversation | ConversationDetail, userRole: ChatUserRole): string {
-  if (userRole === 'CLIENT') {
+  if (userRole === USER_ROLE.CLIENT) {
     return conversation.master?.id ?? conversation.id;
   }
   const clientId =

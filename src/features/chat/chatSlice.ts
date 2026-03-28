@@ -1,11 +1,12 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import type { ChatMessage } from './chatApi';
 import { TYPING_TIMEOUT_MS } from './constants';
+import type { ChatUserRole } from '@/types/chat';
 
 export interface TypingUser {
   conversationId: string;
   userId: string;
-  userRole: 'CLIENT' | 'MASTER';
+  userRole: ChatUserRole;
   timestamp: number;
 }
 
@@ -48,7 +49,7 @@ const slice = createSlice({
       action: PayloadAction<{
         conversationId: string;
         userId: string;
-        userRole: 'CLIENT' | 'MASTER';
+        userRole: ChatUserRole;
         isTyping: boolean;
       }>,
     ) {

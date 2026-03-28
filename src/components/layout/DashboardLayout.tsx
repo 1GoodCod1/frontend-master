@@ -34,6 +34,7 @@ import { ReportsWarningBanner } from '@/components/common/ReportsWarningBanner';
 import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 
 function getItems(
   t: ReturnType<typeof useTranslation>['t'],
@@ -144,8 +145,13 @@ export function DashboardLayout() {
       )}>
         <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
-          {role === 'MASTER' && <VerificationRequiredBanner role="MASTER" isVerified={isVerified} />}
-          {role === 'MASTER' && <ReportsWarningBanner />}
+          {role === USER_ROLE.MASTER && (
+            <VerificationRequiredBanner
+              role={USER_ROLE.MASTER}
+              isVerified={isVerified}
+            />
+          )}
+          {role === USER_ROLE.MASTER && <ReportsWarningBanner />}
           <Outlet />
         </div>
       </main>
