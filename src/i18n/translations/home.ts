@@ -96,6 +96,8 @@ export const home = {
       recommendationReasons: {
         similar_category: 'Similar category',
         your_city: 'Your city',
+        preferred_city: 'Your selected city',
+        geo_city: 'In your area',
         like_favorites: 'Like in favorites',
         similar_services: 'Similar services',
         popular: 'Popular',
@@ -204,6 +206,8 @@ export const home = {
       recommendationReasons: {
         similar_category: 'Похожая категория',
         your_city: 'Ваш город',
+        preferred_city: 'Выбранный город',
+        geo_city: 'Рядом с вами',
         like_favorites: 'Как в избранном',
         similar_services: 'Похожие услуги',
         popular: 'Популярный',
@@ -312,6 +316,8 @@ export const home = {
       recommendationReasons: {
         similar_category: 'Categorie similară',
         your_city: 'Orașul tău',
+        preferred_city: 'Orașul ales',
+        geo_city: 'Aproape de tine',
         like_favorites: 'Ca în favorite',
         similar_services: 'Servicii similare',
         popular: 'Popular',

@@ -8,9 +8,17 @@ import { extractItems } from '@/utils/data';
 
 export const recommendationsApi = api.injectEndpoints({
   endpoints: (build) => ({
-    recommendationsPersonalized: build.query<RecommendedMasterDto[], { limit?: number }>({
-      query: ({ limit = 10 }) => ({
-        url: '/recommendations/personalized', method: 'GET', params: { limit },
+    recommendationsPersonalized: build.query<
+      RecommendedMasterDto[],
+      { limit?: number; cityId?: string }
+    >({
+      query: ({ limit = 10, cityId }) => ({
+        url: '/recommendations/personalized',
+        method: 'GET',
+        params: {
+          limit,
+          ...(cityId ? { cityId } : {}),
+        },
       }),
       transformResponse: (raw: unknown) => extractItems<RecommendedMasterDto>(raw),
       providesTags: ['Recommendations'],

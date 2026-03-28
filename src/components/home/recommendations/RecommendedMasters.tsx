@@ -5,20 +5,30 @@ import { useRecommendationsPersonalizedQuery } from '@/features/recommendations/
 import { MasterCard } from '@/components/ui/MasterCard';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import type { RecommendedMasterDto } from '@/types';
+import { useUserCity } from '@/hooks/useUserCity';
 
 interface RecommendedMastersProps {
   limit?: number;
   title?: string;
   showReasons?: boolean;
+  /** Переопределить город (иначе — из гео/сохранённого при согласии на город) */
+  cityId?: string;
 }
 
 export const RecommendedMasters: React.FC<RecommendedMastersProps> = ({
   limit = 6,
   title,
   showReasons = true,
+  cityId: cityIdProp,
 }) => {
   const { t } = useTranslation();
-  const { data, isLoading } = useRecommendationsPersonalizedQuery({ limit });
+  const { cityId: cityFromHook } = useUserCity();
+  const cityIdForApi = cityIdProp ?? (cityFromHook || undefined);
+
+  const { data, isLoading } = useRecommendationsPersonalizedQuery({
+    limit,
+    cityId: cityIdForApi,
+  });
   const sectionTitle = title ?? t('home.recommendedForYou');
 
   const masters = useMemo<RecommendedMasterDto[]>(() => {
