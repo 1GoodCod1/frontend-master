@@ -221,14 +221,14 @@ export const mastersApi = api.injectEndpoints({
     }),
     mastersUpdateMyProfile: build.mutation<MasterPrivateProfileResponse, UpdateMasterDto>({
       query: (body) => ({ url: '/masters/profile/me', method: 'PUT', data: body }),
-      invalidatesTags: ['Master', 'Masters'],
+      invalidatesTags: ['Master', 'Masters', 'MastersFilters'],
     }),
     mastersUpdateServices: build.mutation<
       { services?: unknown[] },
       { services: Array<{ title: string; priceType: string; price?: number; currency?: string }> }
     >({
       query: (body) => ({ url: '/masters/profile/me/services', method: 'PATCH', data: body }),
-      invalidatesTags: ['Master', 'Masters'],
+      invalidatesTags: ['Master', 'Masters', 'MastersFilters'],
     }),
     mastersMyTariff: build.query<MasterTariffResponse, void>({
       query: () => ({ url: '/masters/tariff/me', method: 'GET' }),

@@ -39,7 +39,13 @@ export const authApi = api.injectEndpoints({
   endpoints: (build) => ({
     authRegister: build.mutation<unknown, RegisterDto>({
       query: (body) => ({ url: '/auth/register', method: 'POST', data: body }),
-      invalidatesTags: ['Me'],
+      invalidatesTags: (_result, _error, arg) => {
+        const tags: Array<'Me' | 'Masters' | 'MastersFilters'> = ['Me'];
+        if (arg.role === 'MASTER') {
+          tags.push('MastersFilters', 'Masters');
+        }
+        return tags;
+      },
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;

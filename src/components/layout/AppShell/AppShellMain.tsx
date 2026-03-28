@@ -1,7 +1,15 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { OTHER_PUBLIC_PATHS, paths } from '@/constants/routes';
 import { cn } from '@/lib/utils';
 import { Footer } from '../Footer';
+
+const AUTH_PATHS = new Set([
+  paths.login,
+  paths.register,
+  paths.forgotPassword,
+  paths.resetPassword,
+]);
 
 type Props = {
   isLoggingOut: boolean;
@@ -15,13 +23,24 @@ export function AppShellMain({
   isHomePage,
 }: Props) {
   const { pathname } = useLocation();
-  const isMasterDetailsPage = /^\/masters\/[^/]+$/.test(pathname);
-  const isMastersListPage = pathname === '/masters';
-  const isPlansPage = pathname === '/plans' || pathname.startsWith('/plans/');
-  const isOtherPublicPage = ['/faq', '/how-it-works', '/contact', '/privacy', '/terms'].includes(pathname);
-  const isPublicPage = isHomePage || isMasterDetailsPage || isMastersListPage || isPlansPage || isOtherPublicPage;
+  const masterPrefix = `${paths.masters}/`;
+  const isMasterDetailsPage =
+    pathname.startsWith(masterPrefix) &&
+    !pathname.slice(masterPrefix.length).includes('/');
+  const isMastersListPage = pathname === paths.masters;
+  const isPlansPage =
+    pathname === paths.plans || pathname.startsWith(`${paths.plans}/`);
+  const isOtherPublicPage = (OTHER_PUBLIC_PATHS as readonly string[]).includes(
+    pathname,
+  );
+  const isPublicPage =
+    isHomePage ||
+    isMasterDetailsPage ||
+    isMastersListPage ||
+    isPlansPage ||
+    isOtherPublicPage;
   const fullWidth = isDashboardOrAdmin || isPublicPage;
-  const isAuthPage = /^\/(login|register|forgot-password|reset-password)$/.test(pathname);
+  const isAuthPage = AUTH_PATHS.has(pathname);
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Shield, History, Radio, Download } from 'lucide-react';
+import { Shield, History, Radio, Download, RefreshCw } from 'lucide-react';
 import type { GridColDef, GridRenderCellParams } from '@/types/dataGrid';
+import type { AuditActorUser } from '@/utils/auditDisplay';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PaginatedDataGrid } from '@/components/common/PaginatedDataGrid';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -24,6 +25,7 @@ import EntityCell from '@/features/admin/components/audit/EntityCell';
 import ActorCell from '@/features/admin/components/audit/ActorCell';
 import IpCell from '@/features/admin/components/audit/IpCell';
 import CreatedAtCell from '@/features/admin/components/common/CreatedAtCell';
+import { cn } from '@/lib/utils';
 
 export default function AuditPage() {
   const { t } = useTranslation();
@@ -49,13 +51,16 @@ export default function AuditPage() {
     totalLogs,
     streamData,
     exportToCSV,
+    refreshing,
+    refreshAll,
   } = useAdminAudit();
 
   const logColumns: GridColDef[] = [
     {
       field: 'action',
       headerName: t('admin.audit.action'),
-      width: 180,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params: GridRenderCellParams) => <ActionCell action={params.value as string} />,
     },
     {
@@ -69,7 +74,11 @@ export default function AuditPage() {
       headerName: t('admin.audit.actor'),
       flex: 1,
       minWidth: 180,
-      renderCell: (params: GridRenderCellParams) => <ActorCell actorId={params.value as string} />,
+      renderCell: (params: GridRenderCellParams) => {
+        const row = params.row as Record<string, unknown>;
+        const user = row.user as AuditActorUser | undefined;
+        return <ActorCell actorId={params.value as string} user={user} />;
+      },
     },
     {
       field: 'ip',
@@ -93,28 +102,71 @@ export default function AuditPage() {
         {/* Statistics Cards - только для Logs Tab */}
         {tab === 1 && (
           <StatisticsCards
-            totalLogs={totalLogs}
-            currentPage={page}
-            perPage={limit}
+            stats={stats}
+            timeframe={timeframe}
+            onTimeframeChange={setTimeframe}
+            journalTotal={totalLogs}
           />
         )}
 
         <SectionCard title={t('admin.audit.sectionTitle')} subtitle={t('admin.audit.sectionSubtitle')}>
           <Tabs value={String(tab)} onValueChange={(v) => setTab(Number(v))} className="mb-6">
-            <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-flex">
-              <TabsTrigger value="0" className="gap-2">
-                <Shield className="size-4" />
-                <span className="hidden sm:inline">📊</span> {t('admin.audit.stats')}
-              </TabsTrigger>
-              <TabsTrigger value="1" className="gap-2">
-                <History className="size-4" />
-                <span className="hidden sm:inline">📋</span> {t('admin.audit.logs')}
-              </TabsTrigger>
-              <TabsTrigger value="2" className="gap-2">
-                <Radio className="size-4" />
-                <span className="hidden sm:inline">🔴</span> {t('admin.audit.liveStream')}
-              </TabsTrigger>
-            </TabsList>
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+              <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-flex sm:max-w-none">
+                <TabsTrigger value="0" className="gap-2">
+                  <Shield className="size-4" />
+                  <span className="hidden sm:inline">📊</span> {t('admin.audit.stats')}
+                </TabsTrigger>
+                <TabsTrigger value="1" className="gap-2">
+                  <History className="size-4" />
+                  <span className="hidden sm:inline">📋</span> {t('admin.audit.logs')}
+                </TabsTrigger>
+                <TabsTrigger value="2" className="gap-2">
+                  <Radio className="size-4" />
+                  <span className="hidden sm:inline">🔴</span> {t('admin.audit.liveStream')}
+                </TabsTrigger>
+              </TabsList>
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => void refreshAll()}
+                        disabled={refreshing}
+                        className="gap-2"
+                        aria-busy={refreshing}
+                      >
+                        <RefreshCw className={cn('size-4', refreshing && 'animate-spin')} />
+                        {t('admin.audit.refresh')}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t('admin.audit.refreshTooltip')}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                {tab === 1 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={exportToCSV}
+                          disabled={!allLogs.length}
+                          className="gap-2"
+                        >
+                          <Download className="size-4" />
+                          {t('admin.audit.export')}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{t('admin.audit.exportTooltip')}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : null}
+              </div>
+            </div>
 
             <TabsContent value="0">
               <StatsTab
@@ -131,25 +183,6 @@ export default function AuditPage() {
                 <ErrorState error={logs.error} onRetry={logs.refetch} />
               ) : (
                 <>
-                  <div className="mb-4 flex justify-end">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={exportToCSV}
-                            disabled={!allLogs.length}
-                            className="gap-2"
-                          >
-                            <Download className="size-4" />
-                            {t('admin.audit.export')}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>{t('admin.audit.exportTooltip')}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
                   <PaginatedDataGrid
                     data={logsData}
                     loading={logs.isLoading}

@@ -5,6 +5,7 @@ import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { useCallback, useState } from 'react';
 import { DigestSubscriptionCard } from '@/features/digest/DigestSubscriptionCard';
 import { CookiePreferencesModal } from '@/features/cookie-consent/CookiePreferencesModal';
+import { paths } from '@/constants/routes';
 
 export function Footer() {
   const { t } = useTranslation();
@@ -55,20 +56,20 @@ export function Footer() {
                 {t('footer.quickLinks')}
               </h4>
               <nav className="flex flex-col gap-0.5 sm:gap-1">
-                <RouterLink to="/masters" className={linkClass}>
+                <RouterLink to={paths.masters} className={linkClass}>
                   {t('footer.masters')}
                 </RouterLink>
-                <RouterLink to="/plans" className={linkClass}>
+                <RouterLink to={paths.plans} className={linkClass}>
                   {t('footer.plans')}
                 </RouterLink>
-                <RouterLink to="/how-it-works" className={linkClass}>
+                <RouterLink to={paths.howItWorks} className={linkClass}>
                   {t('footer.howItWorks')}
                 </RouterLink>
-                <RouterLink to="/faq" className={linkClass}>
+                <RouterLink to={paths.faq} className={linkClass}>
                   {t('footer.faq')}
                 </RouterLink>
                 {!isAuthed && (
-                  <RouterLink to="/login" className={linkClass}>
+                  <RouterLink to={paths.login} className={linkClass}>
                     {t('nav.login')}
                   </RouterLink>
                 )}
@@ -80,13 +81,13 @@ export function Footer() {
                 {t('footer.support')}
               </h4>
               <nav className="flex flex-col gap-0.5 sm:gap-1">
-                <RouterLink to="/contact" className={linkClass}>
+                <RouterLink to={paths.contact} className={linkClass}>
                   {t('footer.contact')}
                 </RouterLink>
-                <RouterLink to="/privacy" className={linkClass}>
+                <RouterLink to={paths.privacy} className={linkClass}>
                   {t('footer.privacy')}
                 </RouterLink>
-                <RouterLink to="/terms" className={linkClass}>
+                <RouterLink to={paths.terms} className={linkClass}>
                   {t('footer.terms')}
                 </RouterLink>
                 <button

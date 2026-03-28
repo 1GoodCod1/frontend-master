@@ -6,16 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { formatTimeOnly, getLocaleFromLanguage } from '@/utils/date';
-import { USER_ROLE } from '@/constants/roles';
 import { CONSENT_TYPE } from '@/constants/consentType';
-
-type StreamUser = {
-  email?: string | null;
-  phone?: string | null;
-  role?: string | null;
-  firstName?: string | null;
-  lastName?: string | null;
-} | null;
+import {
+  formatAuditActorLabel,
+  auditActorLabelUsesMonoFont,
+  type AuditActorUser,
+} from '@/utils/auditDisplay';
 
 type AuditStreamLog = {
   id?: string;
@@ -26,65 +22,8 @@ type AuditStreamLog = {
   actorId?: string | null;
   userId?: string | null;
   createdAt?: string | number | null;
-  user?: StreamUser;
+  user?: AuditActorUser;
 } & Record<string, unknown>;
-
-/** Readable fallback when API could not resolve user (deleted, etc.) */
-function shortenId(raw: string): string {
-  const s = raw.trim();
-  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) {
-    return `${s.slice(0, 8)}…${s.slice(-4)}`;
-  }
-  return s;
-}
-
-/** Do not expose full admin email in the audit stream (shared / screenshot risk). */
-function maskEmail(email: string): string {
-  const trimmed = email.trim();
-  const at = trimmed.indexOf('@');
-  if (at <= 0) return '***';
-  const local = trimmed.slice(0, at);
-  const domain = trimmed.slice(at + 1);
-  if (!domain) return '***';
-  if (local.length <= 1) return `*@${domain}`;
-  return `${local[0]}***@${domain}`;
-}
-
-function isAdminActor(u: NonNullable<StreamUser>): boolean {
-  return String(u.role ?? '').toUpperCase() === USER_ROLE.ADMIN;
-}
-
-function maskPhoneLast4(phone: string): string {
-  const digits = phone.replace(/\D/g, '');
-  if (digits.length < 4) return '···';
-  return `···${digits.slice(-4)}`;
-}
-
-function actorLabel(log: AuditStreamLog, t: (key: string) => string): string {
-  const u = log.user;
-  if (u && typeof u === 'object') {
-    const email = u.email?.trim();
-    const name = [u.firstName, u.lastName].filter(Boolean).join(' ').trim();
-    const admin = isAdminActor(u);
-
-    if (admin) {
-      if (name) return name;
-      if (email) return maskEmail(email);
-      const phone = u.phone?.trim();
-      if (phone) return maskPhoneLast4(phone);
-    } else {
-      if (name && email) return `${name} · ${email}`;
-      if (email) return email;
-      const phone = u.phone?.trim();
-      if (phone) return phone;
-    }
-  }
-  const raw = String(log.actorId ?? log.userId ?? '').trim();
-  const id = raw.toLowerCase();
-  if (!id) return t('admin.audit.actorUnknown');
-  if (id === 'system') return t('admin.audit.actorSystem');
-  return shortenId(raw);
-}
 
 interface StreamTabProps {
   streamLimit: number;
@@ -143,7 +82,7 @@ export default function StreamTab({
             <div className="space-y-2">
               {streamData.map((log, idx) => {
                 const rawActorId = String(log.actorId ?? log.userId ?? '').trim();
-                const displayActor = actorLabel(log, t);
+                const displayActor = formatAuditActorLabel(t, log.actorId ?? log.userId, log.user);
                 return (
                 <Card
                   key={log.id || idx}
@@ -153,10 +92,12 @@ export default function StreamTab({
                     <div className="flex flex-row flex-wrap items-start justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
                         <Badge variant="secondary" className="font-semibold text-xs bg-primary/10 text-primary">
-                          {t(`admin.users.auditAction_${log.action}`, log.action || 'UNKNOWN')}
+                          {t(`admin.users.auditAction_${String(log.action)}`, log.action || 'UNKNOWN')}
                         </Badge>
                         <Badge variant="outline" className="font-medium text-xs border-purple-500/30 text-purple-600 dark:text-purple-400">
-                          {log.entity || 'UNKNOWN'}
+                          {log.entity
+                            ? t(`admin.audit.entityType_${String(log.entity)}`, String(log.entity))
+                            : 'UNKNOWN'}
                         </Badge>
                         {log.action?.startsWith('CONSENT_') &&
                           log.entityId != null &&
@@ -185,8 +126,7 @@ export default function StreamTab({
                         <span className="text-muted-foreground">{t('admin.audit.actor')}: </span>
                         <span
                           className={
-                            displayActor.includes('…') ||
-                            /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(displayActor)
+                            auditActorLabelUsesMonoFont(displayActor)
                               ? 'font-mono text-foreground break-all'
                               : 'text-foreground break-words'
                           }

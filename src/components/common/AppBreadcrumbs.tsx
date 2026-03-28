@@ -11,156 +11,157 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import type { Crumb } from '@/types/ui';
+import { paths } from '@/constants/routes';
 
 const pathToCrumbs: Record<
   string,
   (t: TFunction, lastSegment?: string) => Crumb[]
 > = {
-  '/admin': (t) => [{ label: t('nav.admin') }],
-  '/admin/users': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.root]: (t) => [{ label: t('nav.admin') }],
+  [paths.admin.users]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.users.title') },
   ],
-  '/admin/masters': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.masters]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.masters.title') },
   ],
-  '/admin/leads': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.leads]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('leads.title') },
   ],
-  '/admin/reviews': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.reviews]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.reviews.title') },
   ],
-  '/admin/reports': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.reports]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.reports.title') },
   ],
-  '/admin/payments': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.payments]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.payments.title') },
   ],
-  '/admin/categories': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.categories]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.categories.title') },
   ],
-  '/admin/cities': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.cities]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.cities.title') },
   ],
-  '/admin/tariffs': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.tariffs]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.tariffs.title') },
   ],
-  '/admin/analytics': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.analytics]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('dashboard.analytics') },
   ],
-  '/admin/verification-requests': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.verificationRequests]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('verification.requests') },
   ],
-  '/admin/security': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.security]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('security.title') },
   ],
-  '/admin/system': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.system]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.system.title') },
   ],
-  '/admin/audit': (t) => [
-    { label: t('nav.admin'), to: '/admin' },
+  [paths.admin.audit]: (t) => [
+    { label: t('nav.admin'), to: paths.admin.root },
     { label: t('admin.audit.title') },
   ],
-  '/dashboard': (t) => [{ label: t('dashboard.title') }],
-  '/dashboard/profile': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.root]: (t) => [{ label: t('dashboard.title') }],
+  [paths.dashboard.profile]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.profile') },
   ],
-  '/dashboard/leads': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.leads]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('leads.title') },
   ],
-  '/dashboard/reviews': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.reviews]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.reviews') },
   ],
-  '/dashboard/payments': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.payments]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.payments') },
   ],
-  '/dashboard/analytics': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.analytics]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.analytics') },
   ],
-  '/dashboard/promotions': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.promotions]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.promotions') },
   ],
-  '/dashboard/bookings': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.bookings]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.bookings') },
   ],
-  '/dashboard/files': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.files]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.files') },
   ],
-  '/dashboard/services': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.services]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.services') },
   ],
-  '/dashboard/chat': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.chat]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.chat') },
   ],
-  '/dashboard/subscription': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.subscription]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.subscription') },
   ],
-  '/dashboard/notifications': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.notifications]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.notifications') },
   ],
-  '/dashboard/referrals': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.referrals]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('referrals.title') },
   ],
-  '/dashboard/portfolio': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.portfolio]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.portfolio') },
   ],
-  '/dashboard/security': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.security]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.security') },
   ],
-  '/dashboard/verification': (t) => [
-    { label: t('dashboard.title'), to: '/dashboard' },
+  [paths.dashboard.verification]: (t) => [
+    { label: t('dashboard.title'), to: paths.dashboard.root },
     { label: t('dashboard.verification') },
   ],
-  '/client-dashboard': (t) => [{ label: t('nav.clientDashboard') }],
-  '/client-dashboard/leads': (t) => [
-    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+  [paths.clientDashboard.root]: (t) => [{ label: t('nav.clientDashboard') }],
+  [paths.clientDashboard.leads]: (t) => [
+    { label: t('nav.clientDashboard'), to: paths.clientDashboard.root },
     { label: t('leads.title') },
   ],
-  '/client-dashboard/favorites': (t) => [
-    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+  [paths.clientDashboard.favorites]: (t) => [
+    { label: t('nav.clientDashboard'), to: paths.clientDashboard.root },
     { label: t('favorites.title') },
   ],
-  '/client-dashboard/reports': (t) => [
-    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+  [paths.clientDashboard.reports]: (t) => [
+    { label: t('nav.clientDashboard'), to: paths.clientDashboard.root },
     { label: t('clientDashboard.reports') },
   ],
-  '/client-dashboard/profile': (t) => [
-    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+  [paths.clientDashboard.profile]: (t) => [
+    { label: t('nav.clientDashboard'), to: paths.clientDashboard.root },
     { label: t('clientDashboard.profile') },
   ],
-  '/client-dashboard/bookings': (t) => [
-    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+  [paths.clientDashboard.bookings]: (t) => [
+    { label: t('nav.clientDashboard'), to: paths.clientDashboard.root },
     { label: t('clientDashboard.myBookings') },
   ],
-  '/client-dashboard/security': (t) => [
-    { label: t('nav.clientDashboard'), to: '/client-dashboard' },
+  [paths.clientDashboard.security]: (t) => [
+    { label: t('nav.clientDashboard'), to: paths.clientDashboard.root },
     { label: t('dashboard.security') },
   ],
 };
@@ -171,20 +172,20 @@ function getCrumbsForPath(pathname: string, t: TFunction): Crumb[] {
   if (exact) return exact(t);
 
   if (
-    base.startsWith('/admin/masters/') ||
+    base.startsWith(`${paths.admin.masters}/`) ||
     base.match(/^\/admin\/[^/]+\/[^/]+/)
   ) {
     const parent = base.replace(/\/[^/]+$/, '');
     const parentCrumbs =
       pathToCrumbs[parent]?.(t) ?? [
-        { label: t('nav.admin'), to: '/admin' },
+        { label: t('nav.admin'), to: paths.admin.root },
       ];
     return [...parentCrumbs, { label: t('common.details') }];
   }
-  if (base.startsWith('/dashboard/leads/')) {
+  if (base.startsWith(`${paths.dashboard.leads}/`)) {
     return [
-      { label: t('dashboard.title'), to: '/dashboard' },
-      { label: t('leads.title'), to: '/dashboard/leads' },
+      { label: t('dashboard.title'), to: paths.dashboard.root },
+      { label: t('leads.title'), to: paths.dashboard.leads },
       { label: t('common.details') },
     ];
   }

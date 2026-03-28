@@ -12,6 +12,7 @@ export function useAdminAudit() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [streamLimit, setStreamLimit] = useState(50);
+  const [refreshing, setRefreshing] = useState(false);
 
   const stats = useAuditStatsQuery({ timeframe });
   const logs = useAuditLogsQuery({ page, limit });
@@ -46,6 +47,15 @@ export function useAdminAudit() {
     });
     return items.slice(0, streamLimit);
   }, [stream.data, streamLimit]);
+
+  const refreshAll = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([stats.refetch(), logs.refetch(), stream.refetch()]);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const doExportToCSV = () => {
     const headers = ['ID', 'Action', 'Entity', 'Entity ID', 'Actor ID', 'IP', 'User Agent', 'Created At'];
@@ -83,5 +93,7 @@ export function useAdminAudit() {
     totalLogs,
     streamData,
     exportToCSV: doExportToCSV,
+    refreshing,
+    refreshAll,
   };
 }

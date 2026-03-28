@@ -2,6 +2,7 @@ export * from './storage';
 export * from './components';
 export * from './home';
 export * from './app';
+export * from './routes';
 export * from './theme';
 export * from './roles';
 export * from './notificationCategory';

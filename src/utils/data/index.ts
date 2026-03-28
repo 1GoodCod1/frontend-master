@@ -12,6 +12,24 @@ export function unwrapEnvelope(raw: unknown): unknown {
 }
 
 /**
+ * Unwraps nested `{ data: … }` envelopes until an object with `totalLogs` is found (GET /audit/stats).
+ */
+export function unwrapAuditStatsPayload(raw: unknown): Record<string, unknown> | null {
+  let cur: unknown = raw;
+  for (let i = 0; i < 8; i++) {
+    if (!cur || typeof cur !== 'object') return null;
+    const o = cur as Record<string, unknown>;
+    if (typeof o.totalLogs === 'number') return o;
+    if ('data' in o && o.data != null) {
+      cur = o.data;
+      continue;
+    }
+    return null;
+  }
+  return null;
+}
+
+/**
  * Typed wrapper: unwrapEnvelope + cast to T.
  */
 export function unwrapObject<T>(raw: unknown): T {

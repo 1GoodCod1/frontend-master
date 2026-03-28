@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Users, ArrowRight, ChevronRight } from 'lucide-react';
 import { useMastersLandingStatsQuery, useMastersFiltersQuery } from '@/features/masters/mastersApi';
 import { publicCachePolicy } from '@/config/publicCache';
-import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import { useIsDark } from '@/hooks/useIsDark';
 import { useUserCity } from '@/hooks/useUserCity';
 import { USER_CITY_STORAGE_KEY } from '@/hooks/constants';
@@ -34,7 +33,7 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
     refetchOnFocus: publicCachePolicy.mastersFiltersRefetchOnFocus,
   });
   const categories = filtersData?.categories ?? [];
-  const { data: citiesFromDb = [] } = useCitiesListQuery({ isActive: true });
+  const cities = useMemo(() => filtersData?.cities ?? [], [filtersData?.cities]);
   const { cityId: detectedCityId } = useUserCity();
   const { add: addSearchHistory } = useSearchHistory();
 
@@ -42,7 +41,6 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
   const [cityId, setCityId] = useState<string | undefined>(undefined);
   const effectiveCityId = cityId === undefined ? detectedCityId : cityId;
 
-  const cities = citiesFromDb;
   const getCityLabel = (c: { id: string; name: string; slug: string }) =>
     t(`cities.${c.slug}`, { defaultValue: c.name }) || c.name;
   const getCitySlugForUrl = useCallback(

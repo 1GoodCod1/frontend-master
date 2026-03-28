@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Mail, Phone, CheckCircle, Ban, Clock, Calendar, LogIn, Star, Eye, Briefcase, MapPin, ShieldCheck, Activity } from 'lucide-react';
+import { Mail, Phone, CheckCircle, Ban, Clock, Calendar, LogIn, Star, Eye, Briefcase, MapPin, ShieldCheck, Activity, FileX } from 'lucide-react';
 import { useAdminUserConsentsQuery, useAdminUserAuditLogsQuery } from '@/features/admin/adminApi';
 import {
   Dialog,
@@ -80,6 +80,10 @@ export default function UserDetailsDialog({
   if (!user) return null;
   const role = (user.role ?? 'USER') as string;
 
+  const documentsPurgedLog = auditData?.logs?.find(
+    (log) => log.action === 'VERIFICATION_DOCUMENTS_PURGED',
+  ) ?? null;
+
   const avatarPath = user.avatarFile?.path || user.masterProfile?.avatarFile?.path;
   const avatarSrc = avatarPath ? mediaUrl(avatarPath) : undefined;
   const nameLine = [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
@@ -149,6 +153,20 @@ export default function UserDetailsDialog({
                   </Badge>
                 )}
               </div>
+
+              {documentsPurgedLog && (
+                <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-slate-200/60 bg-slate-50/80 px-3.5 py-2.5 dark:border-white/[0.06] dark:bg-white/[0.03]">
+                  <FileX className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
+                  <div className="min-w-0 text-xs text-muted-foreground leading-relaxed">
+                    <span>{t('admin.users.docsPurgedNotice')}</span>
+                    {documentsPurgedLog.createdAt && (
+                      <span className="ml-1 font-medium text-foreground/70">
+                        {t('admin.users.docsPurgedOn')}: {formatDateTimeLong(documentsPurgedLog.createdAt, locale)}.
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </section>
 

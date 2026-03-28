@@ -95,7 +95,7 @@ export const adminApi = api.injectEndpoints({
     }),
     adminUpdateMaster: build.mutation<unknown, { id: string }>({
       query: ({ id }) => ({ url: `/admin/masters/${id}`, method: 'PUT' }),
-      invalidatesTags: ['Masters', 'Master'],
+      invalidatesTags: ['Masters', 'Master', 'MastersFilters'],
     }),
     adminLeads: build.query<
       unknown,
