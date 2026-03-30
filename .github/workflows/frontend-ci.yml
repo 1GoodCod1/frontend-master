@@ -42,7 +42,7 @@ jobs:
           if [ "$TOTAL_KB" -gt 1500 ]; then
             echo "::warning::Total JS bundle size (${TOTAL_KB}KB) exceeds 1500KB threshold"
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: frontend-dist
           path: dist
