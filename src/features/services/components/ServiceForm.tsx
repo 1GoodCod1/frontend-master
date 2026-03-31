@@ -18,6 +18,103 @@ export type ServiceItem = {
   currency: 'MDL' | 'EUR' | 'USD';
 };
 
+type ServiceFormFieldsProps = {
+  service: ServiceItem;
+  onChange: (updater: (prev: ServiceItem) => ServiceItem) => void;
+  /** Prefix for label `htmlFor` / input ids when multiple forms on one page */
+  idPrefix?: string;
+};
+
+export function ServiceFormFields({ service, onChange, idPrefix = '' }: ServiceFormFieldsProps) {
+  const { t } = useTranslation();
+  const p = idPrefix ? `${idPrefix}-` : '';
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <Label htmlFor={`${p}title`} className="text-xs font-medium">
+          {t('servicesPage.serviceName')}
+        </Label>
+        <Input
+          id={`${p}title`}
+          value={service.title}
+          onChange={(e) => onChange((s) => ({ ...s, title: e.target.value }))}
+          placeholder={t('servicesPage.serviceNamePlaceholder')}
+          className="mt-1 rounded-lg bg-background"
+        />
+      </div>
+      <div
+        className={
+          service.priceType === 'FIXED'
+            ? 'grid grid-cols-1 gap-3 sm:grid-cols-2'
+            : 'grid grid-cols-1 gap-3'
+        }
+      >
+        <div className="min-w-0">
+          <Label htmlFor={`${p}priceType`} className="text-xs">
+            {t('servicesPage.priceType')}
+          </Label>
+          <Select
+            value={service.priceType}
+            onValueChange={(v: 'FIXED' | 'NEGOTIABLE') =>
+              onChange((s) => ({ ...s, priceType: v, price: v === 'NEGOTIABLE' ? '' : s.price }))
+            }
+          >
+            <SelectTrigger id={`${p}priceType`} className="mt-1 rounded-lg bg-background">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NEGOTIABLE">{t('servicesPage.priceNegotiable')}</SelectItem>
+              <SelectItem value="FIXED">{t('servicesPage.priceFixed')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {service.priceType === 'FIXED' && (
+          <>
+            <div className="min-w-0">
+              <Label htmlFor={`${p}price`} className="text-xs">
+                {t('servicesPage.price')}
+              </Label>
+              <Input
+                id={`${p}price`}
+                type="number"
+                min={0}
+                inputMode="decimal"
+                value={service.price === '' ? '' : service.price}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === '') return onChange((s) => ({ ...s, price: '' }));
+                  const n = Number(v);
+                  if (Number.isFinite(n) && n >= 0) onChange((s) => ({ ...s, price: n }));
+                }}
+                className="mt-1 rounded-lg bg-background"
+              />
+            </div>
+            <div className="min-w-0 sm:col-span-2 sm:max-w-[12rem]">
+              <Label htmlFor={`${p}currency`} className="text-xs">
+                {t('servicesPage.currency')}
+              </Label>
+              <Select
+                value={service.currency}
+                onValueChange={(v: 'MDL' | 'EUR' | 'USD') => onChange((s) => ({ ...s, currency: v }))}
+              >
+                <SelectTrigger id={`${p}currency`} className="mt-1 rounded-lg bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="MDL">MDL</SelectItem>
+                  <SelectItem value="EUR">EUR</SelectItem>
+                  <SelectItem value="USD">USD</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface ServiceFormProps {
   service: ServiceItem;
   onChange: (updater: (prev: ServiceItem) => ServiceItem) => void;
@@ -41,71 +138,15 @@ export function ServiceForm({
 
   return (
     <div className="space-y-4">
-      <div>
-        <Label className="text-xs font-medium">{t('servicesPage.serviceName')}</Label>
-        <Input
-          value={service.title}
-          onChange={(e) => onChange((s) => ({ ...s, title: e.target.value }))}
-          placeholder={t('servicesPage.serviceNamePlaceholder')}
-          className="mt-1 rounded-lg bg-background"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label className="text-xs">{t('servicesPage.priceType')}</Label>
-          <Select
-            value={service.priceType}
-            onValueChange={(v: 'FIXED' | 'NEGOTIABLE') =>
-              onChange((s) => ({ ...s, priceType: v, price: v === 'NEGOTIABLE' ? '' : s.price }))
-            }
-          >
-            <SelectTrigger className="mt-1 rounded-lg bg-background">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="NEGOTIABLE">{t('servicesPage.priceNegotiable')}</SelectItem>
-              <SelectItem value="FIXED">{t('servicesPage.priceFixed')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        {service.priceType === 'FIXED' && (
-          <>
-            <div>
-              <Label className="text-xs">{t('servicesPage.price')}</Label>
-              <Input
-                type="number"
-                min={0}
-                value={service.price === '' ? '' : service.price}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  if (v === '') return onChange((s) => ({ ...s, price: '' }));
-                  const n = Number(v);
-                  if (Number.isFinite(n) && n >= 0) onChange((s) => ({ ...s, price: n }));
-                }}
-                className="mt-1 rounded-lg bg-background"
-              />
-            </div>
-            <div>
-              <Label className="text-xs">{t('servicesPage.currency')}</Label>
-              <Select
-                value={service.currency}
-                onValueChange={(v: 'MDL' | 'EUR' | 'USD') => onChange((s) => ({ ...s, currency: v }))}
-              >
-                <SelectTrigger className="mt-1 rounded-lg bg-background">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="MDL">MDL</SelectItem>
-                  <SelectItem value="EUR">EUR</SelectItem>
-                  <SelectItem value="USD">USD</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        )}
-      </div>
-      <div className="flex gap-2 pt-2">
-        <Button type="button" size="sm" onClick={onSave} disabled={saving} className="gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700">
+      <ServiceFormFields service={service} onChange={onChange} />
+      <div className="flex flex-wrap gap-2 pt-2">
+        <Button
+          type="button"
+          size="sm"
+          onClick={onSave}
+          disabled={saving}
+          className="gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700"
+        >
           {saveIcon} {saveLabel}
         </Button>
         <Button type="button" size="sm" variant="outline" onClick={onCancel} className="gap-1 rounded-lg">

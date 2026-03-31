@@ -5,6 +5,7 @@ import {
   MessageSquare,
   ExternalLink,
   AlertCircle,
+  CheckCircle,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
@@ -145,16 +146,35 @@ export function RequestCard({
 
         {lead?.id && (
           <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3 pt-1">
-            {onOpenDetails && (
-              <Button
-                size="sm"
-                onClick={() => onOpenDetails(lead)}
-                className="h-10 sm:h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 w-full sm:w-auto min-h-[44px] sm:min-h-0 touch-manipulation"
-              >
-                <ExternalLink className="size-3.5" />
-                {t('leads.open')}
-              </Button>
-            )}
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 w-full sm:w-auto sm:flex-1 min-w-0">
+              {variant === 'list' && lead.status === 'IN_PROGRESS' && onStatusChange && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={isUpdating}
+                  onClick={() => {
+                    if (window.confirm(t('leads.confirmCloseLead'))) {
+                      onStatusChange(lead, 'CLOSED');
+                    }
+                  }}
+                  className="h-10 sm:h-8 gap-1.5 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-600 dark:text-emerald-400 dark:border-emerald-500/40 dark:hover:bg-emerald-950/40 w-full sm:w-auto min-h-[44px] sm:min-h-0 touch-manipulation order-first sm:order-none"
+                >
+                  <CheckCircle className="size-3.5 shrink-0" />
+                  {t('leads.closeLead')}
+                </Button>
+              )}
+              {onOpenDetails && (
+                <Button
+                  size="sm"
+                  onClick={() => onOpenDetails(lead)}
+                  className="h-10 sm:h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 w-full sm:w-auto min-h-[44px] sm:min-h-0 touch-manipulation"
+                >
+                  <ExternalLink className="size-3.5" />
+                  {t('leads.open')}
+                </Button>
+              )}
+            </div>
             {variant === 'detail' && !isClosed && onStatusChange && (
               <Button
                 size="sm"

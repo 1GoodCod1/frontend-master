@@ -7,7 +7,7 @@ import type {
   LeadStatsResponse,
   UpdateLeadStatusDto,
 } from '@/types';
-import { patchInListResponse, idMatches } from '@/services/cacheUtils';
+import { idMatches } from '@/services/cacheUtils';
 import { isRecord } from '@/utils/guards';
 import { unwrapObject, extractItems } from '@/utils/data';
 
@@ -50,42 +50,59 @@ export const leadsApi = api.injectEndpoints({
     leadsUpdateStatus: build.mutation<LeadDto, { id: string; body: UpdateLeadStatusDto }>({
       query: ({ id, body }) => ({ url: `/leads/${id}/status`, method: 'PATCH', data: body }),
       invalidatesTags: ['Leads'],
-      async onQueryStarted({ id, body }, { dispatch, queryFulfilled }) {
-        // Optimistic update: patch all existing leadsMyList cache entries
+      async onQueryStarted({ id, body }, { dispatch, queryFulfilled, getState }) {
         const patches: Array<{ undo: () => void }> = [];
 
-        // Patch all cached leadsMyList queries (RTK Query stores them by serialized args)
-        for (const args of [
-          undefined,
-          { status: 'NEW' },
-          { status: 'IN_PROGRESS' },
-          { status: 'CLOSED' },
-          { status: 'SPAM' },
-        ] as const) {
-          try {
-            patches.push(
-              dispatch(
-                leadsApi.util.updateQueryData('leadsMyList', args as { limit?: number; page?: number; status?: string } | void, (draft) => {
-                  patchInListResponse<LeadDto>(draft, (it) => idMatches(it, id), (it) => {
-                    it.status = body.status;
-                  });
-                }),
-              ),
-            );
-          } catch {
-            // No cache entry for this arg variant
+        const statusFilterFromArg = (arg: unknown): string | undefined => {
+          if (!isRecord(arg)) return undefined;
+          const s = arg.status;
+          return typeof s === 'string' ? s : undefined;
+        };
+
+        /** Update or drop list item so UI matches filters immediately (e.g. IN_PROGRESS → CLOSED removes row). */
+        const applyListUpdate = (draft: LeadDto[], arg: unknown) => {
+          const idx = draft.findIndex((it) => idMatches(it, id));
+          if (idx === -1) return;
+          const filterStatus = statusFilterFromArg(arg);
+          if (filterStatus && body.status !== filterStatus) {
+            draft.splice(idx, 1);
+          } else {
+            draft[idx].status = body.status;
+          }
+        };
+
+        const cachedListArgs = leadsApi.util.selectCachedArgsForQuery(getState(), 'leadsMyList');
+        for (const arg of cachedListArgs) {
+          const patchResult = dispatch(
+            leadsApi.util.updateQueryData('leadsMyList', arg, (draft) => {
+              if (!Array.isArray(draft)) return;
+              applyListUpdate(draft, arg);
+            }),
+          );
+          if (
+            patchResult &&
+            typeof patchResult === 'object' &&
+            'undo' in patchResult &&
+            typeof (patchResult as { undo: unknown }).undo === 'function'
+          ) {
+            patches.push(patchResult as { undo: () => void });
           }
         }
 
-        // Patch leadsById cache if exists
         try {
-          patches.push(
-            dispatch(
-              leadsApi.util.updateQueryData('leadsById', { id }, (draft) => {
-                if (draft && typeof draft === 'object') (draft as LeadDto).status = body.status;
-              }),
-            ),
+          const patchResult = dispatch(
+            leadsApi.util.updateQueryData('leadsById', { id }, (draft) => {
+              if (draft && typeof draft === 'object') (draft as LeadDto).status = body.status;
+            }),
           );
+          if (
+            patchResult &&
+            typeof patchResult === 'object' &&
+            'undo' in patchResult &&
+            typeof (patchResult as { undo: unknown }).undo === 'function'
+          ) {
+            patches.push(patchResult as { undo: () => void });
+          }
         } catch {
           // No cache entry for this id
         }

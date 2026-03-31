@@ -23,15 +23,25 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { ServiceForm, type ServiceItem } from '@/features/services/components/ServiceForm';
+import {
+  ServiceForm,
+  ServiceFormFields,
+  type ServiceItem,
+} from '@/features/services/components/ServiceForm';
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import type { MasterServiceItem } from '@/types';
 
-const defaultService = (): ServiceItem => ({
-  title: '',
-  priceType: 'NEGOTIABLE',
-  price: '',
-  currency: 'MDL',
-});
+function defaultService(): ServiceItem {
+  return { title: '', priceType: 'NEGOTIABLE', price: '', currency: 'MDL' };
+}
 
 function normalizeServices(raw: unknown): ServiceItem[] {
   if (!Array.isArray(raw)) return [];
@@ -75,14 +85,15 @@ export default function ServicesPage() {
 
   const [list, setList] = useState<ServiceItem[]>(servicesList);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [isAdding, setIsAdding] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [pendingAdds, setPendingAdds] = useState<ServiceItem[]>([defaultService()]);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const lastSyncedServicesRef = useRef<ServiceItem[]>(servicesList);
 
   // Sync list from server only when server data actually changed (e.g. after refetch),
   // not when we just closed the edit form (otherwise we'd overwrite local edits).
   useEffect(() => {
-    if (isAdding || editingIndex !== null) return;
+    if (addModalOpen || editingIndex !== null) return;
     const serverChanged =
       servicesList.length !== lastSyncedServicesRef.current.length ||
       servicesList.some(
@@ -95,39 +106,55 @@ export default function ServicesPage() {
       lastSyncedServicesRef.current = servicesList;
       queueMicrotask(() => setList(servicesList));
     }
-  }, [servicesList, isAdding, editingIndex]);
+  }, [servicesList, addModalOpen, editingIndex]);
 
-  const formService = editingIndex !== null ? list[editingIndex] ?? defaultService() : isAdding ? (list[list.length - 1] ?? defaultService()) : null;
+  const formService = editingIndex !== null ? list[editingIndex] ?? defaultService() : null;
   const setFormService = (updater: (prev: ServiceItem) => ServiceItem) => {
     if (editingIndex !== null) {
       setList((prev) => prev.map((s, i) => (i === editingIndex ? updater(s) : s)));
-    } else if (isAdding) {
-      setList((prev) => prev.map((s, i) => (i === prev.length - 1 ? updater(s) : s)));
     }
   };
 
-  const startAdd = () => {
+  const openAddModal = () => {
     setEditingIndex(null);
-    setIsAdding(true);
-    setList((prev) => [...prev, defaultService()]);
+    setPendingAdds([defaultService()]);
+    setAddModalOpen(true);
   };
 
-  const saveAdd = async () => {
-    const newOne = list[list.length - 1];
-    if (!newOne?.title.trim()) {
-      toast.error(t('servicesPage.titleRequired'));
+  const closeAddModal = () => {
+    setAddModalOpen(false);
+    setPendingAdds([defaultService()]);
+  };
+
+  const updatePendingRow = (index: number, updater: (prev: ServiceItem) => ServiceItem) => {
+    setPendingAdds((prev) => prev.map((s, i) => (i === index ? updater(s) : s)));
+  };
+
+  const addAnotherRow = () => {
+    setPendingAdds((prev) => [...prev, defaultService()]);
+  };
+
+  const removePendingRow = (index: number) => {
+    setPendingAdds((prev) => (prev.length <= 1 ? prev : prev.filter((_, i) => i !== index)));
+  };
+
+  const saveBulkAdds = async () => {
+    const filled = pendingAdds.filter((s) => s.title.trim());
+    if (filled.length === 0) {
+      toast.error(t('servicesPage.atLeastOneService'));
       return;
     }
-    if (newOne.priceType === 'FIXED' && (newOne.price === '' || Number(newOne.price) < 0)) {
-      toast.error(t('servicesPage.priceRequired'));
-      return;
+    for (const s of filled) {
+      if (s.priceType === 'FIXED' && (s.price === '' || Number(s.price) < 0)) {
+        toast.error(t('servicesPage.priceRequired'));
+        return;
+      }
     }
-    setIsAdding(false);
-    await handleSaveAll();
+    const ok = await handleSaveAll([...list, ...filled]);
+    if (ok) closeAddModal();
   };
 
   const startEdit = (idx: number) => {
-    setIsAdding(false);
     setEditingIndex(idx);
   };
 
@@ -147,22 +174,14 @@ export default function ServicesPage() {
   };
 
   const cancelForm = () => {
-    if (isAdding) {
-      setList((prev) => prev.slice(0, -1));
-      setIsAdding(false);
-    } else {
-      // Revert edited item to original from server
-      if (editingIndex !== null && servicesList[editingIndex]) {
-        const original = servicesList[editingIndex];
-        setList((prev) =>
-          prev.map((s, i) => (i === editingIndex ? { ...original } : s))
-        );
-      }
-      setEditingIndex(null);
+    if (editingIndex !== null && servicesList[editingIndex]) {
+      const original = servicesList[editingIndex];
+      setList((prev) => prev.map((s, i) => (i === editingIndex ? { ...original } : s)));
     }
+    setEditingIndex(null);
   };
 
-  const handleSaveAll = async (listOverride?: ServiceItem[]) => {
+  const handleSaveAll = async (listOverride?: ServiceItem[]): Promise<boolean> => {
     const source = listOverride ?? list;
     const toSend: MasterServiceItem[] = source
       .filter((s) => s.title.trim())
@@ -175,13 +194,14 @@ export default function ServicesPage() {
     try {
       const result = await updateServices({ services: toSend }).unwrap();
       toast.success(t('servicesPage.saved'));
-      setIsAdding(false);
       setEditingIndex(null);
       const updated = (result as { services?: unknown })?.services;
       if (updated !== undefined) setList(normalizeServices(updated));
       await refetch();
+      return true;
     } catch (e: unknown) {
       toast.error(toErrorMessage(e) ?? t('servicesPage.saveFailed'));
+      return false;
     }
   };
 
@@ -206,8 +226,6 @@ export default function ServicesPage() {
     await handleSaveAll(nextList);
   };
 
-  const displayList = isAdding ? list.slice(0, -1) : list;
-
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState error={error as Error} onRetry={refetch} />;
 
@@ -230,21 +248,19 @@ export default function ServicesPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h2 className="text-lg font-bold text-foreground">{t('servicesPage.listTitle')}</h2>
           <div className="flex gap-2">
-            {!isAdding && (
-              <Button
-                type="button"
-                onClick={startAdd}
-                className="gap-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500"
-              >
-                <Plus className="size-4" />
-                {t('servicesPage.add')}
-              </Button>
-            )}
+            <Button
+              type="button"
+              onClick={openAddModal}
+              className="gap-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+            >
+              <Plus className="size-4" />
+              {t('servicesPage.add')}
+            </Button>
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
-          {displayList.map((service, idx) => (
+          {list.map((service, idx) => (
             <Card
               key={idx}
               className="overflow-hidden border-2 border-border/80 transition hover:border-emerald-500/40 hover:shadow-lg dark:hover:border-emerald-500/30"
@@ -309,24 +325,7 @@ export default function ServicesPage() {
           ))}
         </div>
 
-        {isAdding && formService && (
-          <Card className="overflow-hidden border-2 border-dashed border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-950/20">
-            <CardContent className="p-4 space-y-4">
-              <h3 className="font-semibold text-foreground">{t('servicesPage.newService')}</h3>
-              <ServiceForm
-                service={formService}
-                onChange={setFormService}
-                onSave={saveAdd}
-                onCancel={cancelForm}
-                saving={saving}
-                saveIcon={<Plus className="size-3" />}
-                saveLabel={t('servicesPage.addService')}
-              />
-            </CardContent>
-          </Card>
-        )}
-
-        {displayList.length === 0 && !isAdding && (
+        {list.length === 0 && (
           <Card className="rounded-xl border-2 border-dashed border-muted-foreground/25">
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <ListChecks className="size-12 text-muted-foreground/50 mb-3" />
@@ -335,7 +334,7 @@ export default function ServicesPage() {
                 type="button"
                 variant="outline"
                 className="mt-4 gap-2 rounded-xl border-emerald-500/50 text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
-                onClick={startAdd}
+                onClick={openAddModal}
               >
                 <Plus className="size-4" />
                 {t('servicesPage.add')}
@@ -344,6 +343,69 @@ export default function ServicesPage() {
           </Card>
         )}
       </div>
+
+      <Dialog open={addModalOpen} onOpenChange={(open) => (open ? setAddModalOpen(true) : closeAddModal())}>
+        <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-1.5rem)] max-w-2xl flex-col gap-0 p-0 sm:w-full">
+          <DialogHeader className="text-left">
+            <DialogTitle>{t('servicesPage.bulkModalTitle')}</DialogTitle>
+            <DialogDescription>{t('servicesPage.bulkModalHint')}</DialogDescription>
+          </DialogHeader>
+          <DialogBody className="space-y-4 px-4 sm:px-6">
+            {pendingAdds.map((row, index) => (
+              <div
+                key={index}
+                className="relative rounded-xl border border-border/80 bg-muted/20 p-3 sm:p-4 dark:bg-white/[0.03]"
+              >
+                <div className="mb-3 flex flex-wrap items-start justify-between gap-2 border-b border-border/50 pb-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {t('servicesPage.bulkRowLabel', { n: index + 1 })}
+                  </span>
+                  {pendingAdds.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 shrink-0 text-destructive hover:bg-destructive/10"
+                      onClick={() => removePendingRow(index)}
+                      aria-label={t('servicesPage.removeRow')}
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  )}
+                </div>
+                <ServiceFormFields
+                  service={row}
+                  onChange={(updater) => updatePendingRow(index, updater)}
+                  idPrefix={`bulk-${index}`}
+                />
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full gap-2 rounded-xl border-dashed border-emerald-500/50 text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/40"
+              onClick={addAnotherRow}
+            >
+              <Plus className="size-4" />
+              {t('servicesPage.addAnother')}
+            </Button>
+          </DialogBody>
+          <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between">
+            <Button type="button" variant="outline" className="w-full rounded-xl sm:w-auto" onClick={closeAddModal}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              type="button"
+              disabled={saving}
+              className="w-full gap-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 sm:w-auto"
+              onClick={() => void saveBulkAdds()}
+            >
+              <Plus className="size-4" />
+              {t('servicesPage.bulkSave')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {deleteIndex !== null && (
         <ConfirmDialog
