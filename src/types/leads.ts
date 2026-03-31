@@ -36,6 +36,11 @@ export type LeadDto = {
 
 export type ActiveLeadToMasterResponse = LeadDto | null;
 
+export type CompletedLeadToMasterResponse = {
+  hasCompletedLead: boolean;
+  lastLead: Pick<LeadDto, 'id' | 'status' | 'createdAt' | 'message'> | null;
+};
+
 export type LeadStatsResponse = {
   total: number;
   byStatus: { newLeads: number; inProgress: number; closed: number; spam: number };

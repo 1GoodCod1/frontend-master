@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
@@ -7,7 +7,37 @@ import Sitemap from 'vite-plugin-sitemap';
 import { VitePWA } from 'vite-plugin-pwa';
 import viteCompression from 'vite-plugin-compression';
 
-export default defineConfig(({ mode }) => ({
+/** Origins for fetch + Socket.IO (must match VITE_API_URL / VITE_WS_URL; cross-origin ≠ 'self'). */
+function collectConnectSrcOrigins(mode: string): string {
+  const env = loadEnv(mode, process.cwd(), '');
+  const origins = new Set<string>();
+  const add = (raw: string | undefined) => {
+    if (!raw?.trim()) return;
+    try {
+      origins.add(new URL(raw.trim()).origin);
+    } catch {
+      /* ignore */
+    }
+  };
+  add('http://localhost:4000');
+  add('http://127.0.0.1:4000');
+  add('https://api.master-hub.md');
+  add(env.VITE_API_URL);
+  const ws = env.VITE_WS_URL?.trim();
+  if (ws) {
+    try {
+      const normalized = ws.replace(/^ws:/i, 'http:').replace(/^wss:/i, 'https:');
+      add(normalized);
+    } catch {
+      /* ignore */
+    }
+  }
+  return [...origins].join(' ');
+}
+
+export default defineConfig(({ mode }) => {
+  const connectSrc = `'self' ws: wss: ${collectConnectSrcOrigins(mode)}`;
+  return {
   plugins: [
     react(),
     tailwindcss(),
@@ -109,6 +139,13 @@ export default defineConfig(({ mode }) => ({
     watch: {
       usePolling: true,
     },
+    // Match production nginx so passive scans (e.g. ZAP) on localhost:3000 see the same baseline headers
+    headers: {
+      'X-Frame-Options': 'SAMEORIGIN',
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Content-Security-Policy': `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src ${connectSrc}; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';`,
+    },
   },
   build: {
     // Оптимизация для production build
@@ -154,4 +191,5 @@ export default defineConfig(({ mode }) => ({
     // Main app chunk ~875 kB minified; size-limit still enforces gzip/brotli budget
     chunkSizeWarningLimit: 950,
   },
-}));
+};
+});

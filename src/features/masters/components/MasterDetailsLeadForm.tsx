@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Clock,
   CalendarDays,
+  RefreshCw,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +19,7 @@ import {
   useLeadsSubscribeToAvailabilityMutation,
   useLeadsActiveToMasterQuery,
   useLeadsCheckAvailabilitySubscriptionQuery,
+  useLeadsCompletedToMasterQuery,
 } from '@/features/leads/leadsApi';
 import { useCreateConversationMutation, useGetConversationByLeadIdQuery } from '@/features/chat/chatApi';
 import { Card, CardContent } from '@/components/ui/card';
@@ -72,6 +74,17 @@ export const MasterDetailsLeadForm = ({
   );
   const activeLead = activeLeadData;
 
+  const { data: completedLeadData } = useLeadsCompletedToMasterQuery(
+    { masterId, userId },
+    {
+      skip: !isAuthed || role !== USER_ROLE.CLIENT || !userId || !!activeLead,
+      refetchOnMountOrArgChange: true,
+    },
+  );
+  const hasCompletedLead = completedLeadData?.hasCompletedLead ?? false;
+
+  const [showRecontactForm, setShowRecontactForm] = useState(false);
+
   const [createConversation, { isLoading: isCreatingChat }] = useCreateConversationMutation();
   const { data: existingConversation } = useGetConversationByLeadIdQuery(submittedLeadId || activeLead?.id || '', {
     skip: !submittedLeadId && !activeLead?.id,
@@ -122,6 +135,44 @@ export const MasterDetailsLeadForm = ({
       toast.error(toErrorMessage(error) ?? t('masterDetails.chatOpenError', 'Failed to open chat'));
     }
   };
+
+  // ─── Re-contact: client has completed lead with this master ───
+  if (hasCompletedLead && !activeLead && !submittedLeadId && !showRecontactForm) {
+    return (
+      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-500/80" />
+        <CardContent className="p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4">
+            <RefreshCw className="h-10 w-10" />
+          </div>
+          <h3 className="text-lg font-bold tracking-tight mb-2">
+            {t('masterDetails.recontactTitle', 'You have worked with this master before')}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            {t('masterDetails.recontactDesc', 'You already have a completed request with this master. Want to contact them again?')}
+          </p>
+          <div className="space-y-3">
+            <Button
+              size="lg"
+              className="w-full gap-2 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition"
+              onClick={() => setShowRecontactForm(true)}
+            >
+              <RefreshCw className="h-4 w-4" />
+              {t('masterDetails.recontactButton', 'Contact again')}
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full font-semibold dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10"
+              onClick={() => navigate('/client-dashboard/leads')}
+            >
+              {t('clientDashboard.myLeads', 'My requests')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (activeLead && !submittedLeadId) {
     return (

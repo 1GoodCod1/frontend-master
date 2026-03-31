@@ -1,6 +1,7 @@
 import { api } from '@/services/api';
 import type {
   ActiveLeadToMasterResponse,
+  CompletedLeadToMasterResponse,
   CreateLeadDto,
   LeadDto,
   LeadStatsResponse,
@@ -126,6 +127,16 @@ export const leadsApi = api.injectEndpoints({
         return null;
       },
     }),
+
+    // Check if client has a completed (CLOSED) lead to a specific master (for "re-contact" button)
+    leadsCompletedToMaster: build.query<CompletedLeadToMasterResponse, { masterId: string; userId?: string }>({
+      query: ({ masterId }) => ({ url: `/leads/completed-to-master/${masterId}`, method: 'GET' }),
+      providesTags: ['Leads'],
+      transformResponse: (raw: unknown) => {
+        const obj = unwrapObject<CompletedLeadToMasterResponse>(raw);
+        return obj ?? { hasCompletedLead: false, lastLead: null };
+      },
+    }),
   }),
 });
 
@@ -139,4 +150,5 @@ export const {
   useLeadsUnsubscribeFromAvailabilityMutation,
   useLeadsCheckAvailabilitySubscriptionQuery,
   useLeadsActiveToMasterQuery,
+  useLeadsCompletedToMasterQuery,
 } = leadsApi;

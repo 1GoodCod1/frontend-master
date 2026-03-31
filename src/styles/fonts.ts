@@ -1,0 +1,21 @@
+/** Side-effect imports: loaded via Vite (Tailwind's CSS pipeline does not resolve @fontsource in CSS). */
+import '@fontsource/poppins/latin-400.css';
+import '@fontsource/poppins/latin-500.css';
+import '@fontsource/poppins/latin-600.css';
+import '@fontsource/poppins/latin-700.css';
+import '@fontsource/poppins/latin-ext-400.css';
+import '@fontsource/poppins/latin-ext-500.css';
+import '@fontsource/poppins/latin-ext-600.css';
+import '@fontsource/poppins/latin-ext-700.css';
+import '@fontsource/iosevka-charon-mono/latin-400.css';
+import '@fontsource/iosevka-charon-mono/latin-500.css';
+import '@fontsource/iosevka-charon-mono/latin-700.css';
+import '@fontsource/iosevka-charon-mono/latin-400-italic.css';
+import '@fontsource/iosevka-charon-mono/latin-500-italic.css';
+import '@fontsource/iosevka-charon-mono/latin-700-italic.css';
+import '@fontsource/iosevka-charon-mono/latin-ext-400.css';
+import '@fontsource/iosevka-charon-mono/latin-ext-500.css';
+import '@fontsource/iosevka-charon-mono/latin-ext-700.css';
+import '@fontsource/iosevka-charon-mono/latin-ext-400-italic.css';
+import '@fontsource/iosevka-charon-mono/latin-ext-500-italic.css';
+import '@fontsource/iosevka-charon-mono/latin-ext-700-italic.css';

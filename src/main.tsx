@@ -6,6 +6,7 @@ import { App } from '@/App';
 import { env } from '@/services/env';
 import { loadExtendedTranslations } from '@/i18n';
 import { AppProviders } from '@/app/AppProviders';
+import '@/styles/fonts';
 import '@/styles/index.css';
 import { bootstrapAuth } from '@/features/auth/bootstrap';
 import { reportWebVitals } from '@/utils/reportWebVitals';

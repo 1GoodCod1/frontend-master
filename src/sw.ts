@@ -59,23 +59,6 @@ registerRoute(
   }),
 );
 
-// Runtime cache: Google Fonts stylesheets
-registerRoute(
-  ({ url }) => url.origin === 'https://fonts.googleapis.com',
-  new StaleWhileRevalidate({ cacheName: 'google-fonts-stylesheets' }),
-);
-
-// Runtime cache: Google Fonts webfont files
-registerRoute(
-  ({ url }) => url.origin === 'https://fonts.gstatic.com',
-  new CacheFirst({
-    cacheName: 'google-fonts-webfonts',
-    plugins: [
-      new ExpirationPlugin({ maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 }), // 1 year
-    ],
-  }),
-);
-
 // ——— Push notifications (existing logic) ———
 let apiBaseUrl = '';
 

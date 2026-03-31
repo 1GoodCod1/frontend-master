@@ -111,6 +111,9 @@ export const masterDetails = {
       profileDetails: 'Profile details',
       verifiedInfo: 'Verified information',
       masterId: 'Master ID',
+      recontactTitle: 'You have worked with this master before',
+      recontactDesc: 'You already have a completed request with this master. Want to contact them again?',
+      recontactButton: 'Contact again',
     },
   },
   ru: {
@@ -225,6 +228,9 @@ export const masterDetails = {
       profileDetails: 'Детали профиля',
       verifiedInfo: 'Проверенная информация',
       masterId: 'ID мастера',
+      recontactTitle: 'Вы уже работали с этим мастером',
+      recontactDesc: 'У вас есть завершённая заявка с этим мастером. Хотите обратиться снова?',
+      recontactButton: 'Обратиться снова',
     },
   },
   ro: {
@@ -339,6 +345,9 @@ export const masterDetails = {
       profileDetails: 'Detalii profil',
       verifiedInfo: 'Informații verificate',
       masterId: 'ID Meșter',
+      recontactTitle: 'Ați lucrat deja cu acest meșter',
+      recontactDesc: 'Aveți o cerere finalizată cu acest meșter. Doriți să-l contactați din nou?',
+      recontactButton: 'Contactați din nou',
     },
   },
 };
