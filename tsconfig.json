@@ -24,10 +24,9 @@
       "vite-plugin-pwa/client",
       "node"
     ],
-    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     }
   },
