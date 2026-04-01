@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { Mail, Clock, AtSign, CalendarDays, Hourglass } from 'lucide-react';
+import { Mail, Clock, AtSign, CalendarDays, Hourglass, CheckCircle, XCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ import LeaveReviewButton from './LeaveReviewButton';
 import { RequestStatusProgress } from '@/features/requests/components/RequestStatusProgress';
 import { mediaUrl } from '@/utils/media';
 import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
+import { useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
 
 const ClientRequestCard = React.memo(function ClientRequestCard({
   lead,
@@ -21,6 +23,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
 }: LeadCardProps) {
   const { t, i18n } = useTranslation();
   const locale = getLocaleFromLanguage(i18n.language);
+  const [updateStatus, { isLoading: isConfirming }] = useLeadsUpdateStatusMutation();
 
   const createdAt = lead.createdAt ? new Date(lead.createdAt) : null;
   const status = String((lead.status ?? 'NEW')).toUpperCase();
@@ -145,6 +148,50 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
             </div>
           )}
         </div>
+
+        {/* Closure confirmation for client */}
+        {status === 'PENDING_CLOSE' && (
+          <div className="rounded-xl border-2 border-purple-400/40 bg-purple-50 dark:bg-purple-950/20 p-4">
+            <p className="text-sm font-semibold text-purple-800 dark:text-purple-300 mb-3">
+              {t('leads.closeConfirmationMessage')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                size="sm"
+                disabled={isConfirming}
+                onClick={async () => {
+                  try {
+                    await updateStatus({ id: lead.id, body: { status: 'CLOSED' } }).unwrap();
+                    toast.success(t('leads.closeConfirmed'));
+                  } catch {
+                    toast.error(t('leads.updateStatusFailed'));
+                  }
+                }}
+                className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+              >
+                <CheckCircle className="size-3.5" />
+                {t('leads.confirmClose')}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isConfirming}
+                onClick={async () => {
+                  try {
+                    await updateStatus({ id: lead.id, body: { status: 'IN_PROGRESS' } }).unwrap();
+                    toast.success(t('leads.closeRejected'));
+                  } catch {
+                    toast.error(t('leads.updateStatusFailed'));
+                  }
+                }}
+                className="gap-1.5 border-rose-400/60 text-rose-700 hover:bg-rose-50 hover:text-rose-800 dark:text-rose-400 dark:border-rose-500/40 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
+              >
+                <XCircle className="size-3.5" />
+                {t('leads.rejectClose')}
+              </Button>
+            </div>
+          </div>
+        )}
 
       </CardContent>
 

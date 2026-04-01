@@ -1,4 +1,4 @@
-export const LEAD_STATUS_OPTIONS = ['NEW', 'IN_PROGRESS', 'CLOSED', 'SPAM'] as const;
+export const LEAD_STATUS_OPTIONS = ['NEW', 'IN_PROGRESS', 'PENDING_CLOSE', 'CLOSED', 'SPAM'] as const;
 export type LeadStatus = (typeof LEAD_STATUS_OPTIONS)[number];
 export type LeadFilterStatus = LeadStatus | 'ALL';
 
@@ -43,7 +43,7 @@ export type CompletedLeadToMasterResponse = {
 
 export type LeadStatsResponse = {
   total: number;
-  byStatus: { newLeads: number; inProgress: number; closed: number; spam: number };
+  byStatus: { newLeads: number; inProgress: number; pendingClose: number; closed: number; spam: number };
 };
 
 export interface LeadCardProps {

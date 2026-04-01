@@ -134,7 +134,7 @@ export type CreateLeadDto = {
 };
 
 export type UpdateLeadStatusDto = {
-  status: 'NEW' | 'IN_PROGRESS' | 'CLOSED' | 'SPAM';
+  status: 'NEW' | 'IN_PROGRESS' | 'PENDING_CLOSE' | 'CLOSED' | 'SPAM';
 };
 
 export type CreateReviewDto = {

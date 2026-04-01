@@ -7,7 +7,7 @@ import { createStatusColorMap, createStatusColorMapFixed } from './createStatusC
 import { BOOKING_STATUS_CONFIG, LEAD_STATUS_CONFIG, REPORT_STATUS_CONFIG } from './configs';
 
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
-export type LeadStatus = 'NEW' | 'IN_PROGRESS' | 'CLOSED' | 'SPAM';
+export type LeadStatus = 'NEW' | 'IN_PROGRESS' | 'PENDING_CLOSE' | 'CLOSED' | 'SPAM';
 
 const bookingMap = createStatusColorMap(BOOKING_STATUS_CONFIG);
 const leadMap = createStatusColorMap(LEAD_STATUS_CONFIG);

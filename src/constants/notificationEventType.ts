@@ -7,6 +7,7 @@ export const NOTIFICATION_EVENT_TYPE = {
   new_review: 'new_review',
   lead_status_updated: 'lead_status_updated',
   lead_sent: 'lead_sent',
+  lead_close_requested: 'lead_close_requested',
   new_chat_message: 'new_chat_message',
   subscription_expiring: 'subscription_expiring',
   subscription_expired: 'subscription_expired',

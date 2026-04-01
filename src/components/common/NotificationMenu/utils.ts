@@ -15,7 +15,8 @@ export function routeFor(
   if (
     type === NOTIFICATION_EVENT_TYPE.new_lead ||
     type === NOTIFICATION_EVENT_TYPE.lead_status_updated ||
-    type === NOTIFICATION_EVENT_TYPE.lead_sent
+    type === NOTIFICATION_EVENT_TYPE.lead_sent ||
+    type === NOTIFICATION_EVENT_TYPE.lead_close_requested
   ) {
     return role === USER_ROLE.ADMIN
       ? '/admin/leads'
@@ -80,6 +81,7 @@ export function filterByTab(type: string, tab: TabKey): boolean {
       type === NOTIFICATION_EVENT_TYPE.new_lead ||
       type === NOTIFICATION_EVENT_TYPE.lead_status_updated ||
       type === NOTIFICATION_EVENT_TYPE.lead_sent ||
+      type === NOTIFICATION_EVENT_TYPE.lead_close_requested ||
       type === NOTIFICATION_EVENT_TYPE.new_chat_message ||
       type === NOTIFICATION_EVENT_TYPE.admin_new_lead ||
       type === NOTIFICATION_EVENT_TYPE.master_responded ||

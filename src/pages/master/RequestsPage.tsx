@@ -118,7 +118,7 @@ export default function RequestsPage() {
                   <SelectItem value="ALL">{t('common.all')}</SelectItem>
                   {LEAD_STATUS_OPTIONS.map((s) => (
                     <SelectItem key={s} value={s}>
-                      {t(`leads.${s.toLowerCase()}` as 'leads.new' | 'leads.in_progress' | 'leads.closed' | 'leads.spam')}
+                      {t(`leads.${s.toLowerCase()}`)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -216,7 +216,7 @@ export default function RequestsPage() {
                     size="sm"
                     disabled={currentPage <= 1}
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="order-2 sm:order-1 min-h-[44px] sm:min-h-0 border-slate-200 dark:border-white/10 hover:bg-amber-500/10 hover:border-amber-500/30 touch-manipulation"
+                    className="order-2 sm:order-1 min-h-[44px] sm:min-h-0 border-slate-200 dark:border-white/10 hover:bg-amber-500/10 hover:text-amber-900 hover:border-amber-500/30 dark:hover:text-amber-100 touch-manipulation"
                   >
                     {t('common.prev')}
                   </Button>
@@ -228,7 +228,7 @@ export default function RequestsPage() {
                     size="sm"
                     disabled={currentPage >= totalPages}
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    className="order-3 min-h-[44px] sm:min-h-0 border-slate-200 dark:border-white/10 hover:bg-amber-500/10 hover:border-amber-500/30 touch-manipulation"
+                    className="order-3 min-h-[44px] sm:min-h-0 border-slate-200 dark:border-white/10 hover:bg-amber-500/10 hover:text-amber-900 hover:border-amber-500/30 dark:hover:text-amber-100 touch-manipulation"
                   >
                     {t('common.next')}
                   </Button>

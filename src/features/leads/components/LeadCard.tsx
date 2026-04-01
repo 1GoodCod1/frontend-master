@@ -6,26 +6,21 @@ import {
   ExternalLink,
   AlertCircle,
   CheckCircle,
+  PlayCircle,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LeadStatusProgress } from './LeadStatusProgress';
 import { formatDateTimeString } from '@/utils/date';
-import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadDto } from '@/types/leads';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { type LeadStatus, type LeadDto } from '@/types/leads';
 import { cn } from '@/lib/utils';
 
 function statusLabel(status: string | null | undefined, t: (key: string) => string): string {
   const s = (status ?? 'NEW').toUpperCase();
   if (s === 'NEW') return t('leads.new');
   if (s === 'IN_PROGRESS') return t('leads.in_progress');
+  if (s === 'PENDING_CLOSE') return t('leads.pending_close');
   if (s === 'CLOSED') return t('leads.closed');
   if (s === 'SPAM') return t('leads.spam');
   return t('leads.new');
@@ -107,28 +102,9 @@ export function RequestCard({
                 <LeadStatusProgress status={lead?.status as string} />
               </div>
             )}
-            {variant === 'list' ? (
-              <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 pt-1">
-                {statusLabel(lead?.status as string, t)}
-              </p>
-            ) : (
-              <Select
-                value={(lead?.status as LeadStatus) ?? 'NEW'}
-                onValueChange={(v) => onStatusChange?.(lead, v as LeadStatus)}
-                disabled={isUpdating || isClosed}
-              >
-                <SelectTrigger className="w-full sm:w-[140px] rounded-xl border-slate-200 dark:border-white/[0.12] bg-white dark:bg-black/40 h-11">
-                  <SelectValue placeholder={t('leads.setStatus')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {LEAD_STATUS_OPTIONS.filter((s) => s !== 'SPAM').map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {t(`leads.${s.toLowerCase()}` as 'leads.new' | 'leads.in_progress' | 'leads.closed' | 'leads.spam')}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+            <p className="text-sm font-semibold text-amber-600 dark:text-amber-400 pt-1">
+              {statusLabel(lead?.status as string, t)}
+            </p>
           </div>
         </div>
 
@@ -147,22 +123,37 @@ export function RequestCard({
         {lead?.id && (
           <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-between gap-3 pt-1">
             <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 w-full sm:w-auto sm:flex-1 min-w-0">
-              {variant === 'list' && lead.status === 'IN_PROGRESS' && onStatusChange && (
+              {lead.status === 'NEW' && onStatusChange && (
                 <Button
                   type="button"
                   size="sm"
                   variant="outline"
                   disabled={isUpdating}
-                  onClick={() => {
-                    if (window.confirm(t('leads.confirmCloseLead'))) {
-                      onStatusChange(lead, 'CLOSED');
-                    }
-                  }}
-                  className="h-10 sm:h-8 gap-1.5 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-600 dark:text-emerald-400 dark:border-emerald-500/40 dark:hover:bg-emerald-950/40 w-full sm:w-auto min-h-[44px] sm:min-h-0 touch-manipulation order-first sm:order-none"
+                  onClick={() => onStatusChange(lead, 'IN_PROGRESS')}
+                  className="h-10 sm:h-8 gap-1.5 border-blue-600/40 text-blue-700 hover:bg-blue-50 hover:text-blue-800 hover:border-blue-600 dark:text-blue-400 dark:border-blue-500/40 dark:hover:bg-blue-950/40 dark:hover:text-blue-300 w-full sm:w-auto min-h-[44px] sm:min-h-0 touch-manipulation order-first sm:order-none"
+                >
+                  <PlayCircle className="size-3.5 shrink-0" />
+                  {t('leads.acceptLead')}
+                </Button>
+              )}
+              {lead.status === 'IN_PROGRESS' && onStatusChange && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  disabled={isUpdating}
+                  onClick={() => onStatusChange(lead, 'PENDING_CLOSE')}
+                  className="h-10 sm:h-8 gap-1.5 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-600 dark:text-emerald-400 dark:border-emerald-500/40 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 w-full sm:w-auto min-h-[44px] sm:min-h-0 touch-manipulation order-first sm:order-none"
                 >
                   <CheckCircle className="size-3.5 shrink-0" />
                   {t('leads.closeLead')}
                 </Button>
+              )}
+              {lead.status === 'PENDING_CLOSE' && (
+                <span className="inline-flex items-center gap-1.5 h-10 sm:h-8 px-3 text-sm font-medium text-purple-700 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border border-purple-300 dark:border-purple-500/40 rounded-md w-full sm:w-auto min-h-[44px] sm:min-h-0 justify-center order-first sm:order-none">
+                  <Clock className="size-3.5 shrink-0 animate-pulse" />
+                  {t('leads.pendingCloseWaiting')}
+                </span>
               )}
               {onOpenDetails && (
                 <Button

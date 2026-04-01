@@ -22,6 +22,7 @@ export function NotificationIcon({ type }: Props) {
     case NOTIFICATION_EVENT_TYPE.admin_new_lead:
     case NOTIFICATION_EVENT_TYPE.lead_status_updated:
     case NOTIFICATION_EVENT_TYPE.lead_sent:
+    case NOTIFICATION_EVENT_TYPE.lead_close_requested:
       return <Zap className="h-4 w-4 text-orange-500" />;
     case NOTIFICATION_EVENT_TYPE.new_review:
     case NOTIFICATION_EVENT_TYPE.admin_new_review:

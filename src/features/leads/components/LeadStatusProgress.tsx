@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { CheckCircle2, Circle, AlertCircle } from 'lucide-react';
 
-type LeadStatus = 'NEW' | 'IN_PROGRESS' | 'CLOSED' | 'SPAM';
+type LeadStatus = 'NEW' | 'IN_PROGRESS' | 'PENDING_CLOSE' | 'CLOSED' | 'SPAM';
 
 interface LeadStatusProgressProps {
     status: LeadStatus | string | null | undefined;
@@ -10,18 +10,20 @@ interface LeadStatusProgressProps {
     compact?: boolean;
 }
 
-const MAIN_STEP_KEYS: LeadStatus[] = ['NEW', 'IN_PROGRESS', 'CLOSED'];
+const MAIN_STEP_KEYS: LeadStatus[] = ['NEW', 'IN_PROGRESS', 'PENDING_CLOSE', 'CLOSED'];
 
 const STATUS_ORDER: Record<LeadStatus, number> = {
     NEW: 0,
     IN_PROGRESS: 1,
-    CLOSED: 2,
+    PENDING_CLOSE: 2,
+    CLOSED: 3,
     SPAM: -1,
 };
 
 const STEP_TRANSLATION_KEYS: Record<LeadStatus, string> = {
     NEW: 'leads.new',
     IN_PROGRESS: 'leads.in_progress',
+    PENDING_CLOSE: 'leads.pending_close',
     CLOSED: 'leads.closed',
     SPAM: 'leads.spam',
 };
@@ -63,7 +65,8 @@ export function LeadStatusProgress({ status, className, compact = false }: LeadS
                                         'flex items-center justify-center rounded-full transition duration-300 shrink-0 ring-2 ring-transparent',
                                         compact ? 'h-7 w-7' : 'h-9 w-9',
                                         isCompleted && 'bg-amber-500 text-white ring-amber-500/30 dark:ring-amber-500/20',
-                                        isCurrent && 'bg-amber-500 text-white ring-4 ring-amber-500/30 dark:ring-amber-500/25',
+                                        isCurrent && step.key === 'PENDING_CLOSE' && 'bg-purple-500 text-white ring-4 ring-purple-500/30 dark:ring-purple-500/25 animate-pulse',
+                                        isCurrent && step.key !== 'PENDING_CLOSE' && 'bg-amber-500 text-white ring-4 ring-amber-500/30 dark:ring-amber-500/25',
                                         !isCompleted && !isCurrent && 'bg-slate-100 dark:bg-white/10 text-slate-400 dark:text-slate-500 ring-slate-200 dark:ring-white/20',
                                     )}
                                 >
@@ -90,7 +93,7 @@ export function LeadStatusProgress({ status, className, compact = false }: LeadS
             </div>
             {/* Row 2: labels — equal columns, min height, wrap support */}
             {!compact && (
-                <div className="grid grid-cols-3 gap-2 mt-2 w-full">
+                <div className="grid grid-cols-4 gap-2 mt-2 w-full">
                     {mainSteps.map((step) => {
                         const isCompleted = STATUS_ORDER[step.key] < currentOrder;
                         const isCurrent = step.key === currentStatus;
