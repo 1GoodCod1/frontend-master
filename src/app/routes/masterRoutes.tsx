@@ -15,6 +15,7 @@ export const masterRoutes = {
         { path: routeSeg.profile, element: <LazyPage><P.ProfilePage /></LazyPage> },
         { path: routeSeg.services, element: <LazyPage><P.ServicesPage /></LazyPage> },
         { path: routeSeg.leads, element: <LazyPage><P.RequestsPage /></LazyPage> },
+        { path: routeSeg.clients, element: <LazyPage><P.ClientsPage /></LazyPage> },
         {
           path: `${routeSeg.leads}/:id`,
           element: <LazyPage><P.RequestDetailsPage /></LazyPage>,

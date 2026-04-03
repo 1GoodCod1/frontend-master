@@ -7,6 +7,17 @@ import type {
   LeadStatsResponse,
   UpdateLeadStatusDto,
 } from '@/types';
+
+export type ClientAggregated = {
+  clientPhone: string;
+  clientName: string | null;
+  clientId: string | null;
+  totalRequests: number;
+  statusBreakdown: Record<string, number>;
+  lastRequestAt: string;
+  firstRequestAt: string;
+  lastMessage: string | null;
+};
 import { idMatches } from '@/services/cacheUtils';
 import { isRecord } from '@/utils/guards';
 import { unwrapObject, extractItems } from '@/utils/data';
@@ -38,6 +49,21 @@ export const leadsApi = api.injectEndpoints({
         const lead = unwrapObject<unknown>(raw);
         if (isRecord(lead) && typeof lead.id === 'string') return lead as LeadDto;
         return null;
+      },
+    }),
+
+    leadsClients: build.query<
+      { items: ClientAggregated[]; total: number },
+      { search?: string; sortBy?: string; sortOrder?: string } | void
+    >({
+      query: (params) => ({ url: '/leads/clients', method: 'GET', params: params ?? {} }),
+      providesTags: ['Leads'],
+      transformResponse: (raw: unknown) => {
+        const obj = unwrapObject<{ items?: unknown[]; total?: number }>(raw);
+        return {
+          items: (obj?.items ?? []) as ClientAggregated[],
+          total: obj?.total ?? 0,
+        };
       },
     }),
 
@@ -160,6 +186,7 @@ export const leadsApi = api.injectEndpoints({
 export const {
   useLeadsCreateMutation,
   useLeadsMyListQuery,
+  useLeadsClientsQuery,
   useLeadsStatsQuery,
   useLeadsUpdateStatusMutation,
   useLeadsByIdQuery,

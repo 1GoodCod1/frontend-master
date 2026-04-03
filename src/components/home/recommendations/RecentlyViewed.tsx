@@ -49,7 +49,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
 
   return (
     <div className="mb-6 rounded-2xl border border-gray-200/60 dark:border-white/[0.08] bg-white/80 dark:bg-white/[0.03] backdrop-blur-sm px-4 py-4 shadow-sm">
-      <div className="flex items-center gap-2.5 mb-3">
+      <div className="flex items-center justify-center gap-2.5 mb-3">
         <div
           className="flex h-8 w-8 items-center justify-center rounded-lg"
           style={{
@@ -70,7 +70,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
       </div>
 
       {isLoading ? (
-        <div className="flex gap-3 overflow-hidden">
+        <div className="flex justify-center gap-3 overflow-hidden">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <Skeleton
               key={i}
@@ -79,7 +79,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
           ))}
         </div>
       ) : (
-        <div className="flex gap-3 overflow-x-auto pb-1 -mx-1">
+        <div className="flex justify-center gap-3 overflow-x-auto pb-1 -mx-1">
           {masters.slice(0, limit).map((m) => {
             const src = mediaUrl(
               m.avatarUrl || m.avatarFile?.path || m.user?.avatarFile?.path || null,

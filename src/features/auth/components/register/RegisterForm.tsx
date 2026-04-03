@@ -38,10 +38,10 @@ function getStepFieldKeys(step: number, isClient: boolean): (keyof RegisterFormV
   if (step === 0) return ['email', 'password'];
   if (step === 1) {
     const base: (keyof RegisterFormValues)[] = ['phone', 'firstName', 'lastName'];
-    if (isClient) return [...base, 'acceptedAge', 'acceptedLegal'];
+    if (isClient) return [...base, 'acceptedLegal'];
     return base;
   }
-  if (step === 2) return ['city', 'category', 'description', 'acceptedAge', 'acceptedLegal'];
+  if (step === 2) return ['city', 'category', 'description', 'acceptedLegal'];
   return [];
 }
 
@@ -129,28 +129,6 @@ export default function RegisterForm({
   const showMasterFields = !isClient && step === 2;
   const showNameFields = step === 1;
   const showCredentials = step === 0;
-
-  const ageConsentBlock = (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-start gap-3 rounded-lg border border-slate-200/80 bg-slate-50/50 p-3.5 dark:border-white/[0.08] dark:bg-white/[0.03]">
-        <Checkbox
-          id="register-accepted-age"
-          checked={values.acceptedAge}
-          onCheckedChange={(v) => setFieldValue('acceptedAge', v === true)}
-          className="mt-0.5"
-        />
-        <Label
-          htmlFor="register-accepted-age"
-          className="cursor-pointer text-left text-[0.8125rem] font-normal leading-relaxed text-muted-foreground"
-        >
-          {t('auth.register.ageConsent')}
-        </Label>
-      </div>
-      {touched.acceptedAge && errors.acceptedAge && (
-        <p className="text-xs text-destructive">{errors.acceptedAge}</p>
-      )}
-    </div>
-  );
 
   const legalConsentBlock = (
     <div className="flex flex-col gap-1.5">
@@ -320,12 +298,7 @@ export default function RegisterForm({
                   icon={<User size={15} />}
                 />
               </div>
-              {isClient && (
-                <>
-                  {ageConsentBlock}
-                  {legalConsentBlock}
-                </>
-              )}
+              {isClient && legalConsentBlock}
             </>
           )}
 
@@ -356,7 +329,6 @@ export default function RegisterForm({
                 rows={3}
                 icon={<FileText size={15} />}
               />
-              {ageConsentBlock}
               {legalConsentBlock}
             </>
           )}

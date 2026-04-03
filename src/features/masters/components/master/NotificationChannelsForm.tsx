@@ -66,7 +66,13 @@ export function NotificationChannelsForm() {
     }
   }, [createLink, refetch, t]);
 
+  const prevTelegramChatIdRef = useRef(settings.telegramChatId);
   useEffect(() => {
+    if (settings.telegramChatId && !prevTelegramChatIdRef.current && pollRef.current) {
+      toast.success(t('notificationSettings.telegram.connectedToast'));
+    }
+    prevTelegramChatIdRef.current = settings.telegramChatId;
+
     if (settings.telegramChatId && pollRef.current) {
       clearInterval(pollRef.current);
       pollRef.current = null;
@@ -76,7 +82,7 @@ export function NotificationChannelsForm() {
         clearInterval(pollRef.current);
       }
     };
-  }, [settings.telegramChatId]);
+  }, [settings.telegramChatId, t]);
 
   if (isLoading) return null;
 
@@ -143,7 +149,10 @@ export function NotificationChannelsForm() {
             <div className="mb-4 flex items-center gap-2">
               <MessageCircle className={iconClass} />
               <h2 className="text-lg font-semibold">{t('notificationSettings.telegram.title')}</h2>
-              <Badge variant={settings.telegramChatId ? 'default' : 'secondary'}>
+              <Badge
+                variant={settings.telegramChatId ? 'default' : 'outline'}
+                className={settings.telegramChatId ? 'bg-emerald-600 hover:bg-emerald-600/80 text-white' : 'text-muted-foreground'}
+              >
                 {settings.telegramChatId
                   ? t('notificationSettings.telegram.connected')
                   : t('notificationSettings.telegram.notConnected')}
@@ -183,7 +192,10 @@ export function NotificationChannelsForm() {
             <div className="mb-4 flex items-center gap-2">
               <Send className={iconClass} />
               <h2 className="text-lg font-semibold">{t('notificationSettings.whatsapp.title')}</h2>
-              <Badge variant={settings.whatsappPhone ? 'default' : 'secondary'}>
+              <Badge
+                variant={settings.whatsappPhone ? 'default' : 'outline'}
+                className={settings.whatsappPhone ? 'bg-emerald-600 hover:bg-emerald-600/80 text-white' : 'text-muted-foreground'}
+              >
                 {settings.whatsappPhone
                   ? t('notificationSettings.whatsapp.connected')
                   : t('notificationSettings.whatsapp.notConnected')}

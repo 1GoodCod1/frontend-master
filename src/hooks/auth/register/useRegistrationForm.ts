@@ -64,10 +64,6 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
         .boolean()
         .oneOf([true], t('auth.register.legalConsentRequired'))
         .required(t('auth.register.legalConsentRequired')),
-      acceptedAge: yup
-        .boolean()
-        .oneOf([true], t('auth.register.ageConsentRequired'))
-        .required(t('auth.register.ageConsentRequired')),
     };
     const emailPassword = yup.object({
       email: yup.string().email(t('Invalid email')).required(t('Email is required')),
@@ -112,10 +108,6 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
           .boolean()
           .oneOf([true], t('auth.register.legalConsentRequired'))
           .required(t('auth.register.legalConsentRequired')),
-        acceptedAge: yup
-          .boolean()
-          .oneOf([true], t('auth.register.ageConsentRequired'))
-          .required(t('auth.register.ageConsentRequired')),
         role: yup
           .mixed<RegisterRole>()
           .oneOf([USER_ROLE.CLIENT, USER_ROLE.MASTER] as const)
@@ -164,7 +156,6 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
       phone: '',
       password: '',
       acceptedLegal: false,
-      acceptedAge: false,
       role: selectedRole,
       firstName: '',
       lastName: '',
@@ -175,8 +166,8 @@ export function useRegistrationForm(selectedRole: RegisterRole) {
 
   const handleSubmit = async (values: RegisterFormValues, helpers: FormikHelpers<RegisterFormValues>) => {
     try {
-      const { acceptedLegal, acceptedAge, ...rest } = values;
-      const payload = { ...rest, acceptedLegal, acceptedAge };
+      const { acceptedLegal, ...rest } = values;
+      const payload = { ...rest, acceptedLegal, acceptedAge: acceptedLegal };
       await register({ ...payload, referralCode: effectiveRefCode }).unwrap();
       toast.success(t('Account created successfully'));
 

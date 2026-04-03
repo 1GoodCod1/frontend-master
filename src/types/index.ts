@@ -27,6 +27,8 @@ export type RegisterDto = {
   category?: string;
   description?: string;
   referralCode?: string;
+  acceptedLegal: boolean;
+  acceptedAge: boolean;
 };
 
 export type LoginDto = {

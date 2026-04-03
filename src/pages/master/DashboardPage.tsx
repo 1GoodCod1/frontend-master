@@ -5,7 +5,7 @@ import {
   Eye, CheckCircle, Rocket, Lock, History,
   Activity, BarChart3, Users, Clock, MousePointerClick
 } from 'lucide-react';
-import { useMastersMyStatsQuery, useMastersMyProfileQuery, useMastersUpdateOnlineStatusMutation, useMastersGetAvailabilityStatusQuery, useMastersUpdateAvailabilityStatusMutation } from '@/features/masters/mastersApi';
+import { useMastersMyStatsQuery, useMastersMyProfileQuery, useMastersGetAvailabilityStatusQuery, useMastersUpdateAvailabilityStatusMutation } from '@/features/masters/mastersApi';
 import { useLeadsStatsQuery } from '@/features/leads/leadsApi';
 import { useAnalyticsMyQuery } from '@/features/analytics/analyticsApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -13,11 +13,10 @@ import { StatCard } from '@/components/ui/StatCard';
 import { AvailabilityControl } from '@/features/masters/components/master/AvailabilityControl';
 import { extractItems } from '@/utils/data';
 import { formatDateShort, formatDateCompact, getLocaleFromLanguage } from '@/utils/date';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { ProfileViewsHistoryModal } from '@/features/masters/components/master/ProfileViewsHistoryModal';
 import { Progress } from '@/components/ui/progress';
@@ -59,18 +58,9 @@ export default function DashboardPage() {
   const analytics = useAnalyticsMyQuery({ days: 14 });
   const profile = useMastersMyProfileQuery();
   const availability = useMastersGetAvailabilityStatusQuery();
-  const [updateOnlineStatus, { isLoading: isUpdatingStatus }] = useMastersUpdateOnlineStatusMutation();
   const [updateAvailability] = useMastersUpdateAvailabilityStatusMutation();
-  const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
   const [viewsHistoryOpen, setViewsHistoryOpen] = useState(false);
-  const successTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isChartWide = useMediaQuery('(min-width: 640px)');
-
-  useEffect(() => {
-    return () => {
-      if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
-    };
-  }, []);
 
   type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' };
   type AvailabilityData = {
@@ -85,17 +75,6 @@ export default function DashboardPage() {
   const currentStatus = availabilityData?.availabilityStatus || AVAILABILITY_STATUS.AVAILABLE;
   const maxActiveLeads = availabilityData?.maxActiveLeads || 5;
   const currentActiveLeads = availabilityData?.currentActiveLeads || 0;
-
-  const handleToggleOnlineStatus = async () => {
-    try {
-      await updateOnlineStatus({ isOnline: !isOnline }).unwrap();
-      setStatusUpdateSuccess(true);
-      if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
-      successTimeoutRef.current = setTimeout(() => setStatusUpdateSuccess(false), 3000);
-    } catch (error) {
-      console.error('Failed to update online status:', error);
-    }
-  };
 
   const handleUpdateAvailability = async (status: string, maxLeads?: number) => {
     await updateAvailability({
@@ -387,7 +366,7 @@ export default function DashboardPage() {
           {/* Pending Bookings */}
           <MasterPendingBookingsCard />
 
-          {/* Status Control Card */}
+          {/* Status Card (auto-tracked via WebSocket connection) */}
           <Card className={cn(
             "relative overflow-hidden transition duration-500 border shadow-sm",
             isOnline
@@ -399,49 +378,31 @@ export default function DashboardPage() {
             )}
 
             <CardContent className="p-5 sm:p-6 relative z-10">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    {t('dashboard.statusControl', 'Статус')}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-3.5 w-3.5">
-                      {isOnline && (
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75 hidden sm:inline-flex"></span>
-                      )}
-                      <span className={cn(
-                        "relative inline-flex rounded-full h-3.5 w-3.5 border border-background",
-                        isOnline ? "bg-teal-500" : "bg-muted-foreground/40"
-                      )}></span>
-                    </span>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                  {t('dashboard.statusControl', 'Статус')}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-3.5 w-3.5">
+                    {isOnline && (
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75 hidden sm:inline-flex"></span>
+                    )}
                     <span className={cn(
-                      "text-xl sm:text-2xl font-bold tracking-tight",
-                      isOnline ? "text-teal-600 dark:text-teal-400" : "text-muted-foreground"
-                    )}>
-                      {isOnline ? 'Online' : 'Offline'}
-                    </span>
-                  </div>
+                      "relative inline-flex rounded-full h-3.5 w-3.5 border border-background",
+                      isOnline ? "bg-teal-500" : "bg-muted-foreground/40"
+                    )}></span>
+                  </span>
+                  <span className={cn(
+                    "text-xl sm:text-2xl font-bold tracking-tight",
+                    isOnline ? "text-teal-600 dark:text-teal-400" : "text-muted-foreground"
+                  )}>
+                    {isOnline ? 'Online' : 'Offline'}
+                  </span>
                 </div>
-                
-                <Switch
-                  checked={isOnline}
-                  onCheckedChange={handleToggleOnlineStatus}
-                  disabled={isUpdatingStatus}
-                  className={cn(
-                    "scale-125 transition",
-                    isOnline 
-                      ? "data-[state=checked]:bg-teal-500 shadow-md shadow-teal-500/25" 
-                      : "dark:bg-muted-foreground/30"
-                  )}
-                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('dashboard.statusAutoTracked', 'Статус отслеживается автоматически')}
+                </p>
               </div>
-
-              {statusUpdateSuccess && (
-                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-teal-600 dark:text-teal-400 animate-in fade-in slide-in-from-bottom-2">
-                  <CheckCircle className="size-3.5" />
-                  <span>{t('dashboard.statusUpdated', 'Статус обновлен')}</span>
-                </div>
-              )}
             </CardContent>
           </Card>
 

@@ -1311,7 +1311,7 @@ export const admin = {
         redisInfo: 'Informații Redis',
         connectedClients: 'Clienți conectați',
         usedMemory: 'Memorie utilizată',
-        totalCommands: 'Total comenzi',
+        totalCommands: 'Comenzi Redis (total)',
         dailyMetrics: 'Metrici zilnice',
         newUsersToday: 'Utilizatori noi azi',
         newLeadsToday: 'Cereri noi azi',

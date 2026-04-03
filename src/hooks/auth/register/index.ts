@@ -5,7 +5,6 @@ export interface RegisterFormValues {
   phone: string;
   password: string;
   acceptedLegal: boolean;
-  acceptedAge: boolean;
   role: RegisterRole;
   firstName?: string;
   lastName?: string;

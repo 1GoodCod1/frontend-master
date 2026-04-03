@@ -22,6 +22,7 @@ export const notificationSettings = {
         connecting: 'Opening...',
         connectToast: 'Open Telegram and press Start to complete the connection.',
         connectError: 'Failed to create connect link',
+        connectedToast: 'Telegram connected successfully!',
       },
 
       whatsapp: {
@@ -81,6 +82,7 @@ export const notificationSettings = {
         connecting: 'Открываю...',
         connectToast: 'Откройте Telegram и нажмите Start для завершения подключения.',
         connectError: 'Не удалось создать ссылку',
+        connectedToast: 'Telegram успешно подключён!',
       },
 
       whatsapp: {
@@ -140,6 +142,7 @@ export const notificationSettings = {
         connecting: 'Se deschide...',
         connectToast: 'Deschide Telegram și apasă Start pentru a finaliza conexiunea.',
         connectError: 'Nu s-a putut crea linkul',
+        connectedToast: 'Telegram conectat cu succes!',
       },
 
       whatsapp: {

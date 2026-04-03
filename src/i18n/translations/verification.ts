@@ -70,6 +70,16 @@ export const verification = {
       first100BannerHint: 'Verified masters can claim any plan free in their cabinet.',
       ifApprovePremium: 'If you approve, this master can claim VIP or PREMIUM free in their cabinet.',
       ifApproveNoPremium: 'If you approve, this master can claim VIP or PREMIUM free in their cabinet.',
+      documentTypes: {
+        PASSPORT: 'Passport',
+        ID_CARD: 'ID card',
+        DRIVER_LICENSE: "Driver's license",
+      },
+      validation: {
+        documentTypeRequired: 'Document type is required',
+        documentNumberRequired: 'Document number is required',
+        phoneRequired: 'Phone number is required',
+      },
     },
   },
   ru: {
@@ -143,6 +153,16 @@ export const verification = {
       first100BannerHint: 'Верифицированные мастера могут получить любой тариф бесплатно в кабинете.',
       ifApprovePremium: 'При одобрении мастер сможет получить VIP или PREMIUM бесплатно в кабинете.',
       ifApproveNoPremium: 'При одобрении мастер сможет получить VIP или PREMIUM бесплатно в кабинете.',
+      documentTypes: {
+        PASSPORT: 'Паспорт',
+        ID_CARD: 'ID карта',
+        DRIVER_LICENSE: 'Водительское удостоверение',
+      },
+      validation: {
+        documentTypeRequired: 'Тип документа обязателен',
+        documentNumberRequired: 'Номер документа обязателен',
+        phoneRequired: 'Телефон обязателен',
+      },
     },
   },
   ro: {
@@ -216,6 +236,16 @@ export const verification = {
       first100BannerHint: 'Masterii verificați pot obține orice plan gratuit în cabinet.',
       ifApprovePremium: 'Dacă aprobezi, acest master poate obține VIP sau PREMIUM gratuit în cabinet.',
       ifApproveNoPremium: 'Dacă aprobezi, masterul poate obține VIP sau PREMIUM gratuit în cabinet.',
+      documentTypes: {
+        PASSPORT: 'Pașaport',
+        ID_CARD: 'Carte de identitate',
+        DRIVER_LICENSE: 'Permis de conducere',
+      },
+      validation: {
+        documentTypeRequired: 'Tipul documentului este obligatoriu',
+        documentNumberRequired: 'Numărul documentului este obligatoriu',
+        phoneRequired: 'Numărul de telefon este obligatoriu',
+      },
     },
   },
 };

@@ -46,6 +46,8 @@ export async function connectSocket(store: Store<RootState>) {
 
   socket.on('connect', () => {
     store.dispatch(setConnected(true));
+    // Refetch master profile so isOnline (set by backend on socket connect) is up to date
+    store.dispatch(api.util.invalidateTags(['Master']));
   });
   socket.on('disconnect', () => {
     store.dispatch(setConnected(false));

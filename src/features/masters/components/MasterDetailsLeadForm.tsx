@@ -249,7 +249,7 @@ export const MasterDetailsLeadForm = ({
           <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-3 border-2 border-white/30">
             <Heart className="h-7 w-7 text-white fill-white" />
           </div>
-          <h3 className="font-bold text-white text-lg">{t('masterDetails.orderThisMaster', 'Order this master')}</h3>
+          <h3 className="font-bold text-white text-lg">{t('masterDetails.contactThisMaster', 'Contact this master')}</h3>
           <p className="text-amber-100 text-sm mt-1">{t('masterDetails.becomeClientDesc')}</p>
         </div>
         <CardContent className="p-5 space-y-3 bg-white dark:bg-[hsl(47,22%,9%)]">

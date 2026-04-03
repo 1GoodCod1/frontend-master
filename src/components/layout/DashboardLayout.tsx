@@ -4,6 +4,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   User,
+  Users,
   Mail,
   MessageSquareQuote,
   CreditCard,
@@ -45,6 +46,7 @@ function getItems(
     { key: 'profile', label: t('dashboard.profile'), to: '/dashboard/profile', icon: <User className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'services', label: t('dashboard.services'), to: '/dashboard/services', icon: <ListChecks className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'leads', label: t('dashboard.leads'), to: '/dashboard/leads', icon: <Mail className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'clients', label: t('dashboard.clients', 'Клиенты'), to: '/dashboard/clients', icon: <Users className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'chat', label: t('dashboard.chat', 'Чаты'), to: '/dashboard/chat', icon: <MessageCircle className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'reviews', label: t('dashboard.reviews'), to: '/dashboard/reviews', icon: <MessageSquareQuote className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'payments', label: t('dashboard.payments'), to: '/dashboard/payments', icon: <CreditCard className="size-5" />, minPlan: 'BASIC' as TariffPlan },
@@ -139,10 +141,13 @@ export function DashboardLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main className={cn(
+      <main
+        data-app-scroll-region=""
+        className={cn(
         'flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300',
         !isMdUp && 'pt-14'
-      )}>
+      )}
+      >
         <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
           {role === USER_ROLE.MASTER && (

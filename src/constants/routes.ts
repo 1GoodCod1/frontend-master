@@ -41,6 +41,7 @@ export const routeSeg = {
   verification: 'verification',
   referrals: 'referrals',
   chat: 'chat',
+  clients: 'clients',
   clientDashboard: 'client-dashboard',
   book: 'book',
   leadSuccess: 'lead-success',
@@ -101,6 +102,7 @@ export const paths = {
     chat: j(routeSeg.dashboard, routeSeg.chat),
     chatConversation: (conversationId: string) =>
       j(routeSeg.dashboard, routeSeg.chat, conversationId),
+    clients: j(routeSeg.dashboard, routeSeg.clients),
   },
 
   clientDashboard: {

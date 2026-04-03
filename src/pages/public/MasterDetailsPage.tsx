@@ -221,7 +221,7 @@ export default function MasterDetailsPage() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-8 sm:pb-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left column — tabs + content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 min-w-0">
             {/* Tabs — Figma: active orange+white, inactive white+light grey border+dark grey text */}
             <div className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-3xl p-2 flex gap-1.5 flex-wrap shadow-sm">
               {(['about', 'services', 'gallery', 'reviews'] as const).map((tab) => (

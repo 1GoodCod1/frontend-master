@@ -73,11 +73,11 @@ export const MasterDetailsInfo = ({
           )}
         </div>
 
-        <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-4">
+        <div className="min-w-0 max-w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-4 overflow-hidden">
           <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 font-medium">
             {t('masterDetails.descriptionLabel')}
           </p>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
             {description || t('masterDetails.noDescription')}
           </p>
         </div>

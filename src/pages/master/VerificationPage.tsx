@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Upload, CheckCircle, Hourglass, Phone } from 'lucide-react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -27,17 +27,19 @@ import { FormikSelect } from '@/components/ui/FormikSelect';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
-const documentTypes = [
-  { value: 'PASSPORT', label: 'Паспорт' },
-  { value: 'ID_CARD', label: 'ID карта' },
-  { value: 'DRIVER_LICENSE', label: 'Водительское удостоверение' },
-];
+const DOCUMENT_TYPE_VALUES = ['PASSPORT', 'ID_CARD', 'DRIVER_LICENSE'] as const;
 
-const schema = Yup.object({
-  documentType: Yup.string().required('Тип документа обязателен'),
-  documentNumber: Yup.string().required('Номер документа обязателен'),
-  phone: Yup.string().required('Телефон обязателен'),
-});
+type DocumentTypeTranslationKey =
+  | 'verification.documentTypes.PASSPORT'
+  | 'verification.documentTypes.ID_CARD'
+  | 'verification.documentTypes.DRIVER_LICENSE';
+
+function documentTypeLabelKey(value: string): DocumentTypeTranslationKey | null {
+  if (value === 'PASSPORT' || value === 'ID_CARD' || value === 'DRIVER_LICENSE') {
+    return `verification.documentTypes.${value}`;
+  }
+  return null;
+}
 
 interface VerificationData {
   isVerified?: boolean;
@@ -58,6 +60,25 @@ interface VerificationData {
 
 export default function VerificationPage() {
   const { t, i18n } = useTranslation();
+
+  const documentTypes = useMemo(
+    () =>
+      DOCUMENT_TYPE_VALUES.map((value) => ({
+        value,
+        label: t(`verification.documentTypes.${value}`),
+      })),
+    [t],
+  );
+
+  const schema = useMemo(
+    () =>
+      Yup.object({
+        documentType: Yup.string().required(t('verification.validation.documentTypeRequired')),
+        documentNumber: Yup.string().required(t('verification.validation.documentNumberRequired')),
+        phone: Yup.string().required(t('verification.validation.phoneRequired')),
+      }),
+    [t],
+  );
   const statusQuery = useGetMyVerificationStatusQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -129,9 +150,14 @@ export default function VerificationPage() {
   }
 
   if (pendingVerification) {
-    const docTypeLabel = verification?.documentType
-      ? documentTypes.find((d) => d.value === verification.documentType)?.label ?? verification.documentType
-      : '-';
+    const docTypeKey = verification?.documentType
+      ? documentTypeLabelKey(verification.documentType)
+      : null;
+    const docTypeLabel = docTypeKey
+      ? t(docTypeKey)
+      : verification?.documentType
+        ? verification.documentType
+        : '-';
     const submittedDate = verification?.submittedAt
       ? formatDateTimeLong(verification.submittedAt, getLocaleFromLanguage(i18n.language))
       : '';

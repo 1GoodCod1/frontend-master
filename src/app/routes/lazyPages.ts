@@ -34,6 +34,7 @@ export const PromotionsPage = lazy(() => import('@/pages/master/PromotionsPage')
 export const ServicesPage = lazy(() => import('@/pages/master/ServicesPage'));
 export const BookingsPage = lazy(() => import('@/pages/master/BookingsPage'));
 export const MasterChatPage = lazy(() => import('@/pages/master/ChatPage'));
+export const ClientsPage = lazy(() => import('@/pages/master/ClientsPage'));
 export const SubscriptionPage = lazy(() => import('@/pages/master/SubscriptionPage'));
 
 export const AdminDashboardPage = lazy(() => import('@/pages/admin/AdminDashboardPage'));

@@ -111,10 +111,13 @@ export function AdminLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main className={cn(
+      <main
+        data-app-scroll-region=""
+        className={cn(
         'flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300',
         !isMdUp && 'pt-14'
-      )}>
+      )}
+      >
         <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
           <AppBreadcrumbs />
           <Outlet />

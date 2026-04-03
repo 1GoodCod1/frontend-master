@@ -38,6 +38,7 @@ import { referrals } from './referrals';
 import { digest } from './digest';
 import { dataGrid } from './dataGrid';
 import { compliance } from './compliance';
+import { clients } from './clients';
 
 /** Остальные экраны — отдельный async-чанк (уменьшает initial JS). */
 const extendedModules = [
@@ -80,6 +81,7 @@ const extendedModules = [
   digest,
   dataGrid,
   compliance,
+  clients,
 ];
 
 export function buildExtendedResources() {
