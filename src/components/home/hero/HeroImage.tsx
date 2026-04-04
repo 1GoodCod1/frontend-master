@@ -49,7 +49,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
               <span className="truncate max-w-[100px] sm:max-w-none">{t('home.heroSpecialistsAvailable')}</span>
             </div>
             <div className={cn('text-[10px] sm:text-xs shrink-0', 'text-muted-foreground')}>
-              master-hub.md
+              Faber
             </div>
           </div>
 

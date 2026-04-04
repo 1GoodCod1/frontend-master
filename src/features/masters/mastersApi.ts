@@ -265,11 +265,13 @@ export const mastersApi = api.injectEndpoints({
 
     mastersGetNotificationSettings: build.query<NotificationSettings, void>({
       query: () => ({ url: '/masters/notifications-settings/me', method: 'GET' }),
+      transformResponse: (raw: unknown): NotificationSettings => unwrapObject<NotificationSettings>(raw),
       providesTags: ['Master'],
     }),
 
     mastersUpdateNotificationSettings: build.mutation<NotificationSettings, UpdateNotificationSettingsDto>({
       query: (body) => ({ url: '/masters/notifications-settings/me', method: 'PATCH', data: body }),
+      transformResponse: (raw: unknown): NotificationSettings => unwrapObject<NotificationSettings>(raw),
       invalidatesTags: ['Master'],
     }),
 
@@ -281,6 +283,7 @@ export const mastersApi = api.injectEndpoints({
         url: '/masters/telegram-connect-token/me',
         method: 'POST',
       }),
+      transformResponse: (raw: unknown) => unwrapObject<{ link: string; expiresAt: string }>(raw),
       invalidatesTags: ['Master'],
     }),
 

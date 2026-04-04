@@ -25,12 +25,12 @@
       "node"
     ],
     "paths": {
-      "*": ["./*"],
       "@/*": ["./src/*"]
     }
   },
   "include": [
     "src",
+    "vite.config.ts",
     "tailwind.config.ts",
     "pwa-assets.config.ts",
     "e2e/**/*.ts",
@@ -40,7 +40,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "build",
-    "vite.config.ts"
+    "build"
   ]
 }

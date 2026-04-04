@@ -16,10 +16,10 @@ function pick(...vals: Array<string | undefined | null>): string | undefined {
 // Vite: use VITE_*
 // apiUrl = REST base (must include /api/v1 — same as Nest global prefix in api-master).
 // wsUrl = Socket.IO origin only (no /api/v1).
-// Fallback: allow injecting values at runtime (optional) by setting window.__MASTER_HUB_ENV__ = { apiUrl, wsUrl, envName }
+// Fallback: allow injecting values at runtime (optional) by setting window.__FABER_ENV__ = { apiUrl, wsUrl, envName }
 const runtime = (() => {
   try {
-    return window.__MASTER_HUB_ENV__ as Partial<AppEnv> | undefined;
+    return window.__FABER_ENV__ as Partial<AppEnv> | undefined;
   } catch {
     return undefined;
   }

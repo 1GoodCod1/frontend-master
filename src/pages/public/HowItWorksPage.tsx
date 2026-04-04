@@ -44,7 +44,7 @@ function StepCard({
 }) {
   return (
     <div
-      className="mh-page-enter"
+      className="faber-page-enter"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       <Card className="h-full text-center border-border transition duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-primary/30">
@@ -72,9 +72,9 @@ export default function HowItWorksPage() {
       <SEOHead
         title={t('howItWorks.title')}
         description={t('howItWorks.subtitle')}
-        keywords="как работает Master-Hub, найти мастера Moldova"
+        keywords={t('howItWorks.seoKeywords')}
       />
-      <div className="mh-page-enter container max-w-5xl mx-auto py-8 md:py-12 px-4">
+      <div className="faber-page-enter container max-w-5xl mx-auto py-8 md:py-12 px-4">
       <div className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
           {t('howItWorks.title')}
@@ -122,7 +122,7 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <div className="mh-page-enter mt-12 rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-8 text-center">
+      <div className="faber-page-enter mt-12 rounded-2xl border border-border bg-gradient-to-br from-primary/10 to-primary/5 p-8 text-center">
         <h3 className="text-xl font-bold mb-3 tracking-tight text-foreground">
           {t('howItWorks.ready.title')}
         </h3>

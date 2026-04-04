@@ -3,6 +3,8 @@ export const faq = {
     faq: {
       title: 'Frequently Asked Questions',
       subtitle: 'Find answers to common questions about our platform',
+      seoKeywords:
+        'Faber FAQ, help masters clients Moldova, verification tariffs, reviews requests, privacy support, how to find master Chisinau',
       viewAll: 'View all questions',
       categories: {
         forClients: 'For clients',
@@ -67,7 +69,7 @@ export const faq = {
       q12: {
         question: 'How can I contact support?',
         answer:
-          'You can reach us by email at supportmasterhub@gmail.com or Telegram @masterhubmd. Visit our',
+          'You can reach us by email at supportfabermd@gmail.com or Telegram @fabermd. Visit our',
         linkSuffix: 'page for more details and working hours.',
       },
     },
@@ -76,6 +78,8 @@ export const faq = {
     faq: {
       title: 'Часто задаваемые вопросы',
       subtitle: 'Ответы на распространённые вопросы о платформе',
+      seoKeywords:
+        'FAQ faber.md, помощь мастерам и клиентам Молдова, верификация тарифы, отзывы заявки, конфиденциальность поддержка, как найти мастера Кишинёв',
       viewAll: 'Все вопросы',
       categories: {
         forClients: 'Для клиентов',
@@ -140,7 +144,7 @@ export const faq = {
       q12: {
         question: 'Как связаться со службой поддержки?',
         answer:
-          'Вы можете связаться с нами по email: supportmasterhub@gmail.com или в Telegram: @masterhubmd. Посетите нашу',
+          'Вы можете связаться с нами по email: supportfabermd@gmail.com или в Telegram: @fabermd. Посетите нашу',
         linkSuffix: 'страницу для подробностей и рабочих часов.',
       },
     },
@@ -149,6 +153,8 @@ export const faq = {
     faq: {
       title: 'Întrebări Frecvente',
       subtitle: 'Răspunsuri la întrebările frecvente despre platformă',
+      seoKeywords:
+        'întrebări faber.md, ajutor meșteri clienți Moldova, verificare tarife, recenzii cereri, confidențialitate suport, cum găsesc meșter Chișinău',
       viewAll: 'Toate întrebările',
       categories: {
         forClients: 'Pentru clienți',
@@ -213,7 +219,7 @@ export const faq = {
       q12: {
         question: 'Cum pot contacta suportul?',
         answer:
-          'Ne puteți contacta prin email la supportmasterhub@gmail.com sau pe Telegram la @masterhubmd. Vizitați pagina noastră de',
+          'Ne puteți contacta prin email la supportfabermd@gmail.com sau pe Telegram la @fabermd. Vizitați pagina noastră de',
         linkSuffix: 'Contacte pentru detalii și ore de lucru.',
       },
     },

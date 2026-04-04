@@ -3,6 +3,8 @@ export const howItWorks = {
     howItWorks: {
       title: 'How It Works',
       subtitle: 'For clients — find a master. For masters — get clients and grow.',
+      seoKeywords:
+        'how Faber works, find verified master Moldova, register client, send request, master catalog Chisinau, reviews booking, grow business craftsman',
       forClients: 'For clients',
       forMasters: 'For masters',
       step1: {
@@ -48,7 +50,7 @@ export const howItWorks = {
       ready: {
         title: 'Ready to get started?',
         description:
-          'Join thousands of satisfied users who have found their perfect specialist through Master-Hub.',
+          'Join thousands of satisfied users who have found their perfect specialist through Faber.',
       },
     },
   },
@@ -56,6 +58,8 @@ export const howItWorks = {
     howItWorks: {
       title: 'Как это работает',
       subtitle: 'Для клиентов — найти мастера. Для мастеров — получать заявки и развиваться.',
+      seoKeywords:
+        'как работает Faber, найти проверенного мастера Молдова, регистрация клиент, заявка мастеру, каталог мастеров Кишинёв, отзывы бронирование, развитие бизнеса мастера',
       forClients: 'Для клиентов',
       forMasters: 'Для мастеров',
       step1: {
@@ -101,7 +105,7 @@ export const howItWorks = {
       ready: {
         title: 'Готовы начать?',
         description:
-          'Присоединяйтесь к тысячам довольных пользователей, которые нашли своего идеального специалиста через Master-Hub.',
+          'Присоединяйтесь к тысячам довольных пользователей, которые нашли своего идеального специалиста через Faber.',
       },
     },
   },
@@ -109,6 +113,8 @@ export const howItWorks = {
     howItWorks: {
       title: 'Cum Funcționează',
       subtitle: 'Pentru clienți — găsiți un meșter. Pentru meșteri — primiți clienți și creșteți.',
+      seoKeywords:
+        'cum funcționează Faber, găsi meșter verificat Moldova, înregistrare client, cerere meșter, catalog Chișinău, recenzii rezervare, creștere afaceri meșter',
       forClients: 'Pentru clienți',
       forMasters: 'Pentru meșteri',
       step1: {
@@ -154,7 +160,7 @@ export const howItWorks = {
       ready: {
         title: 'Gata să începeți?',
         description:
-          'Alăturați-vă miilor de utilizatori mulțumiți care și-au găsit specialistul perfect prin Master-Hub.',
+          'Alăturați-vă miilor de utilizatori mulțumiți care și-au găsit specialistul perfect prin Faber.',
       },
     },
   },

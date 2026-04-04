@@ -92,7 +92,7 @@ export default function BookingSuccessPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
-      <div className="text-center mb-8 mh-page-enter">
+      <div className="text-center mb-8 faber-page-enter">
         <div className="relative mx-auto mb-6 h-24 w-24">
           <div className="absolute inset-0 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 shadow-xl shadow-green-500/30 dark:shadow-green-500/20" />
           <div className="absolute inset-0 flex items-center justify-center">
@@ -109,7 +109,7 @@ export default function BookingSuccessPage() {
       </div>
 
       {showContent && (
-          <div className="space-y-6 mh-view-swap">
+          <div className="space-y-6 faber-view-swap">
             <Card className="overflow-hidden border-border/50 dark:border-white/[0.08] shadow-lg">
               <div className="h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
               <CardContent className="p-6 space-y-5">
@@ -211,7 +211,7 @@ export default function BookingSuccessPage() {
                   ].map((step, index) => (
                     <div
                       key={index}
-                      className="mh-page-enter flex items-center gap-3"
+                      className="faber-page-enter flex items-center gap-3"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${step.bg}`}>

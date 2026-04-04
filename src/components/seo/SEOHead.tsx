@@ -12,8 +12,8 @@ interface SEOHeadProps {
     noindex?: boolean;
 }
 
-export const SITE_URL = 'https://master-hub.md';
-const BASE_TITLE = 'Master-Hub';
+export const SITE_URL = 'https://faber.md';
+const BASE_TITLE = 'Faber';
 const DEFAULT_OG_IMAGE = '/og-image.png';
 
 /** Moldova geo-targeting for search engines */

@@ -9,7 +9,7 @@ import {
 } from '@/utils/prefsCookies';
 import { initTracking, removeTrackingKey, TRACKING_KEYS } from '@/utils/tracking';
 
-const KEY = 'mh_cookie_consent';
+const KEY = 'faber_cookie_consent';
 
 export const NON_ESSENTIAL_KEYS = [
   'mastersSearchHistory',

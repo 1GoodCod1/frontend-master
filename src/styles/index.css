@@ -203,7 +203,7 @@ body {
 }
 
 /* Лёгкие входы без Framer Motion (страницы / переключение видов) */
-@keyframes mh-fade-in {
+@keyframes faber-fade-in {
   from {
     opacity: 0;
   }
@@ -211,15 +211,15 @@ body {
     opacity: 1;
   }
 }
-.mh-page-enter {
-  animation: mh-fade-in 0.35s ease-out both;
+.faber-page-enter {
+  animation: faber-fade-in 0.35s ease-out both;
 }
-.mh-view-swap {
-  animation: mh-fade-in 0.22s ease-out both;
+.faber-view-swap {
+  animation: faber-fade-in 0.22s ease-out both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .mh-page-enter,
-  .mh-view-swap {
+  .faber-page-enter,
+  .faber-view-swap {
     animation: none;
   }
 }

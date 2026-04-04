@@ -5,7 +5,7 @@ export const privacy = {
       subtitle: 'How we collect, use and protect your personal data.',
       lastUpdated: 'Last updated',
       intro:
-        'Master-Hub, operated by {{COMPANY_NAME}}, IDNO {{IDNO}}, registered at {{LEGAL_ADDRESS}}, Republic of Moldova ("we", "our", "us"), is the data controller responsible for your personal data. We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose and safeguard your information when you use our platform, website and services. Please read this policy carefully.',
+        'Faber, operated by {{COMPANY_NAME}}, IDNO {{IDNO}}, registered at {{LEGAL_ADDRESS}}, Republic of Moldova ("we", "our", "us"), is the data controller responsible for your personal data. We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose and safeguard your information when you use our platform, website and services. Please read this policy carefully.',
       section1Title: '1. Information We Collect',
       section1P1:
         'We collect information that you provide directly to us, including when you register as a master or client, create a profile, send a request, leave a review, contact support, or subscribe to communications.',
@@ -55,7 +55,7 @@ export const privacy = {
       subtitle: 'Как мы собираем, используем и защищаем ваши персональные данные.',
       lastUpdated: 'Последнее обновление',
       intro:
-        'Master-Hub, управляемый {{COMPANY_NAME}}, IDNO {{IDNO}}, зарегистрированный по адресу: {{LEGAL_ADDRESS}}, Республика Молдова («мы», «наш», «нас»), является контроллером персональных данных. Мы обязуемся защищать вашу конфиденциальность. Настоящая Политика конфиденциальности объясняет, как мы собираем, используем, раскрываем и защищаем вашу информацию при использовании нашей платформы, сайта и услуг. Просим внимательно ознакомиться с текстом.',
+        'Faber, управляемый {{COMPANY_NAME}}, IDNO {{IDNO}}, зарегистрированный по адресу: {{LEGAL_ADDRESS}}, Республика Молдова («мы», «наш», «нас»), является контроллером персональных данных. Мы обязуемся защищать вашу конфиденциальность. Настоящая Политика конфиденциальности объясняет, как мы собираем, используем, раскрываем и защищаем вашу информацию при использовании нашей платформы, сайта и услуг. Просим внимательно ознакомиться с текстом.',
       section1Title: '1. Информация, которую мы собираем',
       section1P1:
         'Мы собираем информацию, которую вы предоставляете напрямую: при регистрации в качестве мастера или клиента, создании профиля, отправке заявки, оставлении отзыва, обращении в поддержку или подписке на рассылки.',
@@ -105,7 +105,7 @@ export const privacy = {
       subtitle: 'Cum colectăm, utilizăm și protejăm datele dvs. personale.',
       lastUpdated: 'Ultima actualizare',
       intro:
-        'Master-Hub, operat de {{COMPANY_NAME}}, IDNO {{IDNO}}, înregistrat la {{LEGAL_ADDRESS}}, Republica Moldova («noi», «nostru»), este operatorul de date cu caracter personal. Suntem dedicați protejării confidențialității dvs. Această Politică de confidențialitate explică cum colectăm, utilizăm, dezvăluim și protejăm informațiile dvs. când folosiți platforma, site-ul și serviciile noastre. Vă rugăm să citiți cu atenție.',
+        'Faber, operat de {{COMPANY_NAME}}, IDNO {{IDNO}}, înregistrat la {{LEGAL_ADDRESS}}, Republica Moldova («noi», «nostru»), este operatorul de date cu caracter personal. Suntem dedicați protejării confidențialității dvs. Această Politică de confidențialitate explică cum colectăm, utilizăm, dezvăluim și protejăm informațiile dvs. când folosiți platforma, site-ul și serviciile noastre. Vă rugăm să citiți cu atenție.',
       section1Title: '1. Informații pe care le colectăm',
       section1P1:
         'Colectăm informații pe care ni le furnizați direct: la înregistrarea ca meșter sau client, la crearea profilului, la trimiterea unei cereri, la lăsarea unei recenzii, la contactarea suportului sau la abonarea la comunicări.',

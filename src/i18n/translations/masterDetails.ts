@@ -114,6 +114,8 @@ export const masterDetails = {
       recontactTitle: 'You have worked with this master before',
       recontactDesc: 'You already have a completed request with this master. Want to contact them again?',
       recontactButton: 'Contact again',
+      seoKeywordsSuffix:
+        'verified master Moldova, hire specialist, local services, faber.md, book professional, reviews, Chisinau area',
     },
   },
   ru: {
@@ -231,6 +233,8 @@ export const masterDetails = {
       recontactTitle: 'Вы уже работали с этим мастером',
       recontactDesc: 'У вас есть завершённая заявка с этим мастером. Хотите обратиться снова?',
       recontactButton: 'Обратиться снова',
+      seoKeywordsSuffix:
+        'проверенный мастер Молдова, заказать услугу, услуги на дом, faber.md, специалист, отзывы, Кишинёв и регион',
     },
   },
   ro: {
@@ -348,6 +352,8 @@ export const masterDetails = {
       recontactTitle: 'Ați lucrat deja cu acest meșter',
       recontactDesc: 'Aveți o cerere finalizată cu acest meșter. Doriți să-l contactați din nou?',
       recontactButton: 'Contactați din nou',
+      seoKeywordsSuffix:
+        'meșter verificat Moldova, servicii locale, faber.md, specialist, recenzii, Chișinău și regiune',
     },
   },
 };

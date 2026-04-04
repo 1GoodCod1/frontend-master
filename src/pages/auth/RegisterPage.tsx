@@ -50,7 +50,7 @@ export default function RegisterPage() {
     <AuthLayout view="register">
       <div className="flex flex-1 flex-col overflow-y-auto">
         <div className="mx-auto w-full max-w-[420px] px-6 py-10 md:max-w-[440px] md:px-11 md:py-11">
-          <div className="mh-page-enter flex flex-col gap-4">
+          <div className="faber-page-enter flex flex-col gap-4">
             <RegisterHeader />
             <RoleTabs
               value={selectedRole === USER_ROLE.CLIENT ? 0 : 1}

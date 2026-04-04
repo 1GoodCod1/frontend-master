@@ -1,7 +1,7 @@
 export const home = {
   en: {
     home: {
-      title: 'Master Hub',
+      title: 'Faber',
       heroStatus: 'Over 500+ verified masters active now',
       heroStatusWithCount: 'Over {{count}}+ verified masters active now',
       heroTitleLine1: 'Connect with verified',
@@ -104,14 +104,14 @@ export const home = {
         interesting_category: 'Interesting category',
       },
       seoKeywords:
-        'masters Moldova, specialists Chisinau, manicure, haircuts, repairs, cleaning, plumbing, electrical, construction, beauty services, verified craftsmen, handyman, marketplace Moldova, find master, home repair, auto repair, furniture, moving services',
+        'masters Moldova, specialists Chisinau, Chișinău, Bălți, Cahul, Comrat, Orhei, Ungheni, Soroca, Tiraspol, Bender, manicure, haircuts, repairs, cleaning, plumbing, electrical, HVAC, construction, roofing, windows, doors, welding, beauty services, verified craftsmen, handyman, marketplace Moldova, find master, home repair, auto repair, appliance repair, phone repair, furniture, moving, courier, tutoring, legal, accounting, pest control, landscaping, photo video, emergency repair, same day, reviews, ratings, book specialist',
       seoDefaultDescription:
-        'Master-Hub — marketplace of verified specialists in Moldova. Manicure, haircuts, repairs, cleaning, plumbing, electrical, construction and more. Find trusted masters in Chisinau, Balti and across Moldova.',
+        'Faber — marketplace of verified specialists in Moldova. Search manicure, repairs, cleaning, plumbing, electrical, HVAC, construction, auto and more. Find trusted masters in Chișinau, Bălți, Cahul and across Moldova — with reviews and fast contact.',
     },
   },
   ru: {
     home: {
-      title: 'Master Hub',
+      title: 'Faber',
       heroStatus: 'Более 500+ проверенных мастеров активны сейчас',
       heroStatusWithCount: 'Более {{count}}+ проверенных мастеров активны сейчас',
       heroTitleLine1: 'Свяжитесь с проверенными',
@@ -214,14 +214,14 @@ export const home = {
         interesting_category: 'Интересная категория',
       },
       seoKeywords:
-        'мастера Молдовы, специалисты Кишинёв, маникюр, стрижки, ремонт, уборка, сантехник, электрик, строительство, услуги красоты, проверенные мастера, ремонт техники, ремонт авто, мебель, переезды, Бэлць, Тирасполь, Бендеры, поиск мастера, маркетплейс Молдова',
+        'мастера Молдовы, специалисты Кишинёв, Кишинэу, Бэлць, Кагул, Комрат, Орхей, Унгень, Сороки, Тирасполь, Бендеры, маникюр, стрижки, ремонт квартир, уборка, клининг, сантехник, электрик, кондиционеры, вентиляция, строительство, кровля, окна, двери, сварка, услуги красоты, проверенные мастера, ремонт техники, ремонт телефонов, ремонт авто, мебель, грузоперевозки, переезды, курьер, репетитор, юрист, бухгалтер, дезинсекция, ландшафт, фото видео, срочный ремонт, вызов мастера, отзывы, рейтинг, заказать мастера, маркетплейс Молдова',
       seoDefaultDescription:
-        'Master-Hub — платформа для поиска лучших мастеров Молдовы. Маникюр, стрижки, ремонт, уборка, сантехника, электрика, строительство и многое другое. Найдите проверенных специалистов в Кишинёве, Бэлць и по всей Молдове.',
+        'Faber — платформа для поиска проверенных мастеров в Молдове. Маникюр, ремонт, уборка, сантехника, электрика, кондиционеры, стройка, авто и другое. Специалисты в Кишинёве, Бэлць, Кагуле и по всей стране — с отзывами и быстрой связью.',
     },
   },
   ro: {
     home: {
-      title: 'Master Hub',
+      title: 'Faber',
       heroStatus: 'Peste 500+ mesteri verificați activi acum',
       heroStatusWithCount: 'Peste {{count}}+ mesteri verificați activi acum',
       heroTitleLine1: 'Conectează-te cu meșterii verificați',
@@ -324,9 +324,9 @@ export const home = {
         interesting_category: 'Categorie interesantă',
       },
       seoKeywords:
-        'meșteri Moldova, specialiști Chișinău, manichiură, tunsoare, reparații, curățenie, instalator, electrician, construcții, servicii frumusețe, meșteri verificați, reparații electrocasnice, reparații auto, mobilier, mutări, Bălți, Tiraspol, Bender, căutare meșter, piață Moldova',
+        'meșteri Moldova, specialiști Chișinău, Chișinău, Bălți, Cahul, Comrat, Orhei, Ungheni, Soroca, Tiraspol, Bender, manichiură, tunsoare, reparații locuință, curățenie, instalator, electrician, climatizare, ventilație, construcții, acoperiș, ferestre, uși, sudură, servicii frumusețe, meșteri verificați, reparații electrocasnice, reparații telefoane, reparații auto, mobilier, mutări, curier, meditații, avocat, contabilitate, dezinsecție, peisagistică, foto video, urgență reparații, recenzii, rating, comandă meșter, piață servicii Moldova',
       seoDefaultDescription:
-        'Master-Hub — piața specialiștilor verificați din Moldova. Manichiură, tunsoare, reparații, curățenie, instalații sanitare, electricitate, construcții și multe altele. Găsiți meșteri de încredere în Chișinău, Bălți și în toată Moldova.',
+        'Faber — piața specialiștilor verificați din Moldova. Căutați manichiură, reparații, curățenie, instalații, electricitate, climatizare, construcții, auto și altele. Meșteri în Chișinău, Bălți, Cahul și în toată țara — cu recenzii și contact rapid.',
     },
   },
 };

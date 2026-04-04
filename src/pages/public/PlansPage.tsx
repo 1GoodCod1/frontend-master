@@ -53,7 +53,7 @@ export default function PlansPage() {
       <>
         <SEOHead title={t('plans.adminView.title')} noindex />
         <div className="w-full max-w-md mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-        <div className="mh-page-enter flex justify-center">
+        <div className="faber-page-enter flex justify-center">
           <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
             <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
@@ -83,7 +83,7 @@ export default function PlansPage() {
       <>
         <SEOHead title={t('plans.becomeMaster.title')} noindex />
         <div className="w-full max-w-2xl mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-        <div className="mh-page-enter flex justify-center">
+        <div className="faber-page-enter flex justify-center">
           <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
             <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
@@ -125,9 +125,9 @@ export default function PlansPage() {
       <SEOHead
         title={t('plans.title')}
         description={t('plans.subtitle')}
-        keywords="тарифы Master-Hub, планы для мастеров, Moldova"
+        keywords={t('plans.seoKeywords')}
       />
-      <div className="mh-page-enter min-h-screen bg-gray-50/50 dark:bg-transparent">
+      <div className="faber-page-enter min-h-screen bg-gray-50/50 dark:bg-transparent">
       <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-[max(3rem,env(safe-area-inset-bottom,0px))] sm:pb-16">
         <div className="text-center mb-8 sm:mb-12 pt-6 sm:pt-8 md:pt-12">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 tracking-tight">

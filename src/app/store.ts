@@ -27,7 +27,7 @@ import { notificationPersistMiddleware } from './notificationPersistMiddleware';
 
 // API cache: persist only Categories/Cities (via transform)
 const apiPersistConfig = {
-  key: 'mh_api',
+  key: 'faber_api',
   version: API_CACHE_PERSIST_VERSION,
   storage: safePersistStorage,
   transforms: [persistApiCacheTransform],

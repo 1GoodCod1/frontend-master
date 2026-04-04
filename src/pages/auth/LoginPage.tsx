@@ -58,7 +58,7 @@ export default function LoginPage() {
   return (
     <AuthLayout view="login">
       <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
-        <div className="mh-page-enter mx-auto w-full max-w-[360px]">
+        <div className="faber-page-enter mx-auto w-full max-w-[360px]">
           <LoginHeader />
           <Formik<LoginFormValues>
             initialValues={form.initialValues}

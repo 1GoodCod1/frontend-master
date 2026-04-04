@@ -6,13 +6,13 @@ import { safeStorage } from '@/utils/safeStorage';
 // (DevTools → Application → Cookies) so they stay in sync. Reads use LS only.
 // ---------------------------------------------------------------------------
 export const TRACKING_KEYS = {
-  utmSource: 'mh_utm_source',
-  utmMedium: 'mh_utm_medium',
-  utmCampaign: 'mh_utm_campaign',
-  firstVisit: 'mh_first_visit',
-  visitCount: 'mh_visit_count',
-  recentViews: 'mh_recent_views',
-  viewMode: 'mh_view_mode',
+  utmSource: 'faber_utm_source',
+  utmMedium: 'faber_utm_medium',
+  utmCampaign: 'faber_utm_campaign',
+  firstVisit: 'faber_first_visit',
+  visitCount: 'faber_visit_count',
+  recentViews: 'faber_recent_views',
+  viewMode: 'faber_view_mode',
 } as const;
 
 const TRACKING_KEY_SET = new Set<string>(Object.values(TRACKING_KEYS));

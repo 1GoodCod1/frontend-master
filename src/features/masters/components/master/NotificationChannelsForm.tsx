@@ -45,7 +45,7 @@ export function NotificationChannelsForm() {
   const handleConnectTelegram = useCallback(async () => {
     try {
       const result = await createLink().unwrap();
-      const link = (result as { data?: { link?: string } })?.data?.link ?? (result as { link?: string }).link;
+      const link = result?.link;
       if (!link) {
         toast.error(t('notificationSettings.telegram.connectError'));
         return;

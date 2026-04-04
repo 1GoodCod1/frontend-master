@@ -8,6 +8,12 @@ import { ExpirationPlugin } from 'workbox-expiration';
 
 declare const self: ServiceWorkerGlobalScope;
 
+/** W3C Push API — ensures `waitUntil` + subscription fields (DOM typings may omit this in webworker-only checks). */
+interface PushSubscriptionChangeEvent extends ExtendableEvent {
+  readonly oldSubscription: PushSubscription | null;
+  readonly newSubscription: PushSubscription | null;
+}
+
 // Take control of all clients immediately
 self.skipWaiting();
 clientsClaim();
@@ -79,17 +85,17 @@ self.addEventListener('push', (event) => {
       body: body || '',
       icon: icon || '/brand/favicon.svg',
       badge: badge || '/brand/favicon.svg',
-      tag: tag || 'master-hub-notification',
+      tag: tag || 'fabermd-notification',
       data: { url, ...(data || {}) },
       vibrate: [200, 100, 200],
       actions: url ? [{ action: 'open', title: 'Открыть' }] : [],
       requireInteraction: false,
     } as NotificationOptions;
 
-    event.waitUntil(self.registration.showNotification(title || 'Master-Hub', options));
+    event.waitUntil(self.registration.showNotification(title || 'faber.md', options));
   } catch {
     const text = event.data.text();
-    event.waitUntil(self.registration.showNotification('Master-Hub', { body: text }));
+    event.waitUntil(self.registration.showNotification('faber.md', { body: text }));
   }
 });
 
@@ -112,10 +118,11 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-self.addEventListener('pushsubscriptionchange', (event) => {
-  event.waitUntil(
+self.addEventListener('pushsubscriptionchange', (event: Event) => {
+  const e = event as PushSubscriptionChangeEvent;
+  e.waitUntil(
     self.registration.pushManager
-      .subscribe(event.oldSubscription?.options || { userVisibleOnly: true })
+      .subscribe(e.oldSubscription?.options || { userVisibleOnly: true })
       .then((subscription) => {
         if (!apiBaseUrl) {
           console.warn('SW: API URL not configured, cannot re-subscribe');

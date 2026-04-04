@@ -4,9 +4,9 @@ import {
 } from '@/constants/storage';
 import { safeStorage } from '@/utils/safeStorage';
 
-export const REFRESH_TOKEN_KEY = 'master-hub.refreshToken';
-const REMEMBER_ME_KEY = 'master-hub.rememberMe';
-const LOGOUT_FLAG_KEY = 'master-hub.logout';
+export const REFRESH_TOKEN_KEY = 'faber.md.refreshToken';
+const REMEMBER_ME_KEY = 'faber.md.rememberMe';
+const LOGOUT_FLAG_KEY = 'faber.md.logout';
 /** httpOnly: '0' = нет сессии, не дергать /auth/refresh на bootstrap; '1' / отсутствует = можно пробовать cookie */
 
 function readHttpOnlySessionHint(): string | null {

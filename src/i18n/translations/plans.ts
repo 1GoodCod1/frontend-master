@@ -3,6 +3,8 @@ export const plans = {
     plans: {
       title: 'Choose your plan',
       subtitle: 'Grow your visibility and get more clients',
+      seoKeywords:
+        'Faber plans, tariffs Moldova, VIP PREMIUM master, visibility Chisinau, subscription craftsman, promote profile, analytics leads, portfolio master',
       myPlan: 'My Plan',
       myPlanSubtitle: 'Your current plan and upgrade options',
       currentPlan: 'Current Plan',
@@ -122,6 +124,8 @@ export const plans = {
     plans: {
       title: 'Выберите ваш тариф',
       subtitle: 'Увеличьте видимость и получите больше клиентов',
+      seoKeywords:
+        'тарифы Faber, планы для мастеров Молдова, VIP PREMIUM, продвижение профиля, подписка мастер, аналитика заявки, портфолио мастера, видимость Кишинёв',
       myPlan: 'Мой план',
       myPlanSubtitle: 'Текущий план и опции обновления',
       currentPlan: 'Текущий план',
@@ -243,6 +247,8 @@ export const plans = {
     plans: {
       title: 'Alege planul tău',
       subtitle: 'Crește-ți vizibilitatea și obține mai mulți clienți',
+      seoKeywords:
+        'planuri Faber, tarife Moldova, VIP PREMIUM meșter, vizibilitate Chișinău, abonament specialist, promovare profil, analitică cereri, portofoliu meșter',
       myPlan: 'Planul Meu',
       myPlanSubtitle: 'Planul tău curent și opțiuni de actualizare',
       currentPlan: 'Plan Curent',

@@ -9,5 +9,5 @@ export default defineConfig({
     basePath: '/brand/',
   },
   preset: minimal2023Preset,
-  images: ['public/brand/icon-mh.svg'],
+  images: ['public/brand/icon-faber.svg'],
 });

@@ -141,7 +141,7 @@ export default function SubscriptionPage() {
     }
 
     return (
-        <div className="mh-page-enter space-y-6">
+        <div className="faber-page-enter space-y-6">
             {/* Header */}
             <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">
@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
 
             {/* Pending Upgrade Alert */}
             {pendingUpgrade && (
-                <div className="mh-view-swap">
+                <div className="faber-view-swap">
                     <Alert className="border-amber-300 dark:border-amber-600/40 bg-amber-50/80 dark:bg-amber-900/20">
                         <ArrowUpCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         <AlertDescription className="flex flex-col gap-3">

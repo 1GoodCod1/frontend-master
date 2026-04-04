@@ -70,7 +70,7 @@ export default function PaymentOptionsPage() {
   }
 
   return (
-    <div className="mh-page-enter container max-w-4xl mx-auto py-6 md:py-8 px-4">
+    <div className="faber-page-enter container max-w-4xl mx-auto py-6 md:py-8 px-4">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <Button variant="ghost" size="sm" asChild className="self-start">

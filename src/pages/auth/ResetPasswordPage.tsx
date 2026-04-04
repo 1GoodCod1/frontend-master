@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="min-h-screen bg-background py-8 md:py-12">
         <div className="container max-w-md mx-auto px-4">
-          <div className="mh-page-enter">
+          <div className="faber-page-enter">
             <Card className="border-border dark:border-white/[0.08]">
               <CardContent className="p-6 md:p-8">
                 <InvalidTokenView />
@@ -31,7 +31,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-background py-8 md:py-12">
       <div className="container max-w-md mx-auto px-4">
-        <div className="mh-page-enter">
+        <div className="faber-page-enter">
           <Card className="border-border">
             <CardContent className="p-6 md:p-8">
               <ResetPasswordHeader />

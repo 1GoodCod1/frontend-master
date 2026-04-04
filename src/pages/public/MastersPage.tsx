@@ -56,7 +56,7 @@ export default function MastersPage() {
         description={t('masters.subtitle')}
         keywords={t('home.seoKeywords')}
       />
-      <div className="mh-page-enter container max-w-7xl mx-auto py-3 sm:py-5 md:py-6 lg:py-8 px-3 sm:px-4">
+      <div className="faber-page-enter container max-w-7xl mx-auto py-3 sm:py-5 md:py-6 lg:py-8 px-3 sm:px-4">
         <MastersPageHeader
           viewMode={viewMode}
           onViewModeChange={setViewMode}

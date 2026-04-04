@@ -180,7 +180,20 @@ export default function MasterDetailsPage() {
     t('masterDetails.becomeClientSubtitle');
   const categoryName = m?.category ? getTranslatedCategoryName(t, m.category) : '';
   const cityName = m?.city ? getTranslatedCityName(t, m.city) : '';
-  const seoKeywords = [fullName, categoryName, cityName, 'Master-Hub Moldova'].filter(Boolean).join(', ');
+  const serviceKeywordParts =
+    services
+      ?.map((s) => (s && typeof s.title === 'string' ? s.title.trim() : ''))
+      .filter(Boolean)
+      .slice(0, 8) ?? [];
+  const seoKeywords = [
+    fullName,
+    categoryName,
+    cityName,
+    ...serviceKeywordParts,
+    t('masterDetails.seoKeywordsSuffix'),
+  ]
+    .filter(Boolean)
+    .join(', ');
 
   return (
     <>
@@ -191,7 +204,7 @@ export default function MasterDetailsPage() {
         ogType="profile"
         ogImage={avatarUrl?.startsWith('http') ? avatarUrl : undefined}
       />
-      <div className="mh-page-enter">
+      <div className="faber-page-enter">
       <MasterProfileHero
         title={title}
         avatarUrl={avatarUrl}

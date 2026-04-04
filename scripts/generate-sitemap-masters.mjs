@@ -2,8 +2,8 @@
  * Post-build script: fetches master IDs from API and generates sitemap-masters.xml.
  * Run after `npm run build`. Requires API to be available.
  *
- * Usage: SITEMAP_API_URL=https://api.master-hub.md node scripts/generate-sitemap-masters.mjs
- * Or: VITE_API_URL=https://api.master-hub.md node scripts/generate-sitemap-masters.mjs
+ * Usage: SITEMAP_API_URL=https://api.faber.md node scripts/generate-sitemap-masters.mjs
+ * Or: VITE_API_URL=https://api.faber.md node scripts/generate-sitemap-masters.mjs
  */
 import fs from 'fs';
 import path from 'path';
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '../dist');
-const SITE_URL = 'https://master-hub.md';
+const SITE_URL = 'https://faber.md';
 const API_URL =
   process.env.SITEMAP_API_URL ||
   process.env.VITE_API_URL ||

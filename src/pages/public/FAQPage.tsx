@@ -59,9 +59,9 @@ export default function FAQPage() {
       <SEOHead
         title={t('faq.title')}
         description={t('faq.subtitle')}
-        keywords="FAQ Master-Hub, вопросы, Moldova мастера"
+        keywords={t('faq.seoKeywords')}
       />
-      <div className="mh-page-enter container max-w-3xl mx-auto py-6 md:py-8 px-4">
+      <div className="faber-page-enter container max-w-3xl mx-auto py-6 md:py-8 px-4">
       <PageHeader title={t('faq.title')} subtitle={t('faq.subtitle')} />
 
       <div className="space-y-10">

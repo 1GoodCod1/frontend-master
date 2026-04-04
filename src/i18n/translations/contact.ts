@@ -3,6 +3,8 @@ export const contact = {
     contact: {
       title: 'Contact Us',
       subtitle: 'Get in touch with us. We are here to help.',
+      seoKeywords:
+        'Faber contact, support Moldova, Telegram email help, customer service Chisinau, platform assistance',
       email: 'Email',
       emailDescription: 'Send us an email anytime',
       telegram: 'Telegram',
@@ -15,6 +17,8 @@ export const contact = {
     contact: {
       title: 'Свяжитесь с нами',
       subtitle: 'Свяжитесь с нами. Мы здесь, чтобы помочь.',
+      seoKeywords:
+        'контакты Faber, поддержка Молдова, Telegram email помощь, служба поддержки Кишинёв, связь с платформой',
       email: 'Email',
       emailDescription: 'Напишите нам в любое время',
       telegram: 'Telegram',
@@ -27,6 +31,8 @@ export const contact = {
     contact: {
       title: 'Contactați-ne',
       subtitle: 'Contactați-ne. Suntem aici pentru a vă ajuta.',
+      seoKeywords:
+        'contact Faber, suport Moldova, Telegram email ajutor, serviciu clienți Chișinău, asistență platformă',
       email: 'Email',
       emailDescription: 'Trimiteți-ne un email oricând',
       telegram: 'Telegram',

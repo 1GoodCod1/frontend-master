@@ -35,9 +35,9 @@ export default function ContactsPage() {
       <SEOHead
         title={t('contact.title')}
         description={t('contact.subtitle')}
-        keywords="контакты Master-Hub, поддержка Moldova"
+        keywords={t('contact.seoKeywords')}
       />
-      <div className="mh-page-enter min-h-screen bg-background py-8 md:py-12">
+      <div className="faber-page-enter min-h-screen bg-background py-8 md:py-12">
         <div className="container max-w-2xl mx-auto px-4">
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl md:text-4xl font-semibold text-foreground mb-3">
@@ -54,7 +54,7 @@ export default function ContactsPage() {
             return (
               <div
                 key={index}
-                className="mh-page-enter"
+                className="faber-page-enter"
                 style={{ animationDelay: `${index * 80}ms` }}
               >
                 <Card className="border-border overflow-hidden transition duration-250 hover:shadow-lg hover:-translate-y-0.5">
@@ -86,7 +86,7 @@ export default function ContactsPage() {
           })}
         </div>
 
-        <div className="mh-page-enter mt-10 text-center" style={{ animationDelay: '240ms' }}>
+        <div className="faber-page-enter mt-10 text-center" style={{ animationDelay: '240ms' }}>
           <Card className="border-border">
             <CardContent className="p-6">
               <p className="text-primary font-semibold text-lg mb-2 leading-relaxed">

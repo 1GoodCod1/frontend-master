@@ -8,7 +8,7 @@ export default function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="mh-page-enter container max-w-2xl mx-auto py-16 text-center px-4">
+    <div className="faber-page-enter container max-w-2xl mx-auto py-16 text-center px-4">
       <p className="text-8xl font-bold text-muted-foreground/80">404</p>
       <h1 className="text-2xl md:text-3xl font-semibold text-foreground mt-4">
         {t('common.notFound.title')}

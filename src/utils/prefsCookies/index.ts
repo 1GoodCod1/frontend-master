@@ -23,7 +23,7 @@ function clearCookie(name: string): void {
 }
 
 /** Mirrors consent choice in an HTTP cookie so DevTools → Cookies shows a record (localStorage remains source of truth). */
-const CONSENT_MODE_COOKIE = 'mh_consent_mode';
+const CONSENT_MODE_COOKIE = 'faber_consent_mode';
 
 export function setConsentModeCookie(mode: 'all' | 'necessary' | 'custom'): void {
   setHttpCookie(CONSENT_MODE_COOKIE, mode);
@@ -44,14 +44,14 @@ function getCookie(name: string): string | null {
 
 export const prefsCookies = {
   lang: {
-    key: 'mh_lang',
-    get: () => getCookie('mh_lang'),
-    set: (value: string) => setHttpCookie('mh_lang', value),
+    key: 'faber_lang',
+    get: () => getCookie('faber_lang'),
+    set: (value: string) => setHttpCookie('faber_lang', value),
   },
   theme: {
-    key: 'master_hub_theme',
-    get: () => getCookie('mh_theme'),
-    set: (value: string) => setHttpCookie('mh_theme', value),
+    key: 'faber_theme',
+    get: () => getCookie('faber_theme'),
+    set: (value: string) => setHttpCookie('faber_theme', value),
   },
 };
 

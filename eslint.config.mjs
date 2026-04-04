@@ -6,6 +6,7 @@ import globals from 'globals';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import tseslint from '@typescript-eslint/eslint-plugin';
+// @ts-ignore
 import tsparser from '@typescript-eslint/parser';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';

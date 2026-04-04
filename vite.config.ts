@@ -7,7 +7,6 @@ import Sitemap from 'vite-plugin-sitemap';
 import { VitePWA } from 'vite-plugin-pwa';
 import viteCompression from 'vite-plugin-compression';
 
-/** Origins for fetch + Socket.IO (must match VITE_API_URL / VITE_WS_URL; cross-origin ≠ 'self'). */
 function collectConnectSrcOrigins(mode: string): string {
   const env = loadEnv(mode, process.cwd(), '');
   const origins = new Set<string>();
@@ -16,12 +15,12 @@ function collectConnectSrcOrigins(mode: string): string {
     try {
       origins.add(new URL(raw.trim()).origin);
     } catch {
-      /* ignore */
+
     }
   };
   add('http://localhost:4000');
   add('http://127.0.0.1:4000');
-  add('https://api.master-hub.md');
+  add('https://api.faber.md');
   add(env.VITE_API_URL);
   const ws = env.VITE_WS_URL?.trim();
   if (ws) {
@@ -29,7 +28,7 @@ function collectConnectSrcOrigins(mode: string): string {
       const normalized = ws.replace(/^ws:/i, 'http:').replace(/^wss:/i, 'https:');
       add(normalized);
     } catch {
-      /* ignore */
+
     }
   }
   return [...origins].join(' ');
@@ -71,9 +70,9 @@ export default defineConfig(({ mode }) => {
         ],
       },
       manifest: {
-        name: 'Master-Hub',
-        short_name: 'Master-Hub',
-        description: 'Master-Hub — piața specialiștilor verificați din Moldova. Găsiți meșteri pentru manichiură, reparații, curățenie și multe altele.',
+        name: 'Faber',
+        short_name: 'Faber',
+        description: 'faber.md — piața specialiștilor verificați din Moldova. Găsiți meșteri pentru manichiură, reparații, curățenie și multe altele.',
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
@@ -97,7 +96,7 @@ export default defineConfig(({ mode }) => {
         gzipSize: true,
         brotliSize: true,
         open: process.env.CI !== 'true',
-        title: 'Master-Hub — bundle',
+        title: 'faber.md — bundle',
       }),
     viteCompression({
       algorithm: 'gzip',
@@ -112,7 +111,7 @@ export default defineConfig(({ mode }) => {
       verbose: false,
     }),
     Sitemap({
-      hostname: 'https://master-hub.md',
+      hostname: 'https://faber.md',
       dynamicRoutes: [
         '/masters',
         '/plans',
@@ -139,7 +138,6 @@ export default defineConfig(({ mode }) => {
     watch: {
       usePolling: true,
     },
-    // Match production nginx so passive scans (e.g. ZAP) on localhost:3000 see the same baseline headers
     headers: {
       'X-Frame-Options': 'SAMEORIGIN',
       'X-Content-Type-Options': 'nosniff',
@@ -149,7 +147,7 @@ export default defineConfig(({ mode }) => {
   },
   build: {
     // Оптимизация для production build
-    target: 'es2020',
+    target: 'esnext',
     minify: 'esbuild',
     sourcemap: false,
     // Strip console/debugger in production

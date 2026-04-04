@@ -3,7 +3,7 @@ import { safeStorage } from '@/utils/safeStorage';
 
 export type AppLanguage = 'en' | 'ru' | 'ro';
 
-export const STORAGE_KEY = 'mh_lang';
+export const STORAGE_KEY = 'faber_lang';
 
 function getStorageItem(key: string): string | null {
   return safeStorage.getItem(key);

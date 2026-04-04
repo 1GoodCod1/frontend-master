@@ -124,7 +124,7 @@ export function MastersResults({
       </div>
 
       {viewMode === 'list' ? (
-        <div key="list" className="mh-view-swap">
+        <div key="list" className="faber-view-swap">
           {items.length >= VIRTUOSO_GRID_THRESHOLD ? (
             <VirtuosoGrid<PublicMaster>
               useWindowScroll
@@ -152,7 +152,7 @@ export function MastersResults({
       ) : (
         <div
           key="map"
-          className="mh-view-swap h-[400px] sm:h-[450px] md:h-[500px]"
+          className="faber-view-swap h-[400px] sm:h-[450px] md:h-[500px]"
         >
           <Suspense fallback={<MastersMapSkeleton />}>
             <MastersMap masters={mapMasters} className="h-full" />

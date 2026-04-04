@@ -209,7 +209,7 @@ export default function RegisterForm({
 
       <div
         key={`${step}-${isClient ? 'c' : 'm'}`}
-        className="mh-view-swap flex min-h-[1px] flex-col gap-3.5"
+        className="faber-view-swap flex min-h-[1px] flex-col gap-3.5"
       >
           {showCredentials && (
             <>

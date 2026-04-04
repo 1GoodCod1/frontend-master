@@ -11,7 +11,7 @@ export const referrals = {
       copyButton: 'Copy',
       linkCopied: 'Link copied!',
       shareText:
-        "Hi! I use Master-Hub to find masters. Sign up with my link: {{link}}",
+        "Hi! I use Faber to find masters. Sign up with my link: {{link}}",
       totalInvited: 'Invited',
       qualifiedSuccess: 'Successful deals',
       yourFriends: 'Your invited friends',
@@ -39,7 +39,7 @@ export const referrals = {
       copyButton: 'Копировать',
       linkCopied: 'Ссылка скопирована!',
       shareText:
-        'Привет! Я использую Master-Hub для поиска мастеров. Зарегистрируйся по моей ссылке: {{link}}',
+        'Привет! Я использую Faber для поиска мастеров. Зарегистрируйся по моей ссылке: {{link}}',
       totalInvited: 'Приглашено',
       qualifiedSuccess: 'Успешных сделок',
       yourFriends: 'Ваши приглашенные',
@@ -67,7 +67,7 @@ export const referrals = {
       copyButton: 'Copiază',
       linkCopied: 'Link copiat!',
       shareText:
-        'Salut! Folosesc Master-Hub pentru a găsi meșteri. Înregistrează-te cu linkul meu: {{link}}',
+        'Salut! Folosesc Faber pentru a găsi meșteri. Înregistrează-te cu linkul meu: {{link}}',
       totalInvited: 'Invitați',
       qualifiedSuccess: 'Tranzacții reușite',
       yourFriends: 'Prietenii tăi invitați',

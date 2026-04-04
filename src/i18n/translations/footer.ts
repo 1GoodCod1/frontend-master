@@ -3,7 +3,7 @@ export const footer = {
     footer: {
       about: 'About',
       aboutDescription:
-        'Master Hub is a marketplace connecting clients with verified specialists.',
+        'Faber is a marketplace connecting clients with verified specialists.',
       quickLinks: 'Quick Links',
       masters: 'Masters',
       plans: 'Plans',
@@ -26,7 +26,7 @@ export const footer = {
     footer: {
       about: 'О нас',
       aboutDescription:
-        'Master Hub — маркетплейс, соединяющий клиентов с проверенными специалистами.',
+        'Faber — маркетплейс, соединяющий клиентов с проверенными специалистами.',
       quickLinks: 'Быстрые ссылки',
       masters: 'Мастера',
       plans: 'Тарифы',
@@ -49,7 +49,7 @@ export const footer = {
     footer: {
       about: 'Despre',
       aboutDescription:
-        'Master Hub este o piață care conectează clienții cu specialiști verificați.',
+        'Faber este o piață care conectează clienții cu specialiști verificați.',
       quickLinks: 'Link-uri rapide',
       masters: 'Meșteri',
       plans: 'Planuri',

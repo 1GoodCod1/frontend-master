@@ -2,16 +2,16 @@ export const terms = {
   en: {
     terms: {
       title: 'Terms of Use',
-      subtitle: 'Rules and conditions for using the Master-Hub platform.',
+      subtitle: 'Rules and conditions for using the faber.md platform.',
       lastUpdated: 'Last updated',
       intro:
-        'Welcome to Master-Hub, operated by {{COMPANY_NAME}}, IDNO {{IDNO}}, registered at {{LEGAL_ADDRESS}}, Republic of Moldova ("we", "us", "our"). These Terms of Use ("Terms") govern your access to and use of our website, platform and related services. By registering, browsing or using our services, you agree to these Terms. If you do not agree, please do not use our services.',
+        'Welcome to Faber, operated by {{COMPANY_NAME}}, IDNO {{IDNO}}, registered at {{LEGAL_ADDRESS}}, Republic of Moldova ("we", "us", "our"). These Terms of Use ("Terms") govern your access to and use of our website, platform and related services. By registering, browsing or using our services, you agree to these Terms. If you do not agree, please do not use our services.',
       section1Title: '1. Acceptance and Eligibility',
       section1P1:
-        'By creating an account or using Master-Hub, you confirm that you are at least 18 years of age and that you have the authority to enter into these Terms. If you are using the platform on behalf of a business, you represent that you have the authority to bind that entity.',
+        'By creating an account or using Faber, you confirm that you are at least 18 years of age and that you have the authority to enter into these Terms. If you are using the platform on behalf of a business, you represent that you have the authority to bind that entity.',
       section2Title: '2. Description of Services',
       section2P1:
-        'Master-Hub is a marketplace that connects clients seeking services with verified masters (specialists). We provide the platform, profile pages, request and booking tools, reviews, plans and payment processing. We do not employ masters or guarantee the quality of work performed by third parties; we only facilitate the connection.',
+        'Faber is a marketplace that connects clients seeking services with verified masters (specialists). We provide the platform, profile pages, request and booking tools, reviews, plans and payment processing. We do not employ masters or guarantee the quality of work performed by third parties; we only facilitate the connection.',
       section3Title: '3. Accounts and Registration',
       section3P1:
         'You must provide accurate and complete information when registering. You are responsible for maintaining the confidentiality of your password and for all activity under your account. You must notify us immediately of any unauthorized use. We reserve the right to suspend or terminate accounts that violate these Terms or that we reasonably believe are fraudulent or harmful.',
@@ -29,7 +29,7 @@ export const terms = {
         'The platform and services are provided "as is" and "as available". We do not warrant that the service will be uninterrupted, error-free or free of harmful components. We disclaim all warranties, express or implied, to the maximum extent permitted by law. Any transactions or agreements between users are solely between them; we are not a party to such agreements.',
       section8Title: '8. Limitation of Liability',
       section8P1:
-        'To the maximum extent permitted by law, Master-Hub and its affiliates shall not be liable for any indirect, incidental, special, consequential or punitive damages, or for loss of profits, data or goodwill, arising from your use or inability to use the services. Our total liability for any claims related to the services shall not exceed the amount you paid to us in the twelve months preceding the claim, or one hundred (100) USD, whichever is greater, unless otherwise required by mandatory law.',
+        'To the maximum extent permitted by law, Faber and its affiliates shall not be liable for any indirect, incidental, special, consequential or punitive damages, or for loss of profits, data or goodwill, arising from your use or inability to use the services. Our total liability for any claims related to the services shall not exceed the amount you paid to us in the twelve months preceding the claim, or one hundred (100) USD, whichever is greater, unless otherwise required by mandatory law.',
       section9Title: '9. Termination',
       section9P1:
         'You may close your account at any time through account settings or by contacting us. We may suspend or terminate your account and access to the services if you breach these Terms, for operational or legal reasons, or at our discretion with notice where appropriate. Upon termination, your right to use the services ceases; provisions that by their nature should survive (e.g. liability, dispute resolution) will remain in effect.',
@@ -49,16 +49,16 @@ export const terms = {
   ru: {
     terms: {
       title: 'Условия использования',
-      subtitle: 'Правила и условия использования платформы Master-Hub.',
+      subtitle: 'Правила и условия использования платформы faber.md.',
       lastUpdated: 'Последнее обновление',
       intro:
-        'Добро пожаловать на Master-Hub, управляемый {{COMPANY_NAME}}, IDNO {{IDNO}}, зарегистрированный по адресу: {{LEGAL_ADDRESS}}, Республика Молдова («мы», «нас», «наш»). Настоящие Условия использования («Условия») регулируют ваш доступ к нашему сайту, платформе и связанным услугам. Регистрируясь, просматривая или используя сервисы, вы соглашаетесь с этими Условиями. Если вы не согласны, пожалуйста, не используйте наши услуги.',
+        'Добро пожаловать на faber.md, управляемый {{COMPANY_NAME}}, IDNO {{IDNO}}, зарегистрированный по адресу: {{LEGAL_ADDRESS}}, Республика Молдова («мы», «нас», «наш»). Настоящие Условия использования («Условия») регулируют ваш доступ к нашему сайту, платформе и связанным услугам. Регистрируясь, просматривая или используя сервисы, вы соглашаетесь с этими Условиями. Если вы не согласны, пожалуйста, не используйте наши услуги.',
       section1Title: '1. Принятие и правоспособность',
       section1P1:
-        'Создавая учётную запись или используя Master-Hub, вы подтверждаете, что вам исполнилось 18 лет и что вы имеете право заключать настоящие Условия. Если вы используете платформу от имени организации, вы подтверждаете, что имеете полномочия действовать от её имени.',
+        'Создавая учётную запись или используя Faber, вы подтверждаете, что вам исполнилось 18 лет и что вы имеете право заключать настоящие Условия. Если вы используете платформу от имени организации, вы подтверждаете, что имеете полномочия действовать от её имени.',
       section2Title: '2. Описание услуг',
       section2P1:
-        'Master-Hub — маркетплейс, соединяющий клиентов, ищущих услуги, с проверенными мастерами (специалистами). Мы предоставляем платформу, профили, инструменты заявок и бронирований, отзывы, тарифы и приём платежей. Мы не являемся работодателями мастеров и не гарантируем качество работ третьих лиц; мы лишь обеспечиваем связь между сторонами.',
+        'faber.md — маркетплейс, соединяющий клиентов, ищущих услуги, с проверенными мастерами (специалистами). Мы предоставляем платформу, профили, инструменты заявок и бронирований, отзывы, тарифы и приём платежей. Мы не являемся работодателями мастеров и не гарантируем качество работ третьих лиц; мы лишь обеспечиваем связь между сторонами.',
       section3Title: '3. Учётные записи и регистрация',
       section3P1:
         'При регистрации необходимо указывать достоверные и полные данные. Вы несёте ответственность за сохранность пароля и за все действия под вашей учётной записью. О любом несанкционированном доступе необходимо сообщить нам немедленно. Мы оставляем за собой право приостановить или прекратить учётные записи при нарушении Условий или при обоснованном подозрении в мошенничестве или причинении вреда.',
@@ -76,7 +76,7 @@ export const terms = {
         'Платформа и услуги предоставляются «как есть» и «как доступно». Мы не гарантируем бесперебойную и безошибочную работу сервиса или отсутствие вредоносных компонентов. В максимальной степени, допускаемой законом, мы отказываемся от всех гарантий, явных и подразумеваемых. Сделки и договорённости между пользователями осуществляются исключительно между ними; мы не являемся стороной таких соглашений.',
       section8Title: '8. Ограничение ответственности',
       section8P1:
-        'В максимальной степени, допускаемой законом, Master-Hub и аффилированные лица не несут ответственности за косвенные, случайные, особые, последующие или штрафные убытки, а также за утрату прибыли, данных или деловой репутации в связи с использованием или невозможностью использования услуг. Наша совокупная ответственность по любым претензиям не превышает суммы, уплаченной вами нам за двенадцать месяцев до предъявления претензии, или ста (100) USD, в зависимости от того, что больше, если иное не предусмотрено императивной нормой закона.',
+        'В максимальной степени, допускаемой законом, faber.md и аффилированные лица не несут ответственности за косвенные, случайные, особые, последующие или штрафные убытки, а также за утрату прибыли, данных или деловой репутации в связи с использованием или невозможностью использования услуг. Наша совокупная ответственность по любым претензиям не превышает суммы, уплаченной вами нам за двенадцать месяцев до предъявления претензии, или ста (100) USD, в зависимости от того, что больше, если иное не предусмотрено императивной нормой закона.',
       section9Title: '9. Прекращение',
       section9P1:
         'Вы можете закрыть учётную запись в любое время через настройки или обратившись к нам. Мы вправе приостановить или прекратить учётную запись и доступ к услугам при нарушении Условий, по операционным или юридическим причинам или по своему усмотрению с уведомлением, где уместно. После прекращения право на использование услуг прекращается; положения, которые по своей природе должны сохранять силу (например, ответственность, урегулирование споров), остаются в действии.',
@@ -96,16 +96,16 @@ export const terms = {
   ro: {
     terms: {
       title: 'Termeni și condiții',
-      subtitle: 'Reguli și condiții pentru utilizarea platformei Master-Hub.',
+      subtitle: 'Reguli și condiții pentru utilizarea platformei faber.md.',
       lastUpdated: 'Ultima actualizare',
       intro:
-        'Bine ați venit la Master-Hub, operat de {{COMPANY_NAME}}, IDNO {{IDNO}}, înregistrat la {{LEGAL_ADDRESS}}, Republica Moldova («noi», «nostru»). Acești Termeni și condiții («Termenii») reglementează accesul și utilizarea site-ului, platformei și serviciilor conexe. Prin înregistrare, navigare sau utilizare a serviciilor, acceptați acești Termeni. Dacă nu sunteți de acord, vă rugăm să nu folosiți serviciile.',
+        'Bine ați venit la faber.md, operat de {{COMPANY_NAME}}, IDNO {{IDNO}}, înregistrat la {{LEGAL_ADDRESS}}, Republica Moldova («noi», «nostru»). Acești Termeni și condiții («Termenii») reglementează accesul și utilizarea site-ului, platformei și serviciilor conexe. Prin înregistrare, navigare sau utilizare a serviciilor, acceptați acești Termeni. Dacă nu sunteți de acord, vă rugăm să nu folosiți serviciile.',
       section1Title: '1. Acceptare și eligibilitate',
       section1P1:
-        'Prin crearea unui cont sau utilizarea Master-Hub, confirmați că aveți cel puțin 18 ani și că aveți autoritatea de a încheia acești Termeni. Dacă utilizați platforma în numele unei afaceri, declarați că aveți autoritatea de a obliga acea entitate.',
+        'Prin crearea unui cont sau utilizarea faber.md, confirmați că aveți cel puțin 18 ani și că aveți autoritatea de a încheia acești Termeni. Dacă utilizați platforma în numele unei afaceri, declarați că aveți autoritatea de a obliga acea entitate.',
       section2Title: '2. Descrierea serviciilor',
       section2P1:
-        'Master-Hub este o piață care conectează clienții care caută servicii cu meșteri verificați (specialiști). Oferim platforma, paginile de profil, instrumentele pentru cereri și rezervări, recenzii, planuri și procesare plăți. Nu angajăm meșteri și nu garantăm calitatea lucrărilor terților; facilităm doar conexiunea.',
+        'faber.md este o piață care conectează clienții care caută servicii cu meșteri verificați (specialiști). Oferim platforma, paginile de profil, instrumentele pentru cereri și rezervări, recenzii, planuri și procesare plăți. Nu angajăm meșteri și nu garantăm calitatea lucrărilor terților; facilităm doar conexiunea.',
       section3Title: '3. Conturi și înregistrare',
       section3P1:
         'Trebuie să furnizați informații corecte și complete la înregistrare. Sunteți responsabil pentru confidențialitatea parolei și pentru toată activitatea din cont. Trebuie să ne notificați imediat despre orice utilizare neautorizată. Ne rezervăm dreptul de a suspenda sau închide conturi care încalcă acești Termeni sau despre care considerăm rezonabil că sunt frauduloase sau dăunătoare.',
@@ -123,7 +123,7 @@ export const terms = {
         'Platforma și serviciile sunt furnizate «ca atare» și «în măsura disponibilității». Nu garantăm că serviciul va fi neîntrerupt, fără erori sau fără componente dăunătoare. Excludem toate garanțiile, exprese sau implicite, în măsura maximă permisă de lege. Orice tranzacții sau acorduri între utilizatori sunt doar între ei; nu suntem parte la aceste acorduri.',
       section8Title: '8. Limitarea răspunderii',
       section8P1:
-        'În măsura maximă permisă de lege, Master-Hub și afiliații nu răspund pentru daune indirecte, incidentale, speciale, consecvențiale sau punitive, sau pentru pierderea profiturilor, datelor sau a reputației, rezultate din utilizarea sau imposibilitatea utilizării serviciilor. Răspunderea noastră totală pentru orice cereri legate de servicii nu depășește suma plătită nouă în cele douăsprezece luni anterioare cererii, sau o sută (100) USD, oricare este mai mare, cu excepția cazului în care legea obligatorie dispune altfel.',
+        'În măsura maximă permisă de lege, faber.md și afiliații nu răspund pentru daune indirecte, incidentale, speciale, consecvențiale sau punitive, sau pentru pierderea profiturilor, datelor sau a reputației, rezultate din utilizarea sau imposibilitatea utilizării serviciilor. Răspunderea noastră totală pentru orice cereri legate de servicii nu depășește suma plătită nouă în cele douăsprezece luni anterioare cererii, sau o sută (100) USD, oricare este mai mare, cu excepția cazului în care legea obligatorie dispune altfel.',
       section9Title: '9. Încheiere',
       section9P1:
         'Puteți închide contul oricând din setări sau contactându-ne. Putem suspenda sau închide contul și accesul la servicii în caz de încălcare a Termenilor, din motive operaționale sau legale, sau la discreția noastră cu notificare unde este cazul. La încheiere, dreptul de a folosi serviciile încetează; dispozițiile care prin natura lor trebuie să supraviețuiască (ex. răspundere, soluționare litigii) rămân în vigoare.',

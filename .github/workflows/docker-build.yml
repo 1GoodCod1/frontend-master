@@ -53,8 +53,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VITE_API_URL=${{ secrets.VITE_API_URL || 'https://api.master-hub.md' }}
-            VITE_WS_URL=${{ secrets.VITE_WS_URL || 'wss://api.master-hub.md' }}
+            VITE_API_URL=${{ secrets.VITE_API_URL || 'https://api.faber.md' }}
+            VITE_WS_URL=${{ secrets.VITE_WS_URL || 'wss://api.faber.md' }}
             VITE_ENV=production
 
   create-release:

@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile
       target: production
       args:
-        VITE_API_URL: ${VITE_API_URL:-https://api.master-hub.md}
-        VITE_WS_URL: ${VITE_WS_URL:-wss://api.master-hub.md}
+        VITE_API_URL: ${VITE_API_URL:-https://api.faber.md}
+        VITE_WS_URL: ${VITE_WS_URL:-wss://api.faber.md}
         VITE_ENV: production
-    container_name: masterhub-frontend-prod
+    container_name: fabermd-frontend-prod
     ports:
       - "8080:80"
     restart: unless-stopped

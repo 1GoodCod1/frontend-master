@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎨 MasterHub Frontend
+# 🎨 faber.md Frontend
 
 ### Клиентское приложение маркетплейса мастеров 
 
@@ -12,7 +12,7 @@
 
 ## 📖 О проекте
 
-MasterHub Frontend — SPA для пользователей маркетплейса MasterHub: клиентов, мастеров и администраторов. Приложение построено на React с модульной архитектурой, включает поиск мастеров, реал-тайм чат, личные кабинеты, админ-панель и мультиязычность.
+faber.md Frontend — SPA для пользователей маркетплейса faber.md: клиентов, мастеров и администраторов. Приложение построено на React с модульной архитектурой, включает поиск мастеров, реал-тайм чат, личные кабинеты, админ-панель и мультиязычность.
 
 ---
 
@@ -167,7 +167,7 @@ npm run docker:down         # Остановить
 
 | Контейнер | Порт | Назначение |
 |---|---|---|
-| `master-hub-frontend-dev` | 3000 | Vite dev server с hot-reload |
+| `fabermd-frontend-dev` | 3000 | Vite dev server с hot-reload |
 
 ### Prod-окружение
 
@@ -178,7 +178,7 @@ npm run docker:prod:down    # Остановить
 
 | Контейнер | Порт | Назначение |
 |---|---|---|
-| `masterhub-frontend-prod` | 8080 | Nginx + статический билд |
+| `fabermd-frontend-prod` | 8080 | Nginx + статический билд |
 
 ### Dockerfile
 
@@ -352,6 +352,6 @@ npm run docker:prod:up
 
 <div align="center">
 
-© 2026 MasterHub Team · Все права защищены
+© 2026 faber.md Team · Все права защищены
 
 </div>

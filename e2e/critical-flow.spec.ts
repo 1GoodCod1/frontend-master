@@ -10,10 +10,10 @@ import { test, expect } from '@playwright/test';
 const API_BASE = process.env.API_BASE_URL || 'http://localhost:4000';
 
 const PROD_BLOCKED_HOSTS = [
-  'api.master-hub.md',
-  'master-hub.md',
-  'api.master-hub.com',
-  'master-hub.com',
+  'api.faber.md',
+  'faber.md',
+  'api.faber.md.com',
+  'faber.md.com',
 ];
 
 function isProductionApi(url: string): boolean {
