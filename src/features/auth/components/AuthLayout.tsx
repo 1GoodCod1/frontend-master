@@ -24,6 +24,16 @@ const SUBS: Record<AuthView, string> = {
 
 function AuthLeftPanel({ view }: { view: AuthView }) {
   const { t } = useTranslation();
+  const appName = t('appName');
+  const wordmark =
+    appName.length >= 3 ? (
+      <>
+        {appName.slice(0, -2)}
+        <span className="text-[#f97316]">{appName.slice(-2)}</span>
+      </>
+    ) : (
+      appName
+    );
 
   return (
     <div
@@ -59,9 +69,7 @@ function AuthLeftPanel({ view }: { view: AuthView }) {
             width={36}
             height={36}
           />
-          <span className="text-[1.15rem] font-extrabold tracking-tight text-white">
-            Master<span className="text-[#f97316]">Hub</span>
-          </span>
+          <span className="text-[1.15rem] font-extrabold tracking-tight text-white">{wordmark}</span>
         </Link>
         <p className="mt-2 text-[0.78rem] text-white/60">
           {t('auth.leftPanel.tagline')}
