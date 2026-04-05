@@ -163,10 +163,17 @@ export const authApi = api.injectEndpoints({
             persistRefreshToken(null);
             if (env.useHttpOnly) markHttpOnlySessionHint(false);
           }
-        } catch {
-          dispatch(clearAuth());
-          persistRefreshToken(null);
-          if (env.useHttpOnly) markHttpOnlySessionHint(false);
+        } catch (refreshError: unknown) {
+          const re = isRecord(refreshError) ? refreshError : {};
+          const reStatus =
+            (typeof re.status === 'number' ? re.status : undefined) ??
+            (isRecord(re.error) && typeof re.error.status === 'number' ? re.error.status : undefined);
+          // Only clear auth on definitive auth failures, not on network/5xx errors
+          if (reStatus === 401 || reStatus === 403) {
+            dispatch(clearAuth());
+            persistRefreshToken(null);
+            if (env.useHttpOnly) markHttpOnlySessionHint(false);
+          }
         }
       },
     }),

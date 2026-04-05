@@ -183,10 +183,15 @@ export const baseQueryWithReauth =
             );
 
             if (refreshResult.error) {
-              api.dispatch(clearAuth());
-              persistRefreshToken(null);
-              setLogoutFlag();
-              if (useHttpOnly) markHttpOnlySessionHint(false);
+              const refreshStatus = refreshResult.error.status;
+              // Only clear auth on definitive auth failures (401/403)
+              // Network errors and 5xx should not log the user out
+              if (refreshStatus === 401 || refreshStatus === 403) {
+                api.dispatch(clearAuth());
+                persistRefreshToken(null);
+                setLogoutFlag();
+                if (useHttpOnly) markHttpOnlySessionHint(false);
+              }
               return false;
             }
 

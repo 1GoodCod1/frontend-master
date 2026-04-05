@@ -125,7 +125,6 @@ self.addEventListener('pushsubscriptionchange', (event: Event) => {
       .subscribe(e.oldSubscription?.options || { userVisibleOnly: true })
       .then((subscription) => {
         if (!apiBaseUrl) {
-          console.warn('SW: API URL not configured, cannot re-subscribe');
           return;
         }
         return fetch(`${apiBaseUrl}/web-push/subscribe`, {
