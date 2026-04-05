@@ -126,5 +126,5 @@ jobs:
           key: ${{ secrets.PROD_SSH_KEY }}
           script: |
             cd ~/masterhub/fabermd-frontend
-            docker-compose -f docker-compose.prod.yml pull frontend
-            docker-compose -f docker-compose.prod.yml up -d frontend
+            docker compose -f docker-compose.prod.yml -f docker-compose.override.yml pull frontend
+            docker compose -f docker-compose.prod.yml -f docker-compose.override.yml up -d frontend

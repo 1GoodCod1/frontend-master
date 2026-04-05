@@ -1,0 +1,4 @@
+services:
+  frontend:
+    image: ${FRONTEND_IMAGE}
+    build: !reset null
