@@ -9,7 +9,7 @@ import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
 import { env } from '@/services/env';
 
-function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
@@ -84,8 +84,14 @@ export function useWebPush() {
     }, []);
 
     const subscribe = useCallback(async () => {
-        if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) {
-            toast.error('Service Worker не активен. В dev-режиме включите devOptions.enabled в vite.config.ts или соберите production build.');
+        if (!('serviceWorker' in navigator)) {
+            toast.error('Service Worker не поддерживается в этом браузере.');
+            return;
+        }
+
+        const registration = await navigator.serviceWorker.ready;
+        if (!registration.active) {
+            toast.error('Service Worker не активен. Попробуйте обновить страницу.');
             return;
         }
 
