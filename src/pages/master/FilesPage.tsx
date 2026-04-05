@@ -38,7 +38,7 @@ export default function FilesPage() {
   const busy = up.isLoading || setAvatarState.isLoading || removeState.isLoading;
 
   const avatarFileId = photos.data?.avatarFileId ?? null;
-  const items = Array.isArray(photos.data?.items) ? photos.data.items : [];
+  const items = Array.isArray(photos.data?.items) ? photos.data!.items : [];
   const reached = items.length >= limit;
 
   const normalizedItems: FileDto[] = items.map((f: FileDto & { url?: string }) => ({
@@ -63,7 +63,6 @@ export default function FilesPage() {
     try {
       await upload({ file }).unwrap();
       toast.success(t('files.uploadedSuccess'));
-      photos.refetch();
     } catch (err: unknown) {
       const msg =
         err && typeof err === 'object' && 'data' in err && (err as { data?: { message?: string } }).data?.message;
@@ -151,7 +150,6 @@ export default function FilesPage() {
                 try {
                   await setAvatar({ fileId }).unwrap();
                   toast.success(t('files.avatarUpdated'));
-                  photos.refetch();
                 } catch (e: unknown) {
                   const msg =
                     e && typeof e === 'object' && 'data' in e && (e as { data?: { message?: string } }).data?.message;
@@ -164,7 +162,6 @@ export default function FilesPage() {
                   const remainingCount = items.filter((i) => i.id !== fileId).length;
 
                   await removePhoto({ fileId }).unwrap();
-                  photos.refetch();
 
                   if (wasAvatar && remainingCount > 0) {
                     toast.success(t('files.removedAndAvatarAutoSet'));

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, ImgHTMLAttributes } from 'react';
+import { ImageOff } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -51,6 +52,7 @@ export function LazyImage({
 
   const handleError = () => {
     setHasError(true);
+    setIsLoaded(true);
     onError?.();
   };
 
@@ -68,6 +70,7 @@ export function LazyImage({
   };
 
   const imageSrc = hasError && fallback ? fallback : src;
+  const showBrokenPlaceholder = hasError && !fallback;
 
   return (
     <div
@@ -76,38 +79,44 @@ export function LazyImage({
       style={{ aspectRatio: aspectRatio as React.CSSProperties['aspectRatio'], ...style }}
     >
       {!isLoaded && renderPlaceholder()}
-      {isInView && (
-        <img
-          ref={imgRef}
-          src={imageSrc}
-          alt={alt}
-          onLoad={handleLoad}
-          onError={handleError}
-          loading="lazy"
-          decoding="async"
-          className={cn(
-            'absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-300',
-            isLoaded ? 'opacity-100' : 'opacity-0',
-            props.onClick && 'cursor-pointer',
-          )}
-          style={{ objectFit }}
-          {...Object.fromEntries(
-            Object.entries(props).filter(
-              ([key]) =>
-                ![
-                  'ref',
-                  'style',
-                  'onClick',
-                  'objectFit',
-                  'aspectRatio',
-                  'skeletonHeight',
-                  'skeletonWidth',
-                  'placeholder',
-                  'fallback',
-                ].includes(key)
-            )
-          )}
-        />
+      {showBrokenPlaceholder ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-muted/40">
+          <ImageOff className="size-8 text-muted-foreground/50" />
+        </div>
+      ) : (
+        isInView && (
+          <img
+            ref={imgRef}
+            src={imageSrc}
+            alt={alt}
+            onLoad={handleLoad}
+            onError={handleError}
+            loading="lazy"
+            decoding="async"
+            className={cn(
+              'absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-300',
+              isLoaded ? 'opacity-100' : 'opacity-0',
+              props.onClick && 'cursor-pointer',
+            )}
+            style={{ objectFit }}
+            {...Object.fromEntries(
+              Object.entries(props).filter(
+                ([key]) =>
+                  ![
+                    'ref',
+                    'style',
+                    'onClick',
+                    'objectFit',
+                    'aspectRatio',
+                    'skeletonHeight',
+                    'skeletonWidth',
+                    'placeholder',
+                    'fallback',
+                  ].includes(key)
+              )
+            )}
+          />
+        )
       )}
     </div>
   );
