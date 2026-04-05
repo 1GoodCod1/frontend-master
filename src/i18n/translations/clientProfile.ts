@@ -22,8 +22,7 @@ export const clientProfile = {
       youAreVerified: 'Success! You are verified.',
       phoneNotVerified: 'Phone not verified. Verify for better security!',
       phoneVerifiedSuccess: 'Phone verified successfully!',
-      uploadDisabledVerification:
-        'Verify your phone to add photos to gallery.',
+      uploadDisabledVerification: 'Verify your phone to upload photos.',
       myGallery: 'My Photo Gallery',
       gallerySubtitle: 'Photos you upload appear in your profile gallery.',
       loadingGallery: 'Loading gallery...',
@@ -64,8 +63,7 @@ export const clientProfile = {
       youAreVerified: 'Успех! Вы верифицированы.',
       phoneNotVerified: 'Телефон не верифицирован. Подтвердите для большей безопасности!',
       phoneVerifiedSuccess: 'Телефон успешно подтверждён!',
-      uploadDisabledVerification:
-        'Верифицируйте телефон, чтобы добавлять фото в галерею.',
+      uploadDisabledVerification: 'Верифицируйте телефон, чтобы загружать фото.',
       myGallery: 'Моя галерея',
       gallerySubtitle: 'Загруженные фото отображаются в профиле.',
       loadingGallery: 'Загрузка галереи...',
@@ -107,7 +105,7 @@ export const clientProfile = {
       phoneNotVerified: 'Telefon neverificat. Verifică pentru securitate mai bună!',
       phoneVerifiedSuccess: 'Telefon verificat cu succes!',
       uploadDisabledVerification:
-        'Verifică-ți telefonul pentru a adăuga fotografii în galerie.',
+        'Verifică-ți telefonul pentru a încărca fotografii.',
       myGallery: 'Galeria mea de fotografii',
       gallerySubtitle: 'Fotografiile încărcate apar în galeria profilului.',
       loadingGallery: 'Se încarcă galeria...',

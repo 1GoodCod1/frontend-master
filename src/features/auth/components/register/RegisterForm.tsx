@@ -1,12 +1,7 @@
 import { AuthFormField } from '@/features/auth/components/AuthFormField';
 import { AuthFormSelect } from '@/features/auth/components/AuthFormSelect';
 import { AuthFormTextarea } from '@/features/auth/components/AuthFormTextarea';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import type { RegisterFormValues } from '@/hooks/auth/register';
 import { Mail, Phone, Lock, User, MapPin, Tag, FileText, Eye, EyeOff, ArrowRight, Gift, ChevronLeft } from 'lucide-react';
@@ -230,37 +225,38 @@ export default function RegisterForm({
                 icon={<Lock size={15} />}
                 endAdornment={
                   <span className="flex items-center gap-1">
-                    <TooltipProvider delayDuration={200}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button
-                            type="button"
-                            className="flex shrink-0 items-center justify-center rounded-full p-1 bg-amber-100 text-amber-700 ring-1 ring-amber-200/60 transition hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:ring-amber-700/60 dark:hover:bg-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-[#111111]"
-                            aria-label={t('auth.register.passwordHint')}
-                          >
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                              <circle cx="12" cy="12" r="10" />
-                              <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
-                            </svg>
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent
-                          side="top"
-                          className="max-w-[240px] border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-lg dark:border-slate-700 dark:bg-[#1a1a1a] dark:text-slate-200"
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button
+                          type="button"
+                          className="flex shrink-0 items-center justify-center rounded-full p-1 bg-amber-100 text-amber-700 ring-1 ring-amber-200/60 transition hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:ring-amber-700/60 dark:hover:bg-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-[#111111]"
+                          aria-label={t('auth.register.passwordHint')}
                         >
-                          <p className="mb-2 text-xs font-semibold">
-                            {t('auth.register.passwordHintTitle')}
-                          </p>
-                          <ul className="list-inside list-disc space-y-1 text-xs text-slate-700 dark:text-slate-300">
-                            <li>{t('auth.register.passwordHintMin')}</li>
-                            <li>{t('auth.register.passwordHintUppercase')}</li>
-                            <li>{t('auth.register.passwordHintLowercase')}</li>
-                            <li>{t('auth.register.passwordHintDigit')}</li>
-                            <li>{t('auth.register.passwordHintSpecial')}</li>
-                          </ul>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4M12 8h.01" strokeLinecap="round" />
+                          </svg>
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        side="bottom"
+                        align="end"
+                        sideOffset={8}
+                        collisionPadding={16}
+                        className="z-[100] w-[min(calc(100vw-2rem),18rem)] max-w-[min(calc(100vw-2rem),18rem)] border border-slate-200 bg-white px-3 py-3 text-slate-800 shadow-lg dark:border-slate-700 dark:bg-[#1a1a1a] dark:text-slate-200"
+                      >
+                        <p className="mb-2 text-xs font-semibold">
+                          {t('auth.register.passwordHintTitle')}
+                        </p>
+                        <ul className="list-outside list-disc space-y-1 pl-4 text-xs leading-snug text-slate-700 dark:text-slate-300">
+                          <li>{t('auth.register.passwordHintMin')}</li>
+                          <li>{t('auth.register.passwordHintUppercase')}</li>
+                          <li>{t('auth.register.passwordHintLowercase')}</li>
+                          <li>{t('auth.register.passwordHintDigit')}</li>
+                          <li className="break-words">{t('auth.register.passwordHintSpecial')}</li>
+                        </ul>
+                      </PopoverContent>
+                    </Popover>
                     <button
                       type="button"
                       onClick={() => setShowPass(!showPass)}

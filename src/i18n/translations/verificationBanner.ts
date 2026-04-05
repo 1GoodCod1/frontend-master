@@ -4,8 +4,7 @@ export const verificationBanner = {
       title: 'Verification required',
       messageMaster:
         'Verify your account to add photos and unlock all features. After approval, get any plan (VIP or PREMIUM) free for 30 days with 1 click.',
-      messageClient:
-        'Verify your phone to add photos to your gallery and unlock all features.',
+      messageClient: 'Verify your phone to unlock all features.',
       verifyNow: 'Verify now',
       servicesPromotionsBlocked:
         'Verify your profile to add and display services and promotions. After verification, your services and prices will be visible to clients.',
@@ -18,8 +17,7 @@ export const verificationBanner = {
       title: 'Требуется верификация',
       messageMaster:
         'Верифицируйте аккаунт, чтобы добавлять фото и разблокировать все функции. После одобрения получите любой тариф (VIP или PREMIUM) бесплатно на 30 дней одним кликом.',
-      messageClient:
-        'Верифицируйте телефон, чтобы добавлять фото в галерею и разблокировать все функции.',
+      messageClient: 'Верифицируйте телефон, чтобы разблокировать все функции.',
       verifyNow: 'Верифицировать',
       servicesPromotionsBlocked:
         'Верифицируйте профиль, чтобы добавлять и отображать услуги и акции. После верификации ваши услуги и цены будут видны клиентам.',
@@ -33,7 +31,7 @@ export const verificationBanner = {
       messageMaster:
         'Verifică-ți contul pentru a adăuga fotografii și a debloca toate funcțiile. După aprobare, obține orice plan (VIP sau PREMIUM) gratuit 30 zile cu 1 click.',
       messageClient:
-        'Verifică-ți telefonul pentru a adăuga fotografii în galerie și a debloca toate funcțiile.',
+        'Verifică-ți telefonul pentru a debloca toate funcțiile.',
       verifyNow: 'Verifică acum',
       servicesPromotionsBlocked:
         'Verifică-ți profilul pentru a adăuga și afișa servicii și promoții. După verificare, serviciile și prețurile vor fi vizibile clienților.',
