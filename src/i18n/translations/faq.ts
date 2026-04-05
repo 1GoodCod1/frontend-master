@@ -1,3 +1,5 @@
+import { SUPPORT_EMAIL, TELEGRAM_HANDLE } from '@/config/support';
+
 export const faq = {
   en: {
     faq: {
@@ -68,8 +70,7 @@ export const faq = {
       },
       q12: {
         question: 'How can I contact support?',
-        answer:
-          'You can reach us by email at supportfabermd@gmail.com or Telegram @fabermd. Visit our',
+        answer: `You can reach us by email at ${SUPPORT_EMAIL} or Telegram ${TELEGRAM_HANDLE}. Visit our`,
         linkSuffix: 'page for more details and working hours.',
       },
     },
@@ -143,8 +144,7 @@ export const faq = {
       },
       q12: {
         question: 'Как связаться со службой поддержки?',
-        answer:
-          'Вы можете связаться с нами по email: supportfabermd@gmail.com или в Telegram: @fabermd. Посетите нашу',
+        answer: `Вы можете связаться с нами по email: ${SUPPORT_EMAIL} или в Telegram: ${TELEGRAM_HANDLE}. Посетите нашу`,
         linkSuffix: 'страницу для подробностей и рабочих часов.',
       },
     },
@@ -218,8 +218,7 @@ export const faq = {
       },
       q12: {
         question: 'Cum pot contacta suportul?',
-        answer:
-          'Ne puteți contacta prin email la supportfabermd@gmail.com sau pe Telegram la @fabermd. Vizitați pagina noastră de',
+        answer: `Ne puteți contacta prin email la ${SUPPORT_EMAIL} sau pe Telegram la ${TELEGRAM_HANDLE}. Vizitați pagina noastră de`,
         linkSuffix: 'Contacte pentru detalii și ore de lucru.',
       },
     },

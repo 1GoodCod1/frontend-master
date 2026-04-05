@@ -1,9 +1,10 @@
 /** Platform support — single source of truth for public contact info */
-export const SUPPORT_EMAIL = 'supportfabermd@gmail.com';
+export const SUPPORT_EMAIL = 'support@faber.md';
 export const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}`;
 
 export const TELEGRAM_HANDLE = '@fabermd';
-export const TELEGRAM_USERNAME = 'faber.mdmd';
+/** t.me username (without @), must match the public channel/bot */
+export const TELEGRAM_USERNAME = 'fabermd';
 export const TELEGRAM_URL = `https://t.me/${TELEGRAM_USERNAME}`;
 
 /**
