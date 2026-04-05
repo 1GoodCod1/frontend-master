@@ -9,6 +9,7 @@ import {
   persistRefreshToken,
   setLogoutFlag,
   markHttpOnlySessionHint,
+  isHttpOnlyGuestHint,
 } from '@/features/auth/persist';
 import { getSessionId } from '@/utils/sessionId';
 import { isRecord } from '@/utils/guards';
@@ -166,6 +167,11 @@ export const baseQueryWithReauth =
               api.dispatch(clearAuth());
               persistRefreshToken(null);
               setLogoutFlag();
+              return false;
+            }
+
+            // httpOnly mode but no session — skip refresh attempt
+            if (useHttpOnly && isHttpOnlyGuestHint()) {
               return false;
             }
 
