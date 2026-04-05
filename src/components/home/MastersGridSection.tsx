@@ -85,7 +85,7 @@ export const MastersGridSection = ({
         </div>
       ) : isError ? (
         <ErrorState error={error} onRetry={onRetry} />
-      ) : (
+      ) : list.length === 0 ? null : (
         <div className={GRID_CLASS}>
           {list.map((m, idx: number) => (
             <ScrollReveal key={m.id} delay={idx * 0.04} duration={0.4} className={horizontalScroll ? 'h-full' : undefined}>
