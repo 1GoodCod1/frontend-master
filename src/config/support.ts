@@ -2,10 +2,10 @@
 export const SUPPORT_EMAIL = 'support@faber.md';
 export const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}`;
 
-/** Public support / community Telegram (Masterhub) */
-export const TELEGRAM_HANDLE = '@masterhub';
+/** Public support / community Telegram (Masterhub) — https://t.me/masterhubmd */
+export const TELEGRAM_HANDLE = '@masterhubmd';
 /** t.me username (without @) */
-export const TELEGRAM_USERNAME = 'masterhub';
+export const TELEGRAM_USERNAME = 'masterhubmd';
 export const TELEGRAM_URL = `https://t.me/${TELEGRAM_USERNAME}`;
 
 /**
