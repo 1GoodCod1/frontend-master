@@ -46,8 +46,6 @@ export default defineConfig(({ mode }) => {
       srcDir: 'src',
       filename: 'sw.ts',
       injectManifest: {
-        // Отчёт анализатора (npm run CC) — не в precache
-        // Тяжёлые/редкие JS-чанки — runtime после первого визита (меньше ~ precache, офлайн-админка без предзагрузки)
         globIgnores: [
           '**/stats.html',
           '**/assets/AuditPage-*.js',
@@ -101,7 +99,6 @@ export default defineConfig(({ mode }) => {
     viteCompression({
       algorithm: 'gzip',
       threshold: 256,
-      // Plugin logger uses naive `dist/` replace — breaks on Windows absolute paths (dist/A:/...)
       verbose: false,
     }),
     viteCompression({
@@ -146,11 +143,9 @@ export default defineConfig(({ mode }) => {
     },
   },
   build: {
-    // Оптимизация для production build
     target: 'esnext',
     minify: 'esbuild',
     sourcemap: false,
-    // Strip console/debugger in production
     ...(mode !== 'development' && {
       esbuild: { drop: ['console', 'debugger'] },
     }),
