@@ -58,7 +58,7 @@ export default function HomePage() {
         <link
           rel="preload"
           as="image"
-          href={isDark ? '/images/hero-masters-dark.webp' : '/images/hero-masters.webp'}
+          href="/images/hero-masters-universal.webp"
           type="image/webp"
           fetchPriority="high"
         />

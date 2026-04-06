@@ -1,12 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { useIsDark } from '@/hooks/useIsDark';
 import OptimizedImage from '@/components/common/OptimizedImage';
 import { cn } from '@/lib/utils';
 import { HOW_IT_WORKS_STEPS } from '@/constants';
 
 export const HowItWorksSection = () => {
   const { t } = useTranslation();
-  const isDark = useIsDark();
 
   return (
     <div className="py-2">
@@ -29,11 +27,21 @@ export const HowItWorksSection = () => {
         </p>
       </div>
 
-      <div className="mx-auto mb-8 max-w-3xl">
+      <div
+        className={cn(
+          'mx-auto mb-8 max-w-3xl rounded-2xl overflow-hidden transition-colors duration-500',
+          /* light: без ring (не тянуть тёмную обводку), заметная тень */
+          'shadow-[0_12px_40px_-8px_rgba(15,23,42,0.14)] shadow-slate-900/12',
+          'ring-0',
+          'dark:shadow-[0_4px_32px_-4px_rgba(0,0,0,0.55)]',
+          'dark:ring-1 dark:ring-white/[0.08]',
+          'bg-muted/25 dark:bg-[#1b1709]/85',
+        )}
+      >
         <OptimizedImage
-          basePath={isDark ? '/images/how-it-works-dark' : '/images/how-it-works'}
+          basePath="/images/how-it-works-universal"
           alt=""
-          className="w-full h-auto rounded-2xl"
+          className="w-full h-auto block"
           loading="lazy"
           draggable={false}
         />

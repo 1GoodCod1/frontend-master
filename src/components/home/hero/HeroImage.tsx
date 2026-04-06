@@ -61,7 +61,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
             )}
           >
             <OptimizedImage
-              basePath={isDark ? '/images/hero-masters-dark' : '/images/hero-masters'}
+              basePath="/images/hero-masters-universal"
               alt=""
               className="w-full h-full object-contain object-bottom transition-opacity duration-500"
               loading="eager"
