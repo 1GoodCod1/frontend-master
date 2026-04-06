@@ -170,12 +170,24 @@ export default function SystemPage() {
                 <StatCard
                   title={t('admin.system.totalMemory')}
                   value={stats.system.memory.total}
-                  subtitle={`Used: ${stats.system.memory.used} | Free: ${stats.system.memory.free}`}
+                  subtitle={`Used: ${stats.system.memory.used} | Available: ${stats.system.memory.available ?? stats.system.memory.free}`}
                   progress={parseUsage(stats.system.memory.usage)}
                   color={parseUsage(stats.system.memory.usage) > 80 ? '#f44336' : isDark ? '#9e9e9e' : '#4A90E2'}
                   hover
                 />
                 <MemoryUsageChart data={stats.system.memory} />
+              </div>
+            </SectionCard>
+            <SectionCard title={`🗄️ ${t('admin.system.diskUsage')}`}>
+              <div className="space-y-4">
+                <StatCard
+                  title={t('admin.system.totalDisk')}
+                  value={stats.system.disk.total}
+                  subtitle={`Used: ${stats.system.disk.used} | Free: ${stats.system.disk.free}`}
+                  progress={parseUsage(stats.system.disk.usage)}
+                  color={parseUsage(stats.system.disk.usage) > 80 ? '#f44336' : isDark ? '#9e9e9e' : '#4A90E2'}
+                  hover
+                />
               </div>
             </SectionCard>
             <SectionCard title={`⚡ ${t('admin.system.cpuLoad')}`}>

@@ -28,6 +28,13 @@ export interface SystemStats {
       total: string;
       used: string;
       free: string;
+      available: string;
+      usage: string;
+    };
+    disk: {
+      total: string;
+      used: string;
+      free: string;
       usage: string;
     };
     cpu: {
@@ -69,10 +76,11 @@ function parseBytes(bytesStr: string): number {
 export function MemoryUsageChart({ data }: { data: SystemStats['system']['memory'] }) {
   const isDark = useIsDark();
   const used = parseBytes(data.used);
-  const free = parseBytes(data.free);
+  // prefer 'available' (MemAvailable from /proc/meminfo) over 'free' (MemFree)
+  const free = parseBytes(data.available ?? data.free);
   const chartData = [
     { name: 'Used', value: used, fill: isDark ? '#9e9e9e' : '#4A90E2' },
-    { name: 'Free', value: free, fill: isDark ? '#424242' : '#e0e0e0' },
+    { name: 'Available', value: free, fill: isDark ? '#424242' : '#e0e0e0' },
   ];
 
   return (
