@@ -147,24 +147,34 @@ export const adminApi = api.injectEndpoints({
       query: (params) => ({ url: '/admin/analytics', method: 'GET', params: params ?? {} }),
       providesTags: ['Analytics'],
     }),
-    adminCreateBackup: build.mutation<unknown, void>({
+    adminCreateBackup: build.mutation<{ success: boolean; filename: string; path: string; timestamp: string }, void>({
       query: () => ({ url: '/admin/backup', method: 'POST' }),
       invalidatesTags: ['Admin'],
-      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          dispatch(adminApi.util.invalidateTags(['Admin']));
-        } catch {
-          // ignore invalidation errors
-        }
+      transformResponse: (raw: unknown) => {
+        const r = raw && typeof raw === 'object' && 'data' in raw
+          ? (raw as { data?: unknown }).data
+          : raw;
+        return r as { success: boolean; filename: string; path: string; timestamp: string };
       },
     }),
-    adminListBackups: build.query<unknown, void>({
+    adminListBackups: build.query<Array<{ filename: string; size: string; modified: string }>, void>({
       query: () => ({ url: '/admin/backups', method: 'GET' }),
       providesTags: ['Admin'],
+      transformResponse: (raw: unknown) => {
+        const r = raw && typeof raw === 'object' && 'data' in raw
+          ? (raw as { data?: unknown }).data
+          : raw;
+        return Array.isArray(r) ? r : [];
+      },
     }),
-    adminSystemInfo: build.query<unknown, void>({
+    adminSystemInfo: build.query<{ stats: import('@/features/admin/components/system/SystemCharts').SystemStats; timestamp: string }, void>({
       query: () => ({ url: '/admin/system/info', method: 'GET' }),
+      transformResponse: (raw: unknown) => {
+        const r = raw && typeof raw === 'object' && 'data' in raw
+          ? (raw as { data?: unknown }).data
+          : raw;
+        return r as { stats: import('@/features/admin/components/system/SystemCharts').SystemStats; timestamp: string };
+      },
     }),
     adminReferralsEnabled: build.query<{ enabled: boolean }, void>({
       query: () => ({ url: '/admin/settings/referrals', method: 'GET' }),

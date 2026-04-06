@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { useIsDark } from '@/hooks/useIsDark';
 import { Badge } from '@/components/ui/badge';
 import { Button as ShadcnButton } from '@/components/ui/button';
-import { Card as ShadcnCard, CardContent as ShadcnCardContent } from '@/components/ui/card';
 import { StatCard } from '@/components/ui/StatCard';
 import {
   useAdminSystemInfoQuery,
@@ -44,34 +43,14 @@ export default function SystemPage() {
     pollingInterval: 30000, // Update backups every 30 seconds
   });
 
-  const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
-
-  // Извлекаем массив backup'ов из ответа
-  // API возвращает: { success: true, data: [...], timestamp, path }
-  const backupsList = (() => {
-    const raw = backups.data as unknown;
-    if (Array.isArray(raw)) return raw;
-    if (isRecord(raw) && Array.isArray(raw.data)) return raw.data;
-    return [];
-  })();
   const [createBackup, { isLoading: isCreatingBackup }] = useAdminCreateBackupMutation();
   const { data: referralsData } = useAdminReferralsEnabledQuery();
   const [setReferralsEnabled, { isLoading: isSavingReferrals }] = useAdminSetReferralsEnabledMutation();
   const referralsEnabled = referralsData?.enabled ?? false;
 
-  const infoRaw = info.data as unknown;
-  const infoObj = isRecord(infoRaw) ? infoRaw : undefined;
-  const infoPayload = infoObj && isRecord(infoObj.data) ? infoObj.data : infoObj;
-  const stats: SystemStats | undefined =
-    isRecord(infoPayload) && isRecord(infoPayload.stats)
-      ? (infoPayload.stats as unknown as SystemStats)
-      : undefined;
-  const lastUpdatedRaw =
-    (infoObj && (infoObj.timestamp ?? (isRecord(infoPayload) ? infoPayload.timestamp : undefined))) ?? undefined;
-  const lastUpdated =
-    typeof lastUpdatedRaw === 'string' || typeof lastUpdatedRaw === 'number'
-      ? new Date(lastUpdatedRaw)
-      : null;
+  const stats: SystemStats | undefined = info.data?.stats;
+  const backupsList = backups.data ?? [];
+  const lastUpdated = info.data?.timestamp ? new Date(info.data.timestamp) : null;
 
   const handleReferralsToggle = async (checked: boolean) => {
     try {
@@ -86,18 +65,6 @@ export default function SystemPage() {
     try {
       await createBackup().unwrap();
       toast.success(t('admin.system.backupCreated'));
-      
-      // Принудительно обновляем список backup'ов несколько раз
-      // Это гарантирует что новый backup появится в списке
-      const refetchBackups = () => {
-        backups.refetch();
-      };
-      
-      // Обновляем сразу и через небольшие задержки
-      refetchBackups();
-      setTimeout(refetchBackups, 500);
-      setTimeout(refetchBackups, 1500);
-      setTimeout(refetchBackups, 3000);
     } catch (e: unknown) {
       toast.error(toErrorMessage(e) ?? t('admin.system.createFailed'));
     }
@@ -169,7 +136,7 @@ export default function SystemPage() {
         </div>
       )}
 
-      {Boolean(infoObj) && (
+      {Boolean(info.data) && (
         <div className="mb-6">
           <Badge variant="secondary" className="gap-1.5 font-semibold">
             <span className="size-2 rounded-full bg-green-500 animate-pulse" />
@@ -179,30 +146,6 @@ export default function SystemPage() {
               : t('admin.system.justNow')}
           </Badge>
         </div>
-      )}
-
-      {!stats && Boolean(infoObj) && (
-        <ShadcnCard className="mb-6 border-amber-500/30 bg-amber-500/5">
-          <ShadcnCardContent className="pt-6 text-center">
-            <p className="font-semibold text-amber-600 dark:text-amber-400 mb-1">
-              ⚠️ {t('admin.system.systemDataNotAvailable')}
-            </p>
-            <p className="text-sm text-muted-foreground mb-2">
-              {t('admin.system.systemDataCouldNotLoad')}
-            </p>
-            <p className="text-xs text-muted-foreground mb-4">
-              Expected: info.data.stats, but got: {Object.keys(infoObj || {}).join(', ') || 'empty object'}
-            </p>
-            <ShadcnButton variant="outline" onClick={() => info.refetch()}>
-              {t('admin.system.retry')}
-            </ShadcnButton>
-            <div className="mt-4 max-h-[300px] overflow-auto text-left">
-              <pre className="text-xs text-muted-foreground">
-                {JSON.stringify(infoRaw, null, 2)}
-              </pre>
-            </div>
-          </ShadcnCardContent>
-        </ShadcnCard>
       )}
 
         {/* Database Stats Cards */}
@@ -318,22 +261,22 @@ export default function SystemPage() {
             <LoadingState />
           ) : backups.isError ? (
             <ErrorState error={backups.error} onRetry={backups.refetch} />
-          ) : Array.isArray(backupsList) && backupsList.length > 0 ? (
+          ) : backupsList.length > 0 ? (
             <div className="space-y-3">
-              {backupsList.map((backup: Record<string, unknown>, index: number) => (
+              {backupsList.map((backup, index) => (
                 <div
                   key={index}
                   className="p-4 rounded-lg border bg-card transition-colors hover:bg-muted/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
                 >
                   <div className="flex-1 min-w-0 space-y-0.5">
-                    <p className="font-semibold text-foreground">{String(backup.filename ?? '') || `Backup ${index + 1}`}</p>
+                    <p className="font-semibold text-foreground">{backup.filename || `Backup ${index + 1}`}</p>
                     <p className="text-xs text-muted-foreground">
-                      Created: {backup.created ? formatDateTimeString(backup.created as string | Date, locale) : backup.modified ? formatDateTimeString(backup.modified as string | Date, locale) : 'Unknown date'}
+                      Created: {backup.modified ? formatDateTimeString(backup.modified, locale) : 'Unknown date'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {backup.size != null && <Badge variant="secondary" className="text-xs">{String(backup.size)}</Badge>}
-                    <ShadcnButton variant="outline" size="sm" disabled={typeof backup.filename !== 'string'} onClick={() => typeof backup.filename === 'string' && handleDownloadBackup(backup.filename)}>
+                    {backup.size && <Badge variant="secondary" className="text-xs">{backup.size}</Badge>}
+                    <ShadcnButton variant="outline" size="sm" onClick={() => handleDownloadBackup(backup.filename)}>
                       {t('admin.system.download')}
                     </ShadcnButton>
                   </div>

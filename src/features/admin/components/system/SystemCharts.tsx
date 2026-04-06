@@ -51,17 +51,19 @@ export interface SystemStats {
 
 function parseBytes(bytesStr: string): number {
   if (!bytesStr) return 0;
-  const match = bytesStr.match(/^(\d+\.?\d*)\s*([KMGT]?B)$/);
+  // backend formatBytes uses 'Bytes' for sub-KB values, so match that too
+  const match = bytesStr.match(/^(\d+\.?\d*)\s*(Bytes?|[KMGT]B)$/i);
   if (!match) return 0;
   const [, value, unit] = match;
   const multipliers: Record<string, number> = {
-    B: 1,
+    byte: 1,
+    bytes: 1,
     KB: 1024,
     MB: 1024 ** 2,
     GB: 1024 ** 3,
     TB: 1024 ** 4,
   };
-  return parseFloat(value) * (multipliers[unit] || 1);
+  return parseFloat(value) * (multipliers[unit.toLowerCase()] ?? multipliers[unit] ?? 1);
 }
 
 export function MemoryUsageChart({ data }: { data: SystemStats['system']['memory'] }) {
