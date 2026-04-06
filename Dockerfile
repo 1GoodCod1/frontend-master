@@ -28,7 +28,7 @@ RUN npm run build
 FROM fholzer/nginx-brotli:latest AS production
 
 # Security: Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init curl
 
 # Security: Create non-root user for nginx
 RUN addgroup -g 1001 -S nginx-app && \
@@ -55,7 +55,7 @@ EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD wget -q -O /dev/null http://localhost/health || exit 1
+    CMD wget -q -O /dev/null http://127.0.0.1/health || exit 1
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
