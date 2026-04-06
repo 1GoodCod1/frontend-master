@@ -1,4 +1,5 @@
 import { api } from '@/services/api';
+import type { SystemStats } from '@/features/admin/components/system/SystemCharts';
 
 export type PagedQuery = { limit?: number; page?: number; cursor?: string };
 
@@ -167,13 +168,13 @@ export const adminApi = api.injectEndpoints({
         return Array.isArray(r) ? r : [];
       },
     }),
-    adminSystemInfo: build.query<{ stats: import('@/features/admin/components/system/SystemCharts').SystemStats; timestamp: string }, void>({
+    adminSystemInfo: build.query<{ stats: SystemStats; timestamp: string }, void>({
       query: () => ({ url: '/admin/system/info', method: 'GET' }),
       transformResponse: (raw: unknown) => {
         const r = raw && typeof raw === 'object' && 'data' in raw
           ? (raw as { data?: unknown }).data
           : raw;
-        return r as { stats: import('@/features/admin/components/system/SystemCharts').SystemStats; timestamp: string };
+        return r as { stats: SystemStats; timestamp: string };
       },
     }),
     adminReferralsEnabled: build.query<{ enabled: boolean }, void>({
