@@ -65,7 +65,7 @@ export function AppShellMain({
               <Outlet />
             </div>
           )}
-          <Footer />
+          {!isDashboardOrAdmin && <Footer />}
         </motion.main>
       )}
     </>

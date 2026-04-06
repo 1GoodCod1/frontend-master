@@ -66,6 +66,7 @@ export function HeroImage({ isDark, onlineMastersCount }: HeroImageProps) {
               className="w-full h-full object-contain object-bottom transition-opacity duration-500"
               loading="eager"
               fetchPriority="high"
+              decoding="sync"
               draggable={false}
             />
             <div
