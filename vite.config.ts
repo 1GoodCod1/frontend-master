@@ -36,8 +36,30 @@ function collectConnectSrcOrigins(mode: string): string {
 
 export default defineConfig(({ mode }) => {
   const connectSrc = `'self' ws: wss: ${collectConnectSrcOrigins(mode)}`;
+  const env = loadEnv(mode, process.cwd(), '');
   return {
   plugins: [
+    // Inject LCP preload with correct CDN URL at build time so the browser
+    // starts fetching the hero image during HTML parse, before JS executes.
+    {
+      name: 'lcp-preload',
+      transformIndexHtml() {
+        const cdnBase = (env.VITE_CDN_BASE_URL || '').replace(/\/+$/, '');
+        return [
+          {
+            tag: 'link',
+            attrs: {
+              rel: 'preload',
+              as: 'image',
+              href: `${cdnBase}/images/hero-masters-universal.webp`,
+              type: 'image/webp',
+              fetchpriority: 'high',
+            },
+            injectTo: 'head-prepend',
+          },
+        ];
+      },
+    },
     react(),
     tailwindcss(),
     VitePWA({
