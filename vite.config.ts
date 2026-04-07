@@ -55,7 +55,7 @@ export default defineConfig(({ mode }) => {
               type: 'image/webp',
               fetchpriority: 'high',
             },
-            injectTo: 'head-prepend',
+            injectTo: 'head-prepend' as const,
           },
         ];
       },
