@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Copy, Gift, ExternalLink, Share2, Users, CheckCircle, Clock } from 'lucide-react';
+import { Copy, Gift, Share2, Users, CheckCircle, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { LoadingState, ErrorState } from '@/components/common/States';
@@ -51,11 +51,6 @@ export default function ReferralPage() {
         toast.success(t('referrals.linkCopied'));
     };
 
-    const shareViaWhatsApp = () => {
-        const text = t('referrals.shareText', { link: referralLink });
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-    };
-
     return (
         <div className="mx-auto max-w-5xl px-4 py-8 md:px-6 lg:px-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <PageHeader
@@ -93,10 +88,6 @@ export default function ReferralPage() {
                             <Button onClick={copyToClipboard} className="flex-1 gap-2 font-semibold shadow-md bg-amber-600 hover:bg-amber-700 text-white">
                                 <Share2 className="size-4" />
                                 {t('referrals.copyButton')}
-                            </Button>
-                            <Button onClick={shareViaWhatsApp} variant="outline" className="flex-1 gap-2 border-[#25D366]/50 bg-[#25D366]/5 text-[#25D366] hover:bg-[#25D366]/10 hover:text-[#25D366]">
-                                <ExternalLink className="size-4" />
-                                WhatsApp
                             </Button>
                         </div>
                     </CardContent>

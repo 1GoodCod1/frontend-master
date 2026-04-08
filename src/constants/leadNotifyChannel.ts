@@ -3,8 +3,6 @@
  */
 export const LEAD_NOTIFY_CHANNEL = {
   TELEGRAM: 'TELEGRAM',
-  WHATSAPP: 'WHATSAPP',
-  BOTH: 'BOTH',
   NONE: 'NONE',
 } as const;
 
@@ -16,8 +14,6 @@ export type LeadNotifyChannel =
  */
 export const LEAD_NOTIFY_CHANNEL_INPUT = {
   telegram: 'telegram',
-  whatsapp: 'whatsapp',
-  both: 'both',
   none: 'none',
 } as const;
 

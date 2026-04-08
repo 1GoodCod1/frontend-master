@@ -2,9 +2,9 @@ export const notificationSettings = {
   en: {
     notificationSettings: {
       title: 'Notifications',
-      subtitle: 'Link Telegram and WhatsApp to receive alerts about new requests',
+      subtitle: 'Link Telegram to receive alerts about new requests',
       premiumRequired: 'Premium feature',
-      premiumRequiredDesc: 'Upgrade to VIP or PREMIUM to link Telegram and WhatsApp for instant notifications about new requests.',
+      premiumRequiredDesc: 'Upgrade to VIP or PREMIUM to link Telegram for instant notifications about new requests.',
       viewPlans: 'View plans',
 
       telegram: {
@@ -25,25 +25,10 @@ export const notificationSettings = {
         connectedToast: 'Telegram connected successfully!',
       },
 
-      whatsapp: {
-        title: 'WhatsApp',
-        description: 'Receive new request alerts in WhatsApp',
-        status: 'Status',
-        connected: 'Connected',
-        notConnected: 'Not connected',
-        phoneLabel: 'Phone number',
-        phonePlaceholder: 'e.g. +37369123456',
-        phoneHelp: 'International format with country code (e.g. +373 for Moldova)',
-        connect: 'Connect',
-        disconnect: 'Disconnect',
-      },
-
       leadChannel: {
         label: 'Channel for request notifications',
         description: 'SMS is always sent. Choose one additional channel for requests.',
-        telegram: 'Telegram only',
-        whatsapp: 'WhatsApp only',
-        both: 'Both (Telegram + WhatsApp)',
+        telegram: 'Telegram',
         none: 'SMS only',
       },
       tariffChannel: {
@@ -62,9 +47,9 @@ export const notificationSettings = {
   ru: {
     notificationSettings: {
       title: 'Уведомления',
-      subtitle: 'Привяжите Telegram и WhatsApp для получения уведомлений о новых заявках',
+      subtitle: 'Привяжите Telegram для получения уведомлений о новых заявках',
       premiumRequired: 'Премиум функция',
-      premiumRequiredDesc: 'Перейдите на тариф VIP или PREMIUM, чтобы привязать Telegram и WhatsApp для мгновенных уведомлений о новых заявках.',
+      premiumRequiredDesc: 'Перейдите на тариф VIP или PREMIUM, чтобы привязать Telegram для мгновенных уведомлений о новых заявках.',
       viewPlans: 'Смотреть тарифы',
 
       telegram: {
@@ -85,25 +70,10 @@ export const notificationSettings = {
         connectedToast: 'Telegram успешно подключён!',
       },
 
-      whatsapp: {
-        title: 'WhatsApp',
-        description: 'Получайте уведомления о новых заявках в WhatsApp',
-        status: 'Статус',
-        connected: 'Подключено',
-        notConnected: 'Не подключено',
-        phoneLabel: 'Номер телефона',
-        phonePlaceholder: 'например +37369123456',
-        phoneHelp: 'Международный формат с кодом страны (например +373 для Молдовы)',
-        connect: 'Подключить',
-        disconnect: 'Отключить',
-      },
-
       leadChannel: {
         label: 'Канал для уведомлений о заявках',
         description: 'SMS отправляется всегда. Выберите один дополнительный канал.',
-        telegram: 'Только Telegram',
-        whatsapp: 'Только WhatsApp',
-        both: 'Оба (Telegram + WhatsApp)',
+        telegram: 'Telegram',
         none: 'Только SMS',
       },
       tariffChannel: {
@@ -122,9 +92,9 @@ export const notificationSettings = {
   ro: {
     notificationSettings: {
       title: 'Notificări',
-      subtitle: 'Conectează Telegram și WhatsApp pentru a primi alerte despre cereri noi',
+      subtitle: 'Conectează Telegram pentru a primi alerte despre cereri noi',
       premiumRequired: 'Funcție premium',
-      premiumRequiredDesc: 'Actualizează la VIP sau PREMIUM pentru a conecta Telegram și WhatsApp pentru notificări instant despre cereri noi.',
+      premiumRequiredDesc: 'Actualizează la VIP sau PREMIUM pentru a conecta Telegram pentru notificări instant despre cereri noi.',
       viewPlans: 'Vezi planurile',
 
       telegram: {
@@ -145,25 +115,10 @@ export const notificationSettings = {
         connectedToast: 'Telegram conectat cu succes!',
       },
 
-      whatsapp: {
-        title: 'WhatsApp',
-        description: 'Primește alerte despre cereri noi în WhatsApp',
-        status: 'Status',
-        connected: 'Conectat',
-        notConnected: 'Neconectat',
-        phoneLabel: 'Număr de telefon',
-        phonePlaceholder: 'ex. +37369123456',
-        phoneHelp: 'Format internațional cu cod țării (ex. +373 pentru Moldova)',
-        connect: 'Conectează',
-        disconnect: 'Deconectează',
-      },
-
       leadChannel: {
         label: 'Canal pentru notificări despre cereri',
         description: 'SMS se trimite mereu. Alege un canal suplimentar.',
-        telegram: 'Doar Telegram',
-        whatsapp: 'Doar WhatsApp',
-        both: 'Ambele (Telegram + WhatsApp)',
+        telegram: 'Telegram',
         none: 'Doar SMS',
       },
       tariffChannel: {

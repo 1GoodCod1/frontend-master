@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
-import { MessageCircle, Send, ExternalLink } from 'lucide-react';
+import { MessageCircle, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -23,8 +22,6 @@ import { LEAD_NOTIFY_CHANNEL_INPUT } from '@/constants/leadNotifyChannel';
 const iconClass = 'size-5';
 const LEAD_CHANNEL_OPTIONS: LeadNotifyChannel[] = [
   LEAD_NOTIFY_CHANNEL_INPUT.telegram,
-  LEAD_NOTIFY_CHANNEL_INPUT.whatsapp,
-  LEAD_NOTIFY_CHANNEL_INPUT.both,
   LEAD_NOTIFY_CHANNEL_INPUT.none,
 ];
 const POLL_INTERVAL_MS = 3000;
@@ -99,7 +96,7 @@ export function NotificationChannelsForm() {
                 {t('notificationSettings.leadChannel.description')}
               </p>
               <Select
-                value={form.leadNotifyChannel ?? LEAD_NOTIFY_CHANNEL_INPUT.both}
+                value={form.leadNotifyChannel ?? LEAD_NOTIFY_CHANNEL_INPUT.telegram}
                 onValueChange={(v) => updateForm({ leadNotifyChannel: v as LeadNotifyChannel })}
               >
                 <SelectTrigger>
@@ -143,7 +140,7 @@ export function NotificationChannelsForm() {
           </div>
         </CardContent>
       </Card>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6">
         <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
           <CardContent className="p-6">
             <div className="mb-4 flex items-center gap-2">
@@ -187,38 +184,6 @@ export function NotificationChannelsForm() {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
-          <CardContent className="p-6">
-            <div className="mb-4 flex items-center gap-2">
-              <Send className={iconClass} />
-              <h2 className="text-lg font-semibold">{t('notificationSettings.whatsapp.title')}</h2>
-              <Badge
-                variant={settings.whatsappPhone ? 'default' : 'outline'}
-                className={settings.whatsappPhone ? 'bg-emerald-600 hover:bg-emerald-600/80 text-white' : 'text-muted-foreground'}
-              >
-                {settings.whatsappPhone
-                  ? t('notificationSettings.whatsapp.connected')
-                  : t('notificationSettings.whatsapp.notConnected')}
-              </Badge>
-            </div>
-            <p className="mb-4 text-sm text-muted-foreground">
-              {t('notificationSettings.whatsapp.description')}
-            </p>
-            <div className="space-y-2">
-              <Label htmlFor="whatsappPhone">{t('notificationSettings.whatsapp.phoneLabel')}</Label>
-              <Input
-                id="whatsappPhone"
-                value={form.whatsappPhone ?? ''}
-                onChange={(e) => updateForm({ whatsappPhone: e.target.value || null })}
-                placeholder={t('notificationSettings.whatsapp.phonePlaceholder')}
-                disabled={!isPremium}
-              />
-              <p className="text-xs text-muted-foreground">
-                {t('notificationSettings.whatsapp.phoneHelp')}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <Button onClick={handleSave} disabled={isSaving}>

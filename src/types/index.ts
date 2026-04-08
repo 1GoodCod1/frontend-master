@@ -67,7 +67,6 @@ export type UpdateMasterDto = {
   categoryId?: string;
   experienceYears?: number;
   telegramChatId?: string;
-  whatsappPhone?: string;
   services?: MasterServiceItem[];
 };
 
@@ -75,7 +74,6 @@ export type LeadNotifyChannel = LeadNotifyChannelInput;
 
 export type UpdateNotificationSettingsDto = {
   telegramChatId?: string | null;
-  whatsappPhone?: string | null;
   leadNotifyChannel?: LeadNotifyChannel | null;
   notifyTariffSms?: boolean;
   notifyTariffInApp?: boolean;
@@ -83,7 +81,6 @@ export type UpdateNotificationSettingsDto = {
 
 export type NotificationSettings = {
   telegramChatId: string | null;
-  whatsappPhone: string | null;
   leadNotifyChannel: string | null;
   notifyTariffSms: boolean;
   notifyTariffInApp: boolean;

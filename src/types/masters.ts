@@ -177,7 +177,6 @@ export type MasterPrivateProfileResponse = {
   maxActiveLeads?: number;
   currentActiveLeads?: number;
   telegramChatId?: string | null;
-  whatsappPhone?: string | null;
   workStartHour?: number;
   workEndHour?: number;
   autoresponderEnabled?: boolean;

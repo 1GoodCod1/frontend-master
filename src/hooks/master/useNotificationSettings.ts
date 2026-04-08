@@ -22,18 +22,16 @@ export function useNotificationSettings() {
 
   const settings = data ?? {
     telegramChatId: null,
-    whatsappPhone: null,
-    leadNotifyChannel: 'both',
+    leadNotifyChannel: 'telegram',
     notifyTariffSms: true,
     notifyTariffInApp: true,
   };
 
   const [form, setForm] = useState<UpdateNotificationSettingsDto>({
     telegramChatId: settings.telegramChatId ?? null,
-    whatsappPhone: settings.whatsappPhone ?? null,
     leadNotifyChannel:
       (settings.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ??
-      LEAD_NOTIFY_CHANNEL_INPUT.both,
+      LEAD_NOTIFY_CHANNEL_INPUT.telegram,
     notifyTariffSms: settings.notifyTariffSms ?? true,
     notifyTariffInApp: settings.notifyTariffInApp ?? true,
   });
@@ -43,10 +41,9 @@ export function useNotificationSettings() {
     queueMicrotask(() => {
       setForm({
         telegramChatId: data.telegramChatId ?? null,
-        whatsappPhone: data.whatsappPhone ?? null,
         leadNotifyChannel:
           (data.leadNotifyChannel as UpdateNotificationSettingsDto['leadNotifyChannel']) ??
-          LEAD_NOTIFY_CHANNEL_INPUT.both,
+          LEAD_NOTIFY_CHANNEL_INPUT.telegram,
         notifyTariffSms: data.notifyTariffSms ?? true,
         notifyTariffInApp: data.notifyTariffInApp ?? true,
       });
