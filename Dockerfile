@@ -21,15 +21,8 @@ RUN --mount=type=cache,target=/root/.npm \
 # Copy source code
 COPY . .
 
-# Build application
-RUN npm run build
-
-# Prerender static HTML for SEO (Googlebot sees rendered content)
-# Alpine uses apk, not apt — install system chromium and point Playwright to it
-RUN apk add --no-cache chromium nss freetype harfbuzz ca-certificates ttf-freefont
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
-RUN npm run prerender
+# Use pre-built dist from CI if available (includes prerendered HTML), otherwise build
+RUN [ -d "dist/assets" ] && echo "Using pre-built dist from CI" || npm run build
 
 # Production stage with Nginx (brotli module included)
 FROM fholzer/nginx-brotli:latest AS production
