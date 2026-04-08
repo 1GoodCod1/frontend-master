@@ -59,7 +59,7 @@ export function SEOHead({
 
             {/* Open Graph */}
             <meta property="og:title" content={fullTitle} />
-            <meta property="og:description" content={description} />
+            <meta property="og:description" content={resolvedDescription} />
             <meta property="og:type" content={ogType} />
             <meta property="og:image" content={absoluteOgImage} />
             <meta property="og:site_name" content={BASE_TITLE} />
