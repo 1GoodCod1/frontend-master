@@ -24,6 +24,9 @@ COPY . .
 # Build application
 RUN npm run build
 
+# Prerender static HTML for SEO (Googlebot sees rendered content)
+RUN npx playwright install --with-deps chromium && npm run prerender
+
 # Production stage with Nginx (brotli module included)
 FROM fholzer/nginx-brotli:latest AS production
 

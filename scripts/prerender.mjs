@@ -18,6 +18,8 @@ const routesToPrerender = [
     '/faq',
     '/how-it-works',
     '/contact',
+    '/privacy',
+    '/terms',
     '/login',
     '/register',
 ];
