@@ -47,11 +47,26 @@ void loadExtendedTranslations()
   // Collect Core Web Vitals (CLS, INP, LCP, FCP, TTFB)
   reportWebVitals();
 
-  registerSW({
+  const updateSW = registerSW({
     immediate: true,
     onOfflineReady() {
       console.warn('App ready to work offline');
     },
+    onRegisteredSW(_url, registration) {
+      if (registration) {
+        setInterval(() => { registration.update(); }, 60 * 1000);
+      }
+    },
+    onNeedRefresh() {
+      updateSW(true);
+    },
+  });
+
+  let swRefreshing = false;
+  navigator.serviceWorker?.addEventListener('controllerchange', () => {
+    if (swRefreshing) return;
+    swRefreshing = true;
+    window.location.reload();
   });
   })
   .catch((err) => {

@@ -1,10 +1,11 @@
-import { useState, useRef, useCallback, useEffect, lazy, Suspense, KeyboardEvent } from 'react';
+import { useState, useRef, useCallback, useEffect, Suspense, KeyboardEvent } from 'react';
+import { lazyWithRetry } from '@/utils/lazyWithRetry';
 import { Send, Paperclip, X, Smile } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import type { EmojiClickData } from 'emoji-picker-react';
 
-const LazyEmojiPicker = lazy(() => import('emoji-picker-react'));
+const LazyEmojiPicker = lazyWithRetry(() => import('emoji-picker-react'));
 const THEME_DARK = 'dark' as unknown as import('emoji-picker-react').Theme;
 const THEME_LIGHT = 'light' as unknown as import('emoji-picker-react').Theme;
 import { Button } from '@/components/ui/button';

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   useRouteError,
   isRouteErrorResponse,
@@ -7,12 +8,22 @@ import { useTranslation } from 'react-i18next';
 import { RefreshCw, Home, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+const RELOAD_KEY = 'chunk-reload-ts';
+const RELOAD_COOLDOWN_MS = 10_000;
+
+function isChunkError(message: string): boolean {
+  return (
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Importing a module script failed') ||
+    message.includes('error loading dynamically imported module') ||
+    message.includes('ChunkLoadError')
+  );
+}
+
 export function RouteErrorBoundary() {
   const error = useRouteError();
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  console.error('Route Error:', error);
 
   let errorMessage = t('common.errors.unexpected');
 
@@ -22,9 +33,17 @@ export function RouteErrorBoundary() {
     errorMessage = error.message;
   }
 
-  const isChunkError =
-    errorMessage.includes('Failed to fetch dynamically imported module') ||
-    errorMessage.includes('ChunkLoadError');
+  const chunkError = isChunkError(errorMessage) ||
+    (error instanceof Error && error.name === 'ChunkLoadError');
+
+  useEffect(() => {
+    if (!chunkError) return;
+    const lastReload = Number(sessionStorage.getItem(RELOAD_KEY) || 0);
+    if (Date.now() - lastReload > RELOAD_COOLDOWN_MS) {
+      sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
+      window.location.reload();
+    }
+  }, [chunkError]);
 
   const handleReload = () => {
     window.location.reload();
@@ -42,16 +61,16 @@ export function RouteErrorBoundary() {
         </div>
 
         <h1 className="mb-2 text-2xl font-extrabold">
-          {isChunkError
+          {chunkError
             ? t('common.errors.updateTitle')
             : t('common.errors.errorOccurred')}
         </h1>
 
         <p className="mb-6 text-muted-foreground">
-          {isChunkError ? t('common.errors.updateMessage') : errorMessage}
+          {chunkError ? t('common.errors.updateMessage') : errorMessage}
         </p>
 
-        {isChunkError && (
+        {chunkError && (
           <p className="mb-6 text-xs italic opacity-70">{errorMessage}</p>
         )}
 

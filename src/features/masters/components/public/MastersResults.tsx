@@ -1,4 +1,5 @@
-import { lazy, Suspense, useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
+import { lazyWithRetry } from '@/utils/lazyWithRetry';
 import { useTranslation } from 'react-i18next';
 import { VirtuosoGrid } from 'react-virtuoso';
 import {
@@ -10,7 +11,7 @@ import { MasterCard } from '@/components/ui/MasterCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import type { PublicMaster } from '@/types';
 
-const MastersMap = lazy(() =>
+const MastersMap = lazyWithRetry(() =>
   import('@/features/masters/components/MastersMap').then((m) => ({
     default: m.MastersMap,
   })),

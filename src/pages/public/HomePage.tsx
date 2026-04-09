@@ -1,4 +1,5 @@
-import { useEffect, lazy, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
+import { lazyWithRetry } from '@/utils/lazyWithRetry';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
@@ -12,13 +13,13 @@ import { POPULAR_MASTERS_HOME_LIMIT } from '@/constants/home';
 import { Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const MastersGridSection = lazy(() =>
+const MastersGridSection = lazyWithRetry(() =>
   import('@/components/home/MastersGridSection').then((m) => ({ default: m.MastersGridSection }))
 );
-const PopularCategoriesSection = lazy(() =>
+const PopularCategoriesSection = lazyWithRetry(() =>
   import('@/components/home/PopularCategoriesSection').then((m) => ({ default: m.PopularCategoriesSection }))
 );
-const HowItWorksSection = lazy(() =>
+const HowItWorksSection = lazyWithRetry(() =>
   import('@/components/home/HowItWorksSection').then((m) => ({ default: m.HowItWorksSection }))
 );
 
