@@ -28,6 +28,11 @@ export const files = {
         'Photo limit reached ({{current}}/{{limit}}). Upgrade your plan to add more photos.',
       uploadDisabledVerification:
         'Verify your account to add photos to gallery.',
+      selectedCount: '{{count}} file(s) selected',
+      uploadAllButton: 'Upload {{count}} file(s)',
+      invalidType: 'Invalid file type',
+      tooLarge: 'File is too large (max 10 MB)',
+      tooMany: 'Too many files selected',
     },
   },
   ru: {
@@ -59,6 +64,11 @@ export const files = {
         'Лимит фото достигнут ({{current}}/{{limit}}). Обновите тариф, чтобы добавить больше фото.',
       uploadDisabledVerification:
         'Верифицируйте аккаунт, чтобы добавлять фото в галерею.',
+      selectedCount: 'Выбрано файлов: {{count}}',
+      uploadAllButton: 'Загрузить {{count}} файл(ов)',
+      invalidType: 'Неверный формат файла',
+      tooLarge: 'Файл слишком большой (макс. 10 МБ)',
+      tooMany: 'Слишком много файлов',
     },
   },
   ro: {
@@ -90,6 +100,11 @@ export const files = {
         'Limita de fotografii atinsă ({{current}}/{{limit}}). Actualizează planul pentru a adăuga mai multe fotografii.',
       uploadDisabledVerification:
         'Verificați contul pentru a adăuga fotografii în galerie.',
+      selectedCount: '{{count}} fișier(e) selectat(e)',
+      uploadAllButton: 'Încarcă {{count}} fișier(e)',
+      invalidType: 'Tip de fișier invalid',
+      tooLarge: 'Fișierul este prea mare (max 10 MB)',
+      tooMany: 'Prea multe fișiere selectate',
     },
   },
 };
