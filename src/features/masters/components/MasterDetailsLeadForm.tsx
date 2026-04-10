@@ -27,7 +27,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { RequestSubmissionState as LeadSubmissionState } from '@/hooks/requests';
-import { partitionLeadImageFiles } from '@/utils/leadImageUpload';
+import { validateImageFiles } from '@/utils/validateFile';
 import { toErrorMessage } from '@/utils/errors';
 import { USER_ROLE } from '@/constants/roles';
 import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
@@ -63,6 +63,7 @@ export const MasterDetailsLeadForm = ({
   const { attach, setAttach, handleSendLead, isLoading: isSubmitting, submittedLeadId } = leadSubmission;
 
   const [message, setMessage] = useState('');
+  const [attachPreviews, setAttachPreviews] = useState<string[]>([]);
 
   const userId = useAppSelector((state) => state.auth.me?.id ?? '');
   const { data: activeLeadData } = useLeadsActiveToMasterQuery(
@@ -352,25 +353,21 @@ export const MasterDetailsLeadForm = ({
               className="hidden"
               onChange={(e) => {
                 const list = Array.from(e.target.files ?? []);
-                const { accepted, rejected } = partitionLeadImageFiles(list);
-                if (rejected > 0) {
-                  toast.error(t('masterDetails.imagesOnlyError'));
-                }
-                if (accepted.length === 0) {
-                  e.target.value = '';
-                  return;
-                }
-                const remaining = 10 - attach.length;
-                if (remaining <= 0) {
-                  toast.error(t('masterDetails.maxFilesError', 'Maximum 10 files allowed'));
-                  e.target.value = '';
-                  return;
-                }
-                if (accepted.length > remaining) {
-                  toast(t('masterDetails.filesLimitWarning', { count: remaining }), { icon: '⚠️', duration: 4000 });
-                }
-                setAttach([...attach, ...accepted.slice(0, remaining)]);
                 e.target.value = '';
+                if (list.length === 0) return;
+
+                const remaining = 10 - attach.length;
+                const { valid, errors } = validateImageFiles(list, remaining);
+
+                if (errors.length > 0) {
+                  const msgs = [...new Set(errors)].map((k) => t(k));
+                  toast.error(msgs.join('. '));
+                }
+                if (valid.length === 0) return;
+
+                const newPreviews = valid.map((f) => URL.createObjectURL(f));
+                setAttach([...attach, ...valid]);
+                setAttachPreviews((prev) => [...prev, ...newPreviews]);
               }}
             />
           </label>
@@ -387,14 +384,23 @@ export const MasterDetailsLeadForm = ({
                   key={index}
                   className="flex items-center justify-between gap-2 rounded-lg border border-[#f5f4eb] dark:border-white/10 bg-white dark:bg-white/5 px-3 py-2"
                 >
-                  <span className="text-sm font-medium truncate">{file.name}</span>
+                  {attachPreviews[index] && (
+                    <img src={attachPreviews[index]} alt="" className="size-8 shrink-0 rounded object-cover" />
+                  )}
+                  <span className="text-sm font-medium truncate flex-1">{file.name}</span>
                   <span className="text-xs text-muted-foreground shrink-0">{(file.size / 1024).toFixed(1)} KB</span>
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 shrink-0 text-muted-foreground"
-                    onClick={() => setAttach(attach.filter((_, i) => i !== index))}
+                    onClick={() => {
+                      if (attachPreviews[index]) {
+                        try { URL.revokeObjectURL(attachPreviews[index]); } catch { /* noop */ }
+                      }
+                      setAttach(attach.filter((_, i) => i !== index));
+                      setAttachPreviews((prev) => prev.filter((_, i) => i !== index));
+                    }}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

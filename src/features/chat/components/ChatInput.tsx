@@ -25,6 +25,8 @@ import { useFilesUploadManyMutation } from '@/features/files/filesApi';
 import { TYPING_DEBOUNCE_MS, MAX_ATTACH_FILES } from '@/features/chat/constants';
 import type { ChatInputProps } from '@/types/chat';
 import { isRecord } from '@/utils/guards';
+import { validateChatFiles } from '@/utils/validateFile';
+import { toErrorMessage } from '@/utils/errors';
 
 export default function ChatInput({
   onSend,
@@ -39,6 +41,7 @@ export default function ChatInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [previews, setPreviews] = useState<string[]>([]);
   const [uploadFiles, { isLoading: isUploading }] = useFilesUploadManyMutation();
   const [emojiPopoverOpen, setEmojiPopoverOpen] = useState(false);
 
@@ -94,19 +97,15 @@ export default function ChatInput({
           return;
         }
       } catch (err) {
-        const errObj = err && typeof err === 'object' ? (err as Record<string, unknown>) : null;
-        const data = errObj?.data;
-        const msg =
-          data && typeof data === 'object' && data !== null && 'message' in data
-            ? String((data as { message?: unknown }).message ?? t('common.uploadFailed'))
-            : t('common.uploadFailed');
-        toast.error(msg);
+        toast.error(toErrorMessage(err) ?? t('common.uploadFailed'));
         return;
       }
     }
 
     onSend(trimmed, fileIds.length > 0 ? fileIds : undefined);
     setMessage('');
+    previews.forEach((u) => { try { URL.revokeObjectURL(u); } catch { /* noop */ } });
+    setPreviews([]);
     setFiles([]);
     setUploadedFileIds([]);
 
@@ -128,14 +127,32 @@ export default function ChatInput({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files ?? []);
-    if (selectedFiles.length > 0) {
-      setFiles((prev) => [...prev, ...selectedFiles].slice(0, MAX_ATTACH_FILES));
-    }
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (selectedFiles.length === 0) return;
+
+    const remaining = MAX_ATTACH_FILES - files.length;
+    const { valid, errors } = validateChatFiles(selectedFiles, remaining);
+    if (errors.length > 0) {
+      const msgs = [...new Set(errors)].map((k) => t(k));
+      toast.error(msgs.join('. '));
+    }
+    if (valid.length === 0) return;
+
+    const newPreviews = valid
+      .filter((f) => f.type.startsWith('image/'))
+      .map((f) => URL.createObjectURL(f));
+
+    setFiles((prev) => [...prev, ...valid]);
+    setPreviews((prev) => [...prev, ...newPreviews]);
   };
 
   const removeFile = (index: number) => {
+    const file = files[index];
+    if (file?.type.startsWith('image/') && previews[index]) {
+      try { URL.revokeObjectURL(previews[index]); } catch { /* noop */ }
+    }
     setFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const canSend = !disabled && !isUploading && (message.trim().length > 0 || files.length > 0);
@@ -154,6 +171,9 @@ export default function ChatInput({
               key={`${file.name}-${index}`}
               className="inline-flex max-w-[160px] sm:max-w-[200px] items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[11px] sm:text-xs"
             >
+              {previews[index] && (
+                <img src={previews[index]} alt="" className="size-6 shrink-0 rounded object-cover" />
+              )}
               <span className="truncate">
                 {file.name.length > 20 ? `${file.name.slice(0, 17)}...` : file.name}
               </span>

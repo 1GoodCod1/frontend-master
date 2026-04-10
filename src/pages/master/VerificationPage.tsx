@@ -17,6 +17,8 @@ import { useAuthMeQuery } from '@/features/auth/authApi';
 import { formatDateTimeLong, getLocaleFromLanguage } from '@/utils/date';
 import { mediaUrl } from '@/utils/media';
 import { UnsavedChangesPrompt } from '@/hooks/useUnsavedChangesPrompt';
+import { validateImageFile } from '@/utils/validateFile';
+import { toErrorMessage } from '@/utils/errors';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -102,17 +104,23 @@ export default function VerificationPage() {
     setPreview: (url: string) => void,
     setFileId: (id: string) => void
   ) => {
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      toast.error(t(validationError));
+      return;
+    }
+
+    setPreview(URL.createObjectURL(file));
+
     try {
       const result = await uploadFile({ file }).unwrap();
-      const fileData = (result as { data?: { id?: string; fileId?: string; url?: string; path?: string }; id?: string; url?: string; path?: string })?.data ?? result;
+      const fileData = (result as { data?: { id?: string; fileId?: string }; id?: string })?.data ?? result;
       const fileId = fileData?.id ?? (fileData as { fileId?: string })?.fileId ?? '';
       setFileId(fileId);
-      const url = (fileData as { url?: string })?.url ?? (fileData as { path?: string })?.path ?? '';
-      setPreview(url);
       toast.success(t('verification.fileUploaded'));
     } catch (err: unknown) {
-      const msg = err && typeof err === 'object' && 'data' in err && (err as { data?: { message?: string } }).data?.message;
-      toast.error((msg as string) || t('verification.fileUploadError'));
+      setPreview('');
+      toast.error(toErrorMessage(err) ?? t('verification.fileUploadError'));
     }
   };
 
@@ -346,10 +354,7 @@ export default function VerificationPage() {
                 toast.success(t('verification.submitted'));
                 await statusQuery.refetch();
               } catch (err: unknown) {
-                const msg =
-                  err && typeof err === 'object' && 'data' in err && (err as { data?: { message?: string } }).data?.message;
-                const fallback = err instanceof Error ? err.message : t('verification.submitError');
-                toast.error((msg as string) || fallback);
+                toast.error(toErrorMessage(err) ?? t('verification.submitError'));
               }
             }}
           >
@@ -398,7 +403,7 @@ export default function VerificationPage() {
                       {documentFrontPreview && (
                         <div className="size-24 overflow-hidden rounded-md border border-slate-200 dark:border-white/[0.08]">
                           <img
-                            src={documentFrontPreview.startsWith('http') ? documentFrontPreview : mediaUrl(documentFrontPreview)}
+                            src={documentFrontPreview.startsWith('blob:') || documentFrontPreview.startsWith('http') ? documentFrontPreview : mediaUrl(documentFrontPreview)}
                             alt="Document front"
                             className="size-full object-cover"
                           />
@@ -433,7 +438,7 @@ export default function VerificationPage() {
                       {documentBackPreview && (
                         <div className="size-24 overflow-hidden rounded-md border border-slate-200 dark:border-white/[0.08]">
                           <img
-                            src={documentBackPreview.startsWith('http') ? documentBackPreview : mediaUrl(documentBackPreview)}
+                            src={documentBackPreview.startsWith('blob:') || documentBackPreview.startsWith('http') ? documentBackPreview : mediaUrl(documentBackPreview)}
                             alt="Document back"
                             className="size-full object-cover"
                           />
@@ -465,7 +470,7 @@ export default function VerificationPage() {
                       {selfiePreview && (
                         <div className="size-24 overflow-hidden rounded-md border border-slate-200 dark:border-white/[0.08]">
                           <img
-                            src={selfiePreview.startsWith('http') ? selfiePreview : mediaUrl(selfiePreview)}
+                            src={selfiePreview.startsWith('blob:') || selfiePreview.startsWith('http') ? selfiePreview : mediaUrl(selfiePreview)}
                             alt="Selfie"
                             className="size-full object-cover"
                           />

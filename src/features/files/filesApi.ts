@@ -1,20 +1,20 @@
 import { api } from '@/services/api';
 import type { FileDto } from '@/types';
 import { unwrapEnvelope } from '@/utils/data';
+import { compressImage, compressImages } from '@/utils/compressImage';
 
 export type UploadManyResponse = { items: FileDto[] };
 
 export const filesApi = api.injectEndpoints({
   endpoints: (build) => ({
     filesUpload: build.mutation<FileDto, { file: File }>({
-      query: ({ file }) => {
+      async queryFn({ file }, _api, _extra, baseQuery) {
+        const compressed = await compressImage(file);
         const fd = new FormData();
-        fd.append('file', file);
-        return { 
-          url: '/files/upload', 
-          method: 'POST', 
-          data: fd,
-        };
+        fd.append('file', compressed);
+        const result = await baseQuery({ url: '/files/upload', method: 'POST', data: fd });
+        if (result.error) return { error: result.error };
+        return { data: result.data as FileDto };
       },
       invalidatesTags: ['Files', 'Me'],
     }),
@@ -22,24 +22,20 @@ export const filesApi = api.injectEndpoints({
       UploadManyResponse,
       { files: File[]; forLead?: boolean }
     >({
-      query: ({ files, forLead }) => {
+      async queryFn({ files, forLead }, _api, _extra, baseQuery) {
+        const compressed = await compressImages(files);
         const fd = new FormData();
-        files.forEach((f) => fd.append('files', f));
+        compressed.forEach((f) => fd.append('files', f));
         const url =
           forLead === true
             ? '/files/upload-many?forLead=true'
             : '/files/upload-many';
-        return {
-          url,
-          method: 'POST',
-          data: fd,
-        };
-      },
-      transformResponse: (raw: unknown): UploadManyResponse => {
-        const inner = unwrapEnvelope(raw);
+        const result = await baseQuery({ url, method: 'POST', data: fd });
+        if (result.error) return { error: result.error };
+        const inner = unwrapEnvelope(result.data);
         const obj = inner && typeof inner === 'object' ? (inner as Record<string, unknown>) : {};
         const items = Array.isArray(obj.items) ? obj.items : [];
-        return { items: items as FileDto[] };
+        return { data: { items: items as FileDto[] } };
       },
       invalidatesTags: ['Files'],
     }),

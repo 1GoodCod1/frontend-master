@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { Star, MessageSquare, Paperclip, Trash2, CornerDownRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { cn } from '@/lib/utils';
 import type { ReviewCanCreateResponse } from '@/types/reviews';
 import { useReviewReplyMutation, useReviewDeleteReplyMutation } from '@/features/reviews/reviewsApi';
+import { validateImageFiles } from '@/utils/validateFile';
 
 type ReviewFile = { id?: string; file?: { path?: string; url?: string } };
 
@@ -274,10 +276,15 @@ export const MasterDetailsReviews = ({
                         className="hidden"
                         onChange={(e) => {
                           const list = Array.from(e.target.files ?? []);
-                          const left = 5 - reviewPhotos.length;
-                          if (left <= 0) return;
-                          setReviewPhotos((p) => [...p, ...list.slice(0, left)]);
                           e.target.value = '';
+                          const remaining = 5 - reviewPhotos.length;
+                          const { valid, errors } = validateImageFiles(list, remaining);
+                          if (errors.length > 0) {
+                            const msgs = [...new Set(errors)].map((k) => t(k));
+                            toast.error(msgs.join('. '));
+                          }
+                          if (valid.length === 0) return;
+                          setReviewPhotos((p) => [...p, ...valid]);
                         }}
                       />
                     </label>

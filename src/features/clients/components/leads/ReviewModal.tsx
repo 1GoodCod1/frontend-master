@@ -1,5 +1,6 @@
 import { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { Star, Paperclip, Trash2, MessageSquarePlus } from 'lucide-react';
 import {
   Dialog,
@@ -13,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { validateImageFiles } from '@/utils/validateFile';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -47,10 +49,15 @@ export default function ReviewModal({
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const list = Array.from(e.target.files ?? []);
-    const left = 5 - photos.length;
-    if (left <= 0) return;
-    onPhotosChange([...photos, ...list.slice(0, left)]);
     e.target.value = '';
+    const remaining = 5 - photos.length;
+    const { valid, errors } = validateImageFiles(list, remaining);
+    if (errors.length > 0) {
+      const msgs = [...new Set(errors)].map((k) => t(k));
+      toast.error(msgs.join('. '));
+    }
+    if (valid.length === 0) return;
+    onPhotosChange([...photos, ...valid]);
   };
 
   const handleRemovePhoto = (index: number) => {

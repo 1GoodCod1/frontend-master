@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { toErrorMessage } from '@/utils/errors';
 import { isRecord } from '@/utils/guards';
+import { validateImageFile } from '@/utils/validateFile';
 
 const CLIENT_PHOTO_LIMIT = 1;
 
@@ -43,7 +44,7 @@ export function useClientProfile() {
   const avatarFileFromUser = isRecord(user) && isRecord(user.avatarFile) ? user.avatarFile : null;
   const avatarFileId = (avatarFileFromUser?.id as string) || photos.data?.avatarFileId || null;
 
-  const photoItems = Array.isArray(photos.data?.items) ? photos.data.items : [];
+  const photoItems = Array.isArray(photos.data?.items) ? photos.data!.items : [];
 
   type PhotoItem = { id?: string; path?: string };
   const avatarFile = avatarFileFromUser ?? (photoItems.find((p: PhotoItem) => p.id === avatarFileId) ?? null);
@@ -60,21 +61,12 @@ export function useClientProfile() {
       e.target.value = '';
       return;
     }
-    // Проверка типа файла
-    if (!file.type.startsWith('image/')) {
-      toast.error(t('clientProfile.invalidFileType'));
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      toast.error(t(validationError));
       e.target.value = '';
       return;
     }
-
-    // Проверка размера (макс 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error(t('clientProfile.fileTooLarge'));
-      e.target.value = '';
-      return;
-    }
-
-
 
     try {
       // 1. Capture old ID BEFORE doing anything
