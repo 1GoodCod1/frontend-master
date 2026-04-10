@@ -7,6 +7,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { RefreshCw, Home, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { isChunkError as isChunkErr } from '@/utils/lazyWithRetry';
 
 const RELOAD_KEY = 'chunk-reload-ts';
 const RELOAD_COOLDOWN_MS = 10_000;
@@ -18,6 +19,18 @@ function isChunkError(message: string): boolean {
     message.includes('error loading dynamically imported module') ||
     message.includes('ChunkLoadError')
   );
+}
+
+async function purgeAndReload(): Promise<void> {
+  try {
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    }
+  } catch {
+    // best-effort
+  }
+  window.location.reload();
 }
 
 export function RouteErrorBoundary() {
@@ -33,20 +46,19 @@ export function RouteErrorBoundary() {
     errorMessage = error.message;
   }
 
-  const chunkError = isChunkError(errorMessage) ||
-    (error instanceof Error && error.name === 'ChunkLoadError');
+  const chunkError = isChunkError(errorMessage) || isChunkErr(error);
 
   useEffect(() => {
     if (!chunkError) return;
     const lastReload = Number(sessionStorage.getItem(RELOAD_KEY) || 0);
     if (Date.now() - lastReload > RELOAD_COOLDOWN_MS) {
       sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
-      window.location.reload();
+      void purgeAndReload();
     }
   }, [chunkError]);
 
   const handleReload = () => {
-    window.location.reload();
+    void purgeAndReload();
   };
 
   const handleGoHome = () => {
