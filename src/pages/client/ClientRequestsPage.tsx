@@ -20,6 +20,8 @@ export default function ClientRequestsPage() {
     rating,
     comment,
     photos,
+    criteriaRatings,
+    setCriterionRating,
     submittedMasterIds,
     isLoading: isReviewSubmitting,
     openModal: openReviewModal,
@@ -78,11 +80,13 @@ export default function ClientRequestsPage() {
         rating={rating}
         comment={comment}
         photos={photos}
+        criteriaRatings={criteriaRatings}
         isLoading={isReviewSubmitting}
         onClose={closeReviewModal}
         onRatingChange={setRating}
         onCommentChange={setComment}
         onPhotosChange={setPhotos}
+        onCriterionChange={setCriterionRating}
         onSubmit={submitReview}
       />
     </div>

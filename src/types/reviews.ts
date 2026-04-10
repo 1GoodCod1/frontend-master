@@ -1,3 +1,12 @@
+export const REVIEW_CRITERIA_KEYS = ['quality', 'speed', 'price', 'politeness'] as const;
+export type ReviewCriteriaKey = (typeof REVIEW_CRITERIA_KEYS)[number];
+
+export type CriteriaRatings = Record<ReviewCriteriaKey, number>;
+
+export function createDefaultCriteriaRatings(): CriteriaRatings {
+  return { quality: 0, speed: 0, price: 0, politeness: 0 };
+}
+
 export const REVIEW_STATUS_OPTIONS = ['PENDING', 'VISIBLE', 'HIDDEN', 'REPORTED'] as const;
 export type ReviewStatus = (typeof REVIEW_STATUS_OPTIONS)[number];
 export type ReviewFilterStatus = ReviewStatus | 'ALL';

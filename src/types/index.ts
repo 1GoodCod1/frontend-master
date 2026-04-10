@@ -136,6 +136,11 @@ export type UpdateLeadStatusDto = {
   status: 'NEW' | 'IN_PROGRESS' | 'PENDING_CLOSE' | 'CLOSED' | 'SPAM';
 };
 
+export type CreateReviewCriteriaInput = {
+  criteria: string;
+  rating: number;
+};
+
 export type CreateReviewDto = {
   masterId: string;
   leadId: string;
@@ -144,6 +149,7 @@ export type CreateReviewDto = {
   rating: number;
   comment?: string;
   fileIds?: string[];
+  criteria?: CreateReviewCriteriaInput[];
 };
 
 export type UpdateReviewStatusDto = {

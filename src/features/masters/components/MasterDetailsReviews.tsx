@@ -12,7 +12,12 @@ import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
 import { mediaUrl } from '@/utils/media';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { cn } from '@/lib/utils';
-import type { ReviewCanCreateResponse } from '@/types/reviews';
+import {
+  REVIEW_CRITERIA_KEYS,
+  type CriteriaRatings,
+  type ReviewCriteriaKey,
+  type ReviewCanCreateResponse,
+} from '@/types/reviews';
 import { useReviewReplyMutation, useReviewDeleteReplyMutation } from '@/features/reviews/reviewsApi';
 import { validateImageFiles } from '@/utils/validateFile';
 
@@ -31,6 +36,8 @@ type ReviewSubmissionState = {
   setReviewComment: (v: string) => void;
   reviewPhotos: File[];
   setReviewPhotos: React.Dispatch<React.SetStateAction<File[]>>;
+  criteriaRatings: CriteriaRatings;
+  setCriterionRating: (key: ReviewCriteriaKey, value: number) => void;
   handleCreateReview: () => Promise<void>;
   isLoading: boolean;
 };
@@ -188,6 +195,8 @@ export const MasterDetailsReviews = ({
     setReviewComment,
     reviewPhotos,
     setReviewPhotos,
+    criteriaRatings,
+    setCriterionRating,
     handleCreateReview,
     isLoading: isSubmitting,
   } = reviewSubmission;
@@ -255,6 +264,31 @@ export const MasterDetailsReviews = ({
                         )}
                       />
                     </button>
+                  ))}
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground">{t('reviews.detailedRatings')}</p>
+                  {REVIEW_CRITERIA_KEYS.map((key) => (
+                    <div key={key} className="flex items-center justify-between gap-2">
+                      <span className="text-sm text-muted-foreground">{t(`reviews.criteria.${key}`)}</span>
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((v) => (
+                          <button
+                            key={v}
+                            type="button"
+                            className="p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-ring"
+                            onClick={() => setCriterionRating(key, v)}
+                          >
+                            <Star
+                              className={cn(
+                                'h-4 w-4 transition-colors',
+                                v <= criteriaRatings[key] ? 'text-amber-500 fill-amber-500' : 'text-muted-foreground/30'
+                              )}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
                 <Textarea

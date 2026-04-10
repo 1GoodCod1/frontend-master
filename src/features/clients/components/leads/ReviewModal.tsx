@@ -15,6 +15,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { validateImageFiles } from '@/utils/validateFile';
+import {
+  REVIEW_CRITERIA_KEYS,
+  type CriteriaRatings,
+  type ReviewCriteriaKey,
+} from '@/types/reviews';
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -22,11 +27,13 @@ interface ReviewModalProps {
   rating: number;
   comment: string;
   photos: File[];
+  criteriaRatings?: CriteriaRatings;
   isLoading: boolean;
   onClose: () => void;
   onRatingChange: (rating: number) => void;
   onCommentChange: (comment: string) => void;
   onPhotosChange: (photos: File[]) => void;
+  onCriterionChange?: (key: ReviewCriteriaKey, value: number) => void;
   onSubmit: () => void;
 }
 
@@ -38,11 +45,13 @@ export default function ReviewModal({
   rating,
   comment,
   photos,
+  criteriaRatings,
   isLoading,
   onClose,
   onRatingChange,
   onCommentChange,
   onPhotosChange,
+  onCriterionChange,
   onSubmit,
 }: ReviewModalProps) {
   const { t } = useTranslation();
@@ -123,6 +132,42 @@ export default function ReviewModal({
                 )}
               </div>
             </div>
+
+            {criteriaRatings && onCriterionChange && (
+              <div>
+                <Label className="mb-3 block text-sm font-semibold">
+                  {t('reviews.detailedRatings')}
+                </Label>
+                <div className="space-y-3">
+                  {REVIEW_CRITERIA_KEYS.map((key) => (
+                    <div key={key} className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-muted-foreground min-w-[80px]">
+                        {t(`reviews.criteria.${key}`)}
+                      </span>
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((v) => (
+                          <button
+                            key={v}
+                            type="button"
+                            className="rounded p-0.5 transition duration-150 hover:scale-110 focus:outline-none focus:ring-1 focus:ring-ring"
+                            onClick={() => onCriterionChange(key, v)}
+                          >
+                            <Star
+                              className={cn(
+                                'size-5 transition duration-150',
+                                v <= criteriaRatings[key]
+                                  ? 'fill-amber-400 text-amber-400'
+                                  : 'text-muted-foreground/25 hover:text-amber-300',
+                              )}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Comment */}
             <div className="flex flex-col gap-2">
