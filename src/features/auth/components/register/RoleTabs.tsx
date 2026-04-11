@@ -5,16 +5,19 @@ import { cn } from '@/lib/utils';
 interface RoleTabsProps {
   value: number;
   onChange: (role: 'CLIENT' | 'MASTER') => void;
+  /** Доп. классы корневого контейнера (напр. отступы на странице входа). */
+  className?: string;
 }
 
-export default function RoleTabs({ value, onChange }: RoleTabsProps) {
+export default function RoleTabs({ value, onChange, className }: RoleTabsProps) {
   const { t } = useTranslation();
 
   return (
     <div
       className={cn(
         'mb-5 flex rounded-xl p-1',
-        'bg-[#efefef] dark:bg-[#1a1a1a]'
+        'bg-[#efefef] dark:bg-[#1a1a1a]',
+        className,
       )}
     >
       <button

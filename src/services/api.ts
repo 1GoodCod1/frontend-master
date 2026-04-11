@@ -64,7 +64,8 @@ type AxiosBaseQueryError = {
 const axiosInstance = axios.create({
   baseURL: env.apiUrl,
   timeout: 30_000,
-  withCredentials: env.useHttpOnly,
+  // Always send cookies cross-origin (refresh httpOnly, oauth_pending, oauth_state)
+  withCredentials: true,
 });
 
 export const axiosBaseQuery =

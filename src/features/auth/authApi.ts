@@ -168,7 +168,6 @@ export const authApi = api.injectEndpoints({
           const reStatus =
             (typeof re.status === 'number' ? re.status : undefined) ??
             (isRecord(re.error) && typeof re.error.status === 'number' ? re.error.status : undefined);
-          // Only clear auth on definitive auth failures, not on network/5xx errors
           if (reStatus === 401 || reStatus === 403) {
             dispatch(clearAuth());
             persistRefreshToken(null);
@@ -233,6 +232,37 @@ export const authApi = api.injectEndpoints({
     resetPassword: build.mutation<unknown, { token: string; password: string }>({
       query: (body) => ({ url: '/auth/reset-password', method: 'POST', data: body }),
     }),
+
+    completeOAuth: build.mutation<
+      unknown,
+      {
+        phone: string;
+        role?: 'CLIENT' | 'MASTER';
+        city?: string;
+        category?: string;
+        description?: string;
+      }
+    >({
+      query: (body) => ({ url: '/auth/oauth/complete', method: 'POST', data: body }),
+      invalidatesTags: ['Me'],
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          const t = extractTokens(data);
+          if (t.accessToken) {
+            const refreshToken = env.useHttpOnly ? '' : (t.refreshToken ?? '');
+            dispatch(setTokens({ accessToken: t.accessToken, refreshToken }));
+            if (t.refreshToken) persistRefreshToken(String(t.refreshToken), true);
+            if (env.useHttpOnly) markHttpOnlySessionHint(true);
+            await dispatch(
+              authApi.endpoints.authMe.initiate(undefined, { forceRefetch: true }),
+            ).unwrap();
+          }
+        } catch {
+          // handled by caller
+        }
+      },
+    }),
   }),
 });
 
@@ -246,4 +276,5 @@ export const {
   useAuthMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useCompleteOAuthMutation,
 } = authApi;

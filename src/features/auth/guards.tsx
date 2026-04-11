@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole, selectRestoring, selectPlan } from './selectors';
@@ -6,6 +6,7 @@ import { LoadingState } from '@/components/common/States';
 import { TariffPlan, hasMinPlan } from '@/features/auth/plan';
 import { useAuthMeQuery } from './authApi';
 import { USER_ROLE } from '@/constants/roles';
+import { paths } from '@/constants/routes';
 
 function WaitingForRole() {
   return (
@@ -20,6 +21,21 @@ export function PublicRoute() {
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  /**
+   * Роуты, где нельзя заменять вложенный экран на «ждём role»:
+   * — OAuth: токен уже есть, профиль ещё грузится.
+   * — Формы входа/регистрации: иначе при протухшем access и сбое refresh/me
+   *   пользователь зависает на Loading и не может снова залогиниться.
+   */
+  const alwaysRenderOutlet =
+    pathname === paths.oauthCallback ||
+    pathname === paths.completeProfile ||
+    pathname === paths.login ||
+    pathname === paths.register ||
+    pathname === paths.forgotPassword ||
+    pathname === paths.resetPassword;
 
   useEffect(() => {
     if (!restoring && isAuthed && role) {
@@ -35,7 +51,7 @@ export function PublicRoute() {
 
   if (restoring) return <LoadingState label="Restoring session..." fullScreen />;
   // If authenticated but role not yet loaded, wait (API call in flight)
-  if (isAuthed && !role) return <WaitingForRole />;
+  if (isAuthed && !role && !alwaysRenderOutlet) return <WaitingForRole />;
 
   return (
     <div className="animate-in fade-in duration-200">

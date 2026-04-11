@@ -24,6 +24,8 @@ export const routeSeg = {
   register: 'register',
   forgotPassword: 'forgot-password',
   resetPassword: 'reset-password',
+  oauthCallback: 'oauth-callback',
+  completeProfile: 'complete-profile',
   dashboard: 'dashboard',
   profile: 'profile',
   services: 'services',
@@ -80,6 +82,8 @@ export const paths = {
   register: j(routeSeg.register),
   forgotPassword: j(routeSeg.forgotPassword),
   resetPassword: j(routeSeg.resetPassword),
+  oauthCallback: j('auth', routeSeg.oauthCallback),
+  completeProfile: j('auth', routeSeg.completeProfile),
 
   dashboard: {
     root: j(routeSeg.dashboard),

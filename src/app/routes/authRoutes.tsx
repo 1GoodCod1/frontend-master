@@ -16,5 +16,15 @@ export const authRoutes = {
       path: routeSeg.resetPassword,
       element: <LazyPage><P.ResetPasswordPage /></LazyPage>,
     },
+    {
+      // Receives access_token after successful OAuth login/signup
+      path: `auth/${routeSeg.oauthCallback}`,
+      element: <LazyPage><P.OAuthCallbackPage /></LazyPage>,
+    },
+    {
+      // Collects phone (+ city/category for masters) after new OAuth signup
+      path: `auth/${routeSeg.completeProfile}`,
+      element: <LazyPage><P.OAuthCompletePage /></LazyPage>,
+    },
   ],
 };

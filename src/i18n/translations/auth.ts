@@ -19,6 +19,26 @@ export const auth = {
         rememberMe: 'Remember me',
         backToLogin: 'Back to login',
         noAccount: "Don't have an account?",
+        oauthFailHints: {
+          generic: 'Could not sign in with Google.',
+          invalid_oauth_state:
+            'The sign-in security check failed (another tab, cookies blocked, or an old session). Start again from this tab.',
+          passport_error: 'Google rejected sign-in, or you cancelled.',
+          no_user: 'No profile was returned from Google.',
+          handler_error: 'Something went wrong on our server while finishing sign-in.',
+          missing_token: 'Sign-in did not finish correctly. Try again from this page.',
+          url_error: 'Google reported an error. Try again.',
+          unknown_role: 'We could not load your account details. Try signing in again.',
+          me_unauthorized:
+            'Your session could not be confirmed. Try again, or sign in with email if it keeps happening.',
+          me_failed: 'Could not load your profile after sign-in. Check your connection and try again.',
+          oauth_redirect_mismatch:
+            'Google sign-in is not set up correctly for this site. If you manage the project, check the redirect URL in Google Cloud Console.',
+          oauth_invalid_client_secret:
+            'Google sign-in is temporarily unavailable. Try email sign-in or again later.',
+          oauth_invalid_grant:
+            'The sign-in link expired or was already used. Try “Sign in with Google” again from this tab only.',
+        },
       },
       forgotPassword: {
         title: 'Forgot Password',
@@ -159,6 +179,37 @@ export const auth = {
         step3: 'After approval — choose any plan with 1 click, free for 30 days',
         note: 'Plans are free after verification. Payment will be available later.',
       },
+      social: {
+        orDivider: 'or',
+        loginGoogle: 'Continue with Google',
+        registerGoogle: 'Sign up with Google',
+      },
+      oauthCallback: {
+        loading: 'Completing sign-in...',
+      },
+      oauthComplete: {
+        clientTitle: 'Almost done!',
+        masterTitle: 'Complete your master profile',
+        clientSub: 'Enter your phone number to finish registration',
+        masterSub: 'Enter your phone, city and service category',
+        phone: 'Phone number',
+        phonePlaceholder: '+373XXXXXXXX',
+        phoneError: 'Format: +373XXXXXXXX',
+        city: 'City',
+        cityPlaceholder: 'Select city',
+        category: 'Category',
+        categoryPlaceholder: 'Select category',
+        description: 'About you',
+        descriptionPlaceholder: 'Tell about your experience and services...',
+        descriptionOptional: '(optional)',
+        loading: 'Loading...',
+        submit: 'Complete registration',
+        submitting: 'Saving...',
+        errorCityCategory: 'Please select a city and category',
+        cityRequired: 'Please select a city',
+        categoryRequired: 'Please select a category',
+        errorGeneric: 'Registration failed',
+      },
       leftPanel: {
         tagline: 'Professional masters platform',
         loginTitle: 'Welcome back.',
@@ -197,6 +248,26 @@ export const auth = {
         rememberMe: 'Запомнить меня',
         backToLogin: 'Назад к входу',
         noAccount: 'Нет аккаунта?',
+        oauthFailHints: {
+          generic: 'Не удалось войти через соцсеть.',
+          invalid_oauth_state:
+            'Проверка безопасности входа не прошла (другая вкладка, блокировка cookies или устаревшая сессия). Начните вход заново с этой вкладки.',
+          passport_error: 'Сервис отклонил вход или вы отменили авторизацию.',
+          no_user: 'Профиль не был получен от Google.',
+          handler_error: 'На сервере произошла ошибка при завершении входа.',
+          missing_token: 'Вход не завершился. Попробуйте ещё раз с этой страницы.',
+          url_error: 'Сервис вернул ошибку. Попробуйте снова.',
+          unknown_role: 'Не удалось загрузить данные аккаунта. Попробуйте войти снова.',
+          me_unauthorized:
+            'Сессию не удалось подтвердить. Попробуйте снова или войдите по email.',
+          me_failed: 'Не удалось загрузить профиль после входа. Проверьте сеть и попробуйте снова.',
+          oauth_redirect_mismatch:
+            'Вход через Google для этого сайта настроен неверно. Администратору нужно проверить адрес перенаправления в Google Cloud Console.',
+          oauth_invalid_client_secret:
+            'Вход через Google сейчас недоступен. Воспользуйтесь email или попробуйте позже.',
+          oauth_invalid_grant:
+            'Ссылка входа устарела или уже использована. Попробуйте «Войти через Google» снова, только с этой вкладки.',
+        },
       },
       forgotPassword: {
         title: 'Восстановление пароля',
@@ -339,6 +410,37 @@ export const auth = {
         step3: 'После одобрения — выберите любой план 1 кликом, бесплатно на 30 дней',
         note: 'Тарифы бесплатны после верификации. Оплата будет доступна позже.',
       },
+      social: {
+        orDivider: 'или',
+        loginGoogle: 'Войти через Google',
+        registerGoogle: 'Зарегистрироваться через Google',
+      },
+      oauthCallback: {
+        loading: 'Завершение входа...',
+      },
+      oauthComplete: {
+        clientTitle: 'Почти готово!',
+        masterTitle: 'Заполните профиль мастера',
+        clientSub: 'Укажите номер телефона для завершения регистрации',
+        masterSub: 'Укажите телефон, город и категорию услуг',
+        phone: 'Номер телефона',
+        phonePlaceholder: '+373XXXXXXXX',
+        phoneError: 'Формат: +373XXXXXXXX',
+        city: 'Город',
+        cityPlaceholder: 'Выберите город',
+        category: 'Категория',
+        categoryPlaceholder: 'Выберите категорию',
+        description: 'О себе',
+        descriptionPlaceholder: 'Расскажите о вашем опыте и услугах...',
+        descriptionOptional: '(необязательно)',
+        loading: 'Загрузка...',
+        submit: 'Завершить регистрацию',
+        submitting: 'Сохранение...',
+        errorCityCategory: 'Выберите город и категорию',
+        cityRequired: 'Выберите город',
+        categoryRequired: 'Выберите категорию',
+        errorGeneric: 'Ошибка завершения регистрации',
+      },
       leftPanel: {
         tagline: 'Платформа профессиональных мастеров',
         loginTitle: 'С возвращением.',
@@ -377,6 +479,27 @@ export const auth = {
         rememberMe: 'Ține-mă minte',
         backToLogin: 'Înapoi la autentificare',
         noAccount: 'Nu ai cont?',
+        oauthFailHints: {
+          generic: 'Nu s-a putut autentifica cu Google.',
+          invalid_oauth_state:
+            'Verificarea de securitate a eșuat (alt tab, cookie-uri blocate sau sesiune veche). Începeți din nou din acest tab.',
+          passport_error: 'Google a respins autentificarea sau ați anulat.',
+          no_user: 'Nu s-a primit profilul de la Google.',
+          handler_error: 'A apărut o eroare pe server la finalizarea autentificării.',
+          missing_token: 'Autentificarea nu s-a finalizat. Încercați din nou de pe această pagină.',
+          url_error: 'Serviciul a raportat o eroare. Încercați din nou.',
+          unknown_role: 'Nu s-au putut încărca detaliile contului. Autentificați-vă din nou.',
+          me_unauthorized:
+            'Sesiunea nu a putut fi confirmată. Încercați din nou sau folosiți autentificarea cu email.',
+          me_failed:
+            'Profilul nu s-a încărcat după autentificare. Verificați conexiunea și încercați din nou.',
+          oauth_redirect_mismatch:
+            'Autentificarea cu Google nu este configurată corect pentru acest site. Administratorul trebuie să verifice adresa de redirecționare în Google Cloud Console.',
+          oauth_invalid_client_secret:
+            'Autentificarea cu Google nu este disponibilă momentan. Folosiți email sau încercați mai târziu.',
+          oauth_invalid_grant:
+            'Linkul de autentificare a expirat sau a fost deja folosit. Încercați din nou „Conectare cu Google”, doar din acest tab.',
+        },
       },
       forgotPassword: {
         title: 'Recuperare parolă',
@@ -518,6 +641,37 @@ export const auth = {
         step2: 'Trimite cererea de verificare (documente) în cabinet',
         step3: 'După aprobare — alege orice plan cu 1 click, gratuit 30 zile',
         note: 'Planurile sunt gratuite după verificare. Plata va fi disponibilă mai târziu.',
+      },
+      social: {
+        orDivider: 'sau',
+        loginGoogle: 'Intră cu Google',
+        registerGoogle: 'Înregistrare cu Google',
+      },
+      oauthCallback: {
+        loading: 'Finalizare autentificare...',
+      },
+      oauthComplete: {
+        clientTitle: 'Aproape gata!',
+        masterTitle: 'Completează profilul de meșter',
+        clientSub: 'Introdu numărul de telefon pentru a finaliza înregistrarea',
+        masterSub: 'Introdu telefonul, orașul și categoria de servicii',
+        phone: 'Număr de telefon',
+        phonePlaceholder: '+373XXXXXXXX',
+        phoneError: 'Format: +373XXXXXXXX',
+        city: 'Oraș',
+        cityPlaceholder: 'Selectează orașul',
+        category: 'Categorie',
+        categoryPlaceholder: 'Selectează categoria',
+        description: 'Despre tine',
+        descriptionPlaceholder: 'Povestește despre experiența și serviciile tale...',
+        descriptionOptional: '(opțional)',
+        loading: 'Se încarcă...',
+        submit: 'Finalizează înregistrarea',
+        submitting: 'Se salvează...',
+        errorCityCategory: 'Selectează un oraș și o categorie',
+        cityRequired: 'Selectează orașul',
+        categoryRequired: 'Selectează categoria',
+        errorGeneric: 'Eroare la finalizarea înregistrării',
       },
       leftPanel: {
         tagline: 'Platformă meșteri profesioniști',

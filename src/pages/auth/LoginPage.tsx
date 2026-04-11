@@ -1,24 +1,46 @@
-import { useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useNavigate, Navigate, useSearchParams } from 'react-router-dom';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
+import { clearAuth } from '@/features/auth/authSlice';
+import {
+  markHttpOnlySessionHint,
+  persistRefreshToken,
+} from '@/features/auth/persist';
 import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import LoginHeader from '@/features/auth/components/login/LoginHeader';
 import LoginForm from '@/features/auth/components/login/LoginForm';
 import { useLoginForm, type LoginFormValues } from '@/hooks/auth/login';
 import { Button } from '@/components/ui/button';
 import { USER_ROLE } from '@/constants/roles';
+import { formatOAuthLoginErrorToast } from '@/utils/oauthLoginErrorToast';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [searchParams] = useSearchParams();
+  const clearedOauthFailRef = useRef(false);
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector((s) => s.auth.role);
   const restoring = useAppSelector((s) => s.auth.restoring);
 
   const form = useLoginForm();
+
+  useEffect(() => {
+    if (clearedOauthFailRef.current) return;
+    if (searchParams.get('error') !== 'oauth_failed') return;
+    clearedOauthFailRef.current = true;
+    const reason = searchParams.get('reason') ?? '';
+    toast.error(formatOAuthLoginErrorToast(t, reason), { duration: 9000 });
+    dispatch(clearAuth());
+    persistRefreshToken(null);
+    markHttpOnlySessionHint(false);
+    navigate('/login', { replace: true });
+  }, [dispatch, navigate, searchParams, t]);
 
   useEffect(() => {
     if (!isAuthed || !role) return;

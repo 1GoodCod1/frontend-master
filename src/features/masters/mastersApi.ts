@@ -255,11 +255,11 @@ export const mastersApi = api.injectEndpoints({
       UpdateAvailabilityStatusResponse,
       { availabilityStatus: string; maxActiveLeads?: number }
     >({
-      query: (body) => ({ url: '/masters/availability-status/me', method: 'PATCH', data: body }),
+      query: (body) => ({ url: '/masters/settings/availability', method: 'PATCH', data: body }),
       invalidatesTags: ['Master'],
     }),
     mastersGetAvailabilityStatus: build.query<AvailabilityStatusResponse, void>({
-      query: () => ({ url: '/masters/availability-status/me', method: 'GET' }),
+      query: () => ({ url: '/masters/settings/availability', method: 'GET' }),
       providesTags: ['Master'],
     }),
 

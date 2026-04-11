@@ -43,6 +43,7 @@ export function AppShellMain({
     isOtherPublicPage;
   const fullWidth = isDashboardOrAdmin || isPublicPage;
   const isAuthPage = AUTH_PATHS.has(pathname);
+  const hideFooter = pathname.startsWith('/admin');
 
   return (
     <>
@@ -65,7 +66,7 @@ export function AppShellMain({
               <Outlet />
             </div>
           )}
-          {!isDashboardOrAdmin && <Footer />}
+          {!hideFooter && <Footer />}
         </motion.main>
       )}
     </>

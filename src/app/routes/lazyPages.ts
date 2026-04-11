@@ -17,6 +17,8 @@ export const LoginPage = lazyWithRetry(() => import('@/pages/auth/LoginPage'));
 export const RegisterPage = lazyWithRetry(() => import('@/pages/auth/RegisterPage'));
 export const ForgotPasswordPage = lazyWithRetry(() => import('@/pages/auth/ForgotPasswordPage'));
 export const ResetPasswordPage = lazyWithRetry(() => import('@/pages/auth/ResetPasswordPage'));
+export const OAuthCallbackPage = lazyWithRetry(() => import('@/pages/auth/OAuthCallbackPage'));
+export const OAuthCompletePage = lazyWithRetry(() => import('@/pages/auth/OAuthCompletePage'));
 
 export const DashboardPage = lazyWithRetry(() => import('@/pages/master/DashboardPage'));
 export const ProfilePage = lazyWithRetry(() => import('@/pages/master/ProfilePage'));
