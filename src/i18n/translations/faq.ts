@@ -73,6 +73,16 @@ export const faq = {
         answer: `You can reach us by email at ${SUPPORT_EMAIL} or Telegram ${TELEGRAM_HANDLE}. Visit our`,
         linkSuffix: 'page for more details and working hours.',
       },
+      q13: {
+        question: 'How does online booking work?',
+        answer:
+          'Masters with VIP or PREMIUM plans can enable online booking. On the master\'s profile, click "Book appointment" to see available time slots. Select a date and time, confirm your phone number and notes — the master gets notified instantly. You can track and manage all your bookings in the client dashboard under "My Bookings". Masters confirm or decline via their dashboard.',
+      },
+      q14: {
+        question: 'What are promotions and how do I create one?',
+        answer:
+          'PREMIUM masters can create promotions (discounts) for their services. Go to your dashboard → Promotions, click "Create promotion", set a title, discount percentage (1–100%), select a service or apply to all, and set the validity period. Active promotions are displayed on the main page and your master card to attract more clients.',
+      },
     },
   },
   ru: {
@@ -147,6 +157,16 @@ export const faq = {
         answer: `Вы можете связаться с нами по email: ${SUPPORT_EMAIL} или в Telegram: ${TELEGRAM_HANDLE}. Посетите нашу`,
         linkSuffix: 'страницу для подробностей и рабочих часов.',
       },
+      q13: {
+        question: 'Как работает онлайн-запись?',
+        answer:
+          'Мастера с планами VIP или PREMIUM могут подключить онлайн-запись. На странице мастера нажмите «Записаться», выберите удобную дату и время из доступных слотов, укажите номер телефона и примечания — мастер сразу получит уведомление. Все ваши записи доступны в личном кабинете клиента в разделе «Мои записи». Мастер подтверждает или отклоняет запись через свой дашборд.',
+      },
+      q14: {
+        question: 'Что такое акции и как их создать?',
+        answer:
+          'Мастера с планом PREMIUM могут создавать акции (скидки) на свои услуги. Перейдите в дашборд → Акции, нажмите «Создать акцию», укажите название, размер скидки (1–100%), выберите услугу или примените ко всем, и установите сроки действия. Активные акции отображаются на главной странице и на карточке мастера — это помогает привлечь больше клиентов.',
+      },
     },
   },
   ro: {
@@ -220,6 +240,16 @@ export const faq = {
         question: 'Cum pot contacta suportul?',
         answer: `Ne puteți contacta prin email la ${SUPPORT_EMAIL} sau pe Telegram la ${TELEGRAM_HANDLE}. Vizitați pagina noastră de`,
         linkSuffix: 'Contacte pentru detalii și ore de lucru.',
+      },
+      q13: {
+        question: 'Cum funcționează rezervarea online?',
+        answer:
+          'Meșterii cu planuri VIP sau PREMIUM pot activa rezervarea online. Pe pagina meșterului, apăsați „Rezervă", alegeți data și ora disponibile, confirmați numărul de telefon și notele — meșterul este notificat imediat. Toate rezervările tale sunt în panoul de control al clientului, secțiunea „Rezervările mele". Meșterul confirmă sau refuză rezervarea din dashboard-ul său.',
+      },
+      q14: {
+        question: 'Ce sunt promoțiile și cum le creez?',
+        answer:
+          'Meșterii cu plan PREMIUM pot crea promoții (reduceri) pentru serviciile lor. Mergeți în dashboard → Promoții, apăsați „Creează promoție", introduceți titlul, procentul de reducere (1–100%), selectați un serviciu sau aplicați la toate, și setați perioada de valabilitate. Promoțiile active sunt afișate pe pagina principală și pe cardul meșterului pentru a atrage mai mulți clienți.',
       },
     },
   },

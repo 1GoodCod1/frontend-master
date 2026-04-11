@@ -27,6 +27,7 @@ const FAQ_SECTIONS: { categoryKey: string; icon: React.ElementType; items: FAQIt
       { questionKey: 'faq.q2.question', answerKey: 'faq.q2.answer' },
       { questionKey: 'faq.q3.question', answerKey: 'faq.q3.answer' },
       { questionKey: 'faq.q4.question', answerKey: 'faq.q4.answer' },
+      { questionKey: 'faq.q13.question', answerKey: 'faq.q13.answer' },
       { questionKey: 'faq.q5.question', answerKey: 'faq.q5.answer' },
       { questionKey: 'faq.q6.question', answerKey: 'faq.q6.answer' },
     ],
@@ -39,6 +40,7 @@ const FAQ_SECTIONS: { categoryKey: string; icon: React.ElementType; items: FAQIt
       { questionKey: 'faq.q8.question', answerKey: 'faq.q8.answer' },
       { questionKey: 'faq.q9.question', answerKey: 'faq.q9.answer' },
       { questionKey: 'faq.q10.question', answerKey: 'faq.q10.answer' },
+      { questionKey: 'faq.q14.question', answerKey: 'faq.q14.answer' },
     ],
   },
   {

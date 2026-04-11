@@ -10,42 +10,42 @@ export const howItWorks = {
       step1: {
         title: 'Search',
         description:
-          'Browse our catalog of verified masters. Filter by category, city, and rating to find the perfect match.',
+          'Browse our catalog of verified masters. Filter by category, city, price range, and rating. Switch to map view to find masters near you. Look for active promotions and special offers on master cards.',
       },
       step2: {
         title: 'Register',
         description:
-          'Create a free account to contact masters and leave reviews. Registration takes less than a minute.',
+          'Create a free account in under a minute. Save masters to favorites, send requests, book appointments online, and track everything in your personal dashboard.',
       },
       step3: {
-        title: 'Contact',
+        title: 'Contact & book',
         description:
-          'Send a request to your chosen master with your contact details and message. They will respond quickly.',
+          'Send a request with your message and files, then chat directly with the master. Masters with online booking enabled let you pick a date and time slot — no calls needed.',
       },
       step4: {
         title: 'Review',
         description:
-          'After working together, leave a review to help other users. Your feedback helps maintain quality.',
+          'After working together, leave a review with a rating. Masters can respond to reviews. Your feedback helps maintain quality across the platform.',
       },
       masterStep1: {
         title: 'Register & profile',
         description:
-          'Create a master account and fill in your profile: services, photos, work area. Stand out in the catalog.',
+          'Create a master account and fill in your profile: services with prices, portfolio photos, work area, and description. Stand out in the catalog and attract your first clients.',
       },
       masterStep2: {
         title: 'Verification',
         description:
-          'Submit documents for verification. Verified masters get a badge and more trust from clients.',
+          'Submit documents for verification. Verified masters get a badge, higher placement in search results, and significantly more client trust.',
       },
       masterStep3: {
         title: 'Requests & bookings',
         description:
-          'Receive requests in your personal account, chat with clients, confirm bookings and manage your schedule.',
+          'Receive client requests in your dashboard, chat in real time, confirm or decline bookings, and manage your schedule with configurable time slots.',
       },
       masterStep4: {
-        title: 'Payments & growth',
+        title: 'Grow & promote',
         description:
-          'Get paid for services, collect reviews and ratings. Grow your reputation and attract more clients.',
+          'Collect reviews and improve your rating. Use PREMIUM promotions to offer discounts that appear on the main page. Upgrade your plan for advanced analytics and maximum visibility.',
       },
       ready: {
         title: 'Ready to get started?',
@@ -65,42 +65,42 @@ export const howItWorks = {
       step1: {
         title: 'Поиск',
         description:
-          'Просматривайте наш каталог проверенных мастеров. Фильтруйте по категории, городу и рейтингу, чтобы найти идеальное совпадение.',
+          'Просматривайте каталог проверенных мастеров. Фильтруйте по категории, городу, ценовому диапазону и рейтингу. Переключитесь на вид карты, чтобы найти мастеров рядом. Обращайте внимание на активные акции и спецпредложения на карточках мастеров.',
       },
       step2: {
         title: 'Регистрация',
         description:
-          'Создайте бесплатный аккаунт для связи с мастерами и оставления отзывов. Регистрация занимает менее минуты.',
+          'Создайте бесплатный аккаунт менее чем за минуту. Сохраняйте мастеров в избранное, отправляйте заявки, бронируйте время онлайн и отслеживайте всё в личном кабинете.',
       },
       step3: {
-        title: 'Связь',
+        title: 'Связь и запись',
         description:
-          'Отправьте заявку выбранному мастеру с вашими контактными данными и сообщением. Они быстро ответят.',
+          'Отправьте заявку с сообщением и файлами, общайтесь с мастером в чате. Если у мастера включена онлайн-запись — выберите удобную дату и временной слот без звонков.',
       },
       step4: {
         title: 'Отзыв',
         description:
-          'После совместной работы оставьте отзыв, чтобы помочь другим пользователям. Ваш отзыв помогает поддерживать качество.',
+          'После работы оставьте отзыв с оценкой. Мастера могут отвечать на отзывы. Ваш отзыв помогает поддерживать качество на платформе.',
       },
       masterStep1: {
         title: 'Регистрация и профиль',
         description:
-          'Создайте аккаунт мастера и заполните профиль: услуги, фото, район работы. Выделитесь в каталоге.',
+          'Создайте аккаунт мастера и заполните профиль: услуги с ценами, фото портфолио, район работы, описание. Выделитесь в каталоге и привлеките первых клиентов.',
       },
       masterStep2: {
         title: 'Верификация',
         description:
-          'Пройдите верификацию по документам. Проверенные мастера получают бейдж и больше доверия от клиентов.',
+          'Пройдите верификацию по документам. Верифицированные мастера получают бейдж, более высокое место в поиске и значительно больше доверия от клиентов.',
       },
       masterStep3: {
-        title: 'Заявки и брони',
+        title: 'Заявки и бронирование',
         description:
-          'Получайте заявки в личном кабинете, общайтесь с клиентами в чате, подтверждайте брони и управляйте расписанием.',
+          'Получайте заявки в дашборде, общайтесь в чате в реальном времени, подтверждайте или отклоняйте брони, управляйте расписанием с настраиваемыми временными слотами.',
       },
       masterStep4: {
-        title: 'Оплаты и рост',
+        title: 'Рост и продвижение',
         description:
-          'Получайте оплату за услуги, собирайте отзывы и рейтинг. Растите репутацию и привлекайте новых клиентов.',
+          'Собирайте отзывы и улучшайте рейтинг. Используйте акции PREMIUM, чтобы предлагать скидки — они показываются на главной странице. Обновите план для расширенной аналитики и максимальной видимости.',
       },
       ready: {
         title: 'Готовы начать?',
@@ -120,42 +120,42 @@ export const howItWorks = {
       step1: {
         title: 'Căutare',
         description:
-          'Răsfoiți catalogul nostru de meșteri verificați. Filtrați după categorie, oraș și rating pentru a găsi potrivirea perfectă.',
+          'Răsfoiți catalogul de meșteri verificați. Filtrați după categorie, oraș, interval de preț și rating. Comutați la vizualizarea pe hartă pentru a găsi meșteri aproape de dvs. Căutați promoțiile active pe cardurile meșterilor.',
       },
       step2: {
         title: 'Înregistrare',
         description:
-          'Creați un cont gratuit pentru a contacta meșteri și a lăsa recenzii. Înregistrarea durează mai puțin de un minut.',
+          'Creați un cont gratuit în mai puțin de un minut. Salvați meșteri la favorite, trimiteți cereri, rezervați online și urmăriți totul din panoul de control.',
       },
       step3: {
-        title: 'Contact',
+        title: 'Contact și rezervare',
         description:
-          'Trimiteți o cerere meșterului ales cu datele dvs. de contact și mesaj. Vor răspunde rapid.',
+          'Trimiteți o cerere cu mesaj și fișiere, discutați direct cu meșterul în chat. Meșterii cu rezervare online activată vă permit să alegeți data și ora — fără apeluri telefonice.',
       },
       step4: {
         title: 'Recenzie',
         description:
-          'După ce ați lucrat împreună, lăsați o recenzie pentru a ajuta alți utilizatori. Feedback-ul dvs. ajută la menținerea calității.',
+          'După ce ați lucrat împreună, lăsați o recenzie cu rating. Meșterii pot răspunde la recenzii. Feedback-ul dvs. ajută la menținerea calității pe platformă.',
       },
       masterStep1: {
         title: 'Înregistrare și profil',
         description:
-          'Creați un cont de meșter și completați profilul: servicii, fotografii, zonă de lucru. Diferențiați-vă în catalog.',
+          'Creați un cont de meșter și completați profilul: servicii cu prețuri, fotografii de portofoliu, zonă de lucru, descriere. Diferențiați-vă în catalog și atrageți primii clienți.',
       },
       masterStep2: {
         title: 'Verificare',
         description:
-          'Trimiteți documentele pentru verificare. Meșterii verificați primesc insignă și mai multă încredere de la clienți.',
+          'Trimiteți documentele pentru verificare. Meșterii verificați primesc insignă, plasare mai bună în căutare și mult mai multă încredere din partea clienților.',
       },
       masterStep3: {
         title: 'Cereri și rezervări',
         description:
-          'Primiți cereri în contul personal, discutați cu clienții, confirmați rezervările și gestionați programul.',
+          'Primiți cereri în dashboard, discutați în timp real, confirmați sau refuzați rezervările și gestionați programul cu sloturi orare configurabile.',
       },
       masterStep4: {
-        title: 'Plăți și creștere',
+        title: 'Creștere și promovare',
         description:
-          'Primiți plata pentru servicii, colectați recenzii și rating. Creșteți reputația și atrageți mai mulți clienți.',
+          'Colectați recenzii și îmbunătățiți ratingul. Folosiți promoțiile PREMIUM pentru reduceri afișate pe pagina principală. Actualizați planul pentru analiză avansată și vizibilitate maximă.',
       },
       ready: {
         title: 'Gata să începeți?',
