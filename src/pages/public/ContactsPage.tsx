@@ -68,7 +68,7 @@ export default function ContactsPage() {
                           {contact.title}
                         </h3>
                         <p className="text-muted-foreground mb-3">{contact.description}</p>
-                        <Button variant="outline" asChild className="border-primary text-primary hover:bg-primary/10">
+                        <Button variant="outline" asChild className="border-primary text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors">
                           <a
                             href={contact.link}
                             target={contact.link.startsWith('http') ? '_blank' : undefined}

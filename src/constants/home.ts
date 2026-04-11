@@ -23,6 +23,9 @@ import {
   LayoutGrid,
   Trash2,
   Wifi,
+  Building2,
+  ShoppingBag,
+  Trophy,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -99,6 +102,40 @@ export const CATEGORY_META: Record<string, { icon: LucideIcon; gradient: string 
 
 /** Дефолтная мета для категории без маппинга */
 export const CATEGORY_DEFAULT_META = { icon: LayoutGrid, gradient: 'from-primary to-primary/70' };
+
+/** Пункты роадмапа на главной */
+export const ROADMAP_ITEMS = [
+  {
+    icon: Building2,
+    titleKey: 'home.roadmap.item1Title',
+    descKey: 'home.roadmap.item1Desc',
+    statusKey: 'home.roadmap.statusSoon',
+    accent: 'text-primary dark:text-primary',
+    bg: 'bg-primary/10 dark:bg-primary/10',
+    ring: 'ring-primary/20',
+    statusColor: 'bg-primary/10 text-primary dark:bg-primary/10 dark:text-primary',
+  },
+  {
+    icon: ShoppingBag,
+    titleKey: 'home.roadmap.item2Title',
+    descKey: 'home.roadmap.item2Desc',
+    statusKey: 'home.roadmap.statusDev',
+    accent: 'text-orange-600 dark:text-[#E97525]',
+    bg: 'bg-orange-500/10 dark:bg-[#E97525]/10',
+    ring: 'ring-orange-500/20 dark:ring-[#E97525]/20',
+    statusColor: 'bg-orange-500/10 text-orange-600 dark:bg-[#E97525]/10 dark:text-[#E97525]',
+  },
+  {
+    icon: Trophy,
+    titleKey: 'home.roadmap.item3Title',
+    descKey: 'home.roadmap.item3Desc',
+    statusKey: 'home.roadmap.statusPlanned',
+    accent: 'text-violet-600 dark:text-violet-400',
+    bg: 'bg-violet-500/10 dark:bg-violet-400/10',
+    ring: 'ring-violet-500/20 dark:ring-violet-400/20',
+    statusColor: 'bg-violet-500/10 text-violet-600 dark:bg-violet-400/10 dark:text-violet-400',
+  },
+] as const;
 
 /** Сколько карточек «Популярные мастера» на главной */
 export const POPULAR_MASTERS_HOME_LIMIT = 8;
