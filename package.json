@@ -16,6 +16,8 @@
     "prepare": "husky",
     "preview": "vite preview",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lighthouse": "npm run build && npx @lhci/cli autorun",
     "e2e": "playwright test",
     "e2e:api": "playwright test api-critical-flow",
@@ -100,6 +102,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-sitemap": "^0.8.2",
+    "vitest": "^2.1.9",
     "workbox-core": "^7.4.0",
     "workbox-precaching": "^7.4.0",
     "workbox-routing": "^7.4.0"
