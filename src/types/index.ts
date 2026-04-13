@@ -5,6 +5,8 @@ export * from './chat';
 export * from './leads';
 export * from './payments';
 export * from './reviews';
+export * from './masterDetailsReviews';
+export * from './verificationPage';
 export * from './ui';
 export * from './admin';
 export * from './bookings';

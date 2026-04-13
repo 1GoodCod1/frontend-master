@@ -14,4 +14,6 @@ export * from './reportAction';
 export * from './availabilityStatus';
 export * from './referralStatus';
 export * from './consentType';
+export * from './verificationDocumentType';
+export * from './digestAdmin';
 export * from './senderType';

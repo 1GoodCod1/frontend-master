@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mail, Megaphone, UserX, FileCode2, ArrowLeft } from 'lucide-react';
+import { Mail, Megaphone, FileCode2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
   useAdminDigestStatsQuery,
@@ -37,94 +37,10 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { formatDateTimeString, getLocaleFromLanguage } from '@/utils/date';
-
-function TemplateOverrideForm({
-  templateId,
-  lang,
-  initialSubject,
-  initialBodyHtml,
-  onSave,
-  onCancel,
-  isSaving,
-  t,
-}: {
-  templateId: string;
-  lang: string;
-  initialSubject: string;
-  initialBodyHtml: string;
-  onSave: (subject: string, bodyHtml: string) => void;
-  onCancel: () => void;
-  isSaving: boolean;
-  t: ReturnType<typeof useTranslation>['t'];
-}) {
-  const [subject, setSubject] = useState(initialSubject);
-  const [bodyHtml, setBodyHtml] = useState(initialBodyHtml);
-
-  return (
-    <div className="space-y-4 rounded-lg border border-border bg-muted/30 p-4">
-      <div className="flex items-center justify-between gap-2">
-        <Button variant="ghost" size="sm" onClick={onCancel} className="gap-1.5 -ml-1">
-          <ArrowLeft className="size-4" />
-          {t('common.back')}
-        </Button>
-        <span className="text-sm font-medium text-muted-foreground">
-          {templateId} · {lang}
-        </span>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="override-subject">{t('admin.digest.templateSubject', 'Subject')}</Label>
-        <Input
-          id="override-subject"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          placeholder="Faber: Digest"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="override-body">{t('admin.digest.templateBody', 'HTML body')}</Label>
-        {templateId === 'password-reset' && (
-          <p className="text-xs text-muted-foreground rounded-md bg-muted/50 p-2">
-            {t('admin.digest.passwordResetPlaceholders', 'Use {{resetLink}} for the password reset link, {{frontendUrl}} for the site URL.')}
-          </p>
-        )}
-        <Textarea
-          id="override-body"
-          value={bodyHtml}
-          onChange={(e) => setBodyHtml(e.target.value)}
-          rows={10}
-          className="font-mono text-sm resize-y min-h-[200px]"
-          placeholder="<p>Hello...</p>"
-        />
-      </div>
-      <div className="flex gap-2 pt-1">
-        <Button onClick={() => onSave(subject, bodyHtml)} disabled={isSaving}>
-          {isSaving ? t('common.loading') : t('common.save')}
-        </Button>
-        <Button variant="outline" onClick={onCancel}>
-          {t('common.cancel')}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-const TEMPLATE_OVERRIDE_FALLBACK = [
-  'welcome-1',
-  'master-welcome-1',
-  'digest-client',
-  'digest-master',
-  'new-feature-masters',
-] as const;
-
-const BROADCAST_SEGMENTS = [
-  { value: 'all_masters', labelKey: 'admin.digest.segmentAllMasters' },
-  { value: 'new_masters', labelKey: 'admin.digest.segmentNewMasters' },
-  { value: 'all_clients', labelKey: 'admin.digest.segmentAllClients' },
-  { value: 'digest_subscribers', labelKey: 'admin.digest.segmentDigestSubscribers' },
-] as const;
+import { getLocaleFromLanguage } from '@/utils/date';
+import { TemplateOverrideForm } from './digest/TemplateOverrideForm';
+import { DigestSubscribersSection } from './digest/DigestSubscribersSection';
+import { BROADCAST_SEGMENTS, TEMPLATE_OVERRIDE_FALLBACK } from '@/constants/digestAdmin';
 
 export default function DigestAdminPage() {
   const { t, i18n } = useTranslation();
@@ -140,30 +56,24 @@ export default function DigestAdminPage() {
     useAdminDigestStatsQuery();
   const { data: subscribers, isLoading: subsLoading, refetch: refetchSubs } =
     useAdminDigestSubscribersQuery({ page: subPage, limit: 20 });
-  const { data: templates, isLoading: templatesLoading } =
-    useAdminBroadcastTemplatesQuery();
+  const { data: templates, isLoading: templatesLoading } = useAdminBroadcastTemplatesQuery();
   const { data: templateIds = [] } = useAdminTemplateIdsQuery();
   const { data: announcement = '' } = useAdminDigestAnnouncementQuery();
   const { data: overrides = [] } = useAdminTemplateOverridesQuery();
   const currentOverrideForEdit = overrideEdit
     ? overrides.find((o) => o.templateId === overrideEdit.templateId && o.lang === overrideEdit.lang)
     : null;
-  const { data: templateDefault, isLoading: defaultLoading } =
-    useAdminTemplateDefaultQuery(
-      overrideEdit
-        ? { templateId: overrideEdit.templateId, lang: overrideEdit.lang }
-        : { templateId: '', lang: '' },
-      { skip: !overrideEdit || !!currentOverrideForEdit },
-    );
+  const { data: templateDefault, isLoading: defaultLoading } = useAdminTemplateDefaultQuery(
+    overrideEdit
+      ? { templateId: overrideEdit.templateId, lang: overrideEdit.lang }
+      : { templateId: '', lang: '' },
+    { skip: !overrideEdit || !!currentOverrideForEdit },
+  );
 
-  const [setAnnouncement, { isLoading: isSavingAnnouncement }] =
-    useAdminSetDigestAnnouncementMutation();
-  const [setOverride, { isLoading: isSavingOverride }] =
-    useAdminSetTemplateOverrideMutation();
-  const [unsubscribe, { isLoading: isUnsubscribing }] =
-    useAdminUnsubscribeDigestMutation();
-  const [sendBroadcast, { isLoading: isBroadcasting }] =
-    useAdminSendBroadcastMutation();
+  const [setAnnouncement, { isLoading: isSavingAnnouncement }] = useAdminSetDigestAnnouncementMutation();
+  const [setOverride, { isLoading: isSavingOverride }] = useAdminSetTemplateOverrideMutation();
+  const [unsubscribe, { isLoading: isUnsubscribing }] = useAdminUnsubscribeDigestMutation();
+  const [sendBroadcast, { isLoading: isBroadcasting }] = useAdminSendBroadcastMutation();
 
   const isLoading = statsLoading;
   const isError = statsError;
@@ -231,12 +141,16 @@ export default function DigestAdminPage() {
       const result = await sendBroadcast({
         segment: broadcastSegment,
         templateName: selectedTemplate,
-        ...(broadcastSegment === 'new_masters' ? { sinceDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) } : {}),
+        ...(broadcastSegment === 'new_masters'
+          ? { sinceDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10) }
+          : {}),
       }).unwrap();
       const d = (result as { data?: { total?: number; sent?: number; failed?: number } })?.data;
       const sent = d?.sent ?? 0;
       const total = d?.total ?? 0;
-      toast.success(t('admin.digest.broadcastSuccess', { sent, total, defaultValue: `Отправлено: {{sent}} из {{total}}` }));
+      toast.success(
+        t('admin.digest.broadcastSuccess', { sent, total, defaultValue: `Отправлено: {{sent}} из {{total}}` }),
+      );
       refetch();
     } catch {
       toast.error(t('common.error'));
@@ -250,10 +164,12 @@ export default function DigestAdminPage() {
         subtitle={t('admin.digest.subtitle', 'Управление подпиской на дайджест')}
       />
 
-      {/* Digest announcement */}
       <SectionCard
         title={t('admin.digest.announcementTitle', 'Анонс в дайджесте')}
-        subtitle={t('admin.digest.announcementSubtitle', 'Текст показывается подписчикам в каждом дайджесте. Оставьте пустым, чтобы скрыть блок.')}
+        subtitle={t(
+          'admin.digest.announcementSubtitle',
+          'Текст показывается подписчикам в каждом дайджесте. Оставьте пустым, чтобы скрыть блок.',
+        )}
       >
         <div className="space-y-3">
           <Textarea
@@ -263,16 +179,12 @@ export default function DigestAdminPage() {
             rows={3}
             className="resize-none"
           />
-          <Button
-            onClick={handleSaveAnnouncement}
-            disabled={isSavingAnnouncement}
-          >
+          <Button onClick={handleSaveAnnouncement} disabled={isSavingAnnouncement}>
             {isSavingAnnouncement ? t('common.loading') : t('common.save')}
           </Button>
         </div>
       </SectionCard>
 
-      {/* Stats */}
       <SectionCard title={t('admin.digest.stats', 'Статистика')}>
         <div className="flex items-center gap-3">
           <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
@@ -287,10 +199,12 @@ export default function DigestAdminPage() {
         </div>
       </SectionCard>
 
-      {/* Broadcast — рассылка по сегментам (новая функция для мастеров и т.д.) */}
       <SectionCard
         title={t('admin.digest.broadcastTitle', 'Рассылка по сегментам')}
-        subtitle={t('admin.digest.broadcastSubtitle', 'Например: анонс новой функции для мастеров — выберите «Все мастера» и шаблон new-feature-masters')}
+        subtitle={t(
+          'admin.digest.broadcastSubtitle',
+          'Например: анонс новой функции для мастеров — выберите «Все мастера» и шаблон new-feature-masters',
+        )}
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-4">
           <div className="flex-1 space-y-2">
@@ -342,10 +256,12 @@ export default function DigestAdminPage() {
         </div>
       </SectionCard>
 
-      {/* Template overrides */}
       <SectionCard
         title={t('admin.digest.templateOverridesTitle', 'Переопределение шаблонов')}
-        subtitle={t('admin.digest.templateOverridesSubtitle', 'Изменить subject или HTML для шаблона и языка. Переопределение заменяет файловый шаблон.')}
+        subtitle={t(
+          'admin.digest.templateOverridesSubtitle',
+          'Изменить subject или HTML для шаблона и языка. Переопределение заменяет файловый шаблон.',
+        )}
         icon={<FileCode2 className="size-5" />}
       >
         <div className="space-y-4">
@@ -376,13 +292,12 @@ export default function DigestAdminPage() {
                     <SelectValue placeholder={t('admin.digest.addOverride', 'Добавить override')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {(templateIds.length > 0 ? templateIds : TEMPLATE_OVERRIDE_FALLBACK).flatMap(
-                      (tid) =>
-                        (['en', 'ru', 'ro'] as const).map((l) => (
-                          <SelectItem key={`${tid}-${l}`} value={`${tid}:${l}`}>
-                            {tid} ({l})
-                          </SelectItem>
-                        )),
+                    {(templateIds.length > 0 ? templateIds : TEMPLATE_OVERRIDE_FALLBACK).flatMap((tid) =>
+                      (['en', 'ru', 'ro'] as const).map((l) => (
+                        <SelectItem key={`${tid}-${l}`} value={`${tid}:${l}`}>
+                          {tid} ({l})
+                        </SelectItem>
+                      )),
                     )}
                   </SelectContent>
                 </Select>
@@ -400,12 +315,8 @@ export default function DigestAdminPage() {
               key={`${overrideEdit.templateId}-${overrideEdit.lang}`}
               templateId={overrideEdit.templateId}
               lang={overrideEdit.lang}
-              initialSubject={
-                currentOverrideForEdit?.subject ?? templateDefault?.subject ?? ''
-              }
-              initialBodyHtml={
-                currentOverrideForEdit?.bodyHtml ?? templateDefault?.bodyHtml ?? ''
-              }
+              initialSubject={currentOverrideForEdit?.subject ?? templateDefault?.subject ?? ''}
+              initialBodyHtml={currentOverrideForEdit?.bodyHtml ?? templateDefault?.bodyHtml ?? ''}
               onSave={handleSaveOverride}
               onCancel={() => setOverrideEdit(null)}
               isSaving={isSavingOverride}
@@ -415,80 +326,16 @@ export default function DigestAdminPage() {
         </div>
       </SectionCard>
 
-      {/* Subscribers list */}
-      <SectionCard title={t('admin.digest.subscribersList', 'Список подписчиков')}>
-        {subsLoading ? (
-          <p className="py-8 text-center text-muted-foreground">{t('common.loading')}</p>
-        ) : items.length === 0 ? (
-          <p className="py-8 text-center text-muted-foreground">{t('admin.digest.noSubscribers')}</p>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="py-3 text-left font-medium">{t('admin.digest.email', 'Email')}</th>
-                    <th className="py-3 text-left font-medium">{t('admin.digest.name', 'Имя')}</th>
-                    <th className="py-3 text-left font-medium">{t('admin.digest.role', 'Роль')}</th>
-                    <th className="py-3 text-left font-medium">{t('admin.digest.subscribedAt', 'Подписан')}</th>
-                    <th className="py-3 text-right font-medium">{t('admin.users.actions', 'Действия')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((sub) => (
-                    <tr key={sub.id} className="border-b border-border/50">
-                      <td className="py-2">{sub.user?.email ?? '—'}</td>
-                      <td className="py-2">
-                        {[sub.user?.firstName, sub.user?.lastName].filter(Boolean).join(' ') || '—'}
-                      </td>
-                      <td className="py-2">{t(`admin.roles.${sub.user?.role}`) ?? sub.user?.role}</td>
-                      <td className="py-2 text-muted-foreground">
-                        {formatDateTimeString(sub.subscribedAt, locale)}
-                      </td>
-                      <td className="py-2 text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => setUnsubscribeUserId(sub.userId)}
-                          disabled={isUnsubscribing}
-                        >
-                          <UserX className="size-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {meta.totalPages > 1 && (
-              <div className="mt-4 flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  {t('common.page')} {meta.page} {t('common.pageOf', { total: meta.totalPages })}
-                </p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={meta.page <= 1}
-                    onClick={() => setSubPage((p) => Math.max(1, p - 1))}
-                  >
-                    {t('common.prev')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={meta.page >= meta.totalPages}
-                    onClick={() => setSubPage((p) => p + 1)}
-                  >
-                    {t('common.next')}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-      </SectionCard>
+      <DigestSubscribersSection
+        subsLoading={subsLoading}
+        items={items}
+        meta={meta}
+        locale={locale}
+        isUnsubscribing={isUnsubscribing}
+        onUnsubscribeClick={setUnsubscribeUserId}
+        onPrevPage={() => setSubPage((p) => Math.max(1, p - 1))}
+        onNextPage={() => setSubPage((p) => p + 1)}
+      />
 
       <AlertDialog open={!!unsubscribeUserId} onOpenChange={() => setUnsubscribeUserId(null)}>
         <AlertDialogContent>
