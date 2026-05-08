@@ -25,7 +25,9 @@
       "node"
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@faber/api-contract": ["../packages/api-contract/src/index.ts"],
+      "@faber/api-contract/*": ["../packages/api-contract/src/*"]
     }
   },
   "include": [

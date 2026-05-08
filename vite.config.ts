@@ -149,6 +149,7 @@ export default defineConfig(({ mode }) => {
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@faber/api-contract': path.resolve(__dirname, '../packages/api-contract/src'),
     },
   },
   server: {

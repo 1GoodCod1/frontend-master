@@ -169,7 +169,7 @@ export function useUserCity() {
         .catch(() => {
           if (cancelled) return;
           return fetch(
-            'http://ip-api.com/json/?fields=city,lat,lon',
+            'https://ip-api.com/json/?fields=city,lat,lon',
             { signal: controller.signal }
           )
             .then((r) => r.json())
