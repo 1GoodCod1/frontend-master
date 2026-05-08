@@ -2,7 +2,7 @@
 
 # 🎨 faber.md Frontend
 
-### Клиентское приложение маркетплейса мастеров 
+### Client Application for the Masters Marketplace
 
 **React 19** · **Vite 7** · **TypeScript 5.9** · **Docker**
 
@@ -10,41 +10,41 @@
 
 </div>
 
-## 📖 О проекте
+## 📖 About
 
-faber.md Frontend — SPA для пользователей маркетплейса faber.md: клиентов, мастеров и администраторов. Приложение построено на React с модульной архитектурой, включает поиск мастеров, реал-тайм чат, личные кабинеты, админ-панель и мультиязычность.
+faber.md Frontend is a SPA for faber.md marketplace users: clients, masters, and administrators. The application is built on React with a modular architecture, featuring master search, real-time chat, personal dashboards, an admin panel, and multi-language support.
 
 ---
 
-## 🛠 Стек технологий
+## 🛠 Tech Stack
 
-**Ядро:** Node.js 25 · TypeScript 5.9 · React 19 · Vite 7
+**Core:** Node.js 25 · TypeScript 5.9 · React 19 · Vite 7
 
-**Состояние:** Redux Toolkit · RTK Query · Redux Persist
+**State:** Redux Toolkit · RTK Query · Redux Persist
 
-**Стилизация:** Tailwind CSS 4 · CSS Modules · Radix UI · Framer Motion
+**Styling:** Tailwind CSS 4 · CSS Modules · Radix UI · Framer Motion
 
-**Реал-тайм:** Socket.IO Client
+**Real-time:** Socket.IO Client
 
-**Формы и валидация:** React Hook Form · Zod · Yup · Formik
+**Forms & Validation:** React Hook Form · Zod · Yup · Formik
 
-**Маршрутизация:** React Router 7
+**Routing:** React Router 7
 
-**Интернационализация:** i18next · react-i18next
+**Internationalization:** i18next · react-i18next
 
-**Карты:** Leaflet · React-Leaflet
+**Maps:** Leaflet · React-Leaflet
 
-**Тесты:** Playwright
+**Tests:** Playwright
 
 **CI/CD:** Husky · Docker
 
 ---
 
-## 🏗 Архитектура
+## 🏗 Architecture
 
 ```mermaid
 graph TB
-    User["👤 Пользователь"]
+    User["👤 User"]
 
     User -->|HTTP| SPA
     User -->|WebSocket| SPA
@@ -68,7 +68,7 @@ graph TB
     API --> REST
     WS --> WS_GW
 
-    subgraph Features["Функциональные модули"]
+    subgraph Features["Feature Modules"]
         direction LR
         F1["Auth"]
         F2["Masters"]
@@ -78,7 +78,7 @@ graph TB
         F6["Payments"]
         F7["Promotions"]
         F8["Admin"]
-        F9["...ещё"]
+        F9["...more"]
     end
 
     SPA --> Features
@@ -86,15 +86,15 @@ graph TB
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### Требования
+### Requirements
 
-- Node.js ≥ 25 и npm ≥ 10
-- Docker + Docker Compose (рекомендуется)
-- Запущенный API Master (backend)
+- Node.js ≥ 25 and npm ≥ 10
+- Docker + Docker Compose (recommended)
+- Running API Master (backend)
 
-### Шаг 1 — Клонирование
+### Step 1 — Clone
 
 ```bash
 git clone <repository-url>
@@ -102,57 +102,57 @@ cd frontend-master
 npm install
 ```
 
-### Шаг 2 — Настройка окружения
+### Step 2 — Environment Setup
 
 ```bash
 cp .env.docker.example .env.docker
 ```
 
-Заполните переменные в `.env.docker` (см. [переменные окружения](#-переменные-окружения)).
+Fill in the variables in `.env.docker` (see [environment variables](#-environment-variables)).
 
-### Шаг 3 — Запуск через Docker 🐳
+### Step 3 — Run via Docker 🐳
 
 ```bash
-# Поднять dev-контейнер
+# Start dev container
 docker-compose -f docker-compose.dev.yml up -d --build
 ```
 
-### Шаг 4 — Локальный запуск (без Docker)
+### Step 4 — Local Run (without Docker)
 
 ```bash
 npm run dev
 ```
 
-### Шаг 5 — Проверка
+### Step 5 — Verify
 
-| Сервис | URL |
+| Service | URL |
 |---|---|
 | Frontend (Dev) | `http://localhost:3000` |
 | Frontend (Prod) | `http://localhost:8080` |
 
 ---
 
-## 🔐 Переменные окружения
+## 🔐 Environment Variables
 
 <details>
-<summary>🔽 Нажмите, чтобы развернуть полный список</summary>
+<summary>🔽 Click to expand full list</summary>
 
 <br>
 
-### Основные
+### Core
 
-| Переменная | Обязательна | Описание | По умолчанию |
+| Variable | Required | Description | Default |
 |---|:---:|---|---|
-| `VITE_API_URL` | ✅ | Базовый URL REST (с префиксом `/api/v1`, как на бэкенде) | `http://localhost:4000/api/v1` |
-| `VITE_WS_URL` | ✅ | URL WebSocket | `ws://localhost:4000` |
-| `VITE_ENV` | — | `development` или `production` | `development` |
-| `VITE_USE_HTTPONLY` | — | HttpOnly cookies для токенов | `true` |
+| `VITE_API_URL` | ✅ | Base REST URL (with `/api/v1` prefix, as on the backend) | `http://localhost:4000/api/v1` |
+| `VITE_WS_URL` | ✅ | WebSocket URL | `ws://localhost:4000` |
+| `VITE_ENV` | — | `development` or `production` | `development` |
+| `VITE_USE_HTTPONLY` | — | HttpOnly cookies for tokens | `true` |
 
-### CDN (опционально)
+### CDN (optional)
 
-| Переменная | Описание |
+| Variable | Description |
 |---|---|
-| `VITE_CDN_BASE_URL` | URL CDN для статики (Backblaze B2, Cloudflare) |
+| `VITE_CDN_BASE_URL` | CDN URL for static assets (Backblaze B2, Cloudflare) |
 
 </details>
 
@@ -160,59 +160,59 @@ npm run dev
 
 ## 🐳 Docker
 
-### Dev-окружение
+### Dev Environment
 
 ```bash
-npm run docker:up           # Поднять
-npm run docker:down         # Остановить
+npm run docker:up           # Start
+npm run docker:down         # Stop
 ```
 
-| Контейнер | Порт | Назначение |
+| Container | Port | Purpose |
 |---|---|---|
-| `fabermd-frontend-dev` | 3000 | Vite dev server с hot-reload |
+| `fabermd-frontend-dev` | 3000 | Vite dev server with hot-reload |
 
-### Prod-окружение
+### Prod Environment
 
 ```bash
-npm run docker:prod:up      # Поднять
-npm run docker:prod:down    # Остановить
+npm run docker:prod:up      # Start
+npm run docker:prod:down    # Stop
 ```
 
-| Контейнер | Порт | Назначение |
+| Container | Port | Purpose |
 |---|---|---|
-| `fabermd-frontend-prod` | 8080 | Nginx + статический билд |
+| `fabermd-frontend-prod` | 8080 | Nginx + static build |
 
 ### Dockerfile
 
-Многоступенчатая сборка:
+Multi-stage build:
 
-- **builder** → Компиляция Vite + TypeScript
+- **builder** → Vite + TypeScript compilation
 - **production** → Nginx Alpine + non-root user + dumb-init + healthcheck
-- **development** → Node.js с hot-reload
+- **development** → Node.js with hot-reload
 
 ---
 
-## 📜 NPM-скрипты
+## 📜 NPM Scripts
 
 <details>
-<summary>🔽 Разработка</summary>
+<summary>🔽 Development</summary>
 
-| Команда | Описание |
+| Command | Description |
 |---|---|
-| `npm run dev` | Запуск с hot-reload |
-| `npm run build` | Сборка production |
-| `npm run preview` | Превью production-билда |
+| `npm run dev` | Start with hot-reload |
+| `npm run build` | Production build |
+| `npm run preview` | Preview production build |
 | `npm run lint` | ESLint |
 
 </details>
 
 <details>
-<summary>🔽 Сборка</summary>
+<summary>🔽 Build</summary>
 
-| Команда | Описание |
+| Command | Description |
 |---|---|
 | `npm run build` | TypeScript + Vite build |
-| `npm run prerender` | Предрендер страниц |
+| `npm run prerender` | Pre-render pages |
 | `npm run build:prerender` | Build + Prerender |
 
 </details>
@@ -220,145 +220,145 @@ npm run docker:prod:down    # Остановить
 <details>
 <summary>🔽 Docker</summary>
 
-| Команда | Описание |
+| Command | Description |
 |---|---|
-| `npm run docker:up` | Dev-контейнер вверх |
-| `npm run docker:down` | Dev-контейнер вниз |
-| `npm run docker:prod:up` | Prod-контейнер вверх |
-| `npm run docker:prod:down` | Prod-контейнер вниз |
+| `npm run docker:up` | Dev container up |
+| `npm run docker:down` | Dev container down |
+| `npm run docker:prod:up` | Prod container up |
+| `npm run docker:prod:down` | Prod container down |
 
 </details>
 
 <details>
-<summary>🔽 Тестирование</summary>
+<summary>🔽 Testing</summary>
 
-| Команда | Описание |
+| Command | Description |
 |---|---|
-| `npm run e2e` | E2E тесты (Playwright) |
-| `npm run e2e:api` | API-critical-flow |
-| `npm run e2e:ui` | UI-critical-flow |
-| `npm run e2e:headed` | Запуск с браузером |
+| `npm run e2e` | E2E tests (Playwright) |
+| `npm run e2e:api` | API critical flow |
+| `npm run e2e:ui` | UI critical flow |
+| `npm run e2e:headed` | Run with browser window |
 
 </details>
 
 ---
 
-## 📂 Структура проекта
+## 📂 Project Structure
 
 ```
 frontend-master/
 │
-├── public/                 Статические файлы
+├── public/                 Static files
 │
 ├── src/
-│   ├── main.tsx            Точка входа
-│   ├── app/                Конфигурация приложения
-│   │   ├── router.tsx      Маршрутизация
+│   ├── main.tsx            Entry point
+│   ├── app/                Application configuration
+│   │   ├── router.tsx      Routing
 │   │   └── store.ts        Redux store
-│   ├── components/         UI-компоненты
-│   │   ├── common/         Общие компоненты
+│   ├── components/         UI components
+│   │   ├── common/         Shared components
 │   │   ├── layout/         Layouts (AppShell, Admin, Dashboard)
-│   │   ├── home/           Home-страница
-│   │   ├── notifications/  Уведомления
+│   │   ├── home/           Home page
+│   │   ├── notifications/  Notifications
 │   │   ├── seo/            SEO
-│   │   └── ui/             UI-кит (Radix, etc.)
-│   ├── features/           Функциональные модули
-│   │   ├── auth/           Аутентификация
-│   │   ├── masters/        Мастера (поиск, карта, профили)
-│   │   ├── leads/          Заявки
-│   │   ├── chat/           Реал-тайм чат
-│   │   ├── bookings/       Онлайн-запись и расписание
-│   │   ├── reviews/        Отзывы и рейтинги
-│   │   ├── payments/       Платежи
-│   │   ├── promotions/     Акции и скидки
-│   │   ├── favorites/      Избранные мастера
-│   │   ├── recommendations/ Рекомендации
-│   │   ├── admin/          Админ-панель
-│   │   ├── digest/         Дайджест
-│   │   ├── referrals/      Рефералы
+│   │   └── ui/             UI kit (Radix, etc.)
+│   ├── features/           Feature modules
+│   │   ├── auth/           Authentication
+│   │   ├── masters/        Masters (search, map, profiles)
+│   │   ├── leads/          Leads
+│   │   ├── chat/           Real-time chat
+│   │   ├── bookings/       Online booking and scheduling
+│   │   ├── reviews/        Reviews and ratings
+│   │   ├── payments/       Payments
+│   │   ├── promotions/     Promotions and discounts
+│   │   ├── favorites/      Favorite masters
+│   │   ├── recommendations/ Recommendations
+│   │   ├── admin/          Admin panel
+│   │   ├── digest/         Digest
+│   │   ├── referrals/      Referrals
 │   │   ├── socket/         WebSocket
 │   │   ├── cookie-consent/ Cookie consent
 │   │   └── ...
-│   ├── pages/              Страницы
-│   │   ├── public/         Публичные
-│   │   ├── auth/           Авторизация
-│   │   ├── master/         Кабинет мастера
-│   │   ├── client/         Кабинет клиента
-│   │   ├── admin/          Админ-панель
-│   │   └── referrals/      Рефералы
-│   ├── hooks/              Кастомные хуки
+│   ├── pages/              Pages
+│   │   ├── public/         Public pages
+│   │   ├── auth/           Authentication
+│   │   ├── master/         Master dashboard
+│   │   ├── client/         Client dashboard
+│   │   ├── admin/          Admin panel
+│   │   └── referrals/      Referrals
+│   ├── hooks/              Custom hooks
 │   ├── services/           API, Socket, env
-│   ├── i18n/               Переводы
-│   ├── types/              Типы TypeScript
-│   ├── utils/              Утилиты
-│   └── styles/             Глобальные стили
+│   ├── i18n/               Translations
+│   ├── types/              TypeScript types
+│   ├── utils/              Utilities
+│   └── styles/             Global styles
 │
-├── Dockerfile              Многоступенчатый
-├── docker-compose.dev.yml  Dev-стек
-├── docker-compose.prod.yml Prod-стек
-├── nginx.conf              Конфиг Nginx (prod)
+├── Dockerfile              Multi-stage
+├── docker-compose.dev.yml  Dev stack
+├── docker-compose.prod.yml Prod stack
+├── nginx.conf              Nginx config (prod)
 └── package.json
 ```
 
 ---
 
-## 🧭 Карта маршрутов
+## 🧭 Route Map
 
-| Путь | Доступ | Описание |
+| Path | Access | Description |
 |---|---|---|
-| `/` | Публичный | Главная, поиск мастеров, акции |
-| `/masters` | Публичный | Каталог мастеров (фильтры, карта) |
-| `/masters/:slug` | Публичный | Профиль мастера, онлайн-запись |
-| `/plans` | Публичный | Тарифные планы |
-| `/how-it-works` | Публичный | Как работает платформа |
-| `/faq` | Публичный | Часто задаваемые вопросы |
-| `/login` / `/register` | Публичный | Авторизация |
-| `/dashboard/*` | Мастер | Кабинет мастера (статистика, заявки, чат, брони, акции) |
-| `/client/*` | Клиент | Кабинет клиента (заявки, избранное, чат, брони) |
-| `/admin/*` | Админ | Админ-панель |
-| `/referrals` | Клиент | Реферальная программа |
+| `/` | Public | Home page, master search, promotions |
+| `/masters` | Public | Master catalog (filters, map) |
+| `/masters/:slug` | Public | Master profile, online booking |
+| `/plans` | Public | Pricing plans |
+| `/how-it-works` | Public | How the platform works |
+| `/faq` | Public | Frequently asked questions |
+| `/login` / `/register` | Public | Authentication |
+| `/dashboard/*` | Master | Master dashboard (stats, leads, chat, bookings, promotions) |
+| `/client/*` | Client | Client dashboard (leads, favorites, chat, bookings) |
+| `/admin/*` | Admin | Admin panel |
+| `/referrals` | Client | Referral program |
 
 ---
 
-## 📁 Ключевые модули (features)
+## 📁 Key Modules (features)
 
-| Модуль | Описание |
+| Module | Description |
 |---|---|
-| **auth** | JWT, guards, роуты по ролям |
-| **masters** | Поиск, карточки, профили, вид карты |
-| **leads** | Заявки клиентов |
-| **chat** | Реал-тайм чат (Socket.IO) |
-| **bookings** | Онлайн-запись: слоты, расписание, управление бронями |
-| **reviews** | Отзывы и рейтинги |
-| **payments** | Платежи MIA/MAIB |
-| **promotions** | Акции и скидки мастеров (PREMIUM) |
-| **recommendations** | Рекомендации мастеров |
-| **favorites** | Избранные мастера (для клиентов) |
-| **admin** | Админ-панель |
-| **digest** | Подписка на дайджест |
-| **referrals** | Реферальная система |
-| **socket** | WebSocket состояние |
+| **auth** | JWT, guards, role-based routes |
+| **masters** | Search, cards, profiles, map view |
+| **leads** | Client requests |
+| **chat** | Real-time chat (Socket.IO) |
+| **bookings** | Online booking: slots, schedule, booking management |
+| **reviews** | Reviews and ratings |
+| **payments** | MIA/MAIB payments |
+| **promotions** | Master promotions and discounts (PREMIUM) |
+| **recommendations** | Master recommendations |
+| **favorites** | Favorite masters (for clients) |
+| **admin** | Admin panel |
+| **digest** | Digest subscription |
+| **referrals** | Referral system |
+| **socket** | WebSocket state |
 | **cookie-consent** | GDPR cookie consent |
 
 ---
 
-## 🚀 Продакшн
+## 🚀 Production
 
-### Чек-лист
+### Checklist
 
 - [ ] `VITE_ENV=production`
-- [ ] `VITE_API_URL` и `VITE_WS_URL` указывают на prod API
-- [ ] SSL/TLS через reverse proxy (Nginx / Traefik)
-- [ ] CDN для статики (опционально)
+- [ ] `VITE_API_URL` and `VITE_WS_URL` point to prod API
+- [ ] SSL/TLS via reverse proxy (Nginx / Traefik)
+- [ ] CDN for static assets (optional)
 
-### Деплой
+### Deploy
 
 ```bash
-# 1. Создать prod-конфиг
+# 1. Create prod config
 cp .env.docker.example .env
-# Заполнить VITE_API_URL, VITE_WS_URL
+# Fill in VITE_API_URL, VITE_WS_URL
 
-# 2. Запустить
+# 2. Start
 npm run docker:prod:up
 ```
 
@@ -366,6 +366,6 @@ npm run docker:prod:up
 
 <div align="center">
 
-© 2026 faber.md Team · Все права защищены
+© 2026 faber.md Team · All rights reserved
 
 </div>
