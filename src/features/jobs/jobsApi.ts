@@ -32,7 +32,7 @@ export const jobsApi = api.injectEndpoints({
     jobById: build.query<JobDto | null, { id: string }>({
       query: ({ id }) => ({ url: `/jobs/${id}`, method: 'GET' }),
       providesTags: (_r, _e, a) => [{ type: 'Jobs', id: a.id }],
-      transformResponse: (raw: unknown) => unwrapObject<JobDto>(raw) as JobDto ?? null,
+      transformResponse: (raw: unknown) => (unwrapObject<JobDto>(raw) ?? null) as JobDto | null,
     }),
 
     jobWithApplications: build.query<JobApplicationsResponse, { id: string }>({
@@ -51,9 +51,24 @@ export const jobsApi = api.injectEndpoints({
         method: 'POST',
         data: body,
       }),
-      invalidatesTags: ['JobApplications', 'Joints', 'Jobs'],
+      invalidatesTags: (_r, _e, a) => [
+        { type: 'Jobs', id: a.jobId },
+        { type: 'JobApplications', id: a.jobId },
+        'JobApplications',
+        'Joints',
+      ],
       transformResponse: (raw: unknown) =>
         unwrapObject<JobApplicationDto>(raw) as JobApplicationDto,
+    }),
+
+    jobMyApplication: build.query<
+      { applied: boolean; application: { id: string; status: string; jointsSpent: number; createdAt: string; viewedAt: string | null } | null },
+      { jobId: string }
+    >({
+      query: ({ jobId }) => ({ url: `/jobs/${jobId}/my-application`, method: 'GET' }),
+      providesTags: (_r, _e, a) => [{ type: 'JobApplications', id: a.jobId }],
+      transformResponse: (raw: unknown) =>
+        unwrapObject<{ applied: boolean; application: never }>(raw) ?? { applied: false, application: null },
     }),
 
     jobViewApplication: build.mutation<JobApplicationDto, { applicationId: string }>({
@@ -189,4 +204,5 @@ export const {
   useJobWithdrawApplicationMutation,
   useJobLeaderboardQuery,
   useMasterMyApplicationsQuery,
+  useJobMyApplicationQuery,
 } = jobsApi;

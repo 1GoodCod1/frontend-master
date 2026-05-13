@@ -31,7 +31,9 @@ export const NOTIFICATION_EVENT_TYPE = {
   system_maintenance: 'system_maintenance',
   system_update: 'system_update',
   job_application_received: 'job_application_received',
+  job_application_viewed: 'job_application_viewed',
   job_master_selected: 'job_master_selected',
+  job_not_selected: 'job_not_selected',
   job_status_changed: 'job_status_changed',
 } as const;
 

@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Zap, Send, ImagePlus, X, ChevronLeft, Loader2, CheckCircle2, Plus, Trash2, Clock } from 'lucide-react';
-import { useJobByIdQuery, useJobApplyMutation, useMasterMyApplicationsQuery } from '@/features/jobs/jobsApi';
+import { useJobByIdQuery, useJobApplyMutation, useJobMyApplicationQuery } from '@/features/jobs/jobsApi';
 import { useJointsBalanceQuery } from '@/features/joints/jointsApi';
 import { useFileUpload } from '@/hooks/useFileUpload';
 import { useAppSelector } from '@/app/hooks';
@@ -33,13 +33,13 @@ export default function MasterJobApplyPage() {
 
   const { data: job, isLoading: jobLoading } = useJobByIdQuery({ id: id! }, { skip: !id });
   const { data: balanceData } = useJointsBalanceQuery(undefined, { skip: !isMaster });
-  const { data: myApps } = useMasterMyApplicationsQuery(undefined, { skip: !isMaster });
+  const { data: myApp } = useJobMyApplicationQuery({ jobId: id! }, { skip: !id || !isMaster });
   const [apply, { isLoading }] = useJobApplyMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { files, previews, pickFiles, upload, removeFile, isUploading } = useFileUpload({ maxFiles: 5, forLead: true });
 
-  const [joints, setJoints] = useState(job?.minJoints ?? 5);
+  const [joints, setJoints] = useState<number | null>(null);
   const [description, setDescription] = useState('');
   const [paymentType, setPaymentType] = useState<ApplicationPaymentType>('FULL');
   const [deadline, setDeadline] = useState<string>('');
@@ -47,7 +47,14 @@ export default function MasterJobApplyPage() {
 
   const balance = balanceData?.balance ?? 0;
   const minJoints = job?.minJoints ?? 1;
-  const alreadyApplied = (myApps?.items ?? []).some((a) => a.jobId === id);
+  const alreadyApplied = myApp?.applied ?? false;
+
+  // Синхронизируем initial joints с minJoints, как только job загружен.
+  useEffect(() => {
+    if (job && joints === null) {
+      setJoints(job.minJoints);
+    }
+  }, [job, joints]);
 
   const updateMilestone = (i: number, patch: Partial<MilestoneDto>) => {
     setMilestones((prev) => prev.map((m, idx) => idx === i ? { ...m, ...patch } : m));
@@ -58,8 +65,9 @@ export default function MasterJobApplyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!id) return;
-    if (joints < minJoints) { toast.error(t('jobs.minJointsRequired', { n: minJoints })); return; }
-    if (joints > balance) { toast.error(t('jobs.insufficientJoints')); return; }
+    const jointsValue = joints ?? minJoints;
+    if (jointsValue < minJoints) { toast.error(t('jobs.minJointsRequired', { n: minJoints })); return; }
+    if (jointsValue > balance) { toast.error(t('jobs.insufficientJoints')); return; }
     if (!description.trim()) { toast.error(t('jobs.writeCoverLetter')); return; }
 
     if (paymentType === 'FULL' && !deadline) {
@@ -82,7 +90,7 @@ export default function MasterJobApplyPage() {
       await apply({
         jobId: id,
         body: {
-          jointsSpent: joints,
+          jointsSpent: jointsValue,
           description,
           paymentType,
           deadline: paymentType === 'FULL' && deadline ? Number(deadline) : undefined,
@@ -166,7 +174,7 @@ export default function MasterJobApplyPage() {
               type="number"
               min={minJoints}
               max={balance}
-              value={joints}
+              value={joints ?? ''}
               onChange={(e) => setJoints(Math.max(minJoints, Number(e.target.value)))}
               className="w-28 rounded-xl border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/30"
             />
@@ -351,7 +359,7 @@ export default function MasterJobApplyPage() {
           {isLoading || isUploading
             ? <Loader2 className="h-4 w-4 animate-spin" />
             : <Send className="h-4 w-4" />}
-          {t('jobs.submitJoints', { joints })}
+          {t('jobs.submitJoints', { joints: joints ?? minJoints })}
         </Button>
       </form>
     </div>

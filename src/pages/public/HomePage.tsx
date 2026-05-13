@@ -22,6 +22,9 @@ const PopularCategoriesSection = lazyWithRetry(() =>
 const HowItWorksSection = lazyWithRetry(() =>
   import('@/components/home/HowItWorksSection').then((m) => ({ default: m.HowItWorksSection }))
 );
+const JobsFlowSection = lazyWithRetry(() =>
+  import('@/components/home/JobsFlowSection').then((m) => ({ default: m.JobsFlowSection }))
+);
 const RoadmapSection = lazyWithRetry(() =>
   import('@/components/home/RoadmapSection').then((m) => ({ default: m.RoadmapSection }))
 );
@@ -130,6 +133,19 @@ export default function HomePage() {
           <Suspense fallback={null}>
             <HowItWorksSection />
           </Suspense>
+
+          <div
+            className={cn(
+              'rounded-2xl border p-5 sm:p-6 md:p-8 mt-6 md:mt-8 transition-colors duration-500',
+              isDark
+                ? 'bg-white/[0.03] border-white/[0.08] shadow-none'
+                : 'bg-[#F9FAFB] border-gray-200/80 shadow-sm',
+            )}
+          >
+            <Suspense fallback={null}>
+              <JobsFlowSection />
+            </Suspense>
+          </div>
 
           <div
             className={cn(

@@ -124,12 +124,41 @@ export async function connectSocket(store: Store<RootState>) {
       mapped === NOTIFICATION_EVENT_TYPE.booking_cancelled
     ) {
       store.dispatch(api.util.invalidateTags(['Bookings']));
-    } else if (mapped === NOTIFICATION_EVENT_TYPE.job_application_received) {
-      store.dispatch(api.util.invalidateTags(['Jobs', 'JobApplications']));
-    } else if (mapped === NOTIFICATION_EVENT_TYPE.job_master_selected) {
-      store.dispatch(api.util.invalidateTags(['JobApplications', 'Jobs']));
-    } else if (mapped === NOTIFICATION_EVENT_TYPE.job_status_changed) {
-      store.dispatch(api.util.invalidateTags(['Jobs', 'JobApplications']));
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.job_application_received ||
+      mapped === NOTIFICATION_EVENT_TYPE.job_application_viewed
+    ) {
+      // Точечно: jobId известен — инвалидируем конкретный job и его заявки.
+      const payloadObj = isRecord(payload) ? payload : {};
+      const meta =
+        (isRecord(payloadObj.metadata) && (payloadObj.metadata as Record<string, unknown>)) ||
+        (isRecord(payloadObj.data) && (payloadObj.data as Record<string, unknown>)) ||
+        payloadObj;
+      const jobId = typeof meta.jobId === 'string' ? meta.jobId : undefined;
+      const tags: { type: 'Jobs' | 'JobApplications'; id?: string }[] = [];
+      if (jobId) {
+        tags.push({ type: 'Jobs', id: jobId }, { type: 'JobApplications', id: jobId });
+      }
+      tags.push({ type: 'JobApplications' });
+      store.dispatch(api.util.invalidateTags(tags));
+    } else if (
+      mapped === NOTIFICATION_EVENT_TYPE.job_master_selected ||
+      mapped === NOTIFICATION_EVENT_TYPE.job_not_selected ||
+      mapped === NOTIFICATION_EVENT_TYPE.job_status_changed
+    ) {
+      // Эти события меняют статус джоба И могут менять joints (рефанды/burn).
+      const payloadObj = isRecord(payload) ? payload : {};
+      const meta =
+        (isRecord(payloadObj.metadata) && (payloadObj.metadata as Record<string, unknown>)) ||
+        (isRecord(payloadObj.data) && (payloadObj.data as Record<string, unknown>)) ||
+        payloadObj;
+      const jobId = typeof meta.jobId === 'string' ? meta.jobId : undefined;
+      const tags: { type: 'Jobs' | 'JobApplications' | 'Joints'; id?: string }[] = [];
+      if (jobId) {
+        tags.push({ type: 'Jobs', id: jobId }, { type: 'JobApplications', id: jobId });
+      }
+      tags.push({ type: 'Jobs' }, { type: 'JobApplications' }, { type: 'Joints' });
+      store.dispatch(api.util.invalidateTags(tags));
     }
 
     // Play sound for all notifications except system maintenance (optional)
