@@ -21,6 +21,7 @@ import {
   Tag,
   ListChecks,
   Gift,
+  Briefcase,
 } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { selectPlan, selectRole, selectIsVerified } from '@/features/auth/selectors';
@@ -59,6 +60,7 @@ function getItems(
     { key: 'security', label: t('dashboard.security'), to: '/dashboard/security', icon: <Shield className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'notifications', label: t('dashboard.notifications'), to: '/dashboard/notifications', icon: <Bell className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'verification', label: t('dashboard.verification'), to: '/dashboard/verification', icon: <BadgeCheck className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'applications', label: t('jobs.myApplications', 'My Applications'), to: '/dashboard/jobs/applications', icon: <Briefcase className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'referrals', label: t('referrals.title'), to: '/dashboard/referrals', icon: <Gift className="size-5" />, minPlan: 'BASIC' as TariffPlan },
   ];
   return base

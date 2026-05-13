@@ -39,7 +39,7 @@ export const paymentsApi = api.injectEndpoints({
     }),
     paymentsSimulateMiaSandbox: build.mutation<{ ok: boolean; orderId: string }, { paymentId: string }>({
       query: (body) => ({ url: '/payments/mia-sandbox-simulate', method: 'POST', data: body }),
-      invalidatesTags: ['Payments', 'Master'],
+      invalidatesTags: ['Payments', 'Master', 'Joints'],
     }),
     paymentsForMaster: build.query<PaymentDto[], { masterId: string }>({
       query: ({ masterId }) => ({ url: `/payments/master/${masterId}`, method: 'GET' }),

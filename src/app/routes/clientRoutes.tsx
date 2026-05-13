@@ -55,6 +55,15 @@ export const clientRoutes = {
           element: <LazyPage><P.ClientChatPage /></LazyPage>,
         },
         { path: routeSeg.referrals, element: <LazyPage><P.ReferralPage /></LazyPage> },
+        { path: routeSeg.jobs, element: <LazyPage><P.ClientJobsPage /></LazyPage> },
+        {
+          path: `${routeSeg.jobs}/${routeSeg.jobCreate}`,
+          element: <LazyPage><P.ClientCreateJobPage /></LazyPage>,
+        },
+        {
+          path: `${routeSeg.jobs}/:id`,
+          element: <LazyPage><P.ClientJobDetailsPage /></LazyPage>,
+        },
       ],
     },
   ],

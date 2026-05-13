@@ -188,7 +188,9 @@ export function CabinetSidebar({
 
         {items.map((item) => {
           const exactMatch = location.pathname === item.to;
+          const anyExactMatch = items.some((i) => i.to === location.pathname);
           const nestedMatch =
+            !anyExactMatch &&
             item.to !== '/dashboard' &&
             item.to !== '/client-dashboard' &&
             item.to !== '/admin' &&

@@ -47,13 +47,15 @@ export interface MasterInfo {
 export interface ClientInfo {
   id: string;
   email: string;
+  firstName: string | null;
+  lastName: string | null;
   avatarFile: { path: string } | null;
 }
 
 export interface Conversation {
   id: string;
-  leadId: string;
-  lead: LeadInfo;
+  leadId: string | null;
+  lead: LeadInfo | null;
   master: MasterInfo;
   client: ClientInfo | null;
   clientPhone: string | null;

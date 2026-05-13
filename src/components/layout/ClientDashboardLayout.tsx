@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Gift,
   Calendar,
+  Briefcase,
 } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectRole, selectIsVerified } from '@/features/auth/selectors';
@@ -35,6 +36,7 @@ function getItems(t: ReturnType<typeof useTranslation>['t']): CabinetNavItem[] {
     { key: 'reports', label: t('clientDashboard.reports'), to: '/client-dashboard/reports', icon: <AlertTriangle className="size-5" /> },
     { key: 'profile', label: t('clientDashboard.profile'), to: '/client-dashboard/profile', icon: <User className="size-5" /> },
     { key: 'security', label: t('dashboard.security'), to: '/client-dashboard/security', icon: <Shield className="size-5" /> },
+    { key: 'jobs', label: t('jobs.jobs', 'Jobs'), to: '/client-dashboard/jobs', icon: <Briefcase className="size-5" /> },
     { key: 'referrals', label: t('referrals.title'), to: '/client-dashboard/referrals', icon: <Gift className="size-5" /> },
   ];
 }

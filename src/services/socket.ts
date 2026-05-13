@@ -124,6 +124,12 @@ export async function connectSocket(store: Store<RootState>) {
       mapped === NOTIFICATION_EVENT_TYPE.booking_cancelled
     ) {
       store.dispatch(api.util.invalidateTags(['Bookings']));
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.job_application_received) {
+      store.dispatch(api.util.invalidateTags(['Jobs', 'JobApplications']));
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.job_master_selected) {
+      store.dispatch(api.util.invalidateTags(['JobApplications', 'Jobs']));
+    } else if (mapped === NOTIFICATION_EVENT_TYPE.job_status_changed) {
+      store.dispatch(api.util.invalidateTags(['Jobs', 'JobApplications']));
     }
 
     // Play sound for all notifications except system maintenance (optional)
@@ -151,7 +157,6 @@ export async function connectSocket(store: Store<RootState>) {
 
 export function disconnectSocket() {
   if (!socket) return;
-  // Удаляем все listeners перед отключением
   socket.removeAllListeners();
   socket.disconnect();
   socket = null;

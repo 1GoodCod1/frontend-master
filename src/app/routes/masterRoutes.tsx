@@ -73,6 +73,14 @@ export const masterRoutes = {
           path: `${routeSeg.chat}/:conversationId`,
           element: <LazyPage><P.MasterChatPage /></LazyPage>,
         },
+        {
+          path: `${routeSeg.jobs}/${routeSeg.applications}`,
+          element: <LazyPage><P.MasterApplicationsPage /></LazyPage>,
+        },
+        {
+          path: `${routeSeg.jobs}/:id/apply`,
+          element: <LazyPage><P.MasterJobApplyPage /></LazyPage>,
+        },
       ],
     },
   ],

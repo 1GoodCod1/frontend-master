@@ -18,6 +18,7 @@ export const plans: readonly PlanUI[] = [
       price: '0 MDL',
       description: 'Start and receive first leads',
       features: [
+        '20 joints / month',
         'Public profile',
         'Up to 5 photos',
         'Receive leads',
@@ -33,6 +34,7 @@ export const plans: readonly PlanUI[] = [
       price: '149 MDL / month',
       description: 'More visibility, more clients',
       features: [
+        '100 joints / month',
         'VIP badge',
         'Higher in search results',
         'Up to 10 photos',
@@ -48,6 +50,7 @@ export const plans: readonly PlanUI[] = [
       price: '299 MDL / month',
       description: 'Maximum exposure & leads',
       features: [
+        '200 joints / month',
         'Top positions in catalog',
         'Featured on homepage',
         'Up to 15 photos',

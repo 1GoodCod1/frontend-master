@@ -60,6 +60,9 @@ export const routeSeg = {
   verificationRequests: 'verification-requests',
   digest: 'digest',
   compliance: 'compliance',
+  jobs: 'jobs',
+  jobCreate: 'create',
+  applications: 'applications',
 } as const;
 
 export const paths = {
@@ -129,6 +132,11 @@ export const paths = {
     referrals: j(routeSeg.clientDashboard, routeSeg.referrals),
   },
 
+  jobs: {
+    list: j(routeSeg.jobs),
+    detail: (id: string) => j(routeSeg.jobs, id),
+  },
+  
   admin: {
     root: j(routeSeg.admin),
     users: j(routeSeg.admin, routeSeg.users),
@@ -157,4 +165,5 @@ export const OTHER_PUBLIC_PATHS = [
   paths.contact,
   paths.privacy,
   paths.terms,
+  paths.jobs.list,
 ] as const;

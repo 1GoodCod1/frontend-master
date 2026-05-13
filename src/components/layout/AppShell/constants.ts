@@ -3,12 +3,19 @@ import {
   CreditCard,
   LayoutDashboard,
   Shield,
+  Briefcase,
 } from 'lucide-react';
 import { USER_ROLE } from '@/constants/roles';
 import type { AppShellNavItem } from './types';
 
 export const APP_SHELL_NAV_ITEMS: AppShellNavItem[] = [
   { to: '/masters', labelKey: 'nav.masters', icon: Users },
+  {
+    to: '/jobs',
+    labelKey: 'nav.jobs',
+    icon: Briefcase,
+    hideForRoles: [USER_ROLE.ADMIN],
+  },
   {
     to: '/plans',
     labelKey: 'nav.plans',

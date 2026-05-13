@@ -14,7 +14,8 @@ export const filesApi = api.injectEndpoints({
         fd.append('file', compressed);
         const result = await baseQuery({ url: '/files/upload', method: 'POST', data: fd });
         if (result.error) return { error: result.error };
-        return { data: result.data as FileDto };
+        const inner = unwrapEnvelope(result.data);
+        return { data: (inner ?? result.data) as FileDto };
       },
       invalidatesTags: ['Files', 'Me'],
     }),

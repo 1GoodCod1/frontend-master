@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import type { LeadNotifyChannelInput } from '@/constants/leadNotifyChannel';
 
 export * from './chat';
+export * from './jobs';
 export * from './leads';
 export * from './payments';
 export * from './reviews';
@@ -199,5 +200,5 @@ export type MeResponse = Record<string, unknown> & {
   id?: string;
   email?: string;
   role?: Role;
-  masterId?: string; // if backend returns it
+  masterId?: string; 
 };

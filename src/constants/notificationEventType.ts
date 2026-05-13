@@ -30,6 +30,9 @@ export const NOTIFICATION_EVENT_TYPE = {
   booking_cancelled: 'booking_cancelled',
   system_maintenance: 'system_maintenance',
   system_update: 'system_update',
+  job_application_received: 'job_application_received',
+  job_master_selected: 'job_master_selected',
+  job_status_changed: 'job_status_changed',
 } as const;
 
 export type NotificationEventType =

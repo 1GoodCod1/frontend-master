@@ -21,4 +21,6 @@ export const publicRoutes = [
   { path: routeSeg.contact, element: <LazyPage><P.ContactsPage /></LazyPage> },
   { path: routeSeg.privacy, element: <LazyPage><P.PrivacyPolicyPage /></LazyPage> },
   { path: routeSeg.terms, element: <LazyPage><P.TermsOfUsePage /></LazyPage> },
+  { path: routeSeg.jobs, element: <LazyPage><P.PublicJobsPage /></LazyPage> },
+  { path: `${routeSeg.jobs}/:id`, element: <LazyPage><P.PublicJobDetailPage /></LazyPage> },
 ];

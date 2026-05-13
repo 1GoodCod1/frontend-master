@@ -25,7 +25,7 @@ export default function ChatList({
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState<ChatTab>('all');
 
-  const { data: conversationsData, isLoading } = useGetConversationsQuery();
+  const { data: conversationsData, isLoading } = useGetConversationsQuery(undefined, { pollingInterval: 10_000 });
 
   const rawConversations = Array.isArray(conversationsData) ? conversationsData : [];
   const grouped = groupConversationsByContact(rawConversations, userRole) as Conversation[];

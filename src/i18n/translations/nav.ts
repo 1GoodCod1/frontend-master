@@ -3,6 +3,7 @@ export const nav = {
     nav: {
       home: 'Home',
       masters: 'Masters',
+      jobs: 'Jobs',
       login: 'Login',
       register: 'Register',
       dashboard: 'Dashboard',
@@ -19,6 +20,7 @@ export const nav = {
     nav: {
       home: 'Главная',
       masters: 'Мастера',
+      jobs: 'Jobs',
       login: 'Вход',
       register: 'Регистрация',
       dashboard: 'Кабинет',
@@ -35,6 +37,7 @@ export const nav = {
     nav: {
       home: 'Acasă',
       masters: 'Meșteri',
+      jobs: 'Joburi',
       login: 'Autentificare',
       register: 'Înregistrare',
       dashboard: 'Cabinet',

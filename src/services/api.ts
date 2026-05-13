@@ -64,7 +64,6 @@ type AxiosBaseQueryError = {
 const axiosInstance = axios.create({
   baseURL: env.apiUrl,
   timeout: 30_000,
-  // Always send cookies cross-origin (refresh httpOnly, oauth_pending, oauth_state)
   withCredentials: true,
 });
 
@@ -74,20 +73,14 @@ export const axiosBaseQuery =
       try {
         const state = api.getState() as RootState;
         const accessToken = state.auth.tokens?.accessToken;
-
         const isFormData = args.data instanceof FormData;
-
-        // Собираем заголовки
         const headers: Record<string, string> = {};
 
-        // Копируем существующие заголовки
         if (args.headers && isRecord(args.headers)) {
           for (const [k, v] of Object.entries(args.headers)) {
             if (typeof v === 'string') headers[k] = v;
           }
         }
-
-        // Добавляем Authorization токен
         if (accessToken) {
           headers['Authorization'] = `Bearer ${accessToken}`;
         }
@@ -96,9 +89,6 @@ export const axiosBaseQuery =
         if (sessionId) {
           headers['x-session-id'] = sessionId;
         }
-
-        // Публичные GET с коротким max-age на API — иначе браузер отдаёт старый JSON из HTTP-кеша
-        // (axios/XHR подчиняется Cache-Control ответа сервера).
         const method = (args.method ?? 'GET').toUpperCase();
         if (method === 'GET' && args.url) {
           const path = args.url.split('?')[0] ?? '';
@@ -109,7 +99,6 @@ export const axiosBaseQuery =
           }
         }
 
-        // Удаляем Content-Type для FormData, чтобы браузер установил правильный boundary
         if (isFormData) {
           delete headers['Content-Type'];
           delete headers['content-type'];
@@ -139,7 +128,6 @@ export const axiosBaseQuery =
 // Mutex: only one refresh request at a time. Concurrent 401s share the same promise.
 let pendingRefresh: Promise<boolean> | null = null;
 
-// Wrapper that refreshes token once on 401, then retries original request
 export const baseQueryWithReauth =
   (baseQuery: ReturnType<typeof axiosBaseQuery>): BaseQueryFn<AxiosBaseQueryArgs, unknown, AxiosBaseQueryError> =>
     async (args, api, extraOptions) => {
@@ -157,7 +145,6 @@ export const baseQueryWithReauth =
           return result;
         }
 
-        // Mutex: first 401 initiates refresh, concurrent 401s wait for same promise
         if (!pendingRefresh) {
           pendingRefresh = (async (): Promise<boolean> => {
             const state = api.getState() as RootState;
@@ -171,7 +158,6 @@ export const baseQueryWithReauth =
               return false;
             }
 
-            // httpOnly mode but no session — skip refresh attempt
             if (useHttpOnly && isHttpOnlyGuestHint()) {
               return false;
             }
@@ -185,8 +171,6 @@ export const baseQueryWithReauth =
 
             if (refreshResult.error) {
               const refreshStatus = refreshResult.error.status;
-              // Only clear auth on definitive auth failures (401/403)
-              // Network errors and 5xx should not log the user out
               if (refreshStatus === 401 || refreshStatus === 403) {
                 api.dispatch(clearAuth());
                 persistRefreshToken(null);
@@ -226,7 +210,6 @@ export const baseQueryWithReauth =
         }
       }
 
-      // Единая обработка 5xx и сетевых ошибок: тост с опцией повтора через refetch на экране
       if (result.error && isNetworkOr5xx(result.error.status)) {
         toast.error(toErrorMessage(result.error!), { duration: 6000, id: 'api-error-toast' });
       }
@@ -271,6 +254,9 @@ export const api = createApi({
     'Notifications',
     'ScheduleSettings',
     'AvailabilitySubscription',
+    'Jobs',
+    'JobApplications',
+    'Joints',
   ],
   endpoints: () => ({}),
 });

@@ -16,7 +16,7 @@ export default function ChatBadge({ dashboardPath }: ChatBadgeProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data } = useGetUnreadCountQuery(undefined, {
-    pollingInterval: 30000,
+    pollingInterval: 15_000,
   });
 
   const unreadCount = data?.count ?? 0;

@@ -5,6 +5,7 @@ import { CheckCircle } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { usePaymentsSimulateMiaSandboxMutation } from '@/features/payments/paymentsApi';
+import { useJointsBalanceQuery } from '@/features/joints/jointsApi';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { LoadingState } from '@/components/common/States';
@@ -18,6 +19,7 @@ export default function PaymentSuccessPage() {
   const role = useAppSelector(selectRole);
   const isMaster = isAuthed && role === USER_ROLE.MASTER;
   const [simulateMia] = usePaymentsSimulateMiaSandboxMutation();
+  useJointsBalanceQuery(undefined, { refetchOnMountOrArgChange: true, skip: !isMaster });
   const simulateDoneRef = useRef(false);
   const [simulateSettled, setSimulateSettled] = useState(false);
 

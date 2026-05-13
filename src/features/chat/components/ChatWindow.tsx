@@ -65,7 +65,7 @@ export default function ChatWindow({
 
   const { data: conversation, isLoading: loadingConversation } = useGetConversationQuery(
     validConversationId ?? '',
-    { skip: !isValid }
+    { skip: !isValid, pollingInterval: 8_000 }
   );
   const { data: messagesData, isLoading: loadingMessages } = useGetMessagesQuery(
     { id: validConversationId ?? '', page: 1, limit: 100 },
@@ -233,7 +233,8 @@ export default function ChatWindow({
 
   const leadStatus = conversation?.lead?.status;
   const isLeadActive = leadStatus && ['NEW', 'IN_PROGRESS'].includes(String(leadStatus));
-  const canSendMessages = !conversation?.closedAt && Boolean(isLeadActive);
+  const isJobConversation = !conversation?.leadId;
+  const canSendMessages = !conversation?.closedAt && (Boolean(isLeadActive) || isJobConversation);
 
   if (loadingConversation) {
     return (
@@ -433,7 +434,7 @@ export default function ChatWindow({
         </div>
       )}
 
-      {!canSendMessages && !conversation?.closedAt && !isLeadActive && (
+      {!canSendMessages && !conversation?.closedAt && !isLeadActive && !isJobConversation && (
         <div
           className={cn(
             'mx-3 sm:mx-4 mt-3 rounded-xl px-4 py-3.5 text-sm',

@@ -5,8 +5,10 @@ import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { Menu, LogIn, UserPlus } from 'lucide-react';
 import { RemoveScroll } from 'react-remove-scroll';
 import { NotificationMenu } from '@/components/common/NotificationMenu';
+import { JointsBalanceBadge } from '@/components/common/JointsBalanceBadge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { USER_ROLE } from '@/constants/roles';
 import { getVisibleNavItems } from './navUtils';
 import { AppShellNavDesktop } from './AppShellNavDesktop';
 import { AppShellSettingsMenu } from './AppShellSettingsMenu';
@@ -84,6 +86,7 @@ export function AppShellHeader({
         />
 
         <div className="hidden md:flex items-center gap-1">
+          {isAuthed && role === USER_ROLE.MASTER && <JointsBalanceBadge />}
           {isAuthed && <NotificationMenu />}
           {!isAuthed && (
             <>
@@ -125,6 +128,7 @@ export function AppShellHeader({
         </div>
 
         <div className="flex md:hidden items-center gap-1">
+          {isAuthed && role === USER_ROLE.MASTER && <JointsBalanceBadge />}
           {isAuthed && <NotificationMenu />}
           <Button
             variant="ghost"

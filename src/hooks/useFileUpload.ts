@@ -76,6 +76,11 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 
       setFiles((prev) => {
         const remaining = maxFiles - prev.length;
+        if (remaining <= 0) return prev;
+        return [...prev, ...accepted.slice(0, remaining)];
+      });
+      setPreviews((prev) => {
+        const remaining = maxFiles - prev.length;
         if (remaining <= 0) {
           toast.error(t('files.tooMany'));
           return prev;
@@ -87,12 +92,9 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
         const newPreviews = toAdd
           .filter((f) => f.type.startsWith('image/'))
           .map((f) => URL.createObjectURL(f));
-        setPreviews((p) => {
-          const merged = [...p, ...newPreviews];
-          previewsRef.current = merged;
-          return merged;
-        });
-        return [...prev, ...toAdd];
+        const merged = [...prev, ...newPreviews];
+        previewsRef.current = merged;
+        return merged;
       });
     },
     [maxFiles, validator, t],

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { ArrowUpCircle, Settings, ShieldCheck, Star, Zap } from 'lucide-react';
+import { ArrowUpCircle, Settings, ShieldCheck, Star, Zap, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PlanUI } from '@/types/plans';
 import { PaidTariff, TariffPlan } from '@/features/auth/plan';
@@ -220,6 +220,30 @@ export const PlanCard = ({
           {t('plans.registerToGetFreeDesc')}
         </p>
       )}
+
+      {/* Feature list */}
+      <ul className="mt-4 mb-2 space-y-2">
+        {plan.features.map((feature) => {
+          const isJoints = feature.includes('joints');
+          return (
+            <li key={feature} className="flex items-start gap-2">
+              {isJoints ? (
+                <Zap className={cn('mt-0.5 h-4 w-4 shrink-0', isVip ? 'text-orange-500 dark:text-orange-400' : planName === 'PREMIUM' ? 'text-teal-500 dark:text-teal-400' : 'text-primary')} />
+              ) : (
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-gray-400 dark:text-zinc-500" />
+              )}
+              <span className={cn(
+                'text-sm',
+                isJoints
+                  ? 'font-semibold text-gray-900 dark:text-white'
+                  : 'text-gray-600 dark:text-zinc-300'
+              )}>
+                {feature}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
 
       <div className="flex-1" />
 

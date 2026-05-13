@@ -35,12 +35,14 @@ export function AppShellMain({
   const isOtherPublicPage = (OTHER_PUBLIC_PATHS as readonly string[]).includes(
     pathname,
   );
+  const isJobsPage = pathname === paths.jobs.list || pathname.startsWith(`${paths.jobs.list}/`);
   const isPublicPage =
     isHomePage ||
     isMasterDetailsPage ||
     isMastersListPage ||
     isPlansPage ||
-    isOtherPublicPage;
+    isOtherPublicPage ||
+    isJobsPage;
   const fullWidth = isDashboardOrAdmin || isPublicPage;
   const isAuthPage = AUTH_PATHS.has(pathname);
   const hideFooter = pathname.startsWith('/admin');

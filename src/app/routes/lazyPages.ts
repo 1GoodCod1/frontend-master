@@ -70,3 +70,12 @@ export const RequestSuccessPage = lazyWithRetry(() => import('@/pages/client/Req
 export const BookingSuccessPage = lazyWithRetry(() => import('@/pages/client/BookingSuccessPage'));
 
 export const ReferralPage = lazyWithRetry(() => import('@/pages/referrals/ReferralPage'));
+
+// Jobs
+export const PublicJobsPage = lazyWithRetry(() => import('@/pages/public/PublicJobsPage'));
+export const PublicJobDetailPage = lazyWithRetry(() => import('@/pages/public/PublicJobDetailPage'));
+export const ClientJobsPage = lazyWithRetry(() => import('@/pages/client/ClientJobsPage'));
+export const ClientCreateJobPage = lazyWithRetry(() => import('@/pages/client/ClientCreateJobPage'));
+export const ClientJobDetailsPage = lazyWithRetry(() => import('@/pages/client/ClientJobDetailsPage'));
+export const MasterApplicationsPage = lazyWithRetry(() => import('@/pages/master/MasterApplicationsPage'));
+export const MasterJobApplyPage = lazyWithRetry(() => import('@/pages/master/MasterJobApplyPage'));

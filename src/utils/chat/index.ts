@@ -94,9 +94,13 @@ export function getOtherPartyFromConversation(
 ): OtherPartyDisplay | null {
   if (!conversation) return null;
   if (userRole === USER_ROLE.MASTER) {
+    const client = conversation.client;
+    const clientFullName = client
+      ? [client.firstName, client.lastName].filter(Boolean).join(' ') || null
+      : null;
     return {
-      name: conversation.lead.clientName || conversation.clientPhone || 'Клиент',
-      avatar: conversation.client?.avatarFile?.path,
+      name: clientFullName || conversation.lead?.clientName || conversation.clientPhone || client?.email || 'Клиент',
+      avatar: client?.avatarFile?.path,
     };
   }
   return {

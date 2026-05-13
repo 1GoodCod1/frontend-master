@@ -84,6 +84,11 @@ export const chatApi = api.injectEndpoints({
       transformResponse: (response: unknown): ConversationDetail => unwrap<ConversationDetail>(response),
       invalidatesTags: ['Chat'],
     }),
+    getOrCreateJobConversation: build.mutation<ConversationDetail, { jobId: string }>({
+      query: ({ jobId }) => ({ url: `/conversations/job-chat/${jobId}`, method: 'POST' }),
+      transformResponse: (response: unknown): ConversationDetail => unwrap<ConversationDetail>(response),
+      invalidatesTags: ['Chat'],
+    }),
     sendMessage: build.mutation<ChatMessage, { conversationId: string } & SendMessageDto>({
       query: ({ conversationId, ...body }) => ({
         url: `/conversations/${conversationId}/messages`,
@@ -140,6 +145,7 @@ export const {
   useGetConversationQuery,
   useGetMessagesQuery,
   useCreateConversationMutation,
+  useGetOrCreateJobConversationMutation,
   useSendMessageMutation,
   useMarkAsReadMutation,
   useCloseConversationMutation,
