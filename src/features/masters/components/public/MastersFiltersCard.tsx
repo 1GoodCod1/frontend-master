@@ -50,6 +50,8 @@ interface MastersFiltersCardProps {
     error?: unknown;
     refetch: () => void;
   };
+  /** Which sections to render. Default 'all' keeps backward compatibility. */
+  section?: 'top' | 'sidebar' | 'all';
 }
 
 export function MastersFiltersCard({
@@ -77,9 +79,12 @@ export function MastersFiltersCard({
   availableNowCount,
   hasPromotionCount,
   filters,
+  section = 'all',
 }: MastersFiltersCardProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const showTop = section === 'top' || section === 'all';
+  const showSidebar = section === 'sidebar' || section === 'all';
 
   const handleSuggestionSelect = useCallback(
     (event: SearchSuggestionEvent) => {
@@ -109,156 +114,167 @@ export function MastersFiltersCard({
   return (
     <Card className="mb-3 sm:mb-5 md:mb-6 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
       <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
-        <div className="flex items-center gap-2 sm:gap-3 mb-2">
-          <div className="flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-primary text-primary-foreground shrink-0">
-            <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+        {showTop && (
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+            <div className="flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-primary text-primary-foreground shrink-0">
+              <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+            </div>
+            <h2 className="text-base sm:text-lg font-bold text-foreground">
+              {t('masters.searchAndFilters')}
+            </h2>
           </div>
-          <h2 className="text-base sm:text-lg font-bold text-foreground">
-            {t('masters.searchAndFilters')}
-          </h2>
-        </div>
+        )}
         {filters.isError ? (
           <ErrorState error={filters.error} onRetry={filters.refetch} />
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div className="lg:col-span-2 space-y-2">
-                <Label htmlFor="masters-search">{t('masters.search')}</Label>
-                <SearchInputWithHistory
-                  id="masters-search"
-                  value={query.q}
-                  onChange={(v) =>
-                    setQuery((s) => ({
-                      ...s,
-                      page: 1,
-                      q: v,
-                    }))
-                  }
-                  onSuggestionSelect={handleSuggestionSelect}
-                  placeholder={t('masters.searchPlaceholder')}
-                  variant="default"
-                  cityId={query.cityValue || undefined}
-                />
-              </div>
+            {showTop && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="lg:col-span-2 space-y-2">
+                  <Label htmlFor="masters-search">{t('masters.search')}</Label>
+                  <SearchInputWithHistory
+                    id="masters-search"
+                    value={query.q}
+                    onChange={(v) =>
+                      setQuery((s) => ({
+                        ...s,
+                        page: 1,
+                        q: v,
+                      }))
+                    }
+                    onSuggestionSelect={handleSuggestionSelect}
+                    placeholder={t('masters.searchPlaceholder')}
+                    variant="default"
+                    cityId={query.cityValue || undefined}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>{t('masters.category')}</Label>
-                <Select
-                  value={query.categoryValue || 'all'}
-                  onValueChange={(v) =>
-                    setQuery((s) => ({
-                      ...s,
-                      page: 1,
-                      categoryValue: v === 'all' ? '' : v,
-                    }))
-                  }
-                  disabled={filters.isLoading}
-                >
-                  <SelectTrigger className="w-full border-gray-200 dark:border-white/10 bg-secondary/80 focus:border-primary/30">
-                    <SelectValue placeholder={t('common.all')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('common.all')}</SelectItem>
-                    {categories.map((c) => (
-                      <SelectItem key={c.id ?? c.slug ?? c.name} value={getCategoryValue(c)}>
-                        {getCategoryLabel(c)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                <div className="space-y-2">
+                  <Label>{t('masters.category')}</Label>
+                  <Select
+                    value={query.categoryValue || 'all'}
+                    onValueChange={(v) =>
+                      setQuery((s) => ({
+                        ...s,
+                        page: 1,
+                        categoryValue: v === 'all' ? '' : v,
+                      }))
+                    }
+                    disabled={filters.isLoading}
+                  >
+                    <SelectTrigger className="w-full border-gray-200 dark:border-white/10 bg-secondary/80 focus:border-primary/30">
+                      <SelectValue placeholder={t('common.all')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('common.all')}</SelectItem>
+                      {categories.map((c) => (
+                        <SelectItem key={c.id ?? c.slug ?? c.name} value={getCategoryValue(c)}>
+                          {getCategoryLabel(c)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label>{t('masters.city')}</Label>
-                <Select
-                  value={query.cityValue || 'all'}
-                  onValueChange={(v) =>
-                    setQuery((s) => ({
-                      ...s,
-                      page: 1,
-                      cityValue: v === 'all' ? '' : v,
-                    }))
-                  }
-                  disabled={filters.isLoading}
-                >
-                  <SelectTrigger className="w-full border-gray-200 dark:border-white/10 bg-secondary/80 focus:border-primary/30">
-                    <SelectValue placeholder={t('common.all')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('common.all')}</SelectItem>
-                    {cities.map((c) => (
-                      <SelectItem key={c.id ?? c.slug ?? c.name} value={getCityValue(c)}>
-                        {getCityLabel(c)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <Label>{t('masters.city')}</Label>
+                  <Select
+                    value={query.cityValue || 'all'}
+                    onValueChange={(v) =>
+                      setQuery((s) => ({
+                        ...s,
+                        page: 1,
+                        cityValue: v === 'all' ? '' : v,
+                      }))
+                    }
+                    disabled={filters.isLoading}
+                  >
+                    <SelectTrigger className="w-full border-gray-200 dark:border-white/10 bg-secondary/80 focus:border-primary/30">
+                      <SelectValue placeholder={t('common.all')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('common.all')}</SelectItem>
+                      {cities.map((c) => (
+                        <SelectItem key={c.id ?? c.slug ?? c.name} value={getCityValue(c)}>
+                          {getCityLabel(c)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4">
-              <div className="space-y-2">
-                <Label>{t('masters.sortBy')}</Label>
-                <Select
-                  value={query.sortBy}
-                  onValueChange={(v) => {
-                    const nextSortBy = v as SortBy;
-                    setQuery((s) => ({
-                      ...s,
-                      page: 1,
-                      sortBy: nextSortBy,
-                      sortOrder: defaultSortOrder(nextSortBy),
-                    }));
-                  }}
-                >
-                  <SelectTrigger className="w-full border-gray-200 dark:border-white/10 bg-secondary/80 focus:border-primary/30">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('masters.sortDefault')}</SelectItem>
-                    <SelectItem value="createdAt">{t('masters.sortNewest')}</SelectItem>
-                    <SelectItem value="rating">{t('masters.sortRating')}</SelectItem>
-                    <SelectItem value="price">{t('masters.sortPrice')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            {showSidebar && (
+              <>
+                <div className={showTop ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-3 sm:mt-4' : 'space-y-3'}>
+                  <div className="space-y-2">
+                    <Label>{t('masters.sortBy')}</Label>
+                    <Select
+                      value={query.sortBy}
+                      onValueChange={(v) => {
+                        const nextSortBy = v as SortBy;
+                        setQuery((s) => ({
+                          ...s,
+                          page: 1,
+                          sortBy: nextSortBy,
+                          sortOrder: defaultSortOrder(nextSortBy),
+                        }));
+                      }}
+                    >
+                      <SelectTrigger className="w-full border-gray-200 dark:border-white/10 bg-secondary/80 focus:border-primary/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">{t('masters.sortDefault')}</SelectItem>
+                        <SelectItem value="createdAt">{t('masters.sortNewest')}</SelectItem>
+                        <SelectItem value="rating">{t('masters.sortRating')}</SelectItem>
+                        <SelectItem value="price">{t('masters.sortPrice')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              <div className="flex items-end">
-                <Button
-                  variant="ghost"
-                  onClick={() => setShowAdvanced((v) => !v)}
-                  className="gap-2 text-primary hover:bg-primary/10 w-full sm:w-auto justify-center"
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  {t('masters.advancedFilters')}
-                  {showAdvanced ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
+                  {section !== 'sidebar' && (
+                    <div className={showTop ? 'flex items-end' : ''}>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setShowAdvanced((v) => !v)}
+                        className="gap-2 text-primary hover:bg-primary/10 w-full sm:w-auto justify-center"
+                      >
+                        <SlidersHorizontal className="h-4 w-4" />
+                        {t('masters.advancedFilters')}
+                        {showAdvanced ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   )}
-                </Button>
-              </div>
-            </div>
+                </div>
 
-            {showAdvanced && (
-                <MastersAdvancedFilters
-                  query={query}
-                  priceRange={priceRange}
-                  priceMinLocal={priceMinLocal}
-                  priceMaxLocal={priceMaxLocal}
-                  clampedMinPrice={clampedMinPrice}
-                  clampedMaxPrice={clampedMaxPrice}
-                  priceStep={priceStep}
-                  thumbPrimaryClass={thumbPrimaryClass}
-                  priceMinClamp={priceMinClamp}
-                  priceMaxClamp={priceMaxClamp}
-                  availableNowCount={availableNowCount}
-                  hasPromotionCount={hasPromotionCount}
-                  onQueryChange={setQuery}
-                  onPriceMinLocalChange={setPriceMinLocal}
-                  onPriceMaxLocalChange={setPriceMaxLocal}
-                />
-              )}
+                {(section === 'sidebar' || showAdvanced) && (
+                  <MastersAdvancedFilters
+                    query={query}
+                    priceRange={priceRange}
+                    priceMinLocal={priceMinLocal}
+                    priceMaxLocal={priceMaxLocal}
+                    clampedMinPrice={clampedMinPrice}
+                    clampedMaxPrice={clampedMaxPrice}
+                    priceStep={priceStep}
+                    thumbPrimaryClass={thumbPrimaryClass}
+                    priceMinClamp={priceMinClamp}
+                    priceMaxClamp={priceMaxClamp}
+                    availableNowCount={availableNowCount}
+                    hasPromotionCount={hasPromotionCount}
+                    onQueryChange={setQuery}
+                    onPriceMinLocalChange={setPriceMinLocal}
+                    onPriceMaxLocalChange={setPriceMaxLocal}
+                    compact={section === 'sidebar'}
+                  />
+                )}
+              </>
+            )}
           </>
         )}
       </CardContent>

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { FileText, Zap, Trophy, Sparkles, ArrowRight } from 'lucide-react';
+import { FileText, Zap, Trophy, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { paths } from '@/constants/routes';
@@ -60,19 +60,16 @@ export const JobsFlowSection = () => {
         </p>
       </div>
 
-      <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto">
-        {/* connector */}
-        <div className="hidden sm:block pointer-events-none absolute top-12 left-[16%] right-[16%] h-0.5 rounded-full bg-gradient-to-r from-amber-500/30 via-orange-500/30 to-emerald-500/30" />
-
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-3xl mx-auto">
         {STEPS.map(({ icon: Icon, titleKey, descKey, accent, bg, ring }, i) => (
           <div
             key={titleKey}
             className={cn(
-              'relative flex flex-col items-center text-center px-4 py-5 sm:px-5 sm:py-6 rounded-xl min-w-0',
-              'bg-card shadow-md shadow-black/5',
-              'dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
-              'transition duration-250 hover:-translate-y-0.5 hover:shadow-lg',
-              'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
+              'relative h-full flex flex-col items-center text-center px-4 py-6 sm:px-5 sm:py-7 rounded-xl sm:rounded-2xl min-w-0',
+              'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
+              'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
+              'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
+              'transition duration-300',
             )}
           >
             <span
@@ -98,20 +95,27 @@ export const JobsFlowSection = () => {
         ))}
       </div>
 
-      {/* Joints feature card */}
-      <div className="mt-6 sm:mt-8 max-w-4xl mx-auto rounded-2xl border border-amber-500/15 dark:border-amber-400/10 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-500/[0.08] dark:to-orange-500/[0.05] p-5 sm:p-6">
-        <div className="flex items-start gap-4">
-          <div className="shrink-0 inline-flex items-center justify-center h-11 w-11 rounded-xl bg-amber-500/15 dark:bg-amber-400/15">
-            <Zap className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-sm sm:text-base text-slate-800 dark:text-slate-100">
+      {/* Joints feature card — compact inline */}
+      <div className="mt-5 max-w-3xl mx-auto rounded-xl border border-amber-500/15 dark:border-amber-400/10 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-500/[0.08] dark:to-orange-500/[0.05] px-4 py-3">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <div className="flex items-center gap-2 shrink-0">
+            <Zap className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
+            <span className="font-semibold text-xs sm:text-sm text-slate-800 dark:text-slate-100">
               {t('home.jobsFlow.jointsTitle')}
-            </h3>
-            <p className="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              {t('home.jobsFlow.jointsDesc')}
-            </p>
+            </span>
           </div>
+          <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-600 dark:text-slate-300">
+            {[
+              t('home.jobsFlow.jointsRule1'),
+              t('home.jobsFlow.jointsRule2'),
+              t('home.jobsFlow.jointsRule3'),
+            ].map((rule) => (
+              <li key={rule} className="flex items-center gap-1.5">
+                <Check className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" strokeWidth={2.5} />
+                <span>{rule}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 

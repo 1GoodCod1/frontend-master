@@ -19,7 +19,7 @@ const MastersMap = lazyWithRetry(() =>
 
 /** Совпадает с прежней CSS-сеткой карточек */
 const GRID_LIST_CLASS =
-  'grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]';
+  'grid grid-cols-1 sm:grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6';
 
 /** Ниже порога — обычный map, без оверхеда виртуализации (типичная страница ~20 карточек) */
 const VIRTUOSO_GRID_THRESHOLD = 20;
@@ -84,7 +84,7 @@ export function MastersResults({
 
   if (list.isLoading) {
     return viewMode === 'list' ? (
-      <div className="grid grid-cols-2 gap-2 min-[480px]:gap-3 sm:gap-3 md:gap-4 lg:grid-cols-3 lg:gap-5 xl:gap-6 xl:[grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
+      <div className={GRID_LIST_CLASS}>
         {Array.from({ length: 12 }).map((_, i) => (
           <MastersCardSkeleton key={i} />
         ))}

@@ -64,43 +64,58 @@ export default function MastersPage() {
           activeFilterCount={activeFilterCount}
         />
 
-        <MastersFiltersCard
-          query={query}
-          setQuery={setQuery}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          categories={categories}
-          cities={cities}
-          priceRange={priceRange}
-          priceMinLocal={priceMinLocal}
-          priceMaxLocal={priceMaxLocal}
-          clampedMinPrice={clampedMinPrice}
-          clampedMaxPrice={clampedMaxPrice}
-          priceStep={priceStep}
-          thumbPrimaryClass={thumbPrimaryClass}
-          priceMinClamp={priceMinClamp}
-          priceMaxClamp={priceMaxClamp}
-          setPriceMinLocal={setPriceMinLocal}
-          setPriceMaxLocal={setPriceMaxLocal}
-          getCategoryLabel={getCategoryLabel}
-          getCityLabel={getCityLabel}
-          getCategoryValue={getCategoryValue}
-          getCityValue={getCityValue}
-          availableNowCount={availableNowCount}
-          hasPromotionCount={hasPromotionCount}
-          filters={filters}
-        />
+        {(() => {
+          const sharedFilterProps = {
+            query,
+            setQuery,
+            showAdvanced,
+            setShowAdvanced,
+            categories,
+            cities,
+            priceRange,
+            priceMinLocal,
+            priceMaxLocal,
+            clampedMinPrice,
+            clampedMaxPrice,
+            priceStep,
+            thumbPrimaryClass,
+            priceMinClamp,
+            priceMaxClamp,
+            setPriceMinLocal,
+            setPriceMaxLocal,
+            getCategoryLabel,
+            getCityLabel,
+            getCategoryValue,
+            getCityValue,
+            availableNowCount,
+            hasPromotionCount,
+            filters,
+          };
+          return (
+            <>
+              {/* Top: search + category + city (full width) */}
+              <MastersFiltersCard {...sharedFilterProps} section="top" />
 
-        <RecentlyViewed limit={6} />
-
-        <MastersResults
-          viewMode={viewMode}
-          items={items}
-          total={total}
-          promotionDiscountByMasterId={promotionDiscountByMasterId}
-          list={list}
-          onClearFilters={clearFiltersForEmpty}
-        />
+              {/* Below: left sidebar (recently viewed + remaining filters) + masters grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-4 lg:gap-5 items-start">
+                <aside className="order-2 lg:order-1 lg:sticky lg:top-20 lg:self-start space-y-4">
+                  <RecentlyViewed limit={8} layout="sidebar" />
+                  <MastersFiltersCard {...sharedFilterProps} section="sidebar" />
+                </aside>
+                <div className="order-1 lg:order-2 min-w-0">
+                  <MastersResults
+                    viewMode={viewMode}
+                    items={items}
+                    total={total}
+                    promotionDiscountByMasterId={promotionDiscountByMasterId}
+                    list={list}
+                    onClearFilters={clearFiltersForEmpty}
+                  />
+                </div>
+              </div>
+            </>
+          );
+        })()}
 
         {items.length > 0 && (
           <MastersPagination

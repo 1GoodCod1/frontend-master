@@ -280,16 +280,14 @@ export default function MasterDetailsPage() {
                     services={services}
                     promotions={promotions}
                   />
-                ) : !m?.user?.isVerified ? (
+                ) : !m?.user?.isVerified && isOwnProfile ? (
                   <Alert className="rounded-xl border-primary/30 bg-primary/5">
                     <ShieldCheck className="size-5 text-primary" />
                     <AlertTitle className="font-bold text-foreground">
                       {t('verificationBanner.title')}
                     </AlertTitle>
                     <AlertDescription className="mt-1">
-                      {isOwnProfile
-                        ? t('verificationBanner.servicesPromotionsBlocked')
-                        : t('verificationBanner.servicesPromotionsBlockedPublic')}
+                      {t('verificationBanner.servicesPromotionsBlocked')}
                     </AlertDescription>
                   </Alert>
                 ) : (

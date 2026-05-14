@@ -168,14 +168,14 @@ export function SearchInputWithHistory({
   const hasValue = trimmedValue.length > 0;
 
   const itemClass = cn(
-    'relative flex w-full cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-2 pr-3 text-sm outline-none transition-colors',
-    'hover:bg-amber-600 hover:text-white focus:bg-amber-600 focus:text-white',
+    'relative flex w-full cursor-default select-none items-center gap-2 rounded-md py-2 pl-2.5 pr-3 text-sm outline-none transition-colors',
+    'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
     'text-popover-foreground',
   );
 
   const sectionHeaderClass = cn(
-    'px-3 py-1.5 border-b flex items-center gap-2',
-    'border-amber-200/40 dark:border-white/5',
+    'px-3 py-2 border-b flex items-center gap-2',
+    'border-gray-200/70 dark:border-white/[0.06]',
     'bg-[hsl(var(--popover))] text-popover-foreground',
   );
 
@@ -183,17 +183,18 @@ export function SearchInputWithHistory({
     <div
       data-search-history-dropdown
       className={cn(
-        'fixed z-[9999] rounded-lg border overflow-hidden',
-        'border-amber-200/60 dark:border-white/10',
+        'fixed z-[9999] rounded-xl border overflow-hidden',
+        'border-gray-200 dark:border-white/[0.08]',
         'bg-[hsl(var(--popover))] text-popover-foreground',
-        'shadow-xl shadow-amber-900/5',
+        'shadow-xl shadow-black/10 dark:shadow-black/40',
         'animate-in fade-in-0 zoom-in-95 data-[side=bottom]:slide-in-from-top-2',
       )}
       style={{
         top: position.top,
         left: position.left,
-        width: Math.max(position.width, 280),
-        maxWidth: 'min(440px, 90vw)',
+        width: position.width,
+        minWidth: 320,
+        maxWidth: 'min(520px, 92vw)',
       }}
     >
       <div className="max-h-[360px] overflow-y-auto bg-[hsl(var(--popover))]">
@@ -201,7 +202,7 @@ export function SearchInputWithHistory({
         {hasSuggestions && suggestions.categories.length > 0 && (
           <>
             <div className={sectionHeaderClass}>
-              <Tag className="h-3.5 w-3.5 text-amber-500" />
+              <Tag className="h-3.5 w-3.5 text-primary dark:text-[#E97525]" />
               <span className="text-xs font-medium text-muted-foreground">
                 {t('masters.suggestCategories')}
               </span>
@@ -228,7 +229,7 @@ export function SearchInputWithHistory({
         {hasSuggestions && suggestions.services.length > 0 && (
           <>
             <div className={sectionHeaderClass}>
-              <Wrench className="h-3.5 w-3.5 text-amber-500" />
+              <Wrench className="h-3.5 w-3.5 text-primary dark:text-[#E97525]" />
               <span className="text-xs font-medium text-muted-foreground">
                 {t('masters.suggestServices')}
               </span>
@@ -254,7 +255,7 @@ export function SearchInputWithHistory({
         {hasSuggestions && suggestions.masters.length > 0 && (
           <>
             <div className={sectionHeaderClass}>
-              <User className="h-3.5 w-3.5 text-amber-500" />
+              <User className="h-3.5 w-3.5 text-primary dark:text-[#E97525]" />
               <span className="text-xs font-medium text-muted-foreground">
                 {t('masters.suggestMasters')}
               </span>
@@ -318,7 +319,7 @@ export function SearchInputWithHistory({
         <div className={cn('relative', isHero && 'flex items-center gap-3 flex-1 min-w-0')}>
           {!hasValue && (
             isHero ? (
-              <Search size={18} className="text-amber-500 shrink-0 pointer-events-none" />
+              <Search size={18} className="text-primary dark:text-[#E97525] shrink-0 pointer-events-none" />
             ) : (
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary pointer-events-none" />
             )
@@ -335,7 +336,7 @@ export function SearchInputWithHistory({
               'w-full bg-transparent text-sm outline-none transition-[padding]',
               isHero
                 ? 'text-foreground placeholder:text-muted-foreground'
-                : 'h-9 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-stone-50/80 dark:bg-white/[0.03] px-3 py-1 shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-amber-600/40 focus-visible:border-amber-300 dark:border-transparent dark:bg-white/[0.03]',
+                : 'h-9 rounded-lg border border-slate-200 dark:border-white/[0.08] bg-stone-50/80 dark:bg-white/[0.03] px-3 py-1 shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:border-primary/40 dark:border-white/[0.08] dark:bg-white/[0.03]',
               !isHero && (hasValue ? 'pl-3' : 'pl-9'),
               inputClassName,
             )}

@@ -58,13 +58,11 @@ export const RoadmapSection = () => {
             <div
               key={titleKey}
               className={cn(
-                'relative flex flex-col items-center text-center px-4 py-5 sm:px-4 sm:py-6 rounded-xl',
-                'bg-card shadow-md shadow-black/5',
-                'dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
-                'border border-transparent',
-                isDark ? 'dark:border-white/[0.06]' : 'border-gray-100',
-                'transition duration-250 hover:shadow-lg hover:-translate-y-0.5',
-                'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
+                'relative h-full flex flex-col items-center text-center px-4 py-6 sm:px-5 sm:py-7 rounded-xl sm:rounded-2xl',
+                'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
+                'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
+                'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
+                'transition duration-300',
               )}
             >
               {/* Step number */}

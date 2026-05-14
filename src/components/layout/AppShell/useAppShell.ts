@@ -88,8 +88,8 @@ export function useAppShell() {
     cn(
       navLinkBaseClass,
       isActive
-        ? 'border-t-[3px] border-primary text-primary dark:border-primary'
-        : 'border-t-[3px] border-transparent text-foreground hover:bg-accent hover:text-accent-foreground hover:font-semibold'
+        ? 'border-t-[3px] border-primary text-primary dark:border-[#E97525] dark:text-[#E97525]'
+        : 'border-t-[3px] border-transparent text-slate-700 dark:text-white/85 hover:bg-accent hover:text-slate-900 dark:hover:text-white hover:font-semibold'
     );
 
   const isNavCentered = isAuthed;

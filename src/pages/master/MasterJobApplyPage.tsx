@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Zap, Send, ImagePlus, X, ChevronLeft, Loader2, CheckCircle2, Plus, Trash2, Clock } from 'lucide-react';
@@ -39,7 +39,7 @@ export default function MasterJobApplyPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { files, previews, pickFiles, upload, removeFile, isUploading } = useFileUpload({ maxFiles: 5, forLead: true });
 
-  const [joints, setJoints] = useState<number | null>(null);
+  const [userJoints, setJoints] = useState<number | null>(null);
   const [description, setDescription] = useState('');
   const [paymentType, setPaymentType] = useState<ApplicationPaymentType>('FULL');
   const [deadline, setDeadline] = useState<string>('');
@@ -48,13 +48,7 @@ export default function MasterJobApplyPage() {
   const balance = balanceData?.balance ?? 0;
   const minJoints = job?.minJoints ?? 1;
   const alreadyApplied = myApp?.applied ?? false;
-
-  // Синхронизируем initial joints с minJoints, как только job загружен.
-  useEffect(() => {
-    if (job && joints === null) {
-      setJoints(job.minJoints);
-    }
-  }, [job, joints]);
+  const joints = userJoints ?? job?.minJoints ?? null;
 
   const updateMilestone = (i: number, patch: Partial<MilestoneDto>) => {
     setMilestones((prev) => prev.map((m, idx) => idx === i ? { ...m, ...patch } : m));

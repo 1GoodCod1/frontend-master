@@ -1,7 +1,7 @@
 import { useMemo, useState, useCallback } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Users, ArrowRight, ChevronRight } from 'lucide-react';
+import { Users, ArrowRight, ChevronRight, Star, Clock, CheckCircle } from 'lucide-react';
 import { useMastersLandingStatsQuery, useMastersFiltersQuery } from '@/features/masters/mastersApi';
 import { publicCachePolicy } from '@/config/publicCache';
 import { useIsDark } from '@/hooks/useIsDark';
@@ -15,9 +15,52 @@ import type { SearchSuggestionEvent } from '@/features/masters/components/search
 
 import { HeroSearchForm } from './hero/HeroSearchForm';
 import { HeroCategoryPills } from './hero/HeroCategoryPills';
-import { HeroStats } from './hero/HeroStats';
 import { HeroTrustBadges } from './hero/HeroTrustBadges';
-import { HeroImage } from './hero/HeroImage';
+
+type StatKey = 'verified' | 'projects' | 'rating' | 'support';
+interface FloatingStatPos {
+  valueKey: StatKey;
+  labelKey: 'statVerified' | 'statProjects' | 'statRating' | 'statSupport';
+  icon: React.ReactNode;
+  color: string;
+  // position around the hero
+  className: string;
+  rotate: string;
+}
+const FLOATING_STATS: FloatingStatPos[] = [
+  {
+    valueKey: 'verified',
+    labelKey: 'statVerified',
+    icon: <Users size={18} />,
+    color: 'text-primary',
+    className: 'left-[14%] top-[18%]',
+    rotate: '-rotate-[4deg]',
+  },
+  {
+    valueKey: 'projects',
+    labelKey: 'statProjects',
+    icon: <CheckCircle size={18} />,
+    color: 'text-sky-600 dark:text-sky-400',
+    className: 'left-[16%] top-[66%]',
+    rotate: 'rotate-[3deg]',
+  },
+  {
+    valueKey: 'rating',
+    labelKey: 'statRating',
+    icon: <Star size={18} />,
+    color: 'text-amber-500 dark:text-amber-400',
+    className: 'right-[14%] top-[24%]',
+    rotate: 'rotate-[4deg]',
+  },
+  {
+    valueKey: 'support',
+    labelKey: 'statSupport',
+    icon: <Clock size={18} />,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    className: 'right-[16%] top-[62%]',
+    rotate: '-rotate-[3deg]',
+  },
+];
 
 interface HeroSectionProps {
   isAuthed: boolean;
@@ -124,131 +167,192 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-6 sm:pb-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-
-          {/* LEFT COLUMN */}
-          <div className={cn(
-            'flex flex-col gap-6 sm:gap-8 pl-4 sm:pl-6 border-l-4 rounded-r-lg',
-            isDark ? 'border-[#E97525]/60' : 'border-primary/40'
-          )}>
-            {/* Badge */}
-            <div
-              className={cn(
-                'inline-flex items-center gap-2 self-start px-4 py-2 rounded-full backdrop-blur-sm border transition duration-500',
-                isDark
-                  ? 'bg-[#E97525]/15 border-[#E97525]/30'
-                  : 'bg-primary/12 border-primary/25'
-              )}
-            >
-              <div className={cn('w-1.5 h-1.5 rounded-full animate-pulse', isDark ? 'bg-[#E97525]' : 'bg-primary')} />
-              <span className={cn('text-xs font-medium tracking-wide uppercase', isDark ? 'text-[#E97525]' : 'text-primary')}>
-                {t('home.heroPlatformBadge')}
-              </span>
+    <section className="relative overflow-hidden">
+      {/* Floating stats — desktop only */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none z-0" aria-hidden="false">
+        {FLOATING_STATS.map((s, i) => (
+          <div
+            key={s.labelKey}
+            className={cn(
+              'absolute pointer-events-auto px-3.5 py-2.5 rounded-xl backdrop-blur-[2px] transition duration-500 animate-fade-in',
+              s.className,
+              s.rotate,
+              'hover:rotate-0 hover:scale-110',
+              isDark
+                ? 'bg-white/[0.025] ring-1 ring-white/[0.05]'
+                : 'bg-white/40 ring-1 ring-gray-200/40',
+            )}
+            style={{ animationDelay: `${i * 80}ms` }}
+          >
+            <div className="flex items-center gap-2.5">
+              <div className={cn('opacity-80 shrink-0', s.color)}>{s.icon}</div>
+              <div className="min-w-0">
+                <div className={cn('text-2xl font-extrabold tabular-nums leading-none', s.color)}>
+                  {stats[s.valueKey]}
+                </div>
+                <div className="text-[10px] mt-1.5 text-muted-foreground uppercase tracking-wider whitespace-nowrap">
+                  {t(`home.${s.labelKey}`)}
+                </div>
+              </div>
             </div>
-
-            {/* Heading */}
-            <div
-              className={cn(
-                'rounded-xl p-5 sm:p-6 transition duration-500',
-                isDark ? 'bg-white/[0.03] border border-white/[0.06]' : 'bg-white/60 border border-gray-200/80 shadow-sm'
-              )}
-            >
-              <h1
-                className={cn(
-                  'leading-[1.15] mb-4 transition-colors duration-500',
-                  'text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight',
-                  'text-slate-900 dark:text-white'
-                )}
-              >
-                {t('home.heroTitleLine1')}{' '}
-                <span className={cn('font-bold', isDark ? 'text-[#E97525]' : 'text-primary')}>
-                  {t('home.heroTitleLine2Masters')}
-                </span>
-                <br />
-                <span className="text-slate-900 dark:text-white font-medium">
-                  {t('home.heroTitleLine2From')}{' '}
-                </span>
-                <span className="relative inline-block">
-                  <span className={cn('font-bold', isDark ? 'text-[#E97525]' : 'text-primary')}>
-                    Moldova
-                  </span>
-                  <svg className="absolute -bottom-0.5 left-0 w-full" height="4" viewBox="0 0 200 4" fill="none">
-                    <path d="M0 3 Q50 0 100 2.5 Q150 4 200 1.5" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5" className={isDark ? 'text-[#E97525]' : 'text-primary'} />
-                  </svg>
-                </span>
-              </h1>
-              <p className={cn('text-base sm:text-lg max-w-lg leading-relaxed transition-colors duration-500', 'text-slate-600 dark:text-white/50')}>
-                {t('home.subtitle')}
-              </p>
-            </div>
-
-            <div className="h-px shrink-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" aria-hidden />
-
-            <HeroSearchForm
-              searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
-              effectiveCityId={effectiveCityId}
-              cities={cities}
-              getCityLabel={getCityLabel}
-              onCityChange={handleCityChange}
-              onSubmit={handleSearch}
-              onSuggestionSelect={handleSuggestionSelect}
-              isDark={isDark}
-            />
-
-            <div className="h-px shrink-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" aria-hidden />
-
-            <HeroCategoryPills
-              categories={heroCategories}
-              effectiveCityId={effectiveCityId}
-              getCitySlugForUrl={getCitySlugForUrl}
-              isDark={isDark}
-            />
-
-            <div className="h-px shrink-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent" aria-hidden />
-
-            {/* CTA Buttons */}
-            <div className="flex items-center flex-wrap gap-4">
-              <Button asChild className="group flex items-center gap-2.5 px-7 py-3.5 rounded-2xl font-semibold hover:scale-105 active:scale-100 transition duration-200">
-                <RouterLink to="/masters">
-                  <Users size={17} />
-                  {t('home.findMasters')}
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </RouterLink>
-              </Button>
-              {!isAuthed && (
-                <Button
-                  asChild
-                  variant="outline"
-                  className={cn(
-                    'flex items-center gap-2.5 px-7 py-3.5 rounded-2xl border transition duration-200',
-                    isDark
-                      ? 'bg-white/[0.04] border-white/10 text-white/70 hover:bg-white/8'
-                      : 'bg-secondary/80 border-border text-foreground/70 hover:bg-muted'
-                  )}
-                >
-                  <RouterLink to="/plans">
-                    <ChevronRight size={17} />
-                    {t('home.viewPlans')}
-                  </RouterLink>
-                </Button>
-              )}
-            </div>
-
-            <HeroTrustBadges isDark={isDark} />
           </div>
+        ))}
+      </div>
 
-          {/* RIGHT COLUMN */}
-          <HeroImage isDark={isDark} onlineMastersCount={landingStats?.verifiedOnlineMastersCount} />
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-10 sm:pb-12 flex flex-col items-center text-center">
+        {/* Live badge */}
+        <div
+          className={cn(
+            'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full backdrop-blur-sm border transition duration-500',
+            isDark
+              ? 'bg-[#E97525]/12 border-[#E97525]/25'
+              : 'bg-primary/10 border-primary/20',
+          )}
+        >
+          <span
+            className={cn(
+              'w-1.5 h-1.5 rounded-full animate-pulse',
+              isDark ? 'bg-[#E97525]' : 'bg-primary',
+            )}
+          />
+          <span
+            className={cn(
+              'text-[11px] font-semibold tracking-[0.18em] uppercase',
+              isDark ? 'text-[#E97525]' : 'text-primary',
+            )}
+          >
+            {t('home.heroPlatformBadge')}
+          </span>
         </div>
 
-        <HeroStats stats={stats} isDark={isDark} />
+        {/* Title */}
+        <h1 className="mt-6 text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05] text-slate-900 dark:text-white max-w-3xl">
+          {t('home.heroTitleLine1')}{' '}
+          <span className={cn(isDark ? 'text-[#E97525]' : 'text-primary')}>
+            {t('home.heroTitleLine2Masters')}
+          </span>
+          <br />
+          <span className="text-slate-700 dark:text-white/80 font-medium text-2xl sm:text-3xl md:text-4xl">
+            {t('home.heroTitleLine2From')}
+          </span>
+          <span className="relative inline-block ml-1">
+            <span className={cn('font-bold', isDark ? 'text-[#E97525]' : 'text-primary')}>
+              Moldova
+            </span>
+            <svg
+              className="absolute -bottom-0.5 left-0 w-full"
+              height="5"
+              viewBox="0 0 200 5"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M0 3.5 Q50 0 100 3 Q150 5 200 2"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                fill="none"
+                opacity="0.55"
+                className={isDark ? 'text-[#E97525]' : 'text-primary'}
+              />
+            </svg>
+          </span>
+        </h1>
 
-        {/* Bottom links */}
-        {!isAuthed && (
-          <div className="flex items-center justify-center gap-6 mt-6">
+        {/* Subtitle */}
+        <p className="mt-5 text-base sm:text-lg text-slate-600 dark:text-white/55 max-w-2xl leading-relaxed">
+          {t('home.subtitle')}
+        </p>
+
+        {/* Search */}
+        <div className="w-full max-w-3xl mt-8 sm:mt-10">
+          <HeroSearchForm
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            effectiveCityId={effectiveCityId}
+            cities={cities}
+            getCityLabel={getCityLabel}
+            onCityChange={handleCityChange}
+            onSubmit={handleSearch}
+            onSuggestionSelect={handleSuggestionSelect}
+            isDark={isDark}
+          />
+        </div>
+
+        {/* Category pills */}
+        <div className="w-full max-w-3xl mt-5">
+          <HeroCategoryPills
+            categories={heroCategories}
+            effectiveCityId={effectiveCityId}
+            getCitySlugForUrl={getCitySlugForUrl}
+            isDark={isDark}
+          />
+        </div>
+
+        {/* CTA */}
+        <div className="flex items-center flex-wrap justify-center gap-3 mt-8">
+          <Button
+            asChild
+            className="group flex items-center gap-2.5 px-6 py-3 rounded-2xl font-semibold hover:scale-[1.03] active:scale-100 transition duration-200"
+          >
+            <RouterLink to="/masters">
+              <Users size={17} />
+              {t('home.findMasters')}
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </RouterLink>
+          </Button>
+          {!isAuthed && (
+            <Button
+              asChild
+              variant="outline"
+              className={cn(
+                'flex items-center gap-2.5 px-6 py-3 rounded-2xl border transition duration-200',
+                isDark
+                  ? 'bg-white/[0.04] border-white/10 text-white/70 hover:bg-white/8'
+                  : 'bg-secondary/80 border-border text-foreground/70 hover:bg-muted',
+              )}
+            >
+              <RouterLink to="/plans">
+                <ChevronRight size={17} />
+                {t('home.viewPlans')}
+              </RouterLink>
+            </Button>
+          )}
+        </div>
+
+        {/* Trust badges */}
+        <div className="mt-8">
+          <HeroTrustBadges isDark={isDark} />
+        </div>
+      </div>
+
+      {/* Mobile/tablet compact stats — replaces the floating layout below lg */}
+      <div className="lg:hidden max-w-3xl mx-auto px-4 sm:px-6 pb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {FLOATING_STATS.map((s) => (
+            <div
+              key={s.labelKey}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-xl border',
+                isDark ? 'bg-white/[0.04] border-white/[0.07]' : 'bg-white/90 border-gray-200/70',
+              )}
+            >
+              <div className={cn('opacity-70 shrink-0', s.color)}>{s.icon}</div>
+              <div className="min-w-0">
+                <div className={cn('text-base font-bold tabular-nums leading-none', s.color)}>
+                  {stats[s.valueKey]}
+                </div>
+                <div className="text-[9px] mt-1 text-muted-foreground uppercase tracking-wider truncate">
+                  {t(`home.${s.labelKey}`)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {!isAuthed && (
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pb-8">
+          <div className="flex items-center justify-center gap-6">
             <div
               className="h-px flex-1 max-w-24"
               style={{
@@ -279,7 +383,25 @@ export const HeroSection = ({ isAuthed }: HeroSectionProps) => {
               }}
             />
           </div>
+        </div>
+      )}
+
+      {/* Hero / content separator */}
+      <div
+        className={cn(
+          'max-w-7xl mx-auto px-4 sm:px-6',
+          isAuthed ? 'pb-6 sm:pb-8' : 'pb-2',
         )}
+        aria-hidden
+      >
+        <div
+          className={cn(
+            'h-px w-full',
+            isDark
+              ? 'bg-gradient-to-r from-transparent via-white/10 to-transparent'
+              : 'bg-gradient-to-r from-transparent via-black/10 to-transparent',
+          )}
+        />
       </div>
     </section>
   );

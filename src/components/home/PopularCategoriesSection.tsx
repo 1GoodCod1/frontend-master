@@ -68,10 +68,20 @@ export const PopularCategoriesSection = ({ className }: PopularCategoriesSection
         return (
             <div className={cn('mb-6 md:mb-8', className)}>
                 <div className="mb-6 text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1.5">
+                    <h2
+                        className={cn(
+                            'text-2xl sm:text-3xl font-bold tracking-tight',
+                            'text-slate-800 dark:text-slate-100',
+                        )}
+                    >
                         {t('home.popularCategories.title')}
                     </h2>
-                    <p className="text-muted-foreground text-[0.9375rem] mb-4">
+                    <p
+                        className={cn(
+                            'mt-2 text-sm sm:text-base max-w-lg mx-auto',
+                            'text-slate-500 dark:text-slate-400',
+                        )}
+                    >
                         {t('home.popularCategories.subtitle')}
                     </p>
                 </div>
@@ -85,10 +95,20 @@ export const PopularCategoriesSection = ({ className }: PopularCategoriesSection
     return (
         <div className={cn('mb-6 md:mb-8', className)}>
             <div className="mb-8 text-center">
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1.5">
+                <h2
+                    className={cn(
+                        'text-2xl sm:text-3xl font-bold tracking-tight',
+                        'text-slate-800 dark:text-slate-100',
+                    )}
+                >
                     {t('home.popularCategories.title')}
                 </h2>
-                <p className="text-muted-foreground text-[0.9375rem]">
+                <p
+                    className={cn(
+                        'mt-2 text-sm sm:text-base max-w-lg mx-auto',
+                        'text-slate-500 dark:text-slate-400',
+                    )}
+                >
                     {t('home.popularCategories.subtitle')}
                 </p>
             </div>

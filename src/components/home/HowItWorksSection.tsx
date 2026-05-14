@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import OptimizedImage from '@/components/common/OptimizedImage';
 import { cn } from '@/lib/utils';
 import { HOW_IT_WORKS_STEPS } from '@/constants';
 
@@ -27,37 +26,16 @@ export const HowItWorksSection = () => {
         </p>
       </div>
 
-      <div
-        className={cn(
-          'mx-auto mb-8 max-w-3xl rounded-2xl overflow-hidden transition-colors duration-500',
-          /* light: без ring (не тянуть тёмную обводку), заметная тень */
-          'shadow-[0_12px_40px_-8px_rgba(15,23,42,0.14)] shadow-slate-900/12',
-          'ring-0',
-          'dark:shadow-[0_4px_32px_-4px_rgba(0,0,0,0.55)]',
-          'dark:ring-1 dark:ring-white/[0.08]',
-          'bg-muted/25 dark:bg-[#1b1709]/85',
-        )}
-      >
-        <OptimizedImage
-          basePath="/images/how-it-works-universal"
-          alt=""
-          className="w-full h-auto block"
-          loading="lazy"
-          draggable={false}
-        />
-      </div>
-
-      <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-3xl mx-auto">
         {HOW_IT_WORKS_STEPS.map(({ icon: Icon, titleKey, descKey, accent, bg, ring }, i) => (
           <div
             key={titleKey}
             className={cn(
-              'relative flex flex-col items-center text-center px-2 py-3 sm:px-4 sm:py-5 md:px-5 md:py-6 rounded-lg sm:rounded-xl border-0 min-w-0',
-              'bg-card shadow-md shadow-black/5',
-              'dark:bg-white/[0.04] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.5)]',
-              'transition duration-250 hover:shadow-lg',
-              'dark:hover:shadow-[0_8px_28px_-4px_rgba(0,0,0,0.6)]',
-              'hover:-translate-y-0.5'
+              'relative h-full flex flex-col items-center text-center px-4 py-6 sm:px-5 sm:py-7 rounded-xl sm:rounded-2xl min-w-0',
+              'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
+              'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
+              'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
+              'transition duration-300',
             )}
           >
             <span

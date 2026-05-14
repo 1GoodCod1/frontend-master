@@ -14,7 +14,7 @@ interface MastersGridSectionProps {
   isError: boolean;
   error: unknown;
   onRetry: () => void;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{ className?: string }>;
   iconBgColor?: string;
   horizontalScroll?: boolean;
   sectionBg?: boolean;
@@ -59,24 +59,47 @@ export const MastersGridSection = ({
 
   return (
     <div className={cn('mb-6 md:mb-8', className)}>
-      <div className="mb-4">
-        <div className="flex flex-row items-start gap-3">
-          <div
-            className={cn(
-              'flex items-center justify-center w-10 h-10 rounded-full shrink-0 shadow-sm text-primary-foreground',
-              iconBgColor ?? 'bg-primary',
-            )}
-          >
-            <Icon className="h-5 w-5 shrink-0" />
-          </div>
-          <div>
-            <h3 className="text-xl md:text-2xl font-normal text-foreground">{title}</h3>
-            {subtitle ? (
-              <p className="text-muted-foreground text-[0.9375rem] mt-0.5">{subtitle}</p>
-            ) : null}
+      {Icon ? (
+        <div className="mb-4">
+          <div className="flex flex-row items-start gap-3">
+            <div
+              className={cn(
+                'flex items-center justify-center w-10 h-10 rounded-full shrink-0 shadow-sm text-primary-foreground',
+                iconBgColor ?? 'bg-primary',
+              )}
+            >
+              <Icon className="h-5 w-5 shrink-0" />
+            </div>
+            <div>
+              <h3 className="text-xl md:text-2xl font-normal text-foreground">{title}</h3>
+              {subtitle ? (
+                <p className="text-muted-foreground text-[0.9375rem] mt-0.5">{subtitle}</p>
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="mb-8 text-center">
+          <h2
+            className={cn(
+              'text-2xl sm:text-3xl font-bold tracking-tight',
+              'text-slate-800 dark:text-slate-100',
+            )}
+          >
+            {title}
+          </h2>
+          {subtitle ? (
+            <p
+              className={cn(
+                'mt-2 text-sm sm:text-base max-w-lg mx-auto',
+                'text-slate-500 dark:text-slate-400',
+              )}
+            >
+              {subtitle}
+            </p>
+          ) : null}
+        </div>
+      )}
       {isLoading ? (
         <div className={GRID_CLASS}>
           {Array.from({ length: skeletonCount }, (_, i) => (
