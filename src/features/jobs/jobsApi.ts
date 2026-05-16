@@ -9,6 +9,17 @@ import type {
   JobsListResponse,
 } from '@/types';
 
+type JobMyApplicationResponse = {
+  applied: boolean;
+  application: {
+    id: string;
+    status: string;
+    jointsSpent: number;
+    createdAt: string;
+    viewedAt: string | null;
+  } | null;
+};
+
 export const jobsApi = api.injectEndpoints({
   endpoints: (build) => ({
     jobsCreate: build.mutation<JobDto, CreateJobDto>({
@@ -19,7 +30,7 @@ export const jobsApi = api.injectEndpoints({
 
     jobsList: build.query<
       JobsListResponse,
-      { status?: string; type?: string; cityId?: string; recommended?: boolean; page?: number; limit?: number; search?: string; sort?: 'recent' | 'best' } | void
+      { status?: string; type?: string; cityId?: string; recommended?: boolean; mine?: boolean; page?: number; limit?: number; search?: string; sort?: 'recent' | 'best' } | void
     >({
       query: (params) => ({ url: '/jobs', method: 'GET', params: params ?? {} }),
       providesTags: ['Jobs'],
@@ -61,14 +72,11 @@ export const jobsApi = api.injectEndpoints({
         unwrapObject<JobApplicationDto>(raw) as JobApplicationDto,
     }),
 
-    jobMyApplication: build.query<
-      { applied: boolean; application: { id: string; status: string; jointsSpent: number; createdAt: string; viewedAt: string | null } | null },
-      { jobId: string }
-    >({
+    jobMyApplication: build.query<JobMyApplicationResponse, { jobId: string }>({
       query: ({ jobId }) => ({ url: `/jobs/${jobId}/my-application`, method: 'GET' }),
       providesTags: (_r, _e, a) => [{ type: 'JobApplications', id: a.jobId }],
       transformResponse: (raw: unknown) =>
-        unwrapObject<{ applied: boolean; application: never }>(raw) ?? { applied: false, application: null },
+        unwrapObject<JobMyApplicationResponse>(raw) ?? { applied: false, application: null },
     }),
 
     jobViewApplication: build.mutation<JobApplicationDto, { applicationId: string }>({

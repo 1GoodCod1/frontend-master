@@ -1,70 +1,34 @@
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ImagePlus, X, MapPin, Zap, Clock, DollarSign } from 'lucide-react';
+import { MapPin, Zap, DollarSign, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useJobsCreateMutation } from '@/features/jobs/jobsApi';
 import { useCitiesListQuery } from '@/features/cities/citiesApi';
-import { useFileUpload } from '@/hooks/useFileUpload';
-import { getTranslatedCityName } from '@/utils/translateCityCategory';
-import { cn } from '@/lib/utils';
-import type { CreateJobDto, JobType } from '@/types';
-import toast from 'react-hot-toast';
+import { useCategoriesListQuery } from '@/features/categories/categoriesApi';
+import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
+import { useCreateJobForm } from '@/hooks/jobs';
+import { JobPaymentTypeSelector } from '@/features/jobs/components/JobPaymentTypeSelector';
+import { JobPhotosUpload } from '@/features/jobs/components/JobPhotosUpload';
 
 export default function ClientCreateJobPage() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [create, { isLoading }] = useJobsCreateMutation();
+  const { t, i18n } = useTranslation();
   const { data: cities = [] } = useCitiesListQuery({ isActive: true });
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { files, previews, pickFiles, upload, removeFile, isUploading } = useFileUpload({ maxFiles: 10, forLead: true });
-
-  const [form, setForm] = useState<Omit<CreateJobDto, 'photoFileIds'>>({
-    title: '',
-    description: '',
-    type: 'FIXED_PRICE' as JobType,
-    budget: undefined,
-    hourlyRate: undefined,
-    minJoints: 5,
-    cityId: undefined,
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: name === 'budget' || name === 'hourlyRate' || name === 'minJoints'
-        ? value === '' ? undefined : Number(value)
-        : value === '' ? undefined : value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.title.trim() || !form.description.trim()) {
-      toast.error(t('jobs.titleDescRequired', 'Title and description are required'));
-      return;
-    }
-    try {
-      let photoFileIds: string[] | undefined;
-      if (files.length > 0) {
-        const uploaded = await upload();
-        if (!uploaded) return;
-        photoFileIds = uploaded.map((f) => f.id);
-      }
-      const job = await create({ ...form, photoFileIds }).unwrap();
-      toast.success(t('jobs.created', 'Job posted successfully!'));
-      navigate(`/client-dashboard/jobs/${job.id}`);
-    } catch {
-      toast.error(t('jobs.createError', 'Failed to create job posting'));
-    }
-  };
+  const { data: categories = [] } = useCategoriesListQuery({ isActive: true });
+  
+  const {
+    form,
+    setForm,
+    handleChange,
+    handleSubmit,
+    isLoading,
+    files,
+    previews,
+    pickFiles,
+    removeFile,
+    isUploading
+  } = useCreateJobForm();
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 md:py-10">
@@ -116,56 +80,10 @@ export default function ClientCreateJobPage() {
         </div>
 
         {/* Payment type */}
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-foreground">
-            {t('jobs.type', 'Payment Type')}
-          </Label>
-          <div className="grid grid-cols-2 gap-3">
-            {(['FIXED_PRICE', 'HOURLY'] as JobType[]).map((type) => {
-              const isActive = form.type === type;
-              return (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setForm((p) => ({ ...p, type }))}
-                  className={cn(
-                    'group relative overflow-hidden rounded-xl border-2 p-4 text-left transition-all duration-200',
-                    isActive
-                      ? 'border-amber-500 bg-amber-500/8 shadow-md shadow-amber-500/10'
-                      : 'border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] hover:border-amber-500/40 hover:bg-amber-500/5 hover:shadow-sm',
-                  )}
-                >
-                  <div className={cn(
-                    'mb-2 flex h-8 w-8 items-center justify-center rounded-lg transition-colors',
-                    isActive ? 'bg-amber-500/20 text-amber-500' : 'bg-muted text-muted-foreground group-hover:bg-amber-500/10 group-hover:text-amber-500',
-                  )}>
-                    {type === 'FIXED_PRICE'
-                      ? <DollarSign className="h-4 w-4" />
-                      : <Clock className="h-4 w-4" />}
-                  </div>
-                  <p className={cn(
-                    'text-sm font-semibold transition-colors',
-                    isActive ? 'text-amber-600 dark:text-amber-400' : 'text-foreground',
-                  )}>
-                    {type === 'FIXED_PRICE'
-                      ? t('jobs.fixedPrice', 'Fixed Price')
-                      : t('jobs.hourlyRate', 'Hourly Rate')}
-                  </p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {type === 'FIXED_PRICE'
-                      ? t('jobs.fixedPriceDesc', 'Set amount for the whole project')
-                      : t('jobs.hourlyRateDesc', 'Pay per hour of work')}
-                  </p>
-                  {isActive && (
-                    <span className="absolute right-3 top-3 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500">
-                      <span className="h-1.5 w-1.5 rounded-full bg-white" />
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <JobPaymentTypeSelector
+          value={form.type}
+          onChange={(type) => setForm(p => ({ ...p, type }))}
+        />
 
         {/* Budget / hourly rate */}
         <div className="space-y-1.5">
@@ -214,6 +132,33 @@ export default function ClientCreateJobPage() {
           />
         </div>
 
+        {/* Category */}
+        <div className="space-y-1.5">
+          <Label htmlFor="categoryId" className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Briefcase className="h-3.5 w-3.5 text-muted-foreground" />
+            {t('jobs.category', 'Category')}
+            <span className="text-xs font-normal text-rose-500">*</span>
+          </Label>
+          <Select
+            value={form.categoryId || ''}
+            onValueChange={(v) => setForm((f) => ({ ...f, categoryId: v }))}
+          >
+            <SelectTrigger id="categoryId">
+              <SelectValue placeholder={t('jobs.selectCategory', 'Select category')} />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {getTranslatedCategoryName(t, cat, i18n.language) || cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground mt-1">
+            {t('jobs.categoryHint', { defaultValue: 'Specialiștii din această categorie vor vedea jobul mai sus în "Best matches".' })}
+          </p>
+        </div>
+
         {/* City */}
         <div className="space-y-1.5">
           <Label htmlFor="cityId" className="flex items-center gap-2 text-sm font-semibold text-foreground">
@@ -240,48 +185,13 @@ export default function ClientCreateJobPage() {
         </div>
 
         {/* Photos */}
-        <div className="space-y-2">
-          <Label className="text-sm font-semibold text-foreground">
-            {t('jobs.photos', 'Photos')}
-            <span className="ml-1.5 text-xs font-normal text-muted-foreground">(optional, up to 10)</span>
-          </Label>
-          {previews.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {previews.map((src, i) => (
-                <div key={i} className="group relative h-20 w-20 overflow-hidden rounded-xl border border-border">
-                  <img src={src} alt="" className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
-                  <button
-                    type="button"
-                    onClick={() => removeFile(i)}
-                    className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/90"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-          {files.length < 10 && (
-            <>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={(e) => { if (e.target.files) { pickFiles(e.target.files); e.target.value = ''; } }}
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 rounded-xl border-2 border-dashed border-border/60 px-4 py-3 text-sm text-muted-foreground transition-all hover:border-amber-500/50 hover:bg-amber-500/5 hover:text-amber-600 dark:hover:text-amber-400"
-              >
-                <ImagePlus className="h-4 w-4" />
-                {t('jobs.addPhotos', 'Add photos')}
-              </button>
-            </>
-          )}
-        </div>
+        <JobPhotosUpload
+          files={files}
+          previews={previews}
+          pickFiles={pickFiles}
+          removeFile={removeFile}
+          maxFiles={10}
+        />
 
         {/* Submit */}
         <div className="pt-2">

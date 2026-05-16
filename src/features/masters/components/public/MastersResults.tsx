@@ -63,7 +63,7 @@ function MasterCardItem({
 export function MastersResults({
   viewMode,
   items,
-  total,
+  total: _total,
   promotionDiscountByMasterId,
   list,
   onClearFilters,
@@ -112,18 +112,6 @@ export function MastersResults({
 
   return (
     <>
-      <div className="mb-3 sm:mb-4 rounded-lg bg-primary/10 px-3 sm:px-4 py-2 flex items-center justify-between gap-2">
-        <p className="text-sm font-semibold text-primary">
-          {t('masters.found', { count: total })}
-        </p>
-        {list.isFetching && (
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-xs text-primary/70">Updating…</span>
-          </div>
-        )}
-      </div>
-
       {viewMode === 'list' ? (
         <div key="list" className="faber-view-swap">
           {items.length >= VIRTUOSO_GRID_THRESHOLD ? (

@@ -103,7 +103,7 @@ export const masters = {
   },
   ro: {
     masters: {
-      title: 'Meșteri',
+      title: 'Specialiști',
       subtitle: 'Găsiți specialiști verificați după categorie, oraș și rating.',
       searchAndFilters: 'Căutare și filtre',
       search: 'Căutare',

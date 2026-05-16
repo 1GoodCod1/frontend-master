@@ -5,7 +5,11 @@ import {
   Star,
   Heart,
   Share2,
-  Clock,
+  CheckCircle2,
+  Award,
+  MessageSquare,
+  TrendingUp,
+  ShieldCheck,
 } from 'lucide-react';
 import { LazyImage } from '@/components/ui/LazyImage';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
@@ -47,13 +51,20 @@ interface MasterProfileHeroProps {
   responseRate?: number;
 }
 
+// Unified card style — matches homepage / masters / jobs pages
+const baseCardCls = cn(
+  'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
+  'border border-gray-200/80 dark:border-white/[0.08]',
+  'shadow-sm dark:shadow-lg dark:shadow-black/20',
+);
+
 export const MasterProfileHero = ({
   title,
   avatarUrl,
   categoryName: _categoryName,
   cityName: _cityName,
   rating,
-  isVerified: _isVerified,
+  isVerified = false,
   isOnline,
   lastActivityAt,
   isFavorite,
@@ -75,7 +86,8 @@ export const MasterProfileHero = ({
   const { t } = useTranslation();
   const avatarSrc = mediaUrl(avatarUrl);
 
-  const showUnavailable = !isMasterAvailable || availabilityStatus !== AVAILABILITY_STATUS.AVAILABLE;
+  const showUnavailable =
+    !isMasterAvailable || availabilityStatus !== AVAILABILITY_STATUS.AVAILABLE;
   const unavailableLabel =
     availabilityStatus === AVAILABILITY_STATUS.BUSY
       ? t('masterDetails.masterIsBusy', 'Busy')
@@ -89,21 +101,48 @@ export const MasterProfileHero = ({
 
   const ratingDisplay = typeof rating === 'number' ? rating.toFixed(1) : '0.0';
 
+  // Stats — same data, redesigned with Lucide icons and muted accent colors
   const stats = [
-    { value: String(completedProjects), label: t('masterDetails.statsCompletedProjects', 'Completed projects'), icon: '✅' },
-    { value: experienceYears != null ? `${experienceYears} ${experienceYears === 1 ? t('masterDetails.experienceYear') : t('masterDetails.experienceYears')}` : '0', label: t('masterDetails.statsExperience', 'Experience'), icon: '🏆' },
-    { value: ratingDisplay, label: t('masterDetails.statsRating', 'Average rating'), icon: '⭐' },
-    { value: String(reviewsCount), label: t('masterDetails.statsReviews', 'Reviews'), icon: '💬' },
-    { value: `${responseRate}%`, label: t('masterDetails.statsResponseRate', 'Response to requests'), icon: '📊' },
+    {
+      Icon: CheckCircle2,
+      value: String(completedProjects),
+      label: t('masterDetails.statsCompletedProjects', 'Completed projects'),
+      iconColor: 'text-emerald-600 dark:text-emerald-400',
+    },
+    {
+      Icon: Award,
+      value:
+        experienceYears != null
+          ? `${experienceYears} ${experienceYears === 1 ? t('masterDetails.experienceYear') : t('masterDetails.experienceYears')}`
+          : '0',
+      label: t('masterDetails.statsExperience', 'Experience'),
+      iconColor: 'text-amber-600 dark:text-amber-400',
+    },
+    {
+      Icon: Star,
+      value: ratingDisplay,
+      label: t('masterDetails.statsRating', 'Average rating'),
+      iconColor: 'text-yellow-500 dark:text-yellow-400',
+    },
+    {
+      Icon: MessageSquare,
+      value: String(reviewsCount),
+      label: t('masterDetails.statsReviews', 'Reviews'),
+      iconColor: 'text-sky-600 dark:text-sky-400',
+    },
+    {
+      Icon: TrendingUp,
+      value: `${responseRate}%`,
+      label: t('masterDetails.statsResponseRate', 'Response to requests'),
+      iconColor: 'text-violet-600 dark:text-violet-400',
+    },
   ];
 
   const handleShare = () => {
     if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share({
-        title,
-        url: window.location.href,
-        text: title,
-      }).catch(() => {});
+      navigator
+        .share({ title, url: window.location.href, text: title })
+        .catch(() => {});
     } else {
       navigator.clipboard?.writeText(window.location.href).then(() => {});
     }
@@ -111,27 +150,28 @@ export const MasterProfileHero = ({
 
   return (
     <TooltipProvider>
-      {/* Hero: same horizontal rhythm as main content (container), not full-bleed */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-0 pb-0">
-        <div className="relative rounded-t-none rounded-b-2xl sm:rounded-b-3xl bg-gradient-to-br from-amber-500 via-amber-400 to-orange-400 dark:from-amber-600 dark:via-amber-500 dark:to-orange-500 overflow-hidden shadow-sm">
-          <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full -translate-y-1/2" />
-            <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full translate-y-1/2" />
-          </div>
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
+        {/* Back link — sits above the card, muted */}
+        <RouterLink
+          to="/masters"
+          className="inline-flex items-center gap-1.5 text-sm mb-4 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors"
+        >
+          <ArrowLeft size={14} />
+          <span>{t('masterDetails.backToMasters', 'Back to Masters')}</span>
+        </RouterLink>
 
-          <div className="relative px-4 sm:px-6 pt-3 pb-6 sm:pt-4 sm:pb-8">
-          <RouterLink
-            to="/masters"
-            className="inline-flex items-center gap-1.5 text-white hover:text-white/90 mb-4 text-sm transition-colors"
-          >
-            <ArrowLeft size={16} />
-            <span>{t('masterDetails.backToMasters', 'Back to Masters')}</span>
-          </RouterLink>
-
-          <div className="flex flex-col md:flex-row items-start md:items-end gap-6">
+        {/* Main profile card */}
+        <div className={cn(baseCardCls, 'rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8')}>
+          <div className="flex flex-col md:flex-row items-start gap-5 sm:gap-6">
             {/* Avatar */}
             <div className="relative shrink-0">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-gray-800 dark:bg-gray-900 flex items-center justify-center shadow-xl border-4 border-white/30">
+              <div
+                className={cn(
+                  'w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden flex items-center justify-center',
+                  'bg-gray-100 dark:bg-white/[0.04]',
+                  'border border-gray-200/80 dark:border-white/[0.08]',
+                )}
+              >
                 {avatarSrc ? (
                   <LazyImage
                     src={avatarSrc}
@@ -145,26 +185,100 @@ export const MasterProfileHero = ({
                   <AvatarPlaceholder role="master" height={112} variant="default" />
                 )}
               </div>
+              {/* Online dot */}
+              {isOnline && (
+                <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-[#F9FAFB] dark:ring-[hsl(43,16%,12%)]" />
+              )}
             </div>
 
             {/* Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-3 mb-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white">{title}</h1>
+            <div className="flex-1 min-w-0 w-full">
+              {/* Name + verified */}
+              <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
+                  {title}
+                </h1>
+                {isVerified && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-500/20 px-2 py-0.5 text-[11px] font-semibold">
+                    <ShieldCheck size={12} />
+                    {t('masters.verified', 'Verified')}
+                  </span>
+                )}
               </div>
+
+              {/* Rating row */}
+              <div className="flex items-center gap-2 mb-2.5 text-slate-700 dark:text-slate-300">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((s) => {
+                    const r = rating ?? 0;
+                    const isFull = r >= s;
+                    const isHalf = r >= s - 0.5 && r < s;
+                    return (
+                      <div key={s} className="relative shrink-0">
+                        {!isFull && !isHalf && (
+                          <Star
+                            size={16}
+                            strokeWidth={1.5}
+                            className="text-slate-300 dark:text-slate-600 fill-transparent"
+                          />
+                        )}
+                        {isFull && (
+                          <Star
+                            size={16}
+                            strokeWidth={1.5}
+                            className="fill-yellow-400 text-yellow-400 dark:fill-yellow-400 dark:text-yellow-400"
+                          />
+                        )}
+                        {isHalf && (
+                          <>
+                            <Star
+                              size={16}
+                              strokeWidth={1.5}
+                              className="text-slate-300 dark:text-slate-600 fill-transparent"
+                            />
+                            <div className="absolute inset-0 w-1/2 overflow-hidden">
+                              <Star
+                                size={16}
+                                strokeWidth={1.5}
+                                className="fill-yellow-400 text-yellow-400"
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                  {ratingDisplay}
+                </span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">/ 5</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  ·{' '}
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
+                    {reviewsCount}
+                  </span>{' '}
+                  {t('masterDetails.reviewsCountLabel', 'reviews')}
+                </span>
+              </div>
+
+              {/* Status pill */}
               {(isOnline || lastActivityAt) && (
-                <div className="flex flex-wrap items-center gap-1.5 text-sm mb-3">
+                <div className="mb-4">
                   <span
                     className={cn(
-                      'flex items-center gap-1.5 font-medium',
+                      'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium border',
                       isOnline
-                        ? 'text-green-300 dark:text-green-400'
-                        : lastActivityAt
-                          ? 'text-amber-200 dark:text-amber-300'
-                          : 'text-white/80'
+                        ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200/60 dark:border-emerald-500/20'
+                        : 'bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 border-slate-200/60 dark:border-white/[0.06]',
                     )}
                   >
-                    <Clock size={14} />
+                    <span
+                      className={cn(
+                        'w-1.5 h-1.5 rounded-full',
+                        isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-500',
+                      )}
+                    />
                     {isOnline
                       ? t('master.status.online', 'Online')
                       : lastActivityAt
@@ -173,43 +287,9 @@ export const MasterProfileHero = ({
                   </span>
                 </div>
               )}
-              <div className="flex items-center gap-2 text-white">
-                <div className="flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => {
-                    const r = rating ?? 0;
-                    const isFull = r >= s;
-                    const isHalf = r >= s - 0.5 && r < s;
-                    const isEmpty = !isFull && !isHalf;
-                    return (
-                      <div key={s} className="relative shrink-0">
-                        {isEmpty && (
-                          <Star size={18} strokeWidth={1.5} className="text-white/40 stroke-white fill-transparent" />
-                        )}
-                        {isFull && (
-                          <Star size={18} strokeWidth={1.5} className="fill-amber-200 text-amber-200 stroke-amber-300" />
-                        )}
-                        {isHalf && (
-                          <>
-                            <Star size={18} strokeWidth={1.5} className="text-white/40 stroke-white fill-transparent" />
-                            <div className="absolute inset-0 w-1/2 overflow-hidden">
-                              <Star size={18} strokeWidth={1.5} className="fill-amber-200 text-amber-200 stroke-amber-300" />
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-                <span className="font-semibold">{ratingDisplay}</span>
-                <span className="text-sm opacity-90">/ 5</span>
-                <span className="text-sm">
-                  (<span className="font-bold text-amber-200">{reviewsCount}</span>{' '}
-                  {t('masterDetails.reviewsCountLabel', 'reviews')})
-                </span>
-              </div>
 
-              {/* Actions — Figma: white bg, thin light grey border, light orange icon/text */}
-              <div className="flex flex-wrap gap-3 mt-4">
+              {/* Action buttons */}
+              <div className="flex flex-wrap gap-2.5">
                 {isClient && (
                   <Button
                     variant="outline"
@@ -217,39 +297,46 @@ export const MasterProfileHero = ({
                     onClick={onToggleFavorite}
                     disabled={favoriteLoading}
                     className={cn(
-                      'flex items-center gap-2 rounded-xl border transition',
+                      'h-9 px-4 rounded-full inline-flex items-center gap-1.5 transition font-medium text-sm',
                       isFavorite
-                        ? 'bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600 dark:bg-red-500 dark:border-red-500 dark:text-white dark:hover:bg-red-600 dark:hover:border-red-600'
-                        : 'border-gray-200 dark:border-white/40 bg-white dark:bg-white/25 text-amber-600 dark:text-white hover:bg-gray-50 dark:hover:bg-white/35'
+                        ? 'bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-100 hover:text-rose-700 dark:hover:bg-rose-500/15 dark:hover:text-rose-300'
+                        : 'bg-transparent border-gray-200 dark:border-white/[0.12] text-slate-700 dark:text-slate-300 hover:bg-gray-200/70 hover:text-slate-900 hover:border-gray-300 dark:hover:bg-white/[0.06] dark:hover:text-slate-100 dark:hover:border-white/20',
                     )}
                     style={favoriteAnimation ? { animation: 'heartPop 0.5s ease' } : undefined}
                   >
-                    <Heart size={16} className={cn(isFavorite && 'fill-current')} />
-                    <span className="font-medium">{isFavorite ? t('masterDetails.saved', 'Saved') : t('masterDetails.save', 'Save')}</span>
+                    <Heart
+                      size={14}
+                      className={cn(isFavorite && 'fill-current')}
+                    />
+                    {isFavorite
+                      ? t('masterDetails.saved', 'Saved')
+                      : t('masterDetails.save', 'Save')}
                   </Button>
                 )}
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleShare}
-                  className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-white/40 bg-white dark:bg-white/25 text-amber-600 dark:text-white hover:bg-gray-50 dark:hover:bg-white/35"
+                  className="h-9 px-4 rounded-full inline-flex items-center gap-1.5 transition font-medium text-sm bg-transparent border-gray-200 dark:border-white/[0.12] text-slate-700 dark:text-slate-300 hover:bg-gray-200/70 hover:text-slate-900 hover:border-gray-300 dark:hover:bg-white/[0.06] dark:hover:text-slate-100 dark:hover:border-white/20"
                 >
-                  <Share2 size={16} />
-                  <span className="font-medium">{t('masterDetails.share', 'Share')}</span>
+                  <Share2 size={14} />
+                  {t('masterDetails.share', 'Share')}
                 </Button>
               </div>
             </div>
 
             {/* Unavailable badge */}
             {showUnavailable && (
-              <div className="md:ml-auto">
+              <div className="md:ml-auto shrink-0">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Badge
                       variant="outline"
                       className={cn(
-                        'text-xs font-semibold h-6 cursor-default border-white/40 bg-white/10 text-white',
-                        availabilityStatus === 'OFFLINE' && 'bg-red-500/30 border-red-400/50'
+                        'text-xs font-semibold h-7 px-2.5 cursor-default rounded-full',
+                        availabilityStatus === 'OFFLINE'
+                          ? 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-200/60 dark:border-rose-500/20'
+                          : 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200/60 dark:border-amber-500/20',
                       )}
                     >
                       {unavailableLabel}
@@ -262,21 +349,29 @@ export const MasterProfileHero = ({
               </div>
             )}
           </div>
-
-          {/* Stats bar — Figma: translucent white bg, faint white border, dark grey text */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="bg-white/20 dark:bg-white/15 backdrop-blur-sm rounded-xl p-3 text-center border border-white/30 dark:border-white/20"
-              >
-                <div className="text-xl mb-1">{stat.icon}</div>
-                <div className="text-gray-900 dark:text-white font-bold text-lg leading-none">{stat.value}</div>
-                <div className="text-gray-700 dark:text-amber-100 text-xs mt-1 leading-tight">{stat.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
+
+        {/* Stats row — 5 cards below the profile card */}
+        <div className="mt-4 sm:mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className={cn(
+                baseCardCls,
+                'rounded-2xl p-4 transition duration-300 hover:-translate-y-0.5 hover:shadow-md',
+              )}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <stat.Icon size={18} className={stat.iconColor} strokeWidth={1.75} />
+              </div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100 leading-none">
+                {stat.value}
+              </div>
+              <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-tight line-clamp-2">
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

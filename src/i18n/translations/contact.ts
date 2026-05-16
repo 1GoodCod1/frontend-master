@@ -11,6 +11,10 @@ export const contact = {
       telegramDescription: 'Chat with us on Telegram',
       workingHours: 'Working Hours: Monday - Friday, 9:00 - 18:00',
       responseTime: 'We typically respond within 24 hours',
+      faqCardTitle: 'Looking for a quick answer?',
+      faqCardDesc: 'Most questions are already answered in our FAQ.',
+      faqCardCta: 'Browse the FAQ',
+      writeAction: 'Write',
     },
   },
   ru: {
@@ -25,6 +29,10 @@ export const contact = {
       telegramDescription: 'Напишите нам в Telegram',
       workingHours: 'Рабочие часы: Понедельник - Пятница, 9:00 - 18:00',
       responseTime: 'Обычно отвечаем в течение 24 часов',
+      faqCardTitle: 'Ищете быстрый ответ?',
+      faqCardDesc: 'На большинство вопросов уже есть ответы в нашем FAQ.',
+      faqCardCta: 'Открыть FAQ',
+      writeAction: 'Написать',
     },
   },
   ro: {
@@ -39,6 +47,10 @@ export const contact = {
       telegramDescription: 'Scrieți-ne pe Telegram',
       workingHours: 'Ore de lucru: Luni - Vineri, 9:00 - 18:00',
       responseTime: 'De obicei răspundem în termen de 24 de ore',
+      faqCardTitle: 'Cauți un răspuns rapid?',
+      faqCardDesc: 'Majoritatea întrebărilor au deja un răspuns în FAQ.',
+      faqCardCta: 'Deschide FAQ',
+      writeAction: 'Scrie',
     },
   },
 };

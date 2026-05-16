@@ -11,7 +11,7 @@ import { useIsDark } from '@/hooks/useIsDark';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { HeroSection } from '@/components/home/HeroSection';
 import { POPULAR_MASTERS_HOME_LIMIT } from '@/constants/home';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -70,7 +70,7 @@ interface FlowSectionProps {
 
 function FlowSection({ id, index, kicker, accent, trailing, children, isDark }: FlowSectionProps) {
   return (
-    <section id={id} className="relative scroll-mt-28 pt-10 md:pt-16 first:pt-2">
+    <section id={id} className="relative scroll-mt-20 pt-10 md:pt-16 first:pt-2">
       {/* Slim marker strip — does NOT duplicate the inner section title */}
       <div className="flex items-center justify-between gap-3 mb-5 md:mb-6">
         <div className="flex items-center gap-3 min-w-0">
@@ -312,31 +312,20 @@ export default function HomePage() {
     { id: 'roadmap', index: '05', label: t('home.roadmap.title', { defaultValue: 'Roadmap' }), accent: 'emerald' },
   ];
 
-  // Smooth-scroll to anchor with navbar offset — rAF-based, works on whichever element actually scrolls
+  // Smooth-scroll to anchor — native scrollIntoView with explicit smooth behavior
   const handleSectionClick = useCallback((id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-    const OFFSET = 80; // navbar (3.5rem) + gap
 
-    // Detect the real scroll container (html / body / a parent with overflow-y)
-    const scroller =
-      (document.scrollingElement as HTMLElement | null) || document.documentElement;
-    const startY = scroller.scrollTop;
-    const targetY = el.getBoundingClientRect().top + startY - OFFSET;
-    const distance = targetY - startY;
-    if (Math.abs(distance) < 2) return;
-
-    const duration = Math.min(900, 350 + Math.abs(distance) * 0.35);
-    const startTime = performance.now();
-    const easeInOutCubic = (t: number) =>
-      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-    const step = (now: number) => {
-      const progress = Math.min((now - startTime) / duration, 1);
-      scroller.scrollTop = startY + distance * easeInOutCubic(progress);
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    // Temporarily force smooth scrolling — overrides CSS `scroll-behavior: auto` set globally
+    const html = document.documentElement;
+    const prev = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'smooth';
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Restore CSS after animation completes
+    window.setTimeout(() => {
+      html.style.scrollBehavior = prev;
+    }, 900);
 
     setActive(id);
     if (typeof history !== 'undefined') {
@@ -344,27 +333,41 @@ export default function HomePage() {
     }
   }, []);
 
-  // Active-section tracking via IntersectionObserver
+  // Active-section tracking — scroll listener picks the section closest to the top of viewport
   useEffect(() => {
-    const root = mainRef.current;
-    if (!root) return;
-    const targets = sections
-      .map((s) => document.getElementById(s.id))
-      .filter((el): el is HTMLElement => el !== null);
-    if (targets.length === 0) return;
+    const sectionIds = ['flow', 'masters', 'categories', 'how', 'roadmap'];
+    const OFFSET = 120; // section is "active" once its top crosses this line below navbar
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) setActive(visible[0].target.id);
-      },
-      { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] },
-    );
-    targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      let currentId: string | null = null;
+      for (const id of sectionIds) {
+        const node = document.getElementById(id);
+        if (!node) continue;
+        const top = node.getBoundingClientRect().top;
+        if (top <= OFFSET) currentId = id;
+        else break;
+      }
+      setActive(currentId ?? sectionIds[0]);
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    update();
+    // Listen on multiple potential scroll sources — page may scroll via window OR an inner overflow container
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll, { capture: true } as EventListenerOptions);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   return (
@@ -381,28 +384,6 @@ export default function HomePage() {
       </Helmet>
 
       <div className="relative min-h-screen w-full animate-fade-in">
-        {/* Page-wide ambient backdrop */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-          <div
-            className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"
-            style={{ background: isDark ? 'hsl(var(--primary)/0.05)' : 'hsl(var(--primary)/0.07)' }}
-          />
-          <div
-            className="absolute top-[60%] left-0 w-[500px] h-[500px] rounded-full blur-[100px] -translate-x-1/4"
-            style={{ background: isDark ? 'rgba(139,92,246,0.05)' : 'rgba(139,92,246,0.06)' }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              opacity: isDark ? 0.025 : 0.045,
-              backgroundImage:
-                'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
-              backgroundSize: '64px 64px',
-              maskImage: 'radial-gradient(ellipse at center, black 25%, transparent 75%)',
-            }}
-          />
-        </div>
-
         {/* HERO */}
         <section className="relative">
           <HeroSection isAuthed={isAuthed} />
@@ -512,50 +493,6 @@ export default function HomePage() {
                 </Suspense>
               </FlowSection>
 
-              {/* Final CTA — guests only */}
-              {!isAuthed && (
-                <div className="relative mt-20">
-                  <div
-                    className={cn(
-                      'relative overflow-hidden rounded-3xl border p-8 md:p-12 text-center',
-                      isDark
-                        ? 'border-white/10 bg-gradient-to-br from-white/[0.04] to-white/[0.01]'
-                        : 'border-gray-200/70 bg-gradient-to-br from-white to-gray-50',
-                    )}
-                  >
-                    <div className="absolute inset-0 pointer-events-none" aria-hidden>
-                      <div
-                        className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[100px]"
-                        style={{
-                          background: isDark
-                            ? 'hsl(var(--primary)/0.10)'
-                            : 'hsl(var(--primary)/0.12)',
-                        }}
-                      />
-                    </div>
-                    <div className="relative">
-                      <Sparkles size={28} className="mx-auto mb-3 text-primary dark:text-[#E97525]" />
-                      <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                        {t('home.ctaReadyTitle', { defaultValue: 'Готовы начать?' })}
-                      </h3>
-                      <p className="mt-2 text-sm md:text-base text-slate-600 dark:text-white/60 max-w-xl mx-auto">
-                        {t('home.subtitle')}
-                      </p>
-                      <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
-                        <Button asChild className="px-6 py-3 rounded-2xl font-semibold">
-                          <RouterLink to="/register">
-                            {t('nav.register')}
-                            <ArrowRight size={16} className="ml-1.5" />
-                          </RouterLink>
-                        </Button>
-                        <Button asChild variant="outline" className="px-6 py-3 rounded-2xl font-semibold">
-                          <RouterLink to="/masters">{t('home.findMasters')}</RouterLink>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 import {
   SUPPORT_EMAIL,
   SUPPORT_MAILTO,
@@ -50,33 +51,51 @@ export default function TermsOfUsePage() {
         ]}
       />
 
-      <Card className="overflow-hidden border-border shadow-sm">
+      <Card
+        className={cn(
+          'overflow-hidden rounded-2xl',
+          'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
+          'border border-gray-200/80 dark:border-white/[0.08]',
+          'shadow-sm dark:shadow-lg dark:shadow-black/20',
+        )}
+      >
         <CardContent className="space-y-6 p-6 sm:p-8">
-          <p className="text-sm font-medium text-muted-foreground">
+          <p className="text-xs font-mono uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">
             {t('terms.lastUpdated')}: {LAST_UPDATED}
           </p>
 
-          <p className="leading-7">{t('terms.intro', { COMPANY_NAME, IDNO: COMPANY_IDNO, LEGAL_ADDRESS: COMPANY_ADDRESS })}</p>
+          <p className="leading-7 text-slate-700 dark:text-slate-300">
+            {t('terms.intro', { COMPANY_NAME, IDNO: COMPANY_IDNO, LEGAL_ADDRESS: COMPANY_ADDRESS })}
+          </p>
 
           {sections.map((section, index) => (
             <div key={index} className="space-y-2">
-              <h2 className="text-lg font-bold text-primary">{section.title}</h2>
+              <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">
+                {section.title}
+              </h2>
               {section.p.map((paragraph, pIndex) => (
-                <p key={pIndex} className="leading-7 text-muted-foreground">
+                <p key={pIndex} className="leading-7 text-slate-600 dark:text-slate-400">
                   {paragraph}
                 </p>
               ))}
             </div>
           ))}
 
-          <Separator className="my-6" />
+          <Separator className="my-6 bg-gray-200/60 dark:bg-white/[0.06]" />
 
-          <h2 className="text-lg font-bold">{t('terms.contactTitle')}</h2>
-          <p className="leading-7 text-muted-foreground">{t('terms.contactP1')}</p>
-          <ul className="list-inside list-disc space-y-1 pl-2 text-muted-foreground">
+          <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">
+            {t('terms.contactTitle')}
+          </h2>
+          <p className="leading-7 text-slate-600 dark:text-slate-400">
+            {t('terms.contactP1')}
+          </p>
+          <ul className="list-inside list-disc space-y-1 pl-2 text-slate-600 dark:text-slate-400">
             <li>
               {t('terms.contactEmail')}:{' '}
-              <a href={SUPPORT_MAILTO} className="font-medium text-primary hover:underline">
+              <a
+                href={SUPPORT_MAILTO}
+                className="font-semibold text-primary dark:text-[#E97525] hover:underline"
+              >
                 {SUPPORT_EMAIL}
               </a>
             </li>
@@ -86,14 +105,17 @@ export default function TermsOfUsePage() {
                 href={TELEGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-primary hover:underline"
+                className="font-semibold text-primary dark:text-[#E97525] hover:underline"
               >
                 {TELEGRAM_HANDLE}
               </a>
             </li>
             <li>
               {t('terms.contactAddress')}:{' '}
-              <RouterLink to="/contact" className="font-medium text-primary hover:underline">
+              <RouterLink
+                to="/contact"
+                className="font-semibold text-primary dark:text-[#E97525] hover:underline"
+              >
                 /contact
               </RouterLink>
             </li>

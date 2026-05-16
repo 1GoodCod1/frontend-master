@@ -234,33 +234,31 @@ export const MasterCard = React.memo(function MasterCard({
         </div>
       )}
 
-      {/* City */}
-      {city && (
-        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-2.5 sm:pb-3">
-          <span className="flex items-center gap-0.5 text-[8px] min-[480px]:text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground/70">
-            <MapPin size={9} className="shrink-0 min-[480px]:[width:10px] min-[480px]:[height:10px]" />
+      {/* City + Contact button — same row */}
+      <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-3 sm:pb-4 pt-0.5 mt-auto flex items-center gap-2">
+        {city ? (
+          <span className="flex items-center gap-0.5 text-[10px] sm:text-[11px] text-muted-foreground/80 min-w-0 flex-1">
+            <MapPin size={11} className="shrink-0" />
             <span className="truncate">{city}</span>
           </span>
-        </div>
-      )}
-
-      {/* Contact button */}
-      {role !== 'MASTER' && role !== 'ADMIN' && (
-        <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-3 sm:pb-4 pt-0.5 mt-auto">
+        ) : (
+          <span className="flex-1" />
+        )}
+        {role !== 'MASTER' && role !== 'ADMIN' && (
           <button
             onClick={handleContactClick}
             className={cn(
-              'w-full h-7 min-[480px]:h-8 sm:h-9 rounded-xl flex items-center justify-center gap-1 min-[480px]:gap-1.5 transition duration-200 active:scale-[0.98] font-medium text-[10px] min-[480px]:text-[11px] sm:text-[12px]',
+              'h-8 px-3 min-[480px]:px-3.5 rounded-full inline-flex items-center gap-1.5 transition duration-200 active:scale-[0.97] font-medium text-[11px] min-[480px]:text-xs shrink-0',
               'bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]',
               'dark:bg-[#E97525] dark:hover:bg-[#d4691f]',
               'shadow-sm hover:shadow-md',
             )}
           >
-            <Phone size={11} strokeWidth={2} className="min-[480px]:[width:13px] min-[480px]:[height:13px]" />
+            <Phone size={12} strokeWidth={2} />
             {t('common.masterCard.contact')}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 });

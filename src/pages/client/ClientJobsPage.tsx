@@ -22,7 +22,7 @@ export default function ClientJobsPage() {
   const [status, setStatus] = useState<JobStatus | undefined>(undefined);
 
   const { data, isLoading, isError, error, refetch } = useJobsListQuery(
-    status ? { status } : undefined,
+    { mine: true, ...(status ? { status } : {}) },
     { refetchOnMountOrArgChange: true, pollingInterval: 60_000 },
   );
 

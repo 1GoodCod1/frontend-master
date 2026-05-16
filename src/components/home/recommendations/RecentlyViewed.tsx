@@ -61,13 +61,9 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
             <button
               type="button"
               onClick={() => slugOrId(m) && navigate(`/masters/${slugOrId(m)}`)}
-              className="relative h-10 w-10 shrink-0 rounded-full p-[2.5px] transition duration-200 hover:scale-110 hover:shadow-[0_4px_16px_rgba(233,117,37,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-              style={{
-                background: `linear-gradient(135deg, ${RECENTLY_VIEWED_ACCENT}, #f08a3d)`,
-                boxShadow: '0 2px 8px rgba(233,117,37,0.25)',
-              }}
+              className="relative h-10 w-10 shrink-0 rounded-full bg-[#E97525]/30 p-[2px] transition duration-200 hover:scale-110 hover:bg-[#E97525] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E97525]/50"
             >
-              <div className="h-full w-full rounded-full overflow-hidden bg-card border-2 border-background dark:border-[#1a1a1a]">
+              <div className="h-full w-full rounded-full overflow-hidden bg-card">
                 {src ? (
                   <LazyImage
                     src={src}
@@ -99,26 +95,20 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
   if (layout === 'sidebar') {
     const visible = masters.slice(0, limit);
     return (
-      <div className="rounded-2xl border border-gray-200/60 dark:border-white/[0.08] bg-white/80 dark:bg-white/[0.03] backdrop-blur-sm overflow-hidden shadow-sm">
+      <div className="overflow-hidden rounded-2xl bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20">
         {/* Header */}
-        <div className="flex items-center gap-2.5 px-4 py-3 border-b border-gray-200/50 dark:border-white/[0.06]">
-          <div
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md"
-            style={{
-              background: `linear-gradient(135deg, ${RECENTLY_VIEWED_ACCENT}22, ${RECENTLY_VIEWED_ACCENT}10)`,
-              border: `1px solid ${RECENTLY_VIEWED_ACCENT}35`,
-            }}
-          >
-            <Eye className="h-3.5 w-3.5" style={{ color: RECENTLY_VIEWED_ACCENT }} />
-          </div>
-          <h3 className="text-[13px] font-semibold text-foreground leading-tight truncate">
+        <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-1">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#E97525]/10 text-[#E97525]">
+            <Eye className="h-4 w-4" />
+          </span>
+          <h3 className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground leading-tight">
             {title ?? t('home.recentlyViewed')}
           </h3>
         </div>
 
         {/* List */}
         {isLoading ? (
-          <ul className="divide-y divide-gray-200/50 dark:divide-white/[0.05]">
+          <ul className="pb-1.5">
             {[1, 2, 3].map((i) => (
               <li key={i} className="flex items-center gap-2.5 px-4 py-2.5">
                 <Skeleton className="h-8 w-8 rounded-full shrink-0" />
@@ -130,7 +120,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
             ))}
           </ul>
         ) : (
-          <ul className="divide-y divide-gray-200/50 dark:divide-white/[0.05]">
+          <ul className="pb-1.5">
             {visible.map((m) => {
               const src = mediaUrl(
                 m.avatarUrl || m.avatarFile?.path || m.user?.avatarFile?.path || null,
@@ -141,10 +131,10 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
                   <button
                     type="button"
                     onClick={() => slugOrId(m) && navigate(`/masters/${slugOrId(m)}`)}
-                    className="group w-full flex items-center gap-2.5 px-4 py-2.5 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.03] focus:outline-none focus-visible:bg-gray-50 dark:focus-visible:bg-white/[0.03]"
+                    className="group w-full flex items-center gap-2.5 px-4 py-2.5 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.06] focus:outline-none focus-visible:bg-black/[0.03] dark:focus-visible:bg-white/[0.06]"
                   >
                     <div
-                      className="h-8 w-8 shrink-0 rounded-full overflow-hidden ring-2 transition"
+                      className="h-8 w-8 shrink-0 rounded-full overflow-hidden transition"
                       style={{
                         boxShadow: `0 0 0 2px ${RECENTLY_VIEWED_ACCENT}40`,
                       }}
@@ -183,17 +173,11 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
   }
 
   return (
-    <div className="mb-6 rounded-2xl border border-gray-200/60 dark:border-white/[0.08] bg-white/80 dark:bg-white/[0.03] backdrop-blur-sm px-4 py-4 shadow-sm">
-      <div className="flex items-center justify-center gap-2.5 mb-3">
-        <div
-          className="flex h-8 w-8 items-center justify-center rounded-lg"
-          style={{
-            background: `linear-gradient(135deg, ${RECENTLY_VIEWED_ACCENT}20, ${RECENTLY_VIEWED_ACCENT}10)`,
-            border: `1px solid ${RECENTLY_VIEWED_ACCENT}40`,
-          }}
-        >
-          <Eye className="h-4 w-4" style={{ color: RECENTLY_VIEWED_ACCENT }} />
-        </div>
+    <div className="rounded-2xl bg-card px-5 py-4 shadow-sm">
+      <div className="mb-3 flex items-center gap-2.5">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#E97525]/10 text-[#E97525]">
+          <Eye className="h-4 w-4" />
+        </span>
         <div>
           <h3 className="text-sm font-semibold text-foreground">
             {title ?? t('home.recentlyViewed')}
@@ -205,13 +189,13 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center gap-3 overflow-hidden">
+        <div className="flex gap-3 overflow-hidden">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Skeleton key={i} className="h-9 w-9 shrink-0 rounded-full" />
+            <Skeleton key={i} className="h-10 w-10 shrink-0 rounded-full" />
           ))}
         </div>
       ) : (
-        <div className="flex justify-center gap-3 overflow-x-auto pb-1 -mx-1">
+        <div className="flex gap-3 overflow-x-auto pb-1">
           {masters.slice(0, limit).map(renderAvatar)}
         </div>
       )}

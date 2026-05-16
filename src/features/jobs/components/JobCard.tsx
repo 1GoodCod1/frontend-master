@@ -1,16 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, DollarSign, Users, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { Clock, DollarSign, Users, CheckCircle2, Loader2, Lock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { formatDateTimeString } from '@/utils/date';
 import type { JobDto } from '@/types';
 
-const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; className: string }> = {
-  OPEN: { label: 'Open', icon: Loader2, className: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10' },
-  FOUND: { label: 'Found', icon: CheckCircle2, className: 'text-blue-500 bg-blue-50 dark:bg-blue-500/10' },
-  CLOSED: { label: 'Closed', icon: XCircle, className: 'text-slate-500 bg-slate-100 dark:bg-slate-500/10' },
-  PENDING_CLOSE: { label: 'Closing', icon: Loader2, className: 'text-amber-500 bg-amber-50 dark:bg-amber-500/10' },
+const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; className: string; iconClassName?: string }> = {
+  OPEN: { label: 'Open', icon: Loader2, className: 'text-emerald-600 bg-emerald-50 border border-emerald-200/60 dark:bg-emerald-500/10 dark:border-emerald-500/20' },
+  FOUND: { label: 'Found', icon: CheckCircle2, className: 'text-blue-600 bg-blue-50 border border-blue-200/60 dark:bg-blue-500/10 dark:border-blue-500/20' },
+  CLOSED: { label: 'Closed', icon: Lock, className: 'text-slate-700 bg-slate-200/70 border border-slate-300 dark:bg-slate-500/20 dark:text-slate-200 dark:border-slate-500/30' },
+  PENDING_CLOSE: { label: 'Closing', icon: Loader2, className: 'text-amber-600 bg-amber-50 border border-amber-200/60 dark:bg-amber-500/10 dark:border-amber-500/20', iconClassName: 'animate-spin' },
 };
 
 type JobCardProps = {
@@ -35,7 +35,7 @@ export default function JobCard({ job, linkTo, showApplicationCount }: JobCardPr
                 statusConfig.className,
               )}
             >
-              <StatusIcon className="h-3 w-3" />
+              <StatusIcon className={cn('h-3 w-3', statusConfig.iconClassName)} />
               {statusConfig.label}
             </span>
             <span className="text-xs text-muted-foreground">
@@ -44,12 +44,12 @@ export default function JobCard({ job, linkTo, showApplicationCount }: JobCardPr
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-sm font-semibold text-foreground group-hover:text-primary">
+          <h3 className="mb-2 line-clamp-2 break-words text-sm font-semibold text-foreground group-hover:text-primary">
             {job.title}
           </h3>
 
           {/* Description */}
-          <p className="mb-4 flex-1 line-clamp-2 text-xs text-muted-foreground">{job.description}</p>
+          <p className="mb-4 flex-1 line-clamp-2 break-words text-xs text-muted-foreground">{job.description}</p>
 
           {/* Job type + budget */}
           <div className="flex flex-wrap gap-3 text-xs">

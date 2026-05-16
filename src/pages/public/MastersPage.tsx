@@ -62,6 +62,8 @@ export default function MastersPage() {
           onViewModeChange={setViewMode}
           onResetFilters={resetFilters}
           activeFilterCount={activeFilterCount}
+          totalCount={total}
+          isFetching={list.isFetching}
         />
 
         {(() => {
@@ -111,23 +113,23 @@ export default function MastersPage() {
                     list={list}
                     onClearFilters={clearFiltersForEmpty}
                   />
+                  {items.length > 0 && (
+                    <MastersPagination
+                      page={query.page}
+                      totalPages={totalPages}
+                      canPrev={canPrev}
+                      canNext={canNext}
+                      isFetching={list.isFetching}
+                      onPrev={() => setQuery((s) => ({ ...s, page: s.page - 1 }))}
+                      onNext={() => setQuery((s) => ({ ...s, page: s.page + 1 }))}
+                      onGoTo={(p) => setQuery((s) => ({ ...s, page: p }))}
+                    />
+                  )}
                 </div>
               </div>
             </>
           );
         })()}
-
-        {items.length > 0 && (
-          <MastersPagination
-            page={query.page}
-            totalPages={totalPages}
-            canPrev={canPrev}
-            canNext={canNext}
-            isFetching={list.isFetching}
-            onPrev={() => setQuery((s) => ({ ...s, page: s.page - 1 }))}
-            onNext={() => setQuery((s) => ({ ...s, page: s.page + 1 }))}
-          />
-        )}
       </div>
     </>
   );

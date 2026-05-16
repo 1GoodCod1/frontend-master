@@ -34,6 +34,15 @@ export interface JobDto {
   };
   cityId: string | null;
   city: { id: string; name: string } | null;
+  categoryId: string | null;
+  category: {
+    id: string;
+    name: string;
+    slug: string;
+    icon?: string | null;
+    iconKey?: string | null;
+    translations?: unknown;
+  } | null;
   _count: { applications: number };
   createdAt: string;
   updatedAt: string;
@@ -85,6 +94,7 @@ export interface CreateJobDto {
   hourlyRate?: number;
   minJoints: number;
   cityId?: string;
+  categoryId: string;
   photoFileIds?: string[];
 }
 

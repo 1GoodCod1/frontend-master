@@ -9,6 +9,8 @@ interface MastersPageHeaderProps {
   onViewModeChange: (mode: ViewMode) => void;
   onResetFilters: () => void;
   activeFilterCount: number;
+  totalCount?: number;
+  isFetching?: boolean;
 }
 
 export function MastersPageHeader({
@@ -16,18 +18,27 @@ export function MastersPageHeader({
   onViewModeChange,
   onResetFilters,
   activeFilterCount,
+  totalCount,
+  isFetching,
 }: MastersPageHeaderProps) {
   const { t } = useTranslation();
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div className="min-w-0">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight">
-          {t('masters.title')}
-        </h1>
-        <p className="text-muted-foreground mt-0.5 sm:mt-1 text-sm sm:text-base">
-          {t('masters.subtitle')}
-        </p>
+        <div className="flex items-center gap-3 flex-wrap">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+            {t('masters.title')}
+          </h1>
+          {typeof totalCount === 'number' && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-2.5 py-0.5 text-xs font-semibold">
+              {t('masters.found', { count: totalCount })}
+              {isFetching && (
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              )}
+            </span>
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-2 shrink-0 flex-wrap">
         <div className="flex rounded-lg border border-gray-200 dark:border-white/10 overflow-hidden">

@@ -8,6 +8,12 @@ export const faq = {
       seoKeywords:
         'Faber FAQ, help masters clients Moldova, verification tariffs, reviews requests, privacy support, how to find master Chisinau',
       viewAll: 'View all questions',
+      searchPlaceholder: 'Search the questions…',
+      noResults: 'No questions match your search.',
+      stillQuestionsTitle: 'Still have questions?',
+      stillQuestionsDesc:
+        'Our team usually replies within an hour during working hours.',
+      contactCta: 'Contact support',
       categories: {
         forClients: 'For clients',
         forMasters: 'For masters',
@@ -83,6 +89,26 @@ export const faq = {
         answer:
           'PREMIUM masters can create promotions (discounts) for their services. Go to your dashboard → Promotions, click "Create promotion", set a title, discount percentage (1–100%), select a service or apply to all, and set the validity period. Active promotions are displayed on the main page and your master card to attract more clients.',
       },
+      q15: {
+        question: 'How do I post a job and get offers?',
+        answer:
+          'Open the Jobs page and click "Post a job". Describe what you need, pick a category and (optionally) a city, set your budget. Verified specialists will start sending you offers — usually within an hour. Compare them side by side, chat directly, and pick the one you like. Posting is free and there are no hidden fees.',
+      },
+      q16: {
+        question: 'What are joints and why should I care?',
+        answer:
+          'Joints are the platform currency that specialists use to send you offers. As a client, you don\'t pay anything to post a job. For you, joints are a quality signal: every specialist who reaches out has invested something to do so — meaning they\'re genuinely interested. Higher offers also rank higher in your list, so you see the most motivated ones first.',
+      },
+      q17: {
+        question: 'How does "Best matches" work for me as a specialist?',
+        answer:
+          'On the Jobs page, the "Best matches" tab orders jobs by how well they fit your profile: first the ones in your category, then jobs in your city (or location-independent), then the most recent. Jobs from other categories are still visible — they just appear lower so you don\'t miss anything.',
+      },
+      q18: {
+        question: 'How do I apply to a job with joints?',
+        answer:
+          'Open the job, click "Apply", write a short cover letter, set how many joints you want to offer (more joints = higher rank in the client\'s list), and submit. If the client doesn\'t open your offer you can withdraw and get a full refund. If the job closes without anyone being picked, everyone gets their joints back.',
+      },
     },
   },
   ru: {
@@ -92,6 +118,12 @@ export const faq = {
       seoKeywords:
         'FAQ faber.md, помощь мастерам и клиентам Молдова, верификация тарифы, отзывы заявки, конфиденциальность поддержка, как найти мастера Кишинёв',
       viewAll: 'Все вопросы',
+      searchPlaceholder: 'Поиск по вопросам…',
+      noResults: 'По вашему запросу ничего не найдено.',
+      stillQuestionsTitle: 'Остались вопросы?',
+      stillQuestionsDesc:
+        'Команда поддержки обычно отвечает в течение часа в рабочее время.',
+      contactCta: 'Написать в поддержку',
       categories: {
         forClients: 'Для клиентов',
         forMasters: 'Для мастеров',
@@ -167,6 +199,26 @@ export const faq = {
         answer:
           'Мастера с планом PREMIUM могут создавать акции (скидки) на свои услуги. Перейдите в дашборд → Акции, нажмите «Создать акцию», укажите название, размер скидки (1–100%), выберите услугу или примените ко всем, и установите сроки действия. Активные акции отображаются на главной странице и на карточке мастера — это помогает привлечь больше клиентов.',
       },
+      q15: {
+        question: 'Как опубликовать задачу и получить предложения?',
+        answer:
+          'Откройте раздел «Joburi» и нажмите «Опубликовать задачу». Опишите, что нужно, выберите категорию и при желании город, укажите бюджет. Проверенные специалисты начнут присылать предложения — обычно в течение часа. Сравните их рядом, обсудите детали в чате и выберите подходящего. Публиковать задачи бесплатно, никаких скрытых комиссий.',
+      },
+      q16: {
+        question: 'Что такое joints и зачем они нужны?',
+        answer:
+          'Joints — это внутренняя валюта платформы, которой специалисты пользуются, чтобы прислать вам предложение. Для клиента всё просто: публиковать задачу не стоит ничего. Joints — это сигнал качества: каждый специалист, который вам ответил, вложил что-то, чтобы это сделать, а значит реально заинтересован. Чем выше предложение в joints, тем выше специалист в вашем списке — самые мотивированные видны первыми.',
+      },
+      q17: {
+        question: 'Как работает «Best matches» для специалиста?',
+        answer:
+          'На странице «Joburi» вкладка «Best matches» сортирует задачи по тому, насколько они подходят вам: сначала задачи из вашей категории, затем из вашего города (или без привязки к городу), потом — самые свежие. Задачи из других категорий не скрыты — просто отображаются ниже, чтобы вы ничего не упустили.',
+      },
+      q18: {
+        question: 'Как откликнуться на задачу с помощью joints?',
+        answer:
+          'Откройте задачу, нажмите «Применить», напишите короткое сопроводительное сообщение, укажите, сколько joints предлагаете (больше joints = выше место в списке у клиента), и отправьте. Если клиент не открыл ваше предложение — можно отозвать и получить полный возврат. Если задача закрыта и никто не выбран — всем возвращают joints.',
+      },
     },
   },
   ro: {
@@ -176,6 +228,12 @@ export const faq = {
       seoKeywords:
         'întrebări faber.md, ajutor meșteri clienți Moldova, verificare tarife, recenzii cereri, confidențialitate suport, cum găsesc meșter Chișinău',
       viewAll: 'Toate întrebările',
+      searchPlaceholder: 'Caută în întrebări…',
+      noResults: 'Nicio întrebare nu se potrivește căutării.',
+      stillQuestionsTitle: 'Mai aveți întrebări?',
+      stillQuestionsDesc:
+        'Echipa noastră răspunde de obicei în decurs de o oră, în program de lucru.',
+      contactCta: 'Contactați suportul',
       categories: {
         forClients: 'Pentru clienți',
         forMasters: 'Pentru meșteri',
@@ -250,6 +308,26 @@ export const faq = {
         question: 'Ce sunt promoțiile și cum le creez?',
         answer:
           'Meșterii cu plan PREMIUM pot crea promoții (reduceri) pentru serviciile lor. Mergeți în dashboard → Promoții, apăsați „Creează promoție", introduceți titlul, procentul de reducere (1–100%), selectați un serviciu sau aplicați la toate, și setați perioada de valabilitate. Promoțiile active sunt afișate pe pagina principală și pe cardul meșterului pentru a atrage mai mulți clienți.',
+      },
+      q15: {
+        question: 'Cum public un job și primesc oferte?',
+        answer:
+          'Deschideți pagina Joburi și apăsați „Publică un job". Descrieți de ce aveți nevoie, alegeți o categorie și (opțional) un oraș, setați bugetul. Specialiștii verificați vă vor trimite oferte — de obicei în decurs de o oră. Comparați-le, discutați direct în chat și alegeți pe cel potrivit. Publicarea este gratuită, fără comisioane ascunse.',
+      },
+      q16: {
+        question: 'Ce sunt joints și de ce contează pentru mine?',
+        answer:
+          'Joints sunt moneda internă a platformei pe care specialiștii o folosesc ca să vă trimită o ofertă. Pentru voi, ca client, e simplu: publicarea unui job nu costă nimic. Joints sunt un semnal de calitate — fiecare specialist care vă răspunde a investit ceva ca să facă asta, deci e cu adevărat interesat. Cu cât oferta în joints e mai mare, cu atât specialistul apare mai sus în lista voastră — primii sunt cei mai motivați.',
+      },
+      q17: {
+        question: 'Cum funcționează „Best matches" pentru mine ca specialist?',
+        answer:
+          'Pe pagina Joburi, fila „Best matches" sortează joburile după cât de bine se potrivesc profilului vostru: mai întâi joburile din categoria voastră, apoi cele din orașul vostru (sau fără locație), apoi cele mai recente. Joburile din alte categorii nu sunt ascunse — apar doar mai jos, ca să nu pierdeți oportunități.',
+      },
+      q18: {
+        question: 'Cum aplic la un job cu joints?',
+        answer:
+          'Deschideți jobul, apăsați „Aplică", scrieți o scrisoare scurtă de prezentare, setați câți joints oferiți (mai mulți joints = poziție mai bună în lista clientului) și trimiteți. Dacă clientul nu deschide oferta, o puteți retrage și primiți refund complet. Dacă jobul se închide fără să fie ales nimeni, toți primesc joints înapoi.',
       },
     },
   },

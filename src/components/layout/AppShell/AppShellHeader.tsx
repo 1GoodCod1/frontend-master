@@ -19,7 +19,6 @@ type Props = {
   role: string | null;
   colorMode: 'light' | 'dark';
   isInCabinet?: boolean;
-  navLinkBaseClass: string;
   navLinkClass: (isActive: boolean) => string;
   isNavCentered: boolean;
   onLogout: () => void;
@@ -33,7 +32,6 @@ export function AppShellHeader({
   role,
   colorMode,
   isInCabinet = false,
-  navLinkBaseClass,
   navLinkClass,
   isNavCentered,
   onLogout,
@@ -85,35 +83,45 @@ export function AppShellHeader({
           centered={isNavCentered}
         />
 
-        <div className="hidden md:flex items-center gap-1">
+        {/* Divider between nav links and the auth/settings cluster */}
+        {!isNavCentered && (
+          <div className="hidden md:block h-6 w-px bg-border/70 mx-3" aria-hidden />
+        )}
+
+        <div className="hidden md:flex items-center gap-1.5">
           {isAuthed && role === USER_ROLE.MASTER && <JointsBalanceBadge />}
           {isAuthed && <NotificationMenu />}
           {!isAuthed && (
-            <>
+            <div className="flex items-center gap-1.5">
               <Button
                 variant="ghost"
                 className={cn(
-                  navLinkBaseClass,
-                  'border-t-[3px] border-transparent text-foreground hover:bg-accent hover:text-accent-foreground transition duration-200',
-                  'dark:text-primary dark:hover:text-primary/80 dark:font-semibold'
+                  'h-9 rounded-lg px-3.5 gap-2 text-sm font-medium transition-colors duration-200',
+                  'text-slate-600 hover:bg-[#E97525]/10 hover:text-[#E97525]',
+                  'dark:text-white/75 dark:hover:bg-[#E97525]/15 dark:hover:text-[#E97525]'
                 )}
                 asChild
               >
-                <RouterLink to="/login" className="transition-colors duration-200">
-                  <LogIn className="shrink-0" strokeWidth={2} />
+                <RouterLink to="/login">
+                  <LogIn className="h-4 w-4 shrink-0" strokeWidth={2} />
                   {t('nav.login')}
                 </RouterLink>
               </Button>
               <Button
-                className="rounded-xl hover:shadow-xl hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition duration-200 gap-2"
+                className={cn(
+                  'h-9 rounded-lg px-4 gap-2 text-sm font-semibold text-white transition duration-200',
+                  'bg-[#E97525] hover:bg-[#d9651a]',
+                  'shadow-sm shadow-[#E97525]/25 hover:shadow-md hover:shadow-[#E97525]/35',
+                  'hover:-translate-y-0.5 motion-reduce:hover:translate-y-0'
+                )}
                 asChild
               >
-                <RouterLink to="/register" className="transition-colors duration-200">
-                  <UserPlus className="shrink-0" strokeWidth={2} />
+                <RouterLink to="/register">
+                  <UserPlus className="h-4 w-4 shrink-0" strokeWidth={2} />
                   {t('nav.register')}
                 </RouterLink>
               </Button>
-            </>
+            </div>
           )}
 
           <AppShellSettingsMenu

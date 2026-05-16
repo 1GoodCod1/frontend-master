@@ -299,7 +299,7 @@ export const howItWorks = {
       },
       jobs: {
         badge: 'Nou: Piața de joburi',
-        title: 'Publică un job — meșterii licitează pentru el',
+        title: 'Publică un job — meșterii îți oferă',
         subtitle:
           'În loc să contactați meșterii unul câte unul, publicați jobul și lăsați specialiștii verificați să vă trimită propuneri. Alegeți cea mai bună și începeți.',
         forClients: 'Pentru clienți',
@@ -312,7 +312,7 @@ export const howItWorks = {
         jobsClient2: {
           title: 'Primiți propuneri',
           description:
-            'Notificări în timp real când meșterii aplică. Fiecare propunere include scrisoare, termene și etape — sortate după licitația joints (cei de top primii).',
+            'Notificări în timp real când meșterii aplică. Fiecare propunere include scrisoare, termene și etape — sortate după oferta în joints (cei de top primii).',
         },
         jobsClient3: {
           title: 'Comparați și revizuiți',
@@ -327,17 +327,17 @@ export const howItWorks = {
         jobsMaster1: {
           title: 'Răsfoiți joburile deschise',
           description:
-            'Filtre după categorie și oraș, sau modul Recomandat pentru joburi în zona voastră. Leaderboard-ul afișează licitațiile curente.',
+            'Filtre după categorie și oraș, sau modul Recomandat pentru joburi în zona voastră. Leaderboard-ul afișează ofertele curente.',
         },
         jobsMaster2: {
-          title: 'Licitați cu joints',
+          title: 'Oferiți cu joints',
           description:
-            'Fiecare aplicație consumă joints — moneda voastră lunară. Licitație mai mare = rang mai bun și vizibilitate. Minimul e setat de client.',
+            'Fiecare aplicație consumă joints — moneda voastră lunară. Ofertă mai mare = rang mai bun și vizibilitate. Minimul e setat de client.',
         },
         jobsMaster3: {
           title: 'Boost sau retragere',
           description:
-            'Măriți licitația oricând înainte ca clientul să o vadă. Anulați și primiți refund complet dacă clientul încă nu a deschis — corect mereu.',
+            'Măriți oferta oricând înainte ca clientul să o vadă. Anulați și primiți refund complet dacă clientul încă nu a deschis — corect mereu.',
         },
         jobsMaster4: {
           title: 'Câștigați și livrați',
@@ -357,7 +357,7 @@ export const howItWorks = {
         jointsFact2: {
           title: 'Refunduri corecte',
           description:
-            'Retrageți o aplicație nevăzută — refund complet. Clientul închide jobul fără să aleagă pe nimeni — toți primesc joints înapoi. Dacă un meșter a fost selectat — restul se pierd: așa licitațiile rămân serioase.',
+            'Retrageți o aplicație nevăzută — refund complet. Clientul închide jobul fără să aleagă pe nimeni — toți primesc joints înapoi. Dacă un meșter a fost selectat — restul se pierd: așa ofertele rămân serioase.',
         },
         jointsFact3: {
           title: 'Istoric complet',

@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface MastersPaginationProps {
   page: number;
@@ -10,6 +11,29 @@ interface MastersPaginationProps {
   isFetching: boolean;
   onPrev: () => void;
   onNext: () => void;
+  onGoTo?: (page: number) => void;
+}
+
+/**
+ * Build a paginated list with ellipsis.
+ * Examples (current shown in brackets):
+ *  total=5,  cur=3  → [1, 2, 3, 4, 5]
+ *  total=10, cur=1  → [1, 2, 3, …, 10]
+ *  total=10, cur=5  → [1, …, 4, 5, 6, …, 10]
+ *  total=10, cur=10 → [1, …, 8, 9, 10]
+ */
+function getPageItems(current: number, total: number): (number | 'ellipsis')[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const items: (number | 'ellipsis')[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) items.push('ellipsis');
+  for (let i = start; i <= end; i++) items.push(i);
+  if (end < total - 1) items.push('ellipsis');
+  items.push(total);
+  return items;
 }
 
 export function MastersPagination({
@@ -20,35 +44,75 @@ export function MastersPagination({
   isFetching,
   onPrev,
   onNext,
+  onGoTo,
 }: MastersPaginationProps) {
   const { t } = useTranslation();
+  const items = useMemo(() => getPageItems(page, totalPages || 1), [page, totalPages]);
+
+  if (totalPages <= 1) return null;
 
   return (
-    <Card className="mt-6 sm:mt-8 mb-4 border border-gray-200 dark:border-white/[0.08] shadow-lg shadow-black/5 dark:shadow-none">
-      <CardContent className="p-3 sm:p-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
-          <Button
-            variant="outline"
-            disabled={!canPrev || isFetching}
-            onClick={onPrev}
-            className="min-h-[44px] sm:min-h-11 border-gray-200 dark:border-white/10 hover:bg-primary/10 hover:border-primary/30 hover:-translate-x-0.5 transition-transform"
+    <nav
+      aria-label={t('common.page')}
+      className="mt-8 mb-2 flex items-center justify-center gap-1"
+    >
+      <button
+        type="button"
+        aria-label={t('common.prev')}
+        onClick={onPrev}
+        disabled={!canPrev || isFetching}
+        className={cn(
+          'inline-flex h-9 w-9 items-center justify-center rounded-lg text-sm transition-all',
+          'text-foreground/70 hover:text-foreground hover:bg-accent',
+          'disabled:opacity-30 disabled:pointer-events-none',
+        )}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      {items.map((it, idx) =>
+        it === 'ellipsis' ? (
+          <span
+            key={`e-${idx}`}
+            className="inline-flex h-9 w-9 items-center justify-center text-muted-foreground"
+            aria-hidden
           >
-            {t('common.prev')}
-          </Button>
-          <span className="px-3 sm:px-4 py-2 rounded-md bg-primary/10 font-semibold text-primary text-xs sm:text-sm md:text-base">
-            {t('common.page')} {page}{' '}
-            {totalPages > 0 && t('common.pageOf', { total: totalPages })}
+            <MoreHorizontal className="h-4 w-4" />
           </span>
-          <Button
-            variant="outline"
-            disabled={!canNext || isFetching}
-            onClick={onNext}
-            className="min-h-[44px] sm:min-h-11 border-gray-200 dark:border-white/10 hover:bg-primary/10 hover:border-primary/30 hover:translate-x-0.5 transition-transform"
+        ) : (
+          <button
+            key={it}
+            type="button"
+            aria-current={it === page ? 'page' : undefined}
+            disabled={isFetching}
+            onClick={() => onGoTo?.(it)}
+            className={cn(
+              'inline-flex h-9 min-w-[2.25rem] px-2 items-center justify-center rounded-lg text-sm font-semibold tabular-nums transition-all',
+              it === page
+                ? 'bg-primary text-primary-foreground shadow-sm shadow-primary/30 dark:bg-[#E97525] dark:text-white dark:shadow-[#E97525]/30'
+                : 'text-foreground/70 hover:text-foreground hover:bg-accent',
+              'disabled:pointer-events-none',
+              !onGoTo && it !== page && 'cursor-default',
+            )}
           >
-            {t('common.next')}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+            {it}
+          </button>
+        ),
+      )}
+
+      <button
+        type="button"
+        aria-label={t('common.next')}
+        onClick={onNext}
+        disabled={!canNext || isFetching}
+        className={cn(
+          'inline-flex h-9 w-9 items-center justify-center rounded-lg text-sm transition-all',
+          'text-foreground/70 hover:text-foreground hover:bg-accent',
+          'disabled:opacity-30 disabled:pointer-events-none',
+        )}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </nav>
   );
 }

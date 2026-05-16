@@ -140,8 +140,7 @@ export const MasterDetailsLeadForm = ({
   // ─── Re-contact: client has completed lead with this master ───
   if (hasCompletedLead && !activeLead && !submittedLeadId && !showRecontactForm) {
     return (
-      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-500/80" />
+      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4">
             <RefreshCw className="h-10 w-10" />
@@ -177,13 +176,12 @@ export const MasterDetailsLeadForm = ({
 
   if (activeLead && !submittedLeadId) {
     return (
-      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-500/80" />
+      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
             <Clock className="h-10 w-10" />
           </div>
-          <h3 className="text-lg font-bold tracking-tight mb-2">{t('masterDetails.activeLeadTitle', 'You have an active request')}</h3>
+          <h3 className="text-lg font-bold tracking-tight mb-2 text-slate-800 dark:text-slate-100">{t('masterDetails.activeLeadTitle', 'You have an active request')}</h3>
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
             {t('masterDetails.activeLeadDesc', 'You have already sent a request to this master. Wait for it to complete before sending a new one.')}
           </p>
@@ -207,7 +205,7 @@ export const MasterDetailsLeadForm = ({
 
   if (submittedLeadId) {
     return (
-      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
+      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-500/80" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mx-auto mb-4">
@@ -245,27 +243,39 @@ export const MasterDetailsLeadForm = ({
 
   if (!isAuthed || role !== USER_ROLE.CLIENT) {
     return (
-      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
-        <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-5 text-center">
-          <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-3 border-2 border-white/30">
-            <Heart className="h-7 w-7 text-white fill-white" />
+      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
+        <CardContent className="p-5 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 dark:bg-[#E97525]/15 flex items-center justify-center shrink-0">
+              <Heart className="h-5 w-5 text-primary dark:text-[#E97525]" />
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-bold text-base text-slate-800 dark:text-slate-100 leading-tight">
+                {t('masterDetails.contactThisMaster', 'Contact this master')}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                {t('masterDetails.becomeClientShort', { defaultValue: 'Înregistrează-te ca client.' })}
+              </p>
+            </div>
           </div>
-          <h3 className="font-bold text-white text-lg">{t('masterDetails.contactThisMaster', 'Contact this master')}</h3>
-          <p className="text-amber-100 text-sm mt-1">{t('masterDetails.becomeClientDesc')}</p>
-        </div>
-        <CardContent className="p-5 space-y-3 bg-white dark:bg-[hsl(47,22%,9%)]">
-          <Button size="lg" className="w-full gap-2 font-semibold " onClick={() => navigate('/register')}>
-            <Send className="h-4 w-4" />
-            {t('masterDetails.registerAsClient')}
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full border border-gray-200 dark:border-white/20 bg-white text-gray-800 dark:bg-[hsl(47,22%,9%)] dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10"
-            onClick={() => navigate('/login')}
-          >
-            {t('masterDetails.alreadyHaveAccount', 'I already have an account — Login')}
-          </Button>
+          <div className="space-y-2">
+            <Button
+              size="default"
+              className="w-full gap-2 font-semibold rounded-full"
+              onClick={() => navigate('/register')}
+            >
+              <Send className="h-4 w-4" />
+              {t('masterDetails.registerAsClient')}
+            </Button>
+            <Button
+              variant="outline"
+              size="default"
+              className="w-full font-semibold rounded-full border-gray-200 dark:border-white/[0.12] text-slate-700 dark:text-slate-300 bg-transparent hover:bg-gray-200/70 hover:text-slate-900 hover:border-gray-300 dark:hover:bg-white/[0.06] dark:hover:text-slate-100 dark:hover:border-white/20"
+              onClick={() => navigate('/login')}
+            >
+              {t('masterDetails.alreadyHaveAccount', 'I already have an account — Login')}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     );
@@ -276,7 +286,7 @@ export const MasterDetailsLeadForm = ({
     const isBusy = availabilityStatus === AVAILABILITY_STATUS.BUSY;
 
     return (
-      <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
+      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">

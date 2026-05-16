@@ -202,7 +202,7 @@ function ApplicationPanel({
               <p className="mb-2.5 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 {t('jobs.coverLetter', 'Cover letter')}
               </p>
-              <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+              <p className="whitespace-pre-line break-words text-sm leading-relaxed text-foreground/90">
                 {application.description}
               </p>
             </div>
@@ -349,7 +349,7 @@ function ApplicationRow({
       </div>
 
       {application.description && (
-        <p className="mt-2.5 line-clamp-2 pl-14 text-xs text-muted-foreground leading-relaxed">
+        <p className="mt-2.5 line-clamp-2 break-words pl-14 text-xs text-muted-foreground leading-relaxed">
           {application.description}
         </p>
       )}
@@ -459,7 +459,7 @@ export default function ClientJobDetailsPage() {
       {/* Job header */}
       <div className="mb-6 rounded-2xl border border-black/5 dark:border-white/5 bg-card p-6 shadow-sm">
         <div className="mb-1 flex items-start justify-between gap-3">
-          <h1 className="text-xl font-bold text-foreground leading-snug">{job.title}</h1>
+          <h1 className="min-w-0 break-words text-xl font-bold text-foreground leading-snug">{job.title}</h1>
           <div className="flex shrink-0 items-center gap-2">
             <span className={cn('rounded-full px-3 py-1 text-xs font-semibold', jobStatusCls)}>
               {job.status === 'OPEN' ? t('jobs.open', 'Open')
@@ -498,7 +498,7 @@ export default function ClientJobDetailsPage() {
 
         <p className="mb-5 text-xs text-muted-foreground">{formatDateTimeString(job.createdAt)}</p>
 
-        <p className="mb-5 whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
+        <p className="mb-5 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80">
           {job.description}
         </p>
 

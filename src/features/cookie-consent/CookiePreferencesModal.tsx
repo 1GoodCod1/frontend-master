@@ -62,19 +62,19 @@ export function CookiePreferencesModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08]">
         <DialogHeader className="px-6 pt-5 pb-4 pr-12">
-          <DialogTitle className="text-lg">
+          <DialogTitle className="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">
             {t('cookieConsent.preferencesTitle')}
           </DialogTitle>
-          <DialogDescription className="text-[13px]">
+          <DialogDescription className="text-[13px] text-slate-500 dark:text-slate-400 leading-relaxed">
             {t('cookieConsent.preferencesDescription')}
           </DialogDescription>
         </DialogHeader>
         <DialogBody className="space-y-1 px-5 py-3">
           {/* Search history */}
           <PreferenceRow
-            icon={<Search className="size-4 text-muted-foreground" />}
+            icon={<Search className="size-4 text-sky-600 dark:text-sky-400" />}
             title={t('cookieConsent.preferenceSearchHistory')}
             description={t('cookieConsent.preferenceSearchHistoryDesc')}
             checked={prefs.searchHistory}
@@ -82,7 +82,7 @@ export function CookiePreferencesModal({
           />
           {/* Session */}
           <PreferenceRow
-            icon={<UserCircle className="size-4 text-muted-foreground" />}
+            icon={<UserCircle className="size-4 text-violet-600 dark:text-violet-400" />}
             title={t('cookieConsent.preferenceSession')}
             description={t('cookieConsent.preferenceSessionDesc')}
             checked={prefs.session}
@@ -90,7 +90,7 @@ export function CookiePreferencesModal({
           />
           {/* City */}
           <PreferenceRow
-            icon={<MapPin className="size-4 text-muted-foreground" />}
+            icon={<MapPin className="size-4 text-emerald-600 dark:text-emerald-400" />}
             title={t('cookieConsent.preferenceCity')}
             description={t('cookieConsent.preferenceCityDesc')}
             checked={prefs.city}
@@ -98,7 +98,7 @@ export function CookiePreferencesModal({
           />
           {/* Recently viewed */}
           <PreferenceRow
-            icon={<Eye className="size-4 text-muted-foreground" />}
+            icon={<Eye className="size-4 text-amber-600 dark:text-amber-400" />}
             title={t('cookieConsent.preferenceRecentViews')}
             description={t('cookieConsent.preferenceRecentViewsDesc')}
             checked={prefs.recentViews}
@@ -106,7 +106,7 @@ export function CookiePreferencesModal({
           />
           {/* Analytics */}
           <PreferenceRow
-            icon={<BarChart3 className="size-4 text-muted-foreground" />}
+            icon={<BarChart3 className="size-4 text-rose-600 dark:text-rose-400" />}
             title={t('cookieConsent.preferenceAnalytics')}
             description={t('cookieConsent.preferenceAnalyticsDesc')}
             checked={prefs.analytics}
@@ -160,17 +160,19 @@ function PreferenceRow({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors',
-        'bg-muted/30 dark:bg-white/[0.03] hover:bg-muted/50 dark:hover:bg-white/[0.05]',
-        'border border-transparent hover:border-border/50'
+        'flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors',
+        'bg-white/70 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.05]',
+        'border border-gray-200/70 dark:border-white/[0.06]',
       )}
     >
-      <div className="shrink-0 rounded-md bg-muted/50 dark:bg-white/5 p-1.5">
+      <div className="shrink-0 rounded-lg bg-gray-100 dark:bg-white/[0.04] p-1.5">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-foreground text-[13px] leading-tight">{title}</p>
-        <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
+        <p className="font-semibold text-slate-800 dark:text-slate-100 text-[13px] leading-tight">
+          {title}
+        </p>
+        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
           {description}
         </p>
       </div>

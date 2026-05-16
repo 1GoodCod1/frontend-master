@@ -22,7 +22,6 @@ export function AppShell() {
     showNavbar,
     isDashboardOrAdmin,
     location,
-    navLinkBaseClass,
     navLinkClass,
     isNavCentered,
     closeMobileNav,
@@ -43,7 +42,6 @@ export function AppShell() {
             role={role}
             colorMode={colorMode}
             isInCabinet={isDashboardOrAdmin}
-            navLinkBaseClass={navLinkBaseClass}
             navLinkClass={navLinkClass}
             isNavCentered={isNavCentered}
             onLogout={onLogout}

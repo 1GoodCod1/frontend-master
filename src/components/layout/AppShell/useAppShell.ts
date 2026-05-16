@@ -82,14 +82,15 @@ export function useAppShell() {
     (!isAuthed || (isAuthed && Boolean(role)));
 
   const navLinkBaseClass =
-    'inline-flex items-center gap-2 text-sm font-medium rounded-none px-3 py-2 h-14 transition duration-200';
+    'relative inline-flex items-center gap-2 text-sm font-medium px-3 h-14 transition-colors duration-200';
 
   const navLinkClass = (isActive: boolean) =>
     cn(
       navLinkBaseClass,
+      'after:absolute after:left-3 after:right-3 after:bottom-0 after:h-[2px] after:rounded-full after:transition-all after:duration-200',
       isActive
-        ? 'border-t-[3px] border-primary text-primary dark:border-[#E97525] dark:text-[#E97525]'
-        : 'border-t-[3px] border-transparent text-slate-700 dark:text-white/85 hover:bg-accent hover:text-slate-900 dark:hover:text-white hover:font-semibold'
+        ? 'text-[#E97525] after:bg-[#E97525]'
+        : 'text-slate-600 dark:text-white/75 hover:text-slate-900 dark:hover:text-white after:bg-transparent hover:after:bg-slate-300 dark:hover:after:bg-white/20'
     );
 
   const isNavCentered = isAuthed;

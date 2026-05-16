@@ -19,6 +19,10 @@ const FEATURE_ROWS: FeatureRow[] = [
     values: ['5', '10', '15'],
   },
   {
+    labelKey: 'plans.comparisonTable.jointsPerMonth',
+    values: ['20', '100', '200'],
+  },
+  {
     labelKey: 'plans.comparisonTable.receiveLeads',
     values: [true, true, true],
   },

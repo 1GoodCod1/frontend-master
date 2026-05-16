@@ -82,7 +82,7 @@ export function useMastersPage() {
     const parsed = parseQueryFromUrl(searchParams);
     return {
       page: 1,
-      limit: 20,
+      limit: 18,
       q: parsed.q ?? '',
       categoryValue: parsed.categoryValue ?? '',
       cityValue: parsed.cityValue ?? '',
