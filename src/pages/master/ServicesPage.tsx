@@ -19,9 +19,17 @@ import type { PromotionDto } from '@/types';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { VerificationGate } from '@/components/common/VerificationGate';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import {
+  masterBadgeCls,
+  masterCardCls,
+  masterDialogContentCls,
+  masterPageClassName,
+  masterPrimaryBtnCls,
+} from '@/lib/masterCabinetStyles';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import {
   ServiceForm,
@@ -231,40 +239,25 @@ export default function ServicesPage() {
 
   return (
     <VerificationGate isVerified={isVerified}>
-    <div className="mx-auto max-w-4xl px-4 py-6 md:py-8">
+    <div className={masterPageClassName}>
       <PageHeader
         title={t('servicesPage.title')}
-        subtitle={t('servicesPage.subtitle')}
+        actions={
+          <Button
+            type="button"
+            onClick={openAddModal}
+            className={cn(masterPrimaryBtnCls, 'gap-2')}
+          >
+            <Plus className="size-4" />
+            {t('servicesPage.add')}
+          </Button>
+        }
       />
 
-      <Alert className="mb-6 rounded-xl border-emerald-200 bg-emerald-50/80 dark:border-emerald-900/50 dark:bg-emerald-950/30">
-        <ListChecks className="size-5 text-emerald-600 dark:text-emerald-400" />
-        <AlertDescription>
-          {t('servicesPage.hint')}
-        </AlertDescription>
-      </Alert>
-
       <div className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-lg font-bold text-foreground">{t('servicesPage.listTitle')}</h2>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              onClick={openAddModal}
-              className="gap-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500"
-            >
-              <Plus className="size-4" />
-              {t('servicesPage.add')}
-            </Button>
-          </div>
-        </div>
-
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
           {list.map((service, idx) => (
-            <Card
-              key={idx}
-              className="overflow-hidden border-2 border-border/80 transition hover:border-emerald-500/40 hover:shadow-lg dark:hover:border-emerald-500/30"
-            >
+            <div key={idx} className={masterCardCls}>
               <CardContent className="p-0">
                 {editingIndex === idx && formService ? (
                   <div className="p-4 bg-muted/30">
@@ -289,7 +282,7 @@ export default function ServicesPage() {
                             {service.price !== '' ? `${service.price} ${service.currency}` : '—'}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">
+                          <span className={cn(masterBadgeCls, 'gap-1 px-2.5 py-0.5 normal-case')}>
                             <HandCoins className="size-3" />
                             {t('servicesPage.priceNegotiable')}
                           </span>
@@ -321,31 +314,20 @@ export default function ServicesPage() {
                   </div>
                 )}
               </CardContent>
-            </Card>
+            </div>
           ))}
         </div>
 
         {list.length === 0 && (
-          <Card className="rounded-xl border-2 border-dashed border-muted-foreground/25">
-            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-              <ListChecks className="size-12 text-muted-foreground/50 mb-3" />
-              <p className="text-sm font-medium text-muted-foreground">{t('servicesPage.empty')}</p>
-              <Button
-                type="button"
-                variant="outline"
-                className="mt-4 gap-2 rounded-xl border-emerald-500/50 text-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
-                onClick={openAddModal}
-              >
-                <Plus className="size-4" />
-                {t('servicesPage.add')}
-              </Button>
-            </CardContent>
-          </Card>
+          <CabinetEmptyState
+            icon={ListChecks}
+            title={t('servicesPage.empty')}
+          />
         )}
       </div>
 
       <Dialog open={addModalOpen} onOpenChange={(open) => (open ? setAddModalOpen(true) : closeAddModal())}>
-        <DialogContent className="flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-1.5rem)] max-w-2xl flex-col gap-0 p-0 sm:w-full">
+        <DialogContent className={cn(masterDialogContentCls, 'flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-1.5rem)] max-w-2xl flex-col sm:w-full')}>
           <DialogHeader className="text-left">
             <DialogTitle>{t('servicesPage.bulkModalTitle')}</DialogTitle>
             <DialogDescription>{t('servicesPage.bulkModalHint')}</DialogDescription>

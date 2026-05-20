@@ -8,14 +8,25 @@ import { useBookingsCreateMutation, useBookingsAvailableSlotsQuery } from '@/fea
 import { PageHeader } from '@/components/ui/PageHeader';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
+import { ClientFilterPill } from '@/components/client/ClientFilterPill';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import {
+  clientCardStaticCls,
+  clientFormLabelCls,
+  clientInputCls,
+  clientLinkCls,
+  clientOutlineBtnCls,
+  clientPageNarrowClassName,
+  clientPrimaryBtnCls,
+  clientTextareaCls,
+  clientTextMuted,
+} from '@/lib/clientCabinetStyles';
+import { cabinetFilterPillCls } from '@/lib/cabinetStyles';
 
 interface SlotData {
   start?: string;
@@ -85,7 +96,9 @@ export default function ClientRequestBookingPage() {
       const msg = err?.data?.message || err?.message || t('bookings.createFailed');
       const isPhoneVerification = /phone|verification|verify/i.test(msg);
       if (isPhoneVerification) {
-        toast.error(t('bookings.phoneVerificationRequired', 'Verify your phone number in profile settings to reserve time.'));
+        toast.error(
+          t('bookings.phoneVerificationRequired', 'Verify your phone number in profile settings to reserve time.'),
+        );
       } else {
         toast.error(msg);
       }
@@ -93,16 +106,21 @@ export default function ClientRequestBookingPage() {
   };
 
   if (!leadId) {
-    return <ErrorState error={{ message: t('leads.invalidLeadId') } as Error} onRetry={() => { }} />;
+    return <ErrorState error={{ message: t('leads.invalidLeadId') } as Error} onRetry={() => {}} />;
   }
   if (leadQuery.isLoading) return <CardsSkeleton count={3} />;
   if (leadQuery.isError) return <ErrorState error={leadQuery.error as Error} onRetry={leadQuery.refetch} />;
   if (!lead || !masterId) {
-    return <ErrorState error={{ message: t('leads.leadNotFound') } as Error} onRetry={() => navigate('/client-dashboard/leads')} />;
+    return (
+      <ErrorState error={{ message: t('leads.leadNotFound') } as Error} onRetry={() => navigate('/client-dashboard/leads')} />
+    );
   }
 
+  const canSubmit =
+    !createState.isLoading && selectedDate && selectedSlotIndex !== null && phoneVerified !== false;
+
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 md:py-8">
+    <div className={cn(clientPageNarrowClassName, 'faber-page-enter py-4 md:py-6')}>
       <PageHeader
         title={t('bookings.chooseTime', 'Choose time')}
         subtitle={t('bookings.chooseTimeSubtitle', { name: masterName || t('masterDetails.masterLabel') })}
@@ -113,24 +131,30 @@ export default function ClientRequestBookingPage() {
         ]}
       />
 
-      <Card className="border-border dark:border-white/[0.08]">
-        <CardContent className="p-6 space-y-6">
-          {phoneVerified === false && (
-            <Alert className="border-amber-500/50 bg-amber-500/10">
-              <AlertDescription>
-                {t('bookings.phoneVerificationRequired')}
-                <Button
-                  variant="link"
-                  className="mt-2 h-auto p-0 text-primary"
-                  onClick={() => navigate('/client-dashboard/security')}
-                >
-                  {t('common.settings', 'Settings')} →
-                </Button>
-              </AlertDescription>
-            </Alert>
-          )}
+      <div className={clientCardStaticCls}>
+        <CardContent className="space-y-5 p-5 sm:p-6">
+          {phoneVerified === false ? (
+            <div
+              className={cn(
+                'rounded-[12px] border border-[#E97525]/35 bg-[#FFF8EB]/90 px-4 py-3 text-[13px] dark:bg-[#E97525]/10',
+              )}
+            >
+              <p className="text-[#212529] dark:text-white/90">{t('bookings.phoneVerificationRequired')}</p>
+              <Button
+                type="button"
+                variant="link"
+                className={cn(clientLinkCls, 'mt-1 h-auto p-0 text-sm')}
+                onClick={() => navigate('/client-dashboard/security')}
+              >
+                {t('common.settings', 'Settings')} →
+              </Button>
+            </div>
+          ) : null}
+
           <div className="space-y-2">
-            <Label htmlFor="booking-date">{t('bookings.selectDate')}</Label>
+            <Label htmlFor="booking-date" className={clientFormLabelCls}>
+              {t('bookings.selectDate')}
+            </Label>
             <input
               id="booking-date"
               type="date"
@@ -140,60 +164,92 @@ export default function ClientRequestBookingPage() {
                 setSelectedSlotIndex(null);
               }}
               min={new Date().toISOString().split('T')[0]}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className={clientInputCls}
             />
           </div>
 
-          {selectedDate && (
-            <div>
-              <Label className="mb-2 block font-semibold">{t('bookings.availableSlots')}</Label>
-              <div className="flex flex-wrap gap-2">
-                {Array.isArray(slots) &&
-                  slots.map((slot: SlotData, index: number) => {
+          {selectedDate ? (
+            <div className="space-y-2">
+              <Label className={clientFormLabelCls}>{t('bookings.availableSlots')}</Label>
+              {availableSlots.isLoading ? (
+                <div className="flex flex-wrap gap-2">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="h-8 w-16 animate-pulse rounded-[10px] bg-[#E9ECEF] dark:bg-white/10" />
+                  ))}
+                </div>
+              ) : slots.length === 0 ? (
+                <p className={clientTextMuted}>{t('bookings.noSlotsAvailable')}</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {slots.map((slot: SlotData, index: number) => {
                     const isSelected = selectedSlotIndex === index;
                     const available = slot.available !== false;
 
+                    if (!available) {
+                      return (
+                        <span
+                          key={index}
+                          className={cn(
+                            cabinetFilterPillCls(false),
+                            'cursor-not-allowed opacity-40',
+                          )}
+                        >
+                          {formatSlotTime(slot)}
+                        </span>
+                      );
+                    }
+
                     return (
-                      <Badge
+                      <ClientFilterPill
                         key={index}
-                        variant={isSelected ? 'default' : 'outline'}
-                        className={cn(
-                          'cursor-pointer transition',
-                          !available && 'opacity-50 cursor-not-allowed',
-                        )}
-                        onClick={() => available && setSelectedSlotIndex(index)}
+                        active={isSelected}
+                        onClick={() => setSelectedSlotIndex(index)}
+                        className="min-w-[4.5rem]"
                       >
                         {formatSlotTime(slot)}
-                      </Badge>
+                      </ClientFilterPill>
                     );
                   })}
-              </div>
+                </div>
+              )}
             </div>
-          )}
+          ) : null}
 
           <div className="space-y-2">
-            <Label htmlFor="booking-notes">{t('bookings.notes')}</Label>
+            <Label htmlFor="booking-notes" className={clientFormLabelCls}>
+              {t('bookings.notes')}
+            </Label>
             <Textarea
               id="booking-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder={t('bookings.notesPlaceholder')}
               rows={3}
-              className="resize-none"
+              className={cn(clientTextareaCls, 'min-h-[88px]')}
             />
           </div>
 
-          <Button
-            size="lg"
-            className="w-full gap-2"
-            onClick={handleBooking}
-            disabled={createState.isLoading || !selectedDate || selectedSlotIndex === null || phoneVerified === false}
-          >
-            <CalendarDays className="h-4 w-4" />
-            {createState.isLoading ? t('common.loading') : t('bookings.createBooking')}
-          </Button>
+          <div className="flex flex-col gap-3 pt-1 sm:flex-row">
+            <Button
+              type="button"
+              variant="outline"
+              className={cn(clientOutlineBtnCls, 'sm:flex-1')}
+              onClick={() => navigate(`/client-dashboard/lead-success/${leadId}`)}
+            >
+              {t('common.back')}
+            </Button>
+            <Button
+              type="button"
+              className={cn(clientPrimaryBtnCls, 'h-11 sm:flex-[2]')}
+              onClick={handleBooking}
+              disabled={!canSubmit}
+            >
+              <CalendarDays className="size-4" />
+              {createState.isLoading ? t('common.loading') : t('bookings.createBooking')}
+            </Button>
+          </div>
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 import { useLeadsClientsQuery, type ClientAggregated } from '@/features/leads/leadsApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,16 @@ import {
   TableRow, TableCell,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterIconWrapCls,
+  masterInputCls,
+  masterLinkCls,
+  masterOutlineBtnCls,
+  masterPageClassName,
+  masterSectionTitleCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 import { getLocaleFromLanguage } from '@/utils/date';
 import { paths } from '@/constants/routes';
 
@@ -26,7 +36,7 @@ type SortOrder = 'asc' | 'desc';
 
 const STATUS_COLORS: Record<string, string> = {
   NEW: 'bg-blue-500',
-  IN_PROGRESS: 'bg-amber-500',
+  IN_PROGRESS: 'bg-[#E97525]',
   PENDING_CLOSE: 'bg-orange-400',
   CLOSED: 'bg-emerald-500',
   SPAM: 'bg-rose-500',
@@ -43,9 +53,9 @@ function SortIcon({
 }) {
   if (sortBy !== field) return <ArrowUpDown className="size-3 opacity-40" />;
   return sortOrder === 'asc' ? (
-    <ChevronUp className="size-3 text-amber-600 dark:text-amber-400" />
+    <ChevronUp className="size-3 text-[#E97525]" />
   ) : (
-    <ChevronDown className="size-3 text-amber-600 dark:text-amber-400" />
+    <ChevronDown className="size-3 text-[#E97525]" />
   );
 }
 
@@ -68,7 +78,7 @@ function StatusDots({ breakdown, total }: { breakdown: Record<string, number>; t
           />
         ))}
       </div>
-      <span className="text-xs text-muted-foreground tabular-nums">{total}</span>
+      <span className={cn('text-xs tabular-nums', masterTextMuted)}>{total}</span>
     </div>
   );
 }
@@ -169,66 +179,49 @@ export default function ClientsPage() {
   if (isError) return <ErrorState error={error} onRetry={refetch} />;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8">
-      <div className="mb-4 sm:mb-6 md:mb-8">
-        <PageHeader
-          title={t('clients.title')}
-          subtitle={t('clients.subtitle')}
-        />
+    <div className={masterPageClassName}>
+      <PageHeader title={t('clients.title')} subtitle={t('clients.subtitle')} />
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className={cn(masterCardStaticCls, 'p-4 text-center')}>
+          <div className="text-2xl font-black text-[#212529] dark:text-white">{data?.total ?? 0}</div>
+          <div className={cn('mt-1', masterTextMuted)}>{t('clients.totalClients')}</div>
+        </div>
+        <div className={cn(masterCardStaticCls, 'p-4 text-center')}>
+          <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+            {clients.reduce((s, c) => s + c.totalRequests, 0)}
+          </div>
+          <div className={cn('mt-1', masterTextMuted)}>{t('clients.totalRequests')}</div>
+        </div>
+        <div className={cn(masterCardStaticCls, 'p-4 text-center')}>
+          <div className="text-2xl font-black text-[#E97525]">
+            {clients.filter((c) => (c.statusBreakdown['IN_PROGRESS'] || 0) > 0).length}
+          </div>
+          <div className={cn('mt-1', masterTextMuted)}>{t('clients.activeClients')}</div>
+        </div>
+        <div className={cn(masterCardStaticCls, 'p-4 text-center')}>
+          <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+            {clients.filter((c) => c.totalRequests > 1).length}
+          </div>
+          <div className={cn('mt-1', masterTextMuted)}>{t('clients.repeatClients')}</div>
+        </div>
       </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Card className="shadow-sm border-blue-500/20">
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-black text-blue-600 dark:text-blue-400">{data?.total ?? 0}</div>
-            <div className="text-xs text-muted-foreground mt-1">{t('clients.totalClients')}</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm border-emerald-500/20">
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
-              {clients.reduce((s, c) => s + c.totalRequests, 0)}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">{t('clients.totalRequests')}</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm border-amber-500/20">
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-black text-amber-600 dark:text-amber-400">
-              {clients.filter((c) => (c.statusBreakdown['IN_PROGRESS'] || 0) > 0).length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">{t('clients.activeClients')}</div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm border-indigo-500/20">
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
-              {clients.filter((c) => c.totalRequests > 1).length}
-            </div>
-            <div className="text-xs text-muted-foreground mt-1">{t('clients.repeatClients')}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="overflow-hidden rounded-lg sm:rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl">
-        {/* Header bar with search */}
-        <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:py-4">
+      <div className={cn(masterCardStaticCls, 'overflow-hidden')}>
+        <div className="flex flex-col gap-3 border-b border-[#e8e8e8] px-4 py-4 dark:border-[#2d2d2d] sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400">
+            <span className={masterIconWrapCls}>
               <Users className="size-4" />
-            </div>
-            <h2 className="text-base sm:text-lg font-semibold text-foreground tracking-tight">
-              {t('clients.tableTitle')}
-            </h2>
+            </span>
+            <h2 className={masterSectionTitleCls}>{t('clients.tableTitle')}</h2>
           </div>
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#6C757D]" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('clients.searchPlaceholder')}
-              className="pl-9 h-9 rounded-lg border-slate-200 dark:border-white/[0.08]"
+              className={cn(masterInputCls, 'h-9 pl-9')}
             />
           </div>
         </div>
@@ -236,7 +229,8 @@ export default function ClientsPage() {
         <CardContent className="p-0">
           {clients.length === 0 ? (
             <div className="px-5 py-8">
-              <EmptyState
+              <CabinetEmptyState
+                icon={Users}
                 title={t('clients.noClients')}
                 description={t('clients.noClientsDescription')}
               />
@@ -329,7 +323,7 @@ export default function ClientsPage() {
             </>
           )}
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }
@@ -354,7 +348,7 @@ function ClientDesktopRow({
           <div className="font-semibold text-foreground truncate max-w-[180px]">
             {client.clientName || t('clients.anonymous')}
           </div>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+          <div className={cn('flex items-center gap-1 text-xs', masterTextMuted)}>
             <Phone className="size-3" />
             {client.clientPhone}
           </div>
@@ -367,7 +361,7 @@ function ClientDesktopRow({
         <StatusBreakdownDetail breakdown={client.statusBreakdown} t={t} />
       </TableCell>
       <TableCell>
-        <div className="text-sm text-muted-foreground">
+        <div className={cn('text-sm', masterTextMuted)}>
           {formatDate(client.firstRequestAt)}
         </div>
       </TableCell>
@@ -375,7 +369,7 @@ function ClientDesktopRow({
         <div className="space-y-0.5">
           <div className="text-sm font-medium">{formatRelative(client.lastRequestAt)}</div>
           {client.lastMessage && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground truncate max-w-[180px]">
+            <div className={cn('flex max-w-[180px] items-center gap-1 truncate text-xs', masterTextMuted)}>
               <MessageSquare className="size-3 shrink-0" />
               {client.lastMessage}
             </div>
@@ -386,7 +380,7 @@ function ClientDesktopRow({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 gap-1.5 text-amber-600 hover:text-amber-700 hover:bg-amber-500/10 dark:text-amber-400"
+          className={cn('h-8 gap-1.5', masterLinkCls, 'hover:bg-[#E97525]/10')}
           onClick={onViewLeads}
         >
           <ExternalLink className="size-3.5" />
@@ -426,7 +420,7 @@ function ClientMobileCard({
             <div className="font-semibold text-foreground truncate">
               {client.clientName || t('clients.anonymous')}
             </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+            <div className={cn('mt-0.5 flex items-center gap-1 text-xs', masterTextMuted)}>
               <Phone className="size-3" />
               {client.clientPhone}
             </div>
@@ -434,9 +428,9 @@ function ClientMobileCard({
           <div className="flex items-center gap-2 shrink-0">
             <StatusDots breakdown={client.statusBreakdown} total={client.totalRequests} />
             {expanded ? (
-              <ChevronUp className="size-4 text-muted-foreground" />
+              <ChevronUp className={cn('size-4', masterTextMuted)} />
             ) : (
-              <ChevronDown className="size-4 text-muted-foreground" />
+              <ChevronDown className={cn('size-4', masterTextMuted)} />
             )}
           </div>
         </div>
@@ -448,17 +442,17 @@ function ClientMobileCard({
 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <div className="text-xs text-muted-foreground">{t('clients.colFirstRequest')}</div>
+              <div className={cn('text-xs', masterTextMuted)}>{t('clients.colFirstRequest')}</div>
               <div className="font-medium">{formatDate(client.firstRequestAt)}</div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">{t('clients.colLastRequest')}</div>
+              <div className={cn('text-xs', masterTextMuted)}>{t('clients.colLastRequest')}</div>
               <div className="font-medium">{formatRelative(client.lastRequestAt)}</div>
             </div>
           </div>
 
           {client.lastMessage && (
-            <div className="flex items-start gap-1.5 text-xs text-muted-foreground">
+            <div className={cn('flex items-start gap-1.5 text-xs', masterTextMuted)}>
               <MessageSquare className="size-3 shrink-0 mt-0.5" />
               <span className="line-clamp-2">{client.lastMessage}</span>
             </div>
@@ -468,7 +462,7 @@ function ClientMobileCard({
             <Button
               variant="outline"
               size="sm"
-              className="h-9 flex-1 gap-1.5 text-amber-600 border-amber-500/30 hover:bg-amber-500/10 dark:text-amber-400"
+              className={cn(masterOutlineBtnCls, 'h-9 flex-1 gap-1.5')}
               onClick={onViewLeads}
             >
               <ExternalLink className="size-3.5" />

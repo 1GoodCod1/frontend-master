@@ -14,6 +14,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { useBookingsCreateMutation, useBookingsAvailableSlotsQuery } from '@/features/bookings/bookingsApi';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
+import {
+  masterDialogContentCls,
+  masterIconWrapCls,
+  masterInsetPanelCls,
+  masterPrimaryBtnCls,
+} from '@/lib/masterCabinetStyles';
 
 interface CreateBookingFromRequestModalProps {
   open: boolean;
@@ -103,12 +109,12 @@ export function CreateBookingFromRequestModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className={cn(masterDialogContentCls, 'sm:max-w-md p-0')}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
+            <span className={masterIconWrapCls}>
               <CalendarDays className="size-4" />
-            </div>
+            </span>
             {t('bookings.assignTime', 'Assign time')}
           </DialogTitle>
         </DialogHeader>
@@ -116,7 +122,7 @@ export function CreateBookingFromRequestModal({
         <DialogBody>
           <div className="space-y-5">
             {(leadClientName || leadClientPhone) && (
-              <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 px-4 py-3">
+              <div className={cn(masterInsetPanelCls, 'flex items-center gap-3')}>
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
                   <User className="size-4" />
                 </div>
@@ -154,7 +160,7 @@ export function CreateBookingFromRequestModal({
                 </Label>
                 {availableSlots.isLoading ? (
                   <div className="flex items-center justify-center h-16 rounded-xl border border-border bg-muted/20">
-                    <div className="size-5 rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
+                    <div className="size-5 rounded-full border-2 border-[#E97525] border-t-transparent animate-spin" />
                   </div>
                 ) : slots.length === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-4 rounded-xl border border-dashed border-border bg-muted/20">
@@ -173,9 +179,9 @@ export function CreateBookingFromRequestModal({
                           className={cn(
                             'h-9 px-3.5 rounded-xl text-sm font-medium border transition duration-150',
                             isSelected
-                              ? 'bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/25'
+                              ? 'bg-amber-500 text-white border-[#E97525] shadow-md shadow-amber-500/25'
                               : available
-                                ? 'border-border bg-background text-foreground hover:border-amber-400 hover:bg-amber-50/60 dark:hover:border-amber-500/50 dark:hover:bg-amber-500/10'
+                                ? 'border-border bg-background text-foreground hover:border-amber-400 hover:bg-amber-50/60 dark:hover:border-[#E97525]/50 dark:hover:bg-[#d86920]/10'
                                 : 'border-border bg-muted/30 text-muted-foreground/50 cursor-not-allowed line-through',
                           )}
                         >
@@ -204,7 +210,7 @@ export function CreateBookingFromRequestModal({
 
             <Button
               size="lg"
-              className="w-full gap-2"
+              className={cn(masterPrimaryBtnCls, 'w-full gap-2')}
               onClick={handleSubmit}
               disabled={createState.isLoading || !selectedDate || selectedSlotIndex === null}
             >

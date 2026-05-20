@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { MapPin, Search } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { SearchInputWithHistory } from '@/features/masters/components/search/SearchInputWithHistory';
 import type { SearchSuggestionEvent } from '@/features/masters/components/search/SearchInputWithHistory';
 import { Button } from '@/components/ui/button';
@@ -49,7 +49,6 @@ export function HeroSearchForm({
         )}
       >
         <div className="flex items-center gap-2.5 flex-1 px-3 sm:px-4 min-h-[48px] min-w-0">
-          <Search size={18} className="text-muted-foreground shrink-0 hidden sm:block" aria-hidden />
           <SearchInputWithHistory
             value={searchQuery}
             onChange={onSearchQueryChange}

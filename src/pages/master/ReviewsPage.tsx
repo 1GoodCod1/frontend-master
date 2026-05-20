@@ -6,9 +6,9 @@ import { clearUnreadReviews } from '@/features/socket/socketSlice';
 import { useReviewsMyQuery } from '@/features/reviews/reviewsApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
 import { StatusChip } from '@/components/ui/StatusChip';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -24,6 +24,18 @@ import {
   type ReviewFilterStatus,
 } from '@/types/reviews';
 import type { SortOrderNewestOldest } from '@/types/ui';
+import { cn } from '@/lib/utils';
+import {
+  masterCardCls,
+  masterCardStaticCls,
+  masterIconWrapCls,
+  masterInsetPanelCls,
+  masterPageClassName,
+  masterSectionTitleCls,
+  masterSelectTriggerCls,
+  masterTextBody,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 
 export default function ReviewsPage() {
   const { t, i18n } = useTranslation();
@@ -60,22 +72,20 @@ export default function ReviewsPage() {
   if (q.isError) return <ErrorState error={q.error} onRetry={q.refetch} />;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
-      <div className="mb-8">
-        <PageHeader title={t('reviews.title')} subtitle={t('reviews.subtitle')} />
-      </div>
+    <div className={masterPageClassName}>
+      <PageHeader title={t('reviews.title')} subtitle={t('reviews.subtitle')} />
 
-      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300 animate-in fade-in duration-200">
-        <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5 flex flex-wrap items-center justify-between gap-4">
+      <div className={cn(masterCardStaticCls, 'overflow-hidden animate-in fade-in duration-200')}>
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#e8e8e8] px-6 py-5 dark:border-[#2d2d2d]">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-500">
+            <span className={masterIconWrapCls}>
               <Star className="size-5" />
-            </div>
-            <h2 className="text-lg font-semibold text-foreground tracking-tight">{t('reviews.myReviews')}</h2>
+            </span>
+            <h2 className={masterSectionTitleCls}>{t('reviews.myReviews')}</h2>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as ReviewFilterStatus)}>
-              <SelectTrigger className="w-[180px] h-9 border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.06]" aria-label={t('reviews.status')}>
+              <SelectTrigger className={cn(masterSelectTriggerCls, 'w-[180px]')} aria-label={t('reviews.status')}>
                 <SelectValue placeholder={t('reviews.status')} />
               </SelectTrigger>
               <SelectContent>
@@ -88,7 +98,7 @@ export default function ReviewsPage() {
               </SelectContent>
             </Select>
             <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as SortOrderNewestOldest)}>
-              <SelectTrigger className="w-[180px] h-9 border-slate-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.06]" aria-label={t('reviews.sortBy')}>
+              <SelectTrigger className={cn(masterSelectTriggerCls, 'w-[180px]')} aria-label={t('reviews.sortBy')}>
                 <SelectValue placeholder={t('reviews.sortBy')} />
               </SelectTrigger>
               <SelectContent>
@@ -101,24 +111,28 @@ export default function ReviewsPage() {
 
         <CardContent className="p-6">
           {!filteredAndSortedItems.length ? (
-            <EmptyState
+            <CabinetEmptyState
+              icon={Star}
               title={t('reviews.noReviewsYet')}
               description={t('reviews.noReviewsDescription')}
             />
           ) : (
             <div className="flex flex-col gap-4">
               {filteredAndSortedItems.map((review, idx) => (
-                <Card
+                <div
                   key={String(review.id ?? idx)}
-                  className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/30 dark:backdrop-blur-sm shadow-[0_2px_10px_-3px_rgba(6,81,237,0.06)] hover:shadow-[0_6px_24px_rgb(0,0,0,0.06)] dark:shadow-none dark:hover:bg-white/[0.03] transition duration-300 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards"
+                  className={cn(
+                    masterCardCls,
+                    'animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-backwards',
+                  )}
                   style={{ animationDelay: `${Math.min(idx * 50, 300)}ms` }}
                 >
                   <CardContent className="p-5 sm:p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="space-y-2 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <User className="size-5 text-primary opacity-70 shrink-0" />
-                          <span className="font-semibold text-foreground">
+                          <User className="size-5 shrink-0 text-[#E97525] opacity-80" />
+                          <span className={cn('font-semibold', masterSectionTitleCls)}>
                             {String(review?.clientName ?? '').trim() ||
                               (review?.client && typeof review.client === 'object'
                                 ? [String((review.client as Record<string, unknown>).firstName ?? ''), String((review.client as Record<string, unknown>).lastName ?? '')].filter(Boolean).join(' ').trim()
@@ -127,13 +141,13 @@ export default function ReviewsPage() {
                           </span>
                           <div className="flex items-center gap-1">
                             <StarRatingDisplay value={Number(review?.rating ?? 0)} size="sm" />
-                            <span className="font-semibold text-amber-600 dark:text-amber-400">
+                            <span className="font-semibold text-[#E97525]">
                               {String(review?.rating ?? '—') as unknown as React.ReactNode}
                             </span>
                           </div>
                         </div>
                         {review?.createdAt ? (
-                          <div className="flex items-center gap-1 text-muted-foreground text-sm">
+                          <div className={cn('flex items-center gap-1', masterTextMuted)}>
                             <Clock className="size-4 opacity-70" />
                             {formatDateTimeString(review.createdAt as string, locale)}
                           </div>
@@ -144,9 +158,9 @@ export default function ReviewsPage() {
 
                     {Array.isArray(review?.reviewCriteria) && (review.reviewCriteria as Record<string, unknown>[]).length > 0 && (
                       <>
-                        <div className="my-3 border-t border-slate-100 dark:border-white/[0.08]" />
+                        <div className="my-3 border-t border-[#e8e8e8] dark:border-[#2d2d2d]" />
                         <div>
-                          <p className="text-sm font-semibold text-muted-foreground mb-2">
+                          <p className={cn('mb-2 font-semibold', masterTextMuted)}>
                             {t('reviews.detailedRatings')}
                           </p>
                           <div className="flex flex-wrap gap-2">
@@ -156,14 +170,14 @@ export default function ReviewsPage() {
                               return (
                                 <div
                                   key={String(crit.id ?? critIdx)}
-                                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-white/[0.06] border border-slate-100 dark:border-white/[0.06]"
+                                  className={cn(masterInsetPanelCls, 'flex items-center gap-2 px-3 py-1.5')}
                                 >
                                   <span className="text-sm font-semibold capitalize">
                                     {labelStr}
                                   </span>
                                   <span className="flex items-center gap-0.5">
-                                    <Star className="size-4 text-amber-500 fill-amber-500" />
-                                    <span className="text-sm font-bold text-amber-600 dark:text-amber-400">
+                                    <Star className="size-4 fill-[#E97525] text-[#E97525]" />
+                                    <span className="text-sm font-bold text-[#E97525]">
                                       {ratingStr}
                                     </span>
                                   </span>
@@ -177,21 +191,21 @@ export default function ReviewsPage() {
 
                     {review?.comment ? (
                       <>
-                        <div className="my-3 border-t border-slate-100 dark:border-white/[0.08]" />
-                        <div className="p-4 rounded-lg bg-slate-50/80 dark:bg-white/[0.04] border border-slate-100 dark:border-white/[0.06]">
-                          <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap">
+                        <div className="my-3 border-t border-[#e8e8e8] dark:border-[#2d2d2d]" />
+                        <div className={masterInsetPanelCls}>
+                          <p className={cn('whitespace-pre-wrap leading-relaxed', masterTextBody)}>
                             {String(review.comment)}
                           </p>
                         </div>
                       </>
                     ) : null}
                   </CardContent>
-                </Card>
+                </div>
               ))}
             </div>
           )}
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

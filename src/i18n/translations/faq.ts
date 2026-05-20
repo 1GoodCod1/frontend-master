@@ -3,6 +3,7 @@ import { SUPPORT_EMAIL, TELEGRAM_HANDLE } from '@/config/support';
 export const faq = {
   en: {
     faq: {
+      kicker: 'Help',
       title: 'Frequently Asked Questions',
       subtitle: 'Find answers to common questions about our platform',
       seoKeywords:
@@ -113,6 +114,7 @@ export const faq = {
   },
   ru: {
     faq: {
+      kicker: 'Помощь',
       title: 'Часто задаваемые вопросы',
       subtitle: 'Ответы на распространённые вопросы о платформе',
       seoKeywords:
@@ -223,7 +225,8 @@ export const faq = {
   },
   ro: {
     faq: {
-      title: 'Întrebări Frecvente',
+      kicker: 'Ajutor',
+      title: 'Întrebări frecvente',
       subtitle: 'Răspunsuri la întrebările frecvente despre platformă',
       seoKeywords:
         'întrebări faber.md, ajutor meșteri clienți Moldova, verificare tarife, recenzii cereri, confidențialitate suport, cum găsesc meșter Chișinău',

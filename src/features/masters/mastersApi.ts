@@ -264,13 +264,13 @@ export const mastersApi = api.injectEndpoints({
     }),
 
     mastersGetNotificationSettings: build.query<NotificationSettings, void>({
-      query: () => ({ url: '/masters/notifications-settings/me', method: 'GET' }),
+      query: () => ({ url: '/masters/settings/notifications', method: 'GET' }),
       transformResponse: (raw: unknown): NotificationSettings => unwrapObject<NotificationSettings>(raw),
       providesTags: ['Master'],
     }),
 
     mastersUpdateNotificationSettings: build.mutation<NotificationSettings, UpdateNotificationSettingsDto>({
-      query: (body) => ({ url: '/masters/notifications-settings/me', method: 'PATCH', data: body }),
+      query: (body) => ({ url: '/masters/settings/notifications', method: 'PATCH', data: body }),
       transformResponse: (raw: unknown): NotificationSettings => unwrapObject<NotificationSettings>(raw),
       invalidatesTags: ['Master'],
     }),
@@ -280,7 +280,7 @@ export const mastersApi = api.injectEndpoints({
       void
     >({
       query: () => ({
-        url: '/masters/telegram-connect-token/me',
+        url: '/masters/settings/telegram-connect',
         method: 'POST',
       }),
       transformResponse: (raw: unknown) => unwrapObject<{ link: string; expiresAt: string }>(raw),
@@ -288,7 +288,7 @@ export const mastersApi = api.injectEndpoints({
     }),
 
     mastersGetScheduleSettings: build.query<ScheduleSettingsResponse, void>({
-      query: () => ({ url: '/masters/schedule-settings/me', method: 'GET' }),
+      query: () => ({ url: '/masters/settings/schedule', method: 'GET' }),
       transformResponse: (raw: unknown): ScheduleSettingsResponse => toScheduleSettings(raw),
       providesTags: ['ScheduleSettings'],
     }),
@@ -297,7 +297,7 @@ export const mastersApi = api.injectEndpoints({
       UpdateScheduleSettingsResponse,
       { workStartHour?: number; workEndHour?: number; slotDurationMinutes?: number }
     >({
-      query: (body) => ({ url: '/masters/schedule-settings/me', method: 'PATCH', data: body }),
+      query: (body) => ({ url: '/masters/settings/schedule', method: 'PATCH', data: body }),
       transformResponse: (raw: unknown): UpdateScheduleSettingsResponse => ({
         success: true,
         ...toScheduleSettings(raw),

@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Zap, Eye, History, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Eye, History, ChevronRight, AlertTriangle, FileText } from 'lucide-react';
+import { JointsBadge, JointsMark } from '@/components/joints';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { ErrorState } from '@/components/common/States';
 import { useMasterMyApplicationsQuery } from '@/features/jobs/jobsApi';
 import { useJointsBalanceQuery, useJointsTransactionsQuery } from '@/features/joints/jointsApi';
 import { cn } from '@/lib/utils';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
+import {
+  masterCardStaticCls,
+  masterFilterPillCls,
+  masterPageMediumClassName,
+} from '@/lib/masterCabinetStyles';
 import { formatDateTimeString } from '@/utils/date';
 import type { JobApplicationDto } from '@/types';
 import { ProposalDetail } from '@/features/jobs/components/ProposalDetail';
@@ -58,34 +66,25 @@ export default function MasterApplicationsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 md:py-8">
+    <div className={masterPageMediumClassName}>
 
-      {/* Header */}
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-bold text-foreground">{t('jobs.jobsAndJoints', 'Jobs & Joints')}</h1>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            {t('jobs.jobsAndJointsSubtitle', 'Your proposals and joints history')}
-          </p>
-        </div>
-        <div className="flex items-center gap-1.5 rounded-2xl bg-primary/8 px-4 py-2.5 text-sm font-bold text-primary">
-          <Zap className="h-4 w-4" />
-          {balanceData?.balance ?? 0}
-          <span className="text-xs font-normal text-primary/70">joints</span>
-        </div>
-      </div>
+      <PageHeader
+        title={t('jobs.jobsAndJoints', 'Jobs & Joints')}
+        subtitle={t('jobs.jobsAndJointsSubtitle', 'Your proposals and joints history')}
+        actions={
+        <JointsBadge value={balanceData?.balance ?? 0} size="lg" showLabel />
+        }
+      />
 
-      {/* Tabs */}
-      <div className="mb-5 flex gap-1 rounded-xl bg-muted p-1">
+      <div className={cn(masterCardStaticCls, 'mb-5 flex gap-1 p-1')}>
         {(['applications', 'history'] as const).map((t_) => (
           <button
             key={t_}
+            type="button"
             onClick={() => setTab(t_)}
             className={cn(
-              'flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-colors',
-              tab === t_
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground',
+              masterFilterPillCls(tab === t_),
+              'flex flex-1 items-center justify-center gap-1.5 py-2',
             )}
           >
             {t_ === 'applications' ? (
@@ -107,18 +106,13 @@ export default function MasterApplicationsPage() {
         ))}
       </div>
 
-      {/* Applications */}
       {tab === 'applications' && (
         items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
-            <Zap className="mb-4 h-12 w-12 text-muted-foreground/30" />
-            <h3 className="mb-2 text-base font-semibold text-foreground">
-              {t('jobs.noApplicationsYet', 'No proposals yet')}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {t('jobs.browseAndApply', 'Apply to jobs from the public job board to see your proposals here')}
-            </p>
-          </div>
+          <CabinetEmptyState
+            icon={FileText}
+            title={t('jobs.noApplicationsYet', 'No proposals yet')}
+            description={t('jobs.browseAndApply', 'Apply to jobs from the public job board to see your proposals here')}
+          />
         ) : (
           <div className="space-y-1">
             {/* Group header */}
@@ -147,7 +141,7 @@ export default function MasterApplicationsPage() {
                           {job?.title ?? '—'}
                         </p>
                         {jobInactive && app.status === 'PENDING' && (
-                          <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+                          <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-[#E97525]" />
                         )}
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -158,9 +152,7 @@ export default function MasterApplicationsPage() {
                             {t('jobs.viewed', 'Viewed')}
                           </span>
                         )}
-                        <span className="flex items-center gap-1 font-semibold text-primary">
-                          <Zap className="h-3 w-3" />{app.jointsSpent}
-                        </span>
+                        <JointsBadge value={app.jointsSpent} size="xs" />
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
@@ -201,7 +193,7 @@ export default function MasterApplicationsPage() {
                   'flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
                   tx.amount > 0 ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15' : 'bg-red-50 text-red-500 dark:bg-red-500/15',
                 )}>
-                  <Zap className="h-4 w-4" />
+                  <JointsMark className="h-4 w-4 text-[#D97706] dark:text-[#FBBF24]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground">{TX_LABEL[tx.type] ?? tx.type}</p>

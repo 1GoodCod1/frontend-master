@@ -11,8 +11,8 @@ import { setLanguage } from '@/i18n';
 import type { SupportedLanguage } from '@/components/layout/AppShell/types';
 import type { TariffPlan } from '@/features/auth/plan';
 import { paths } from '@/constants/routes';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
-import { LazyImage } from '@/components/ui/LazyImage';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,6 +36,9 @@ type CabinetProfileMenuProps = {
   collapsed: boolean;
   displayName: string;
   avatarUrl?: string;
+  /** Stable path for remounting Avatar when the file changes */
+  avatarPath?: string;
+  userId?: string;
   role: string | null;
   plan?: TariffPlan | null;
   isOnline?: boolean;
@@ -67,6 +70,8 @@ export function CabinetProfileMenu({
   collapsed,
   displayName,
   avatarUrl,
+  avatarPath,
+  userId,
   role,
   plan,
   isOnline = false,
@@ -133,24 +138,31 @@ export function CabinetProfileMenu({
               )}
               aria-label={displayName || t('nav.settings')}
             >
-              <div className="relative size-10 shrink-0 overflow-hidden rounded-xl">
-                {avatarUrl ? (
-                  <LazyImage
-                    src={avatarUrl}
-                    alt={displayName || ''}
-                    objectFit="cover"
-                    skeletonHeight={40}
-                    skeletonWidth={40}
-                    className="size-full"
-                  />
-                ) : (
-                  <AvatarPlaceholder
-                    role={placeholderRole}
-                    height={40}
-                    fillParent
-                    variant={placeholderVariant}
-                  />
-                )}
+              <div className="relative size-10 shrink-0">
+                <Avatar
+                  key={avatarPath ?? userId ?? 'no-avatar'}
+                  className="size-10 rounded-xl"
+                >
+                  {avatarUrl ? (
+                    <AvatarImage
+                      src={avatarUrl}
+                      alt={displayName || ''}
+                      className="object-cover"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  ) : null}
+                  <AvatarFallback className="rounded-xl bg-transparent p-0">
+                    <AvatarPlaceholder
+                      id={userId}
+                      name={displayName || undefined}
+                      role={displayName ? undefined : placeholderRole}
+                      height={40}
+                      fillParent
+                      variant={placeholderVariant}
+                    />
+                  </AvatarFallback>
+                </Avatar>
                 {role === USER_ROLE.MASTER && (
                   <span
                     className={cn(

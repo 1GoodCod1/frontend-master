@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Zap, X, Plus, Save } from 'lucide-react';
+import { X, Plus, Save } from 'lucide-react';
+import { JointsBadge, JointsMark } from '@/components/joints';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { MilestoneDto, JobApplicationDto } from '@/types';
@@ -112,7 +113,7 @@ export function ProposalEditForm({
       {/* Boost section */}
       <div className="rounded-xl border border-amber-300/40 bg-amber-500/5 p-4 space-y-3">
         <div className="flex items-center gap-2">
-          <Zap className="h-4 w-4 text-amber-500" />
+          <JointsMark className="h-4 w-4 text-[#D97706] dark:text-[#FBBF24]" />
           <p className="text-sm font-semibold text-foreground">{t('jobs.boostProposal', 'Boost proposal')}</p>
         </div>
 
@@ -143,10 +144,7 @@ export function ProposalEditForm({
                         {isMe ? `${t('jobs.you', 'You')} ★` : t('jobs.anonymous', 'Anonymous master')}
                       </td>
                       <td className="px-3 py-2 text-right">
-                        <span className="flex items-center justify-end gap-0.5 text-amber-600 dark:text-amber-400 font-semibold">
-                          <Zap className="h-3 w-3" />
-                          {entry.jointsSpent}
-                        </span>
+                        <JointsBadge value={entry.jointsSpent} size="xs" className="ml-auto" />
                       </td>
                     </tr>
                   );

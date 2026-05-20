@@ -352,7 +352,7 @@ export default function MasterDetailsPage() {
                 </span>
                 {t('masterDetails.quickInfo', 'Quick info')}
               </h3>
-              <div className="space-y-1">
+              <dl className="divide-y divide-gray-100 dark:divide-white/[0.06]">
                 {[
                   { icon: MapPin, label: t('masterDetails.quickInfoLocation', 'Location'), value: m?.city ? getTranslatedCityName(t, m.city) : '—' },
                   { icon: Briefcase, label: t('masterDetails.quickInfoCategory', 'Category'), value: m?.category ? getTranslatedCategoryName(t, m.category) : '—' },
@@ -360,15 +360,22 @@ export default function MasterDetailsPage() {
                   { icon: Calendar, label: t('masterDetails.quickInfoRegistered', 'Registered'), value: m?.createdAt ? formatDateShort(m.createdAt, locale) : '—' },
                   { icon: ShieldCheck, label: t('masterDetails.quickInfoStatus', 'Status'), value: m?.user?.isVerified ? t('masters.verified') : t('masters.notVerified') },
                 ].map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-2.5 border-b border-gray-100 dark:border-white/[0.06] last:border-0">
-                    <div className="flex items-center gap-2.5 text-gray-500 dark:text-gray-400">
-                      <item.icon size={15} />
-                      <span className="text-sm">{item.label}</span>
-                    </div>
-                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{item.value}</span>
+                  <div
+                    key={item.label}
+                    className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-center gap-3 py-3 first:pt-0 last:pb-0"
+                  >
+                    <dt className="flex min-h-[20px] items-center gap-2 text-[13px] leading-5 text-gray-500 dark:text-gray-400">
+                      <span className="flex size-[15px] shrink-0 items-center justify-center">
+                        <item.icon size={15} strokeWidth={2} className="block" />
+                      </span>
+                      <span>{item.label}</span>
+                    </dt>
+                    <dd className="text-right text-[13px] font-semibold leading-5 text-gray-800 dark:text-gray-200">
+                      {item.value}
+                    </dd>
                   </div>
                 ))}
-              </div>
+              </dl>
             </div>
 
             {/* Similar masters */}

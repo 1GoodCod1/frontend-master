@@ -8,7 +8,6 @@ import { CardsSkeleton } from '@/components/common/Skeletons';
 import { BOOKING_STATUS_OPTIONS, type BookingStatus } from '@/types/bookings';
 import { getLocaleFromLanguage } from '@/utils/date';
 import toast from 'react-hot-toast';
-import { Card } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -17,6 +16,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterPageBookingsClassName,
+  masterSelectTriggerCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 import { addDays, startOfWeek } from 'date-fns';
 import { MasterBookingsCalendar } from '@/features/masters/components/master/bookings/MasterBookingsCalendar';
 import type { BookingItem } from '@/features/masters/components/master/bookings/MasterBookingsCalendar';
@@ -75,23 +81,25 @@ export default function BookingsPage() {
     return <ErrorState error={new Error('Master profile not found')} onRetry={() => { }} />;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
+    <div className={masterPageBookingsClassName}>
       <PageHeader title={t('bookings.myBookings')} subtitle={t('bookings.manageBookings')} />
-      <p className="mb-4 text-sm text-muted-foreground">{t('bookings.flowHint')}</p>
+      <p className={masterTextMuted}>{t('bookings.flowHint')}</p>
 
       <div className="mb-6">
         <ScheduleSettingsCard />
       </div>
 
-      <Card className="mb-6 border-border dark:border-white/[0.08] p-4">
+      <div className={cn(masterCardStaticCls, 'p-4')}>
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-3">
-            <Label htmlFor="booking-status-filter">{t('bookings.filterByStatus')}</Label>
+            <Label htmlFor="booking-status-filter" className="text-[13px] font-semibold">
+              {t('bookings.filterByStatus')}
+            </Label>
             <Select
               value={statusFilter || 'all'}
               onValueChange={(v) => setStatusFilter(v === 'all' ? '' : v)}
             >
-              <SelectTrigger id="booking-status-filter" className="min-w-[200px]">
+              <SelectTrigger id="booking-status-filter" className={cn(masterSelectTriggerCls, 'min-w-[200px]')}>
                 <SelectValue placeholder={t('common.all')} />
               </SelectTrigger>
               <SelectContent>
@@ -105,7 +113,7 @@ export default function BookingsPage() {
             </Select>
           </div>
         </div>
-      </Card>
+      </div>
 
       {calendarQuery.isLoading ? (
         <CardsSkeleton count={7} />
@@ -125,13 +133,13 @@ export default function BookingsPage() {
             />
           </div>
           <div className="lg:col-span-1">
-            <Card className="border-border dark:border-white/[0.08] p-4 sticky top-24">
+            <div className={cn(masterCardStaticCls, 'sticky top-24 p-4')}>
               <MasterRequestsWithoutBookingColumn
                 leads={leadsWithoutBooking}
                 masterId={masterId}
                 onBookingCreated={() => calendarQuery.refetch()}
               />
-            </Card>
+            </div>
           </div>
         </div>
       )}

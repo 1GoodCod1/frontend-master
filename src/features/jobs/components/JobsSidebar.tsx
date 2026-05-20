@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
-  Zap,
   UserPlus,
   FileText,
   Bookmark,
@@ -14,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/constants/routes';
+import { JointsMark } from '@/components/joints';
 import { cn } from '@/lib/utils';
 import { surfaceCardCls } from '@/lib/surfaceCard';
 import { PublicJobsFilters } from './PublicJobsFilters';
@@ -30,6 +30,10 @@ interface SidebarLinkProps {
   to: string;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
+}
+
+function JointsSidebarIcon({ className }: { className?: string }) {
+  return <JointsMark className={cn('h-4 w-4 shrink-0', className)} />;
 }
 
 function SidebarLink({ to, icon: Icon, label }: SidebarLinkProps) {
@@ -79,7 +83,7 @@ export function JobsSidebar({
         <>
           <div className={accentCardCls}>
             <div className="flex items-center gap-2 mb-2">
-              <Zap className="h-4 w-4 text-[#E97525]" />
+              <JointsMark className="h-4 w-4 text-[#D97706] dark:text-[#FBBF24]" />
               <h3 className="text-sm font-semibold text-[#212529] dark:text-white">
                 {t('jobs.sidebar.guestCtaTitle')}
               </h3>
@@ -140,7 +144,7 @@ export function JobsSidebar({
       {isMaster && (
         <div className={sidebarCardCls}>
           <div className="flex items-center gap-2 mb-3 pb-3 border-b border-[#E9ECEF] dark:border-white/[0.08]">
-            <Zap className="h-4 w-4 text-[#E97525]" />
+            <JointsMark className="h-4 w-4 text-[#D97706] dark:text-[#FBBF24]" />
             <div className="min-w-0">
               <p className="text-xs text-[#6C757D] dark:text-white/50 leading-tight">
                 {t('jobs.sidebar.master')}
@@ -163,7 +167,7 @@ export function JobsSidebar({
             />
             <SidebarLink
               to={paths.plans}
-              icon={Zap}
+              icon={JointsSidebarIcon}
               label={t('jobs.sidebar.viewPlans')}
             />
           </div>

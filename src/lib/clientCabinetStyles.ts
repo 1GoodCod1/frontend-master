@@ -1,103 +1,25 @@
-import { cn } from '@/lib/utils';
-import { surfaceCardCls, surfaceCardInteractiveCls } from '@/lib/surfaceCard';
-
-export const FABER_ORANGE = '#E97525';
-export const FABER_ORANGE_HOVER = '#d86920';
-
-/** Outer page wrapper — layout already provides px/py. */
-export const clientPageClassName = 'mx-auto max-w-6xl space-y-6';
-
-export const clientCardCls = cn(
-  surfaceCardInteractiveCls,
-  'rounded-[18px] transition duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10',
-);
-
-export const clientCardStaticCls = cn(surfaceCardCls, 'rounded-[18px]');
-
-export const clientIconWrapCls =
-  'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#FFF8EB] text-[#E97525] dark:bg-[#E97525]/12';
-
-export const clientTextTitle = 'text-[#212529] dark:text-white';
-export const clientTextBody = 'text-[13px] leading-snug text-[#495057] dark:text-white/70';
-export const clientTextMuted = 'text-[12px] leading-snug text-[#6C757D] dark:text-white/50';
-
-export const clientSectionTitleCls =
-  'text-base font-semibold tracking-tight text-[#212529] dark:text-white';
-
-export const clientInsetPanelCls = cn(
-  'rounded-xl border border-[#e8e8e8] bg-[hsl(var(--secondary)/0.35)] p-4',
-  'dark:border-[#2d2d2d] dark:bg-white/[0.03]',
-);
-
-export const clientPrimaryBtnCls = cn(
-  'inline-flex h-10 items-center justify-center gap-2 rounded-[14px] px-4',
-  'text-[13px] font-semibold whitespace-nowrap',
-  'bg-[#E97525] text-white hover:bg-[#d86920] shadow-none transition-colors',
-);
-
-export const clientOutlineBtnCls = cn(
-  'inline-flex h-10 items-center justify-center gap-2 rounded-[14px] px-4',
-  'text-[13px] font-medium border-2 shadow-none transition-colors',
-  'border-[#E9ECEF] bg-white text-[#495057]',
-  'hover:bg-[#E97525]/10 hover:text-[#c45f1a] hover:border-[#E97525]/35',
-  'dark:border-white/12 dark:bg-white/[0.04] dark:text-white/90',
-  'dark:hover:bg-white/[0.08] dark:hover:text-white dark:hover:border-white/20',
-);
-
-export const clientLinkCls =
-  'font-semibold text-[#E97525] hover:text-[#d86920] dark:text-[#E97525] dark:hover:text-[#f08540]';
-
-export const clientBadgeCls = cn(
-  'inline-flex items-center gap-1 rounded-full px-2 py-0.5',
-  'text-[10px] font-medium uppercase tracking-wide',
-  'bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.06] dark:text-white/55',
-);
-
-export function clientFilterPillCls(active: boolean): string {
-  return cn(
-    'h-8 rounded-[10px] px-3 text-[13px] font-medium transition-colors shadow-none',
-    active
-      ? 'bg-[#E97525] text-white hover:bg-[#d86920]'
-      : cn(
-          'border border-[#E9ECEF] bg-white text-[#495057]',
-          'hover:bg-[#E97525]/10 hover:text-[#c45f1a] hover:border-[#E97525]/35',
-          'dark:border-white/12 dark:bg-white/[0.04] dark:text-white/70',
-          'dark:hover:bg-white/[0.08] dark:hover:text-white dark:hover:border-white/20',
-        ),
-  );
-}
-
-export const clientFormLabelCls =
-  'text-[13px] font-semibold text-[#212529] dark:text-white';
-
-export const clientInputCls = cn(
-  'h-10 rounded-[12px] border-[#E9ECEF] bg-white text-[13px] text-[#495057]',
-  'placeholder:text-[#6C757D]/70 shadow-none',
-  'focus-visible:ring-[#E97525]/20 focus-visible:border-[#E97525]/45',
-  'dark:border-white/12 dark:bg-white/[0.04] dark:text-white/90',
-);
-
-export const clientTextareaCls = cn(
-  'rounded-[12px] border-[#E9ECEF] bg-white text-[13px] leading-relaxed text-[#495057] resize-none',
-  'placeholder:text-[#6C757D]/70 shadow-none',
-  'focus-visible:ring-[#E97525]/20 focus-visible:border-[#E97525]/45',
-  'dark:border-white/12 dark:bg-white/[0.04] dark:text-white/90',
-);
-
-export const clientSelectTriggerCls = cn(
-  'h-10 rounded-[12px] border-[#E9ECEF] bg-white text-[13px] text-[#495057] shadow-none',
-  'dark:border-white/12 dark:bg-white/[0.04] dark:text-white/90',
-);
-
-export const clientFormCardCls = cn(clientCardStaticCls, 'p-6 sm:p-8');
-
-export const clientChoiceCardCls = (active: boolean) =>
-  cn(
-    'group relative overflow-hidden rounded-[14px] border-2 p-4 text-left transition-all duration-200',
-    active
-      ? 'border-[#E97525] bg-[#FFF8EB]/80 shadow-sm dark:bg-[#E97525]/10'
-      : cn(
-          'border-[#E9ECEF] bg-white hover:border-[#E97525]/35 hover:bg-[#E97525]/5',
-          'dark:border-white/12 dark:bg-white/[0.04] dark:hover:bg-white/[0.06]',
-        ),
-  );
+export {
+  FABER_ORANGE,
+  FABER_ORANGE_HOVER,
+  cabinetPageClassName as clientPageClassName,
+  cabinetPageNarrowClassName as clientPageNarrowClassName,
+  cabinetCardCls as clientCardCls,
+  cabinetCardStaticCls as clientCardStaticCls,
+  cabinetIconWrapCls as clientIconWrapCls,
+  cabinetTextTitle as clientTextTitle,
+  cabinetTextBody as clientTextBody,
+  cabinetTextMuted as clientTextMuted,
+  cabinetSectionTitleCls as clientSectionTitleCls,
+  cabinetInsetPanelCls as clientInsetPanelCls,
+  cabinetPrimaryBtnCls as clientPrimaryBtnCls,
+  cabinetOutlineBtnCls as clientOutlineBtnCls,
+  cabinetLinkCls as clientLinkCls,
+  cabinetBadgeCls as clientBadgeCls,
+  cabinetFilterPillCls as clientFilterPillCls,
+  cabinetFormLabelCls as clientFormLabelCls,
+  cabinetInputCls as clientInputCls,
+  cabinetTextareaCls as clientTextareaCls,
+  cabinetSelectTriggerCls as clientSelectTriggerCls,
+  cabinetFormCardCls as clientFormCardCls,
+  cabinetChoiceCardCls as clientChoiceCardCls,
+} from '@/lib/cabinetStyles';

@@ -9,13 +9,23 @@ import { useCategoriesListQuery } from '@/features/categories/categoriesApi';
 import { useCitiesListQuery } from '@/features/cities/citiesApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterFormCardCls,
+  masterIconWrapCls,
+  masterPageClassName,
+  masterOutlineBtnCls,
+  masterPrimaryBtnCls,
+  masterSectionTitleCls,
+} from '@/lib/masterCabinetStyles';
 import { FormikTextField } from '@/components/ui/FormikTextField';
 import { FormikSelect } from '@/components/ui/FormikSelect';
 import { FormikTextarea } from '@/components/ui/FormikTextarea';
 import { unwrapList } from '@/utils/data';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
 import { UnsavedChangesPrompt } from '@/hooks/useUnsavedChangesPrompt';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -101,14 +111,12 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
-      <div className="mb-8">
-        <PageHeader title={t('profile.title')} subtitle={t('profile.subtitle')} />
-      </div>
+    <div className={masterPageClassName}>
+      <PageHeader title={t('profile.title')} subtitle={t('profile.subtitle')} />
 
       {isLocked && (
-        <Alert className="mb-8 border-amber-500/50 bg-amber-500/10">
-          <AlertDescription className="text-amber-700 dark:text-amber-400 font-medium">
+        <Alert className="mb-8 border-[#E97525]/50 bg-[#FFF8EB]/80 dark:bg-[#E97525]/10">
+          <AlertDescription className="font-medium text-[#c45f1a] dark:text-[#f08540]">
             {t('profile.lockedMessageDays', {
               days: Math.max(0, minDaysBetweenUpdates - (daysSinceUpdate ?? 0)),
               maxPerMonth: 2,
@@ -158,15 +166,13 @@ export default function ProfilePage() {
               {/* Main Content Column */}
               <div className="lg:col-span-8 flex flex-col gap-6 md:gap-8">
                 {/* Basic Info Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
-                  <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
+                <div className={cn(masterCardStaticCls, 'overflow-hidden')}>
+                  <div className="border-b border-[#e8e8e8] px-6 py-5 dark:border-[#2d2d2d]">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-amber-500/10 p-2 text-amber-600 dark:text-amber-500">
+                      <span className={masterIconWrapCls}>
                         <User className="size-5" />
-                      </div>
-                      <h2 className="text-lg font-semibold text-foreground tracking-tight">
-                        {t('profile.personalInfo')}
-                      </h2>
+                      </span>
+                      <h2 className={masterSectionTitleCls}>{t('profile.personalInfo')}</h2>
                     </div>
                   </div>
                   <CardContent className="p-6">
@@ -175,18 +181,15 @@ export default function ProfilePage() {
                       <FormikTextField name="lastName" label={t('profile.lastName')} disabled={!!isLocked} fullWidth />
                     </div>
                   </CardContent>
-                </Card>
+                </div>
 
-                {/* About Me Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
-                  <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
+                <div className={cn(masterCardStaticCls, 'overflow-hidden')}>
+                  <div className="border-b border-[#e8e8e8] px-6 py-5 dark:border-[#2d2d2d]">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-blue-500/10 p-2 text-blue-600 dark:text-blue-500">
+                      <span className={masterIconWrapCls}>
                         <FileText className="size-5" />
-                      </div>
-                      <h2 className="text-lg font-semibold text-foreground tracking-tight">
-                        {t('profile.description')}
-                      </h2>
+                      </span>
+                      <h2 className={masterSectionTitleCls}>{t('profile.description')}</h2>
                     </div>
                   </div>
                   <CardContent className="p-6">
@@ -198,21 +201,17 @@ export default function ProfilePage() {
                       disabled={!!isLocked}
                     />
                   </CardContent>
-                </Card>
+                </div>
               </div>
 
-              {/* Sidebar Column */}
               <div className="lg:col-span-4 flex flex-col gap-6 md:gap-8">
-                {/* Professional Details Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
-                  <div className="border-b border-slate-100 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.04] px-6 py-5">
+                <div className={cn(masterCardStaticCls, 'overflow-hidden')}>
+                  <div className="border-b border-[#e8e8e8] px-6 py-5 dark:border-[#2d2d2d]">
                     <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-500">
+                      <span className={masterIconWrapCls}>
                         <Award className="size-5" />
-                      </div>
-                      <h2 className="text-lg font-semibold text-foreground tracking-tight">
-                        {t('profile.professionalDetails')}
-                      </h2>
+                      </span>
+                      <h2 className={masterSectionTitleCls}>{t('profile.professionalDetails')}</h2>
                     </div>
                   </div>
                   <CardContent className="p-6 space-y-6">
@@ -258,16 +257,15 @@ export default function ProfilePage() {
                       />
                     </div>
                   </CardContent>
-                </Card>
+                </div>
 
-                {/* Actions Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none bg-white dark:bg-black/40 dark:backdrop-blur-xl">
-                  <CardContent className="p-6 flex flex-col gap-4">
+                <div className={masterFormCardCls}>
+                  <CardContent className="flex flex-col gap-4 p-6">
                     <Button
                       type="submit"
                       disabled={!!isLocked || upd.isLoading}
                       size="lg"
-                      className="w-full relative group overflow-hidden border-0 bg-amber-600 text-white shadow-md transition hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500"
+                      className={cn(masterPrimaryBtnCls, 'w-full')}
                     >
                       <span className="relative flex items-center justify-center font-semibold">
                         <Save className="mr-2 size-5" />
@@ -277,13 +275,16 @@ export default function ProfilePage() {
 
                     <Link
                       to="/dashboard/services"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring dark:border-white/[0.08] dark:bg-transparent dark:text-foreground dark:hover:bg-white/[0.05]"
+                      className={cn(
+                        masterOutlineBtnCls,
+                        'inline-flex w-full items-center justify-center gap-2 px-4 py-3',
+                      )}
                     >
                       <ListChecks className="size-4" />
                       {t('profile.manageServicesLink')}
                     </Link>
                   </CardContent>
-                </Card>
+                </div>
               </div>
 
             </form>

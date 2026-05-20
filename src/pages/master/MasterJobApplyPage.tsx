@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Send, ChevronLeft, Loader2, CheckCircle2, Clock, Zap } from 'lucide-react';
+import { Send, ChevronLeft, Loader2, CheckCircle2, Clock } from 'lucide-react';
+import { JointsBadge } from '@/components/joints';
 import { useJobByIdQuery, useJobMyApplicationQuery } from '@/features/jobs/jobsApi';
 import { useJointsBalanceQuery } from '@/features/joints/jointsApi';
 import { useAppSelector } from '@/app/hooks';
@@ -14,6 +15,13 @@ import { JobApplyJointsBid } from '@/features/jobs/components/JobApplyJointsBid'
 import { JobApplyPaymentApproach } from '@/features/jobs/components/JobApplyPaymentApproach';
 import { JobApplyMilestones } from '@/features/jobs/components/JobApplyMilestones';
 import { JobPhotosUpload } from '@/features/jobs/components/JobPhotosUpload';
+import { cn } from '@/lib/utils';
+import {
+  masterLinkCls,
+  masterPageNarrowClassName,
+  masterPrimaryBtnCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 
 export default function MasterJobApplyPage() {
   const { id } = useParams<{ id: string }>();
@@ -46,9 +54,9 @@ export default function MasterJobApplyPage() {
 
   if (!isAuthed || !isMaster) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <p className="text-sm text-muted-foreground">{t('jobs.mastersOnly')}</p>
-        <Button className="mt-4" onClick={() => navigate(paths.login)}>{t('jobs.logIn')}</Button>
+      <div className={cn(masterPageNarrowClassName, 'py-20 text-center')}>
+        <p className={masterTextMuted}>{t('jobs.mastersOnly')}</p>
+        <Button className={cn(masterPrimaryBtnCls, 'mt-4')} onClick={() => navigate(paths.login)}>{t('jobs.logIn')}</Button>
       </div>
     );
   }
@@ -61,8 +69,8 @@ export default function MasterJobApplyPage() {
 
   if (job.status !== 'OPEN') {
     return (
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <p className="text-sm text-muted-foreground">{t('jobs.notAccepting')}</p>
+      <div className={cn(masterPageNarrowClassName, 'py-20 text-center')}>
+        <p className={masterTextMuted}>{t('jobs.notAccepting')}</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1)}>{t('jobs.back')}</Button>
       </div>
     );
@@ -70,21 +78,20 @@ export default function MasterJobApplyPage() {
 
   if (alreadyApplied) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
+      <div className={cn(masterPageNarrowClassName, 'py-20 text-center')}>
         <CheckCircle2 className="mx-auto mb-3 h-10 w-10 text-emerald-500" />
         <p className="text-sm font-semibold text-foreground">{t('jobs.alreadyApplied')}</p>
-        <p className="mt-1 text-xs text-muted-foreground">{t('jobs.proposalSubmitted')}</p>
+        <p className={cn('mt-1', masterTextMuted)}>{t('jobs.proposalSubmitted')}</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1)}>{t('jobs.back')}</Button>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-      {/* Back */}
+    <div className={masterPageNarrowClassName}>
       <Link
         to="/jobs"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className={cn('mb-6 inline-flex items-center gap-1.5 text-sm transition-colors', masterLinkCls)}
       >
         <ChevronLeft className="h-4 w-4" />{t('jobs.back')}
       </Link>
@@ -96,9 +103,7 @@ export default function MasterJobApplyPage() {
           <span>{job.type === 'FIXED_PRICE' ? t('jobs.fixedPrice') : t('jobs.hourly')}</span>
           {job.budget != null && <span className="font-medium text-foreground">{job.budget} MDL</span>}
           {job.hourlyRate != null && <span className="font-medium text-foreground">{job.hourlyRate} MDL/h</span>}
-          <span className="flex items-center gap-0.5 text-amber-600 font-medium">
-            <Zap className="h-3 w-3" />{t('jobs.minJointsLabel')}: {job.minJoints}
-          </span>
+          <JointsBadge value={job.minJoints} size="xs" prefix={t('jobs.minJointsLabel')} />
         </div>
       </div>
 
@@ -125,7 +130,7 @@ export default function MasterJobApplyPage() {
           {paymentType === 'FULL' && (
             <div className="mt-4 rounded-xl border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] px-4 py-4">
               <label className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-foreground">
-                <Clock className="h-3.5 w-3.5 text-amber-500" />
+                <Clock className="h-3.5 w-3.5 text-[#E97525]" />
                 {t('jobs.deadlineDays', 'Completion time (days)')}
               </label>
               <input
@@ -135,7 +140,7 @@ export default function MasterJobApplyPage() {
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
                 placeholder={t('jobs.deadlinePlaceholder', 'e.g. 7')}
-                className="w-32 rounded-lg border border-black/5 dark:border-white/5 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                className="w-32 rounded-lg border border-black/5 dark:border-white/5 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#E97525]/20"
               />
             </div>
           )}
@@ -170,7 +175,7 @@ export default function MasterJobApplyPage() {
         <Button
           type="submit"
           disabled={isLoading || isUploading}
-          className="w-full h-12 gap-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all"
+          className="w-full h-12 gap-2 bg-[#E97525] hover:bg-[#d86920] text-white font-semibold shadow-lg shadow-amber-500/20 active:scale-[0.98] transition-all"
         >
           {isLoading || isUploading
             ? <Loader2 className="h-4 w-4 animate-spin" />

@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   Eye,
   Star,
-  Zap,
   X,
   MessageCircle,
   XCircle,
@@ -21,6 +20,7 @@ import {
   Briefcase,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { JointsBadge } from '@/components/joints';
 import { ClientEmptyState } from '@/components/client/ClientEmptyState';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { ErrorState } from '@/components/common/States';
@@ -183,12 +183,9 @@ function ApplicationPanel({
 
             {/* Stat pills */}
             <div className="mt-4 flex gap-2">
-              <div className={cn(clientInsetPanelCls, 'flex flex-1 items-center gap-2 border-[#E97525]/25 bg-[#FFF8EB]/50 dark:bg-[#E97525]/8')}>
-                <Zap className="h-4 w-4 shrink-0 text-[#E97525]" />
-                <div>
-                  <p className={cn('text-[10px] font-medium uppercase tracking-wide', clientTextMuted)}>{t('jobs.jointsSpent', 'Joints spent')}</p>
-                  <p className="text-sm font-bold text-[#E97525]">{application.jointsSpent}</p>
-                </div>
+              <div className={cn(clientInsetPanelCls, 'flex flex-1 flex-col items-center justify-center gap-1.5 border-[#E8C878]/40 bg-[#FFFBEB]/50 dark:bg-[#E97525]/8 py-3')}>
+                <p className={cn('text-[10px] font-medium uppercase tracking-wide', clientTextMuted)}>{t('jobs.jointsSpent', 'Joints spent')}</p>
+                <JointsBadge value={application.jointsSpent} size="sm" />
               </div>
               <div className={cn(clientInsetPanelCls, 'flex flex-1 items-center gap-2')}>
                 <DollarSign className="h-4 w-4 shrink-0 text-[#6C757D]" />
@@ -342,10 +339,7 @@ function ApplicationRow({
                 <span className={cn('font-medium', clientTextTitle)}>{master.rating.toFixed(1)}</span>
               </span>
             )}
-            <span className="flex items-center gap-1 font-medium text-[#E97525]">
-              <Zap className="h-3 w-3" />
-              {application.jointsSpent} joints
-            </span>
+            <JointsBadge value={application.jointsSpent} size="xs" />
             {application.rank && (
               <span className="flex items-center gap-1">
                 <Award className="h-3 w-3" />
@@ -551,9 +545,7 @@ export default function ClientJobDetailsPage() {
               <MapPin className="h-3.5 w-3.5" />{job.city.name}
             </span>
           )}
-          <span className={cn(clientBadgeCls, 'gap-1.5 border border-[#E97525]/20 bg-[#FFF8EB]/70 normal-case tracking-normal px-3 py-1.5 font-semibold text-[#E97525] dark:bg-[#E97525]/10')}>
-            <Zap className="h-3.5 w-3.5" /> Min {job.minJoints} joints
-          </span>
+          <JointsBadge value={job.minJoints} size="sm" prefix="Min" className="normal-case tracking-normal" />
           <span className={cn(clientBadgeCls, 'gap-1.5 normal-case tracking-normal px-3 py-1.5')}>
             <Users className="h-3.5 w-3.5" />{applications.length} {t('jobs.applications', 'applications')}
           </span>

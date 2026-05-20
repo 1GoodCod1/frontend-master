@@ -14,7 +14,14 @@ import { useAppSelector } from '@/app/hooks';
 import { selectPlan } from '@/features/auth/selectors';
 import { exportService } from '@/features/export/exportApi';
 import { extractItems } from '@/utils/data';
+import { cn } from '@/lib/utils';
 import { LoadingState, ErrorState } from '@/components/common/States';
+import { PageHeader } from '@/components/ui/PageHeader';
+import {
+  masterCardStaticCls,
+  masterOutlineBtnCls,
+  masterPageWideClassName,
+} from '@/lib/masterCabinetStyles';
 import { LineChartCard } from '@/components/ui/LineChartCard';
 import { BarChartCard } from '@/components/ui/BarChartCard';
 import { StatCard } from '@/components/ui/StatCard';
@@ -93,20 +100,18 @@ export default function AnalyticsPage() {
     };
   });
 
-  const blockClass = 'bg-card border-0 shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]';
+  const blockClass = cn(masterCardStaticCls, 'p-4');
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8 space-y-6 sm:space-y-8 min-h-[calc(100vh-4rem)] bg-muted/10 dark:bg-muted/5">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('analyticsPage.title', 'Аналитика')}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground mt-1">
-            {isPremium
-              ? t('analyticsPage.subtitleBoost', 'Расширенная аналитика и прогнозы')
-              : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')}
-          </p>
-        </div>
+    <div className={masterPageWideClassName}>
+      <PageHeader
+        title={t('analyticsPage.title', 'Аналитика')}
+        subtitle={
+          isPremium
+            ? t('analyticsPage.subtitleBoost', 'Расширенная аналитика и прогнозы')
+            : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')
+        }
+        actions={
         <div className="flex flex-wrap items-center gap-2">
           {isPremium && (
             <Badge variant="secondary" className="gap-1 font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 border-teal-200 dark:border-teal-700/50">
@@ -118,7 +123,7 @@ export default function AnalyticsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="gap-1.5 border-amber-500/50 dark:border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400"
+              className={cn(masterOutlineBtnCls, 'gap-1.5')}
               onClick={async () => {
                 try {
                   const lang = i18n.language?.startsWith('ru') ? 'ru' : 'en';
@@ -135,7 +140,8 @@ export default function AnalyticsPage() {
             </Button>
           )}
         </div>
-      </div>
+        }
+      />
 
       {/* Summary */}
       <Card className={`overflow-hidden ${blockClass}`}>
@@ -153,7 +159,7 @@ export default function AnalyticsPage() {
               value={readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}
               trend={trends?.leadsTrend as 'up' | 'down' | 'stable' | undefined}
               changePercent={trends?.leadsChangePercent as number | undefined}
-              icon={<TrendingUp className="size-5 text-amber-600 dark:text-amber-500 opacity-70" />}
+              icon={<TrendingUp className="size-5 text-[#E97525] dark:text-[#E97525] opacity-70" />}
             />
             <StatCard
               title={t('analyticsPage.totalViews', 'Просмотры')}
@@ -168,7 +174,7 @@ export default function AnalyticsPage() {
               subtitle={readNumber(summary, ['masterRating']) > 0
                 ? `${t('analyticsPage.ratingChart', 'Рейтинг')}: ${readNumber(summary, ['masterRating']).toFixed(1)}`
                 : undefined}
-              icon={<Star className="size-5 text-amber-500 opacity-70 dark:text-amber-400" />}
+              icon={<Star className="size-5 text-[#E97525] opacity-70 dark:text-[#f08540]" />}
             />
           </div>
         </CardContent>
@@ -200,7 +206,7 @@ export default function AnalyticsPage() {
                 <span className="text-2xl font-bold">{readNumber(summary, ['totalLeads', 'leadsCount', 'leads'])}</span>
               </div>
               <div className="flex flex-shrink-0 items-center">
-                <span className="bg-amber-600 text-[10px] font-bold px-2 py-1 rounded-md text-white whitespace-nowrap">
+                <span className="bg-[#E97525] text-[10px] font-bold px-2 py-1 rounded-md text-white whitespace-nowrap">
                   {Math.min(100, Number((conversion as ConversionData).leadsToBookings || 0)).toFixed(1)}%
                 </span>
               </div>
@@ -287,7 +293,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div>
                           <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.yourPosition')}</p>
-                          <p className="text-xl font-bold text-amber-600 dark:text-amber-500">{formatPos()}</p>
+                          <p className="text-xl font-bold text-[#E97525] dark:text-[#E97525]">{formatPos()}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -318,7 +324,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div>
                           <p className="mb-0.5 text-sm text-muted-foreground">{t('analyticsPage.yourPosition')}</p>
-                          <p className="text-xl font-bold text-amber-600 dark:text-amber-500">{formatPos()}</p>
+                          <p className="text-xl font-bold text-[#E97525] dark:text-[#E97525]">{formatPos()}</p>
                         </div>
                       </div>
                     </CardContent>

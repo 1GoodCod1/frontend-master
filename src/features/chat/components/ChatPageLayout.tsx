@@ -1,12 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { MessageCircle } from 'lucide-react';
 import { ChatList, ChatWindow } from '@/features/chat/components';
-import { PageHeader } from '@/components/ui/PageHeader';
 import { useAppSelector, useAppStore } from '@/app/hooks';
 import { selectMe } from '@/features/auth/selectors';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { connectChatSocket, disconnectChatSocket } from '@/services/chatSocket';
+import {
+  CHAT_LAYOUT_HEIGHT_CLS,
+  CHAT_LAYOUT_HEIGHT_MOBILE_CLS,
+  CHAT_SHELL_CLS,
+  CHAT_SIDEBAR_CLS,
+  CHAT_THREAD_AREA_CLS,
+} from '@/features/chat/chatStyles';
+import { cn } from '@/lib/utils';
 import type { ChatUserRole } from '@/types/chat';
 
 const DISCONNECT_DEFER_MS = 50;
@@ -25,7 +33,7 @@ export interface ChatPageLayoutProps {
 export function ChatPageLayout({
   basePath,
   titleKey,
-  subtitleKey,
+  subtitleKey: _subtitleKey,
   selectChatKey,
   selectChatHintKey,
   userRole,
@@ -65,13 +73,24 @@ export function ChatPageLayout({
     navigate(`${basePath}/chat`);
   };
 
-  const layoutHeight = 'calc(100dvh - 140px)';
+  const layoutHeightCls = isLgUp ? CHAT_LAYOUT_HEIGHT_CLS : CHAT_LAYOUT_HEIGHT_MOBILE_CLS;
+
+  const emptyThread = (
+    <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
+      <div className="flex size-14 items-center justify-center rounded-2xl bg-[#FFF8EB] text-[#E97525] dark:bg-[#E97525]/12">
+        <MessageCircle className="size-7" strokeWidth={1.5} />
+      </div>
+      <p className="text-[13px] font-semibold text-[#212529] dark:text-white">{t(selectChatKey)}</p>
+      <p className="max-w-[220px] text-[12px] leading-snug text-[#6C757D] dark:text-white/50">
+        {t(selectChatHintKey, 'Choose a conversation from the list to start messaging.')}
+      </p>
+    </div>
+  );
 
   if (!isLgUp) {
     return (
-      <div className="flex flex-col min-h-0" style={{ height: layoutHeight }}>
-        <PageHeader title={t(titleKey)} subtitle={t(subtitleKey)} className="shrink-0" />
-        <div className="mt-3 sm:mt-4 flex flex-1 min-h-0 flex-col overflow-hidden rounded-xl sm:rounded-2xl border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none">
+      <div className={cn('mx-auto flex w-full max-w-6xl min-h-0 flex-col', layoutHeightCls)}>
+        <div className={cn(CHAT_SHELL_CLS, 'min-h-0 flex-1')}>
           {effectiveSelected ? (
             <ChatWindow
               conversationId={effectiveSelected}
@@ -80,13 +99,13 @@ export function ChatPageLayout({
               currentUserRole={userRole}
             />
           ) : (
-            <div className="flex-1 overflow-auto">
-              <ChatList
-                onSelectConversation={handleSelectConversation}
-                selectedConversationId={effectiveSelected ?? undefined}
-                userRole={userRole}
-              />
-            </div>
+            <ChatList
+              title={t(titleKey)}
+              onSelectConversation={handleSelectConversation}
+              selectedConversationId={effectiveSelected ?? undefined}
+              userRole={userRole}
+              className="h-full"
+            />
           )}
         </div>
       </div>
@@ -94,20 +113,19 @@ export function ChatPageLayout({
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:gap-4" style={{ height: layoutHeight }}>
-      <PageHeader title={t(titleKey)} subtitle={t(subtitleKey)} className="shrink-0" />
-      <div className="flex flex-1 min-h-0 overflow-hidden rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none" style={{ minHeight: 0 }}>
-        <div className="flex w-[320px] xl:w-[360px] min-w-0 shrink-0 flex-col overflow-hidden border-r border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-transparent">
+    <div className={cn('mx-auto flex w-full max-w-6xl min-h-0 flex-col', layoutHeightCls)}>
+      <div className={cn(CHAT_SHELL_CLS, 'min-h-0 flex-1 flex-row')}>
+        <div className={CHAT_SIDEBAR_CLS}>
           <ChatList
+            title={t(titleKey)}
             onSelectConversation={handleSelectConversation}
             selectedConversationId={effectiveSelected ?? undefined}
             userRole={userRole}
+            className="h-full"
           />
         </div>
 
-        <div className="w-px shrink-0 bg-slate-200/80 dark:bg-white/[0.08]" aria-hidden />
-
-        <div className="min-w-0 flex-1 overflow-hidden flex flex-col bg-slate-50/40 dark:bg-white/[0.02]">
+        <div className={CHAT_THREAD_AREA_CLS}>
           {effectiveSelected ? (
             <ChatWindow
               conversationId={effectiveSelected}
@@ -115,15 +133,7 @@ export function ChatPageLayout({
               currentUserRole={userRole}
             />
           ) : (
-            <div className="flex h-full min-h-[240px] sm:min-h-[320px] flex-col items-center justify-center gap-3 sm:gap-4 p-4 sm:p-8 text-center bg-slate-50/60 dark:bg-white/[0.03] border-2 border-dashed border-slate-200 dark:border-white/[0.08] m-2 sm:m-3 rounded-xl">
-              <div className="flex size-14 sm:size-20 items-center justify-center rounded-xl sm:rounded-2xl bg-amber-500/10 dark:bg-amber-500/20">
-                <svg className="size-8 sm:size-10 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.342 21c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                </svg>
-              </div>
-              <p className="text-xs sm:text-sm font-medium text-foreground">{t(selectChatKey)}</p>
-              <p className="max-w-xs text-[11px] sm:text-xs text-muted-foreground">{t(selectChatHintKey, 'Choose a conversation from the list to start messaging.')}</p>
-            </div>
+            emptyThread
           )}
         </div>
       </div>

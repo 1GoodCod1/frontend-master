@@ -7,13 +7,20 @@ import {
   Lock,
   Sparkles,
   UserPlus,
-  Zap,
   ArrowRight,
 } from 'lucide-react';
+import { JointsBadge, JointsMark } from '@/components/joints';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/constants/routes';
 import { cn } from '@/lib/utils';
-import { surfaceCardCls } from '@/lib/surfaceCard';
+import {
+  cabinetCardStaticCls,
+  cabinetIconWrapCls,
+  cabinetOutlineBtnCls,
+  cabinetPrimaryBtnCls,
+  cabinetSectionTitleCls,
+  cabinetTextMuted,
+} from '@/lib/cabinetStyles';
 
 type JobApplyCtaProps = {
   jobId: string;
@@ -42,19 +49,11 @@ export function JobApplyCta({
 
   if (!isOpen) {
     return (
-      <div
-        className={cn(
-          'rounded-2xl p-6 flex flex-col items-center text-center gap-3',
-          surfaceCardCls,
-          className,
-        )}
-      >
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F1F3F5] dark:bg-white/[0.06]">
-          <Lock className="h-5 w-5 text-[#868E96] dark:text-white/40" />
+      <div className={cn('flex flex-col items-center gap-3 p-6 text-center', cabinetCardStaticCls, className)}>
+        <div className={cabinetIconWrapCls}>
+          <Lock className="size-5 text-[#868E96] dark:text-white/40" strokeWidth={2} />
         </div>
-        <p className="text-sm font-medium text-[#495057] dark:text-white/70">
-          {t('jobs.notAccepting')}
-        </p>
+        <p className={cabinetTextMuted}>{t('jobs.notAccepting')}</p>
       </div>
     );
   }
@@ -63,25 +62,21 @@ export function JobApplyCta({
     return (
       <div
         className={cn(
-          'rounded-2xl overflow-hidden border border-emerald-200/80 dark:border-emerald-500/25',
+          'overflow-hidden rounded-[18px] border border-emerald-200/80 dark:border-emerald-500/25',
           'bg-emerald-50/80 dark:bg-emerald-500/10',
           className,
         )}
       >
-        <div className="px-5 py-5 flex gap-3">
+        <div className="flex gap-3 px-5 py-5">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-500/15">
             <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-200">
-              {t('jobs.alreadyApplied')}
-            </p>
-            <p className="mt-0.5 text-xs text-emerald-800/70 dark:text-emerald-400/70">
-              {t('jobs.proposalSubmitted')}
-            </p>
+            <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-200">{t('jobs.alreadyApplied')}</p>
+            <p className="mt-0.5 text-xs text-emerald-800/70 dark:text-emerald-400/70">{t('jobs.proposalSubmitted')}</p>
             <Link
               to="/dashboard/jobs/applications"
-              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:gap-2 transition-all"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 transition-all hover:gap-2 dark:text-emerald-400"
             >
               {t('jobs.submittedProposals')}
               <ArrowRight className="h-3 w-3" />
@@ -96,31 +91,23 @@ export function JobApplyCta({
     return (
       <div
         className={cn(
-          'rounded-2xl overflow-hidden',
-          'border border-[#E97525]/25 dark:border-[#E97525]/20',
+          'overflow-hidden rounded-[18px] border border-[#E97525]/25 dark:border-[#E97525]/20',
           className,
         )}
       >
-        <div className="bg-[#E97525]/8 dark:bg-[#E97525]/10 px-5 py-4 flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E97525]/15">
-            <Sparkles className="h-5 w-5 text-[#E97525]" />
+        <div className="flex items-start gap-3 bg-[#E97525]/8 px-5 py-4 dark:bg-[#E97525]/10">
+          <div className={cabinetIconWrapCls}>
+            <Sparkles className="size-5" strokeWidth={2} />
           </div>
           <div>
-            <p className="text-sm font-semibold text-[#212529] dark:text-white">
-              {t('jobs.panel.readyToApply')}
-            </p>
-            <p className="mt-1 text-xs text-[#6C757D] dark:text-white/55 leading-relaxed">
-              {t('jobs.panel.readyToApplyDesc', { joints: minJoints })}
-            </p>
+            <p className={cabinetSectionTitleCls}>{t('jobs.panel.readyToApply')}</p>
+            <p className={cn('mt-1', cabinetTextMuted)}>{t('jobs.panel.readyToApplyDesc', { joints: minJoints })}</p>
           </div>
         </div>
-        <div className="px-5 py-4 bg-white dark:bg-[#1a1a1a] border-t border-[#E9ECEF] dark:border-white/[0.08]">
-          <Button
-            className="w-full h-11 rounded-full font-semibold gap-2 bg-[#E97525] hover:bg-[#d4691f] text-white"
-            onClick={() => navigate(applyPath)}
-          >
-            <Zap className="h-4 w-4" />
-            {t('jobs.applyNow')} · {minJoints} joints
+        <div className="border-t border-[#E9ECEF] bg-white px-5 py-4 dark:border-white/[0.08] dark:bg-[#1a1a1a]">
+          <Button className={cn(cabinetPrimaryBtnCls, 'h-11 w-full gap-2')} onClick={() => navigate(applyPath)}>
+            {t('jobs.applyNow')}
+            <JointsBadge value={minJoints} size="sm" variant="inverted" />
           </Button>
         </div>
       </div>
@@ -129,39 +116,23 @@ export function JobApplyCta({
 
   if (isAuthed) {
     return (
-      <div
-        className={cn(
-          'rounded-2xl overflow-hidden',
-          surfaceCardCls,
-          className,
-        )}
-      >
-        <div className="px-5 py-5 flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-start gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#F1F3F5] dark:bg-white/[0.06]">
-            <Briefcase className="h-5 w-5 text-[#E97525]" />
+      <div className={cn('p-5 sm:p-6', cabinetCardStaticCls, className)}>
+        <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
+          <div className={cabinetIconWrapCls}>
+            <Briefcase className="size-5" strokeWidth={2} />
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#212529] dark:text-white">
-              {t('jobs.panel.clientTitle')}
-            </p>
-            <p className="mt-1 text-xs text-[#6C757D] dark:text-white/55 leading-relaxed">
-              {t('jobs.panel.clientDesc')}
-            </p>
-            <div className="mt-4 flex flex-col sm:flex-row gap-2">
+          <div className="min-w-0 flex-1">
+            <p className={cabinetSectionTitleCls}>{t('jobs.panel.clientTitle')}</p>
+            <p className={cn('mt-1', cabinetTextMuted)}>{t('jobs.panel.clientDesc')}</p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Button
-                size="sm"
-                className="rounded-full font-semibold gap-1.5 bg-[#212529] hover:bg-[#343a40] text-white dark:bg-[#E97525] dark:hover:bg-[#d4691f]"
+                className={cn(cabinetPrimaryBtnCls, 'w-full sm:w-auto')}
                 onClick={() => navigate(`${paths.register}?redirect=${redirect}`)}
               >
-                <UserPlus className="h-3.5 w-3.5" />
+                <UserPlus className="size-4" strokeWidth={2} />
                 {t('jobs.registerAsMaster')}
               </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="rounded-full font-semibold border-[#e8e8e8] dark:border-[#2d2d2d]"
-                asChild
-              >
+              <Button variant="outline" className={cn(cabinetOutlineBtnCls, 'w-full sm:w-auto')} asChild>
                 <Link to={paths.plans}>{t('jobs.sidebar.viewPlans')}</Link>
               </Button>
             </div>
@@ -172,40 +143,32 @@ export function JobApplyCta({
   }
 
   return (
-    <div
-      className={cn(
-        'rounded-2xl overflow-hidden',
-        'border border-[#E9ECEF] dark:border-white/[0.08]',
-        className,
-      )}
-    >
-      <div className="bg-[#F8F9FA] dark:bg-white/[0.03] px-6 py-8 text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E97525]/12">
-          <Zap className="h-7 w-7 text-[#E97525]" />
+    <div className={cn('p-5 sm:p-6', cabinetCardStaticCls, className)}>
+      <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
+        <div className={cabinetIconWrapCls}>
+          <JointsMark className="size-5 text-[#E97525]" />
         </div>
-        <h3 className="text-base font-bold text-[#212529] dark:text-white">
-          {t('jobs.panel.guestTitle')}
-        </h3>
-        <p className="mt-2 text-sm text-[#6C757D] dark:text-white/55 max-w-xs mx-auto leading-relaxed">
-          {t('jobs.panel.guestDesc')}
-        </p>
-      </div>
-      <div className="flex flex-col sm:flex-row gap-2 px-5 py-4 bg-white dark:bg-[#1a1a1a] border-t border-[#E9ECEF] dark:border-white/[0.08]">
-        <Button
-          className="flex-1 h-10 rounded-full font-semibold gap-1.5 bg-[#212529] hover:bg-[#343a40] text-white dark:bg-[#E97525] dark:hover:bg-[#d4691f]"
-          onClick={() => navigate(`${paths.register}?redirect=${redirect}`)}
-        >
-          <UserPlus className="h-4 w-4" />
-          {t('jobs.register')}
-        </Button>
-        <Button
-          variant="outline"
-          className="flex-1 h-10 rounded-full font-semibold gap-1.5 border-[#e8e8e8] dark:border-[#2d2d2d]"
-          onClick={() => navigate(`${paths.login}?redirect=${redirect}`)}
-        >
-          <LogIn className="h-4 w-4" />
-          {t('jobs.logIn')}
-        </Button>
+        <div className="min-w-0 flex-1">
+          <h3 className={cabinetSectionTitleCls}>{t('jobs.panel.guestTitle')}</h3>
+          <p className={cn('mt-1.5', cabinetTextMuted)}>{t('jobs.panel.guestDesc')}</p>
+          <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
+            <Button
+              className={cn(cabinetPrimaryBtnCls, 'w-full sm:flex-1')}
+              onClick={() => navigate(`${paths.register}?redirect=${redirect}`)}
+            >
+              <UserPlus className="size-4" strokeWidth={2} />
+              {t('jobs.register')}
+            </Button>
+            <Button
+              variant="outline"
+              className={cn(cabinetOutlineBtnCls, 'w-full sm:flex-1')}
+              onClick={() => navigate(`${paths.login}?redirect=${redirect}`)}
+            >
+              <LogIn className="size-4" strokeWidth={2} />
+              {t('jobs.logIn')}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

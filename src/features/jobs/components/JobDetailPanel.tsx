@@ -8,8 +8,8 @@ import {
   Loader2,
   MapPin,
   Users,
-  Zap,
 } from 'lucide-react';
+import { JointsBadge } from '@/components/joints';
 import { useJobByIdQuery } from '@/features/jobs/jobsApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
@@ -85,8 +85,7 @@ export function JobDetailPanel({ jobId, onClose, savedIds, onSave, appliedIds }:
     {
       label: t('jobs.minJointsLabel'),
       value: String(job.minJoints),
-      icon: Zap,
-      accent: true,
+      joints: true as const,
     },
     {
       label: t('jobs.proposalsLabel'),
@@ -183,28 +182,30 @@ export function JobDetailPanel({ jobId, onClose, savedIds, onSave, appliedIds }:
 
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {stats.map((s) => {
-              const Icon = s.icon;
+              const Icon = 'icon' in s ? s.icon : undefined;
+              const isJoints = 'joints' in s && s.joints;
               return (
                 <div
                   key={s.label}
                   className={cn(
                     'rounded-xl px-3 py-3 text-center',
                     surfaceCardCls,
-                    s.accent && 'border-[#E97525]/30 dark:border-[#E97525]/25',
+                    isJoints && 'border-[#E8C878]/40 dark:border-[#E97525]/25',
                   )}
                 >
                   <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-[#868E96] dark:text-white/45">
                     {s.label}
                   </p>
-                  <p
-                    className={cn(
-                      'flex items-center justify-center gap-1 text-sm font-bold tabular-nums',
-                      s.accent ? 'text-[#E97525]' : 'text-[#212529] dark:text-white',
-                    )}
-                  >
-                    <Icon className="h-3.5 w-3.5 opacity-70" />
-                    {s.value}
-                  </p>
+                  {isJoints ? (
+                    <div className="flex justify-center">
+                      <JointsBadge value={Number(s.value)} size="sm" />
+                    </div>
+                  ) : (
+                    <p className="flex items-center justify-center gap-1 text-sm font-bold tabular-nums text-[#212529] dark:text-white">
+                      {Icon ? <Icon className="h-3.5 w-3.5 opacity-70" /> : null}
+                      {s.value}
+                    </p>
+                  )}
                 </div>
               );
             })}

@@ -2,7 +2,15 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { MessageCircle, ExternalLink } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterFormLabelCls,
+  masterPrimaryBtnCls,
+  masterSelectTriggerCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -87,19 +95,19 @@ export function NotificationChannelsForm() {
     <div className="space-y-6">
       {isPremium && (
         <>
-          <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
+          <div className={masterCardStaticCls}>
             <CardContent className="p-6">
-              <Label className="text-base font-semibold">
+              <Label className={masterFormLabelCls}>
                 {t('notificationSettings.leadChannel.label')}
               </Label>
-              <p className="mt-1 mb-3 text-sm text-muted-foreground">
+              <p className={cn('mb-3 mt-1', masterTextMuted)}>
                 {t('notificationSettings.leadChannel.description')}
               </p>
               <Select
                 value={form.leadNotifyChannel ?? LEAD_NOTIFY_CHANNEL_INPUT.telegram}
                 onValueChange={(v) => updateForm({ leadNotifyChannel: v as LeadNotifyChannel })}
               >
-                <SelectTrigger>
+                <SelectTrigger className={masterSelectTriggerCls}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -111,15 +119,15 @@ export function NotificationChannelsForm() {
                 </SelectContent>
               </Select>
             </CardContent>
-          </Card>
+          </div>
         </>
       )}
-      <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
-        <CardContent className="p-6 space-y-4">
-          <Label className="text-base font-semibold">
+      <div className={masterCardStaticCls}>
+        <CardContent className="space-y-4 p-6">
+          <Label className={masterFormLabelCls}>
             {t('notificationSettings.tariffChannel.label')}
           </Label>
-          <p className="text-sm text-muted-foreground">
+          <p className={masterTextMuted}>
             {t('notificationSettings.tariffChannel.description')}
           </p>
           <div className="flex flex-col gap-4">
@@ -139,13 +147,13 @@ export function NotificationChannelsForm() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </div>
       <div className="grid grid-cols-1 gap-6">
-        <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
+        <div className={masterCardStaticCls}>
           <CardContent className="p-6">
             <div className="mb-4 flex items-center gap-2">
-              <MessageCircle className={iconClass} />
-              <h2 className="text-lg font-semibold">{t('notificationSettings.telegram.title')}</h2>
+              <MessageCircle className={cn(iconClass, 'text-[#E97525]')} />
+              <h2 className={masterFormLabelCls}>{t('notificationSettings.telegram.title')}</h2>
               <Badge
                 variant={settings.telegramChatId ? 'default' : 'outline'}
                 className={settings.telegramChatId ? 'bg-emerald-600 hover:bg-emerald-600/80 text-white' : 'text-muted-foreground'}
@@ -155,7 +163,7 @@ export function NotificationChannelsForm() {
                   : t('notificationSettings.telegram.notConnected')}
               </Badge>
             </div>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className={cn('mb-4', masterTextMuted)}>
               {t('notificationSettings.telegram.description')}
             </p>
             {isPremium &&
@@ -182,11 +190,10 @@ export function NotificationChannelsForm() {
                 </Button>
               ))}
           </CardContent>
-        </Card>
-
+        </div>
       </div>
 
-      <Button onClick={handleSave} disabled={isSaving}>
+      <Button className={masterPrimaryBtnCls} onClick={handleSave} disabled={isSaving}>
         {isSaving ? t('notificationSettings.saving') : t('notificationSettings.save')}
       </Button>
     </div>

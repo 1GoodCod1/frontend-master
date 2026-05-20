@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   Briefcase,
   TrendingDown,
-  Phone,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -18,11 +17,9 @@ import {
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { LazyImage } from '@/components/ui/LazyImage';
 import { mastersApi } from '@/features/masters/mastersApi';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
+import { useAppDispatch } from '@/app/hooks';
 import { cn } from '@/lib/utils';
 import { surfaceCardInteractiveCls, surfaceCardRingCls } from '@/lib/surfaceCard';
-import { USER_ROLE } from '@/constants/roles';
 import { ACCENT, ACCENT_LIGHT } from '@/constants/theme';
 import { useMasterCardData } from './masterCard/useMasterCardData';
 import { MasterCardBadges } from './masterCard/MasterCardBadges';
@@ -54,8 +51,6 @@ export const MasterCard = React.memo(function MasterCard({
   const { t } = useTranslation();
   const nav = useNavigate();
   const dispatch = useAppDispatch();
-  const isAuthed = useAppSelector(selectIsAuthed);
-  const role = useAppSelector(selectRole);
   const masterId = master.slug ?? master.id;
 
   const {
@@ -81,15 +76,6 @@ export const MasterCard = React.memo(function MasterCard({
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       navigateToMaster();
-    }
-  };
-
-  const handleContactClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isAuthed && role === USER_ROLE.CLIENT) {
-      navigateToMaster();
-    } else {
-      nav(`/register?redirect=${encodeURIComponent(`/masters/${master.slug ?? master.id}`)}`);
     }
   };
 
@@ -233,31 +219,14 @@ export const MasterCard = React.memo(function MasterCard({
         </div>
       )}
 
-      {/* City + Contact button — same row */}
-      <div className="px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-3 sm:pb-4 pt-0.5 mt-auto flex items-center gap-2">
-        {city ? (
-          <span className="flex items-center gap-0.5 text-[10px] sm:text-[11px] text-muted-foreground/80 min-w-0 flex-1">
+      {city ? (
+        <div className="mt-auto px-2 min-[480px]:px-3 sm:px-4 pb-2 min-[480px]:pb-3 sm:pb-4 pt-0.5">
+          <span className="flex items-center gap-0.5 text-[10px] sm:text-[11px] text-muted-foreground/80 min-w-0">
             <MapPin size={11} className="shrink-0" />
             <span className="truncate">{city}</span>
           </span>
-        ) : (
-          <span className="flex-1" />
-        )}
-        {role !== 'MASTER' && role !== 'ADMIN' && (
-          <button
-            onClick={handleContactClick}
-            className={cn(
-              'h-8 px-3 min-[480px]:px-3.5 rounded-full inline-flex items-center gap-1.5 transition duration-200 active:scale-[0.97] font-medium text-[11px] min-[480px]:text-xs shrink-0',
-              'bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]',
-              'dark:bg-[#E97525] dark:hover:bg-[#d4691f]',
-              'shadow-sm hover:shadow-md',
-            )}
-          >
-            <Phone size={12} strokeWidth={2} />
-            {t('common.masterCard.contact')}
-          </button>
-        )}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 });

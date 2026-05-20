@@ -48,18 +48,18 @@ export function MasterRequestsWithoutBookingColumn({
               key={lead.id}
               className={cn(
                 'border-border dark:border-white/[0.08] transition-colors rounded-xl overflow-hidden',
-                modalLead?.id === lead.id && 'ring-2 ring-amber-500/50',
+                modalLead?.id === lead.id && 'ring-2 ring-[#E97525]/50',
               )}
             >
               <CardContent className="p-4 space-y-3">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <span className="text-xs font-mono font-medium text-amber-600 dark:text-amber-500">
+                  <span className="text-xs font-mono font-medium text-[#E97525] dark:text-[#E97525]">
                     {t('bookings.fromLead')} #{String(lead.id)}
                   </span>
                   <span className="text-xs text-muted-foreground">{formatDateShort(lead.createdAt, locale)}</span>
                 </div>
                 <div className="flex items-center gap-2 font-medium">
-                  <User className="size-4 shrink-0 text-amber-600 dark:text-amber-500" />
+                  <User className="size-4 shrink-0 text-[#E97525] dark:text-[#E97525]" />
                   <span>{lead.clientName || lead.clientPhone}</span>
                 </div>
                 {lead.clientPhone && lead.clientName !== lead.clientPhone && (
@@ -76,7 +76,7 @@ export function MasterRequestsWithoutBookingColumn({
                 )}
                 <Button
                   size="sm"
-                  className="w-full gap-2 bg-amber-600 hover:bg-amber-700"
+                  className="w-full gap-2 bg-[#E97525] hover:bg-[#d86920]"
                   onClick={() => setModalLead(lead)}
                 >
                   <CalendarPlus className="size-4" />

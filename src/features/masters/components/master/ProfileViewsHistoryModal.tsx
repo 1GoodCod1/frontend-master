@@ -12,6 +12,7 @@ import {
 import { useMastersViewsHistoryQuery } from '@/features/masters/mastersApi';
 import { LoadingState } from '@/components/common/States';
 import { cn } from '@/lib/utils';
+import { masterDialogContentCls, masterIconWrapCls } from '@/lib/masterCabinetStyles';
 
 type Period = 'week' | 'month';
 
@@ -37,12 +38,12 @@ export function ProfileViewsHistoryModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className={cn(masterDialogContentCls, 'max-w-md p-0')}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
+            <span className={masterIconWrapCls}>
               <History className="size-4.5" />
-            </div>
+            </span>
             {t('dashboard.viewsHistory.title')}
           </DialogTitle>
         </DialogHeader>
@@ -105,7 +106,7 @@ export function ProfileViewsHistoryModal({
                   className={cn(
                     'group flex items-center justify-between gap-4 rounded-xl border px-4 py-3 min-w-0 transition-colors duration-150',
                     item.views > 0
-                      ? 'border-amber-200/70 bg-amber-50/50 dark:border-amber-500/20 dark:bg-amber-500/5'
+                      ? 'border-amber-200/70 bg-amber-50/50 dark:border-[#E97525]/20 dark:bg-amber-500/5'
                       : 'border-border bg-muted/20 dark:bg-white/[0.02]',
                   )}
                 >
@@ -116,7 +117,7 @@ export function ProfileViewsHistoryModal({
                     className={cn(
                       'shrink-0 text-sm font-bold tabular-nums pl-2 min-w-[1.5rem] text-right',
                       item.views > 0
-                        ? 'text-amber-600 dark:text-amber-400'
+                        ? 'text-[#E97525] dark:text-[#f08540]'
                         : 'text-muted-foreground',
                     )}
                   >

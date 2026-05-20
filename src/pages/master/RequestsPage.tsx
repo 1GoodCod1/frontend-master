@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { Filter, Download } from 'lucide-react';
+import { Download, Inbox } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,11 +9,11 @@ import { leadsApi, useLeadsMyListQuery, useLeadsUpdateStatusMutation } from '@/f
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import { selectPlan } from '@/features/auth/selectors';
 import { exportService } from '@/features/export/exportApi';
-import { LoadingState, ErrorState } from '@/components/common/States';
+import { ErrorState } from '@/components/common/States';
+import { CardsSkeleton } from '@/components/common/Skeletons';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
 import { RequestCard } from '@/features/requests/components/RequestCard';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
@@ -24,6 +24,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterIconWrapCls,
+  masterOutlineBtnCls,
+  masterPageClassName,
+  masterPrimaryBtnCls,
+  masterSectionTitleCls,
+  masterSelectTriggerCls,
+} from '@/lib/masterCabinetStyles';
 import { getLocaleFromLanguage } from '@/utils/date';
 import { LEAD_STATUS_OPTIONS, type LeadStatus, type LeadFilterStatus } from '@/types/leads';
 import { extractItems } from '@/utils/data';
@@ -89,29 +98,27 @@ export default function RequestsPage() {
     }
   };
 
-  if (isLoading) return <LoadingState label={t('leads.loadingLeads')} />;
+  if (isLoading) return <CardsSkeleton count={5} />;
   if (isError) return <ErrorState error={error} onRetry={refetch} />;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8">
-      <div className="mb-4 sm:mb-6 md:mb-8">
-        <PageHeader title={t('leads.title')} subtitle={t('leads.subtitle')} />
-      </div>
+    <div className={masterPageClassName}>
+      <PageHeader title={t('leads.title')} subtitle={t('leads.subtitle')} />
 
-      <Card className="overflow-hidden rounded-lg sm:rounded-xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl transition duration-300">
-        <div className="flex flex-col gap-4 border-b border-slate-200 dark:border-white/[0.08] bg-amber-500/5 dark:bg-amber-500/10 px-3 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-5 sm:py-4 md:px-6 md:py-5">
+      <div className={cn(masterCardStaticCls, 'overflow-hidden')}>
+        <div className="flex flex-col gap-4 border-b border-[#e8e8e8] px-4 py-4 dark:border-[#2d2d2d] sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6 sm:py-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-amber-500/15 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
-              <Filter className="size-4" />
+            <div className={masterIconWrapCls}>
+              <Inbox className="size-4" />
             </div>
-            <h2 className="text-base sm:text-lg font-semibold text-foreground tracking-tight">{t('leads.myLeads')}</h2>
+            <h2 className={masterSectionTitleCls}>{t('leads.myLeads')}</h2>
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
             <div className="w-full sm:w-auto">
               <Label className="sr-only">{t('leads.status')}</Label>
               <Select value={status} onValueChange={onStatusChange}>
-                <SelectTrigger className="w-full sm:min-w-[140px] h-9 sm:h-8 rounded-lg border-slate-200 dark:border-white/[0.08] bg-white dark:bg-black/40">
+                <SelectTrigger className={cn(masterSelectTriggerCls, 'w-full sm:min-w-[140px]')}>
                   <SelectValue placeholder={t('leads.status')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -126,7 +133,7 @@ export default function RequestsPage() {
             </div>
 
             {isPremium && masterId && (
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"
                   size="sm"
@@ -139,7 +146,7 @@ export default function RequestsPage() {
                     }
                   }}
                   aria-label={t('export.exportCSV')}
-                  className="h-9 sm:h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 flex-1 sm:flex-initial min-w-0"
+                  className={cn(masterPrimaryBtnCls, 'h-9 sm:h-8 flex-1 sm:flex-initial min-w-0')}
                 >
                   <Download className="size-3.5 shrink-0" />
                   <span className="hidden sm:inline">{t('export.exportCSV')}</span>
@@ -159,7 +166,7 @@ export default function RequestsPage() {
                     );
                   }}
                   aria-label={t('export.exportExcel')}
-                  className="h-9 sm:h-8 gap-1.5 border-0 bg-amber-600 text-white text-sm hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600 flex-1 sm:flex-initial min-w-0"
+                  className={cn(masterPrimaryBtnCls, 'h-9 sm:h-8 flex-1 sm:flex-initial min-w-0')}
                 >
                   <Download className="size-3.5 shrink-0" />
                   <span className="hidden sm:inline">{t('export.exportExcel')}</span>
@@ -169,25 +176,23 @@ export default function RequestsPage() {
           </div>
         </div>
 
-        <CardContent className="px-3 py-4 sm:px-5 sm:py-5 md:px-6 md:py-6">
+        <div className="px-4 py-5 sm:px-6 sm:py-6">
           {items.length === 0 ? (
-            <EmptyState title={t('leads.noLeadsYet')} description={t('leads.noLeadsDescription')} />
+            <CabinetEmptyState
+              icon={Inbox}
+              title={t('leads.noLeadsYet')}
+              description={t('leads.noLeadsDescription')}
+            />
           ) : (
             <>
-              <div className="space-y-0">
-                {displayedItems.map((lead, index) => {
+              <div className="flex flex-col gap-4">
+                {displayedItems.map((lead) => {
                   const leadId = lead.id;
                   return (
                     <div
                       key={lead.id}
                       className={cn(
-                        index === 0 ? 'pb-3 sm:pb-2' : 'py-3 sm:py-2',
-                        index < displayedItems.length - 1 && 'border-b border-border'
-                      )}
-                    >
-                    <div
-                      className={cn(
-                        isRecent(String(lead.id)) && 'ring-1 ring-amber-500/20 dark:ring-amber-500/10 rounded-xl'
+                        isRecent(String(lead.id)) && 'rounded-[18px] ring-1 ring-[#E97525]/25',
                       )}
                       onMouseEnter={() => {
                         if (leadId) {
@@ -204,31 +209,30 @@ export default function RequestsPage() {
                         variant="list"
                       />
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
 
               {totalPages > 1 && (
-                <div className="mt-4 sm:mt-5 pt-4 border-t border-slate-200 dark:border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div className="mt-5 flex flex-col items-stretch justify-between gap-3 border-t border-[#e8e8e8] pt-4 dark:border-[#2d2d2d] sm:flex-row sm:items-center">
                   <Button
-                    variant="outline"
+                    type="button"
                     size="sm"
                     disabled={currentPage <= 1}
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="order-2 sm:order-1 min-h-[44px] sm:min-h-0 border-slate-200 dark:border-white/10 hover:bg-amber-500/10 hover:text-amber-900 hover:border-amber-500/30 dark:hover:text-amber-100 touch-manipulation"
+                    className={cn(masterOutlineBtnCls, 'order-2 h-10 sm:order-1')}
                   >
                     {t('common.prev')}
                   </Button>
-                  <span className="order-1 sm:order-2 px-3 py-2 sm:py-1.5 rounded-lg bg-amber-500/10 font-medium text-amber-600 dark:text-amber-400 text-sm text-center">
+                  <span className="order-1 rounded-[10px] bg-[#FFF8EB] px-3 py-2 text-center text-sm font-medium text-[#E97525] dark:bg-[#E97525]/12 sm:order-2">
                     {t('common.page')} {currentPage} {t('common.pageOf', { total: totalPages })}
                   </span>
                   <Button
-                    variant="outline"
+                    type="button"
                     size="sm"
                     disabled={currentPage >= totalPages}
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    className="order-3 min-h-[44px] sm:min-h-0 border-slate-200 dark:border-white/10 hover:bg-amber-500/10 hover:text-amber-900 hover:border-amber-500/30 dark:hover:text-amber-100 touch-manipulation"
+                    className={cn(masterOutlineBtnCls, 'order-3 h-10')}
                   >
                     {t('common.next')}
                   </Button>
@@ -236,8 +240,8 @@ export default function RequestsPage() {
               )}
             </>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

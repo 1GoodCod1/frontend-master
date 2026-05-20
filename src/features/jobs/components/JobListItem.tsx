@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Bookmark, BookmarkCheck, CheckCircle2, MapPin, Users, Zap, Briefcase } from 'lucide-react';
+import { Bookmark, BookmarkCheck, CheckCircle2, MapPin, Users, Briefcase } from 'lucide-react';
+import { JointsBadge } from '@/components/joints';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { surfaceCardInteractiveCls } from '@/lib/surfaceCard';
@@ -82,9 +83,7 @@ export function JobListItem({ job, selected, onClick, saved, onSave, applied }: 
             <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
               <Users className="h-3 w-3" />{proposalRange(job._count?.applications || 0, t('jobs.noProposals', 'No proposals'))}
             </span>
-            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
-              <Zap className="h-2.5 w-2.5" />{job.minJoints} joints
-            </span>
+            <JointsBadge value={job.minJoints} size="xs" className="ml-auto shrink-0" />
             {applied && (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="h-2.5 w-2.5" />{t('jobs.applied', 'Applied')}

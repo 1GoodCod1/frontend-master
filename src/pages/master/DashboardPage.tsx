@@ -9,7 +9,9 @@ import { useMastersMyStatsQuery, useMastersMyProfileQuery, useMastersGetAvailabi
 import { useLeadsStatsQuery } from '@/features/leads/leadsApi';
 import { useAnalyticsMyQuery } from '@/features/analytics/analyticsApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
+import { PageHeader } from '@/components/ui/PageHeader';
 import { StatCard } from '@/components/ui/StatCard';
+import { masterPageWideClassName } from '@/lib/masterCabinetStyles';
 import { AvailabilityControl } from '@/features/masters/components/master/AvailabilityControl';
 import { extractItems } from '@/utils/data';
 import { formatDateShort, formatDateCompact, getLocaleFromLanguage } from '@/utils/date';
@@ -159,12 +161,11 @@ export default function DashboardPage() {
     .slice(-14);
 
   return (
-    <div className="mx-auto w-full max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 md:py-8 md:px-6 lg:px-8 space-y-6 sm:space-y-8 min-h-[calc(100vh-4rem)]">
-      {/* Header Section */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('dashboard.title', 'Дашборд')}</h1>
-        <p className="text-sm sm:text-base text-muted-foreground mt-1">{t('dashboard.subtitle', 'Обзор вашей активности и статистики')}</p>
-      </div>
+    <div className={masterPageWideClassName}>
+      <PageHeader
+        title={t('dashboard.title', 'Дашборд')}
+        subtitle={t('dashboard.subtitle', 'Обзор вашей активности и статистики')}
+      />
 
       <PushPermissionBanner />
 
@@ -193,7 +194,7 @@ export default function DashboardPage() {
             <StatCard
               title={t('dashboard.inProgress', 'В работе')}
               value={inProgress}
-              icon={<Clock className="size-5 text-amber-500/80" />}
+              icon={<Clock className="size-5 text-[#E97525]/80" />}
             />
             <StatCard
               title={t('dashboard.closed', 'Завершено')}
@@ -322,29 +323,29 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="relative overflow-hidden border shadow-sm transition duration-500 border-amber-500/20 dark:border-amber-500/10">
-              <div className="absolute -top-10 -right-10 p-24 bg-amber-500/10 dark:bg-amber-500/20 rounded-full blur-3xl z-0 pointer-events-none opacity-50"></div>
+            <Card className="relative overflow-hidden border shadow-sm transition duration-500 border-[#E97525]/20 dark:border-[#E97525]/10">
+              <div className="absolute -top-10 -right-10 p-24 bg-[#FFF8EB]/80 dark:dark:bg-[#E97525]/12 rounded-full blur-3xl z-0 pointer-events-none opacity-50"></div>
               <CardHeader className="pb-2 relative z-10">
                 <CardTitle className="text-lg flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <div className="p-2 rounded-lg bg-[#FFF8EB]/80 text-[#E97525] dark:text-[#f08540]">
                     <Users className="size-4.5" />
                   </div>
                   {t('dashboard.profileSummary', 'Сводка профиля')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4 space-y-3 relative z-10">
-                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition duration-300">
+                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-[#E97525]/15 dark:border-[#E97525]/5 shadow-sm transition duration-300">
                   <span className="text-muted-foreground text-sm font-medium">{t('dashboard.viewsThisWeek', 'Просмотры за неделю')}</span>
-                  <span className="font-black text-xl tracking-tight text-amber-600 dark:text-amber-400">{viewsThisWeek}</span>
+                  <span className="font-black text-xl tracking-tight text-[#E97525] dark:text-[#f08540]">{viewsThisWeek}</span>
                 </div>
-                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-amber-500/15 dark:border-amber-500/5 shadow-sm transition duration-300">
+                <div className="flex justify-between items-center p-3.5 rounded-xl bg-muted/30 dark:bg-muted/10 border border-[#E97525]/15 dark:border-[#E97525]/5 shadow-sm transition duration-300">
                   <span className="text-muted-foreground text-sm font-medium">{t('dashboard.viewsThisMonth', 'Просмотры за месяц')}</span>
-                  <span className="font-black text-xl tracking-tight text-amber-600 dark:text-amber-400">{viewsThisMonth}</span>
+                  <span className="font-black text-xl tracking-tight text-[#E97525] dark:text-[#f08540]">{viewsThisMonth}</span>
                 </div>
                 <div className="pt-3 w-full">
                   <Button
                     variant="outline"
-                    className="w-full h-11 justify-between hover:bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400 group rounded-xl shadow-sm transition"
+                    className="w-full h-11 justify-between hover:bg-[#FFF8EB]/80 border-[#E97525]/30 text-[#c45f1a] dark:text-[#f08540] group rounded-xl shadow-sm transition"
                     onClick={() => setViewsHistoryOpen(true)}
                   >
                     <span className="flex items-center gap-2 font-bold tracking-tight">
@@ -427,7 +428,7 @@ export default function DashboardPage() {
                 <p className="text-sm text-muted-foreground">
                   {t('dashboard.availabilityControl.premiumOnly', 'Настройки доступности (Готов взять заявку, Занят и т.д.) и лимит заявок доступны только для Premium.')}
                 </p>
-                <Button asChild className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20 transition rounded-xl">
+                <Button asChild className="w-full bg-amber-500 hover:bg-[#E97525] text-white shadow-md shadow-amber-500/20 transition rounded-xl">
                   <Link to="/plans" className="flex items-center justify-center gap-2">
                     <Rocket className="size-4" />
                     {t('dashboard.unlockFeature', 'Разблокировать с Premium')}

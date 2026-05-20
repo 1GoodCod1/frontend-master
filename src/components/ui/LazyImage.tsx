@@ -14,6 +14,8 @@ interface LazyImageProps
   aspectRatio?: string;
   skeletonHeight?: number | string;
   skeletonWidth?: number | string;
+  /** Eager load (no intersection gate, loading="eager"). Use for above-the-fold avatars. */
+  priority?: boolean;
   onLoad?: () => void;
   onError?: () => void;
 }
@@ -27,6 +29,7 @@ export function LazyImage({
   aspectRatio,
   skeletonHeight,
   skeletonWidth,
+  priority = false,
   onLoad,
   onError,
   style,
@@ -56,7 +59,10 @@ export function LazyImage({
     onError?.();
   };
 
+  const shouldLoad = priority || isInView;
+
   const renderPlaceholder = () => {
+    if (placeholder === null) return null;
     if (placeholder) return placeholder;
     return (
       <Skeleton
@@ -84,14 +90,15 @@ export function LazyImage({
           <ImageOff className="size-8 text-muted-foreground/50" />
         </div>
       ) : (
-        isInView && (
+        shouldLoad && (
           <img
             ref={imgRef}
             src={imageSrc}
             alt={alt}
             onLoad={handleLoad}
             onError={handleError}
-            loading="lazy"
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : undefined}
             decoding="async"
             className={cn(
               'absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-300',

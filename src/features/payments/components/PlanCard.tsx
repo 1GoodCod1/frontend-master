@@ -1,11 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { ArrowUpCircle, Settings, ShieldCheck, Star, Zap } from 'lucide-react';
+import { ArrowUpCircle, Crown, Settings, ShieldCheck, Sparkles, Star, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PlanUI } from '@/types/plans';
 import { PaidTariff, TariffPlan } from '@/features/auth/plan';
-import { cn } from '@/lib/utils';
-import { surfaceCardCls } from '@/lib/surfaceCard';
+import {
+  planBadgeCls,
+  planCardShellCls,
+  planCtaCls,
+  planDescCls,
+  planIconWrapCls,
+  planNameCls,
+  planPriceCls,
+  planStrikeCls,
+} from '@/features/payments/planStyles';
 
 interface PlanCardProps {
   plan: PlanUI;
@@ -19,24 +27,19 @@ interface PlanCardProps {
   onBuy: (type: PaidTariff) => void;
 }
 
-function PlanIcon({ planName }: { planName: string }) {
-  const planNameUpper = planName?.toUpperCase() || '';
-  if (planNameUpper === 'BASIC') return null;
-  const isVip = planNameUpper === 'VIP';
+function PlanTierIcon({ tier }: { tier: TariffPlan }) {
+  const wrap = planIconWrapCls(tier);
+  if (tier === 'BASIC') return null;
+  if (tier === 'VIP') {
+    return (
+      <span className={wrap}>
+        <Star className="size-4 fill-current" />
+      </span>
+    );
+  }
   return (
-    <span
-      className={cn(
-        'inline-flex items-center justify-center w-8 h-8 rounded-lg',
-        isVip
-          ? 'bg-orange-100 text-orange-500 dark:bg-orange-500/30 dark:text-orange-400'
-          : 'bg-teal-100 text-teal-600 dark:bg-teal-500/30 dark:text-teal-400'
-      )}
-    >
-      {isVip ? (
-        <Star className="w-4 h-4 fill-current" />
-      ) : (
-        <Zap className="w-4 h-4 fill-current" />
-      )}
+    <span className={wrap}>
+      <Sparkles className="size-4" />
     </span>
   );
 }
@@ -54,16 +57,14 @@ export const PlanCard = ({
 }: PlanCardProps) => {
   const { t } = useTranslation();
 
+  const tier = plan.name as TariffPlan;
   const isCurrentPlan = isAuthed && plan.name === effectivePlan;
   const isPaid =
-    plan.tariffType !== null &&
-    (plan.tariffType === 'VIP' || plan.tariffType === 'PREMIUM');
+    plan.tariffType !== null && (plan.tariffType === 'VIP' || plan.tariffType === 'PREMIUM');
 
   const planKey = plan.name.toLowerCase();
   const regularPrice =
-    t(`plans.${planKey}.price`) !== `plans.${planKey}.price`
-      ? t(`plans.${planKey}.price`)
-      : plan.price;
+    t(`plans.${planKey}.price`) !== `plans.${planKey}.price` ? t(`plans.${planKey}.price`) : plan.price;
   const showFree = isMaster && isVerified && isPaid;
   const showVerifyToGetFree = isMaster && !isVerified && isPaid;
   const showRegisterToGetFree = !isAuthed && isPaid;
@@ -76,53 +77,30 @@ export const PlanCard = ({
       : plan.description || '';
 
   const isPopular = plan.highlight && !isAuthed && !isCurrentPlan;
-  const planName = plan.name?.toUpperCase() || '';
-  const isVip = planName === 'VIP';
-  const isPremium = planName === 'PREMIUM';
-
-  const cardClassName = cn(
-    'relative rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col transition overflow-hidden h-full min-h-[280px]',
-    surfaceCardCls,
-  );
-
-  const ctaDisabled = isCurrentPlan;
-  const ctaBg = ctaDisabled
-    ? 'bg-transparent border border-gray-200 text-gray-500 cursor-default dark:bg-orange-500/90 dark:border-orange-500 dark:text-white'
-    : isVip && !ctaDisabled
-      ? 'bg-gray-900 hover:bg-gray-800 text-white border border-gray-900 dark:bg-orange-500 dark:border-orange-500 dark:hover:bg-orange-600 dark:text-white'
-      : isPremium && !ctaDisabled
-        ? 'bg-white border border-teal-500 text-teal-600 hover:bg-teal-50 dark:bg-zinc-800 dark:border-zinc-800 dark:text-white dark:hover:bg-zinc-700'
-        : 'border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 dark:border-zinc-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-white';
 
   const renderCta = () => {
     if (isCurrentPlan) {
       if (isPaid) {
         return (
-          <Button
-            asChild
-            className={cn('w-full py-2.5 rounded-xl text-sm font-medium', ctaBg)}
-          >
-            <RouterLink to="/dashboard/subscription">
-              <Settings className="h-4 w-4 shrink-0" />
+          <Button asChild className={planCtaCls('outline')}>
+            <RouterLink to="/dashboard/subscription" className="gap-2">
+              <Settings className="size-4 shrink-0" />
               <span>{t('plans.manageSubscription')}</span>
             </RouterLink>
           </Button>
         );
       }
       return (
-        <Button disabled className={cn('w-full py-2.5 rounded-xl', ctaBg)}>
+        <Button disabled className={planCtaCls('disabled')}>
           {t('plans.currentPlan')}
         </Button>
       );
     }
     if (showVerifyToGetFree) {
       return (
-        <Button
-          asChild
-          className={cn('w-full py-2.5 rounded-xl text-sm font-medium', ctaBg)}
-        >
-          <RouterLink to="/dashboard/verification">
-            <ShieldCheck className="h-4 w-4 shrink-0" />
+        <Button asChild className={planCtaCls('primary')}>
+          <RouterLink to="/dashboard/verification" className="gap-2">
+            <ShieldCheck className="size-4 shrink-0" />
             <span>
               {t('plans.claimFree')} {t(`plans.${planKey}.name`)}
             </span>
@@ -130,27 +108,14 @@ export const PlanCard = ({
         </Button>
       );
     }
-    if (isUpgradeOption && isPaid && isMaster) {
+    if ((isUpgradeOption || (isPaid && isMaster)) && isPaid) {
       return (
         <Button
-          className={cn('w-full py-2.5 rounded-xl text-sm font-medium', ctaBg)}
+          className={planCtaCls('primary')}
           disabled={checkoutLoading || claimLoading}
           onClick={() => plan.tariffType && onBuy(plan.tariffType)}
         >
-          <ArrowUpCircle className="h-4 w-4 shrink-0" />
-          <span>
-            {t('plans.claimFree')} {t(`plans.${planKey}.name`)}
-          </span>
-        </Button>
-      );
-    }
-    if (isPaid && isMaster) {
-      return (
-        <Button
-          className={cn('w-full py-2.5 rounded-xl text-sm font-medium', ctaBg)}
-          disabled={checkoutLoading || claimLoading}
-          onClick={() => plan.tariffType && onBuy(plan.tariffType)}
-        >
+          <ArrowUpCircle className="size-4 shrink-0" />
           <span>
             {t('plans.claimFree')} {t(`plans.${planKey}.name`)}
           </span>
@@ -159,69 +124,44 @@ export const PlanCard = ({
     }
     if (isPaid && !isMaster) {
       return (
-        <Button asChild className={cn('w-full py-2.5 rounded-xl text-sm font-medium', ctaBg)}>
+        <Button asChild className={planCtaCls('primary')}>
           <RouterLink to="/register">{t('plans.registerToBuy')}</RouterLink>
         </Button>
       );
     }
     return (
-      <Button disabled className={cn('w-full py-2.5 rounded-xl', ctaBg)}>
+      <Button disabled className={planCtaCls('disabled')}>
         {t('plans.free')}
       </Button>
     );
   };
 
   return (
-    <div className={cardClassName}>
-      {isCurrentPlan && (
-        <div className="absolute -top-px right-4 text-xs px-3 py-1.5 rounded-b-xl rounded-t-none font-medium bg-gray-900 text-white dark:bg-orange-500 dark:text-white">
-          {t('plans.current')}
-        </div>
-      )}
-      {isPopular && (
-        <div className="absolute -top-px right-4 text-xs px-3 py-1.5 rounded-b-xl rounded-t-none font-medium bg-gray-900 text-white dark:bg-orange-500 dark:text-white">
-          {t('plans.mostPopular')}
-        </div>
-      )}
+    <div
+      className={planCardShellCls({
+        isCurrent: isCurrentPlan,
+        isHighlighted: isPopular || tier === 'PREMIUM',
+        tier,
+      })}
+    >
+      {isCurrentPlan ? <div className={planBadgeCls()}>{t('plans.current')}</div> : null}
+      {isPopular ? <div className={planBadgeCls()}>{t('plans.mostPopular')}</div> : null}
 
-      <div className="flex items-center gap-2 mb-2 sm:mb-3">
-        <PlanIcon planName={planName} />
-        <span
-          className={cn(
-            'font-bold tracking-wide text-gray-900 dark:text-foreground',
-            isVip && 'dark:text-orange-400',
-            planName === 'PREMIUM' && 'dark:text-teal-400'
-          )}
-        >
-          {plan.name}
-        </span>
+      <div className="mb-2 flex items-center gap-2 sm:mb-3">
+        <PlanTierIcon tier={tier} />
+        <span className={planNameCls(tier)}>{t(`plans.${planKey}.name`, plan.name)}</span>
+        {tier === 'VIP' ? <Crown className="size-4 text-[#E97525] opacity-80" aria-hidden /> : null}
+        {tier === 'PREMIUM' ? <Zap className="size-4 text-[#c45f1a] opacity-80 dark:text-[#f08540]" aria-hidden /> : null}
       </div>
 
       <div className="mb-3">
-        {showZeroPrice && regularPrice !== '0 MDL' && (
-          <p className="text-sm text-gray-500 dark:text-zinc-400 line-through">
-            {regularPrice}
-          </p>
-        )}
-        <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{priceText}</p>
+        {showZeroPrice && regularPrice !== '0 MDL' ? <p className={planStrikeCls}>{regularPrice}</p> : null}
+        <p className={planPriceCls}>{priceText}</p>
       </div>
 
-      <p className="text-sm text-gray-600 dark:text-zinc-300 mb-2 sm:mb-3">{descriptionText}</p>
-
-      {(showRegisterToGetFree || showVerifyToGetFree) && isPaid && (
-        <p
-          className={cn(
-            'text-xs mb-4',
-            isVip && 'text-orange-500 dark:text-orange-400',
-            planName === 'PREMIUM' && 'text-teal-600 dark:text-teal-400'
-          )}
-        >
-          {t('plans.registerToGetFreeDesc')}
-        </p>
-      )}
+      <p className={planDescCls}>{descriptionText}</p>
 
       <div className="flex-1" />
-
       <div className="mt-auto pt-4">{renderCta()}</div>
     </div>
   );

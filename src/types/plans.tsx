@@ -1,5 +1,6 @@
 import type React from 'react';
-import { Star, Zap } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { JointsMark } from '@/components/joints/JointsMark';
 import { TariffPlan as PlanName, PaidTariff } from '@/features/auth/plan';
 
 export type PlanUI = {
@@ -63,6 +64,6 @@ export const plans: readonly PlanUI[] = [
       ],
       highlight: false,
       tariffType: 'PREMIUM',
-      icon: <Zap className="size-5" />,
+      icon: <JointsMark className="size-5 text-[#D97706] dark:text-[#FBBF24]" />,
     },
   ] as const;

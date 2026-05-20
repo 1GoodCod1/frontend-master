@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, DollarSign, Users, CheckCircle2, Loader2, Lock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { JointsBadge } from '@/components/joints';
 import { cn } from '@/lib/utils';
 import { formatDateTimeString } from '@/utils/date';
 import type { JobDto } from '@/types';
@@ -79,9 +80,7 @@ export default function JobCard({ job, linkTo, showApplicationCount }: JobCardPr
                 {job._count.applications}{' '}
                 {job._count.applications === 1 ? 'application' : 'applications'}
               </span>
-              <span className="ml-auto text-xs text-muted-foreground">
-                Min: {job.minJoints} joints
-              </span>
+              <JointsBadge value={job.minJoints} size="xs" prefix="Min" className="ml-auto shrink-0" />
             </div>
           )}
         </CardContent>

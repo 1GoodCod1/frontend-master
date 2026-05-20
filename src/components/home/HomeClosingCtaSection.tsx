@@ -1,106 +1,78 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Briefcase, Search, CreditCard } from 'lucide-react';
+import { ArrowRight, Briefcase, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/constants/routes';
-import { USER_ROLE } from '@/constants/roles';
 import { cn } from '@/lib/utils';
 import { surfaceCardCls } from '@/lib/surfaceCard';
-import { getPostJobNavigationPath } from '@/utils/postJobNavigation';
 
-type HomeClosingCtaSectionProps = {
-  isAuthed: boolean;
-  role: string | null;
-};
-
-export function HomeClosingCtaSection({ isAuthed, role }: HomeClosingCtaSectionProps) {
+/** Bottom CTA for masters only — clients get actions inside HowItWorksSection. */
+export function HomeClosingCtaSection() {
   const { t } = useTranslation();
-  const isMaster = isAuthed && role === USER_ROLE.MASTER;
-  const postJobPath = getPostJobNavigationPath(isAuthed, role);
 
-  const cards = isMaster
-    ? [
-        {
-          icon: Briefcase,
-          title: t('home.closingCta.masterJobsTitle'),
-          desc: t('home.closingCta.masterJobsDesc'),
-          cta: t('home.heroBrowseJobs'),
-          to: paths.jobs.list,
-          accent: '#F59E0B',
-        },
-        {
-          icon: CreditCard,
-          title: t('home.closingCta.masterPlansTitle'),
-          desc: t('home.closingCta.masterPlansDesc'),
-          cta: t('home.viewPlans'),
-          to: paths.plans,
-          accent: '#E97525',
-        },
-      ]
-    : [
-        {
-          icon: Search,
-          title: t('home.closingCta.clientSearchTitle'),
-          desc: t('home.closingCta.clientSearchDesc'),
-          cta: t('home.findMasters'),
-          to: paths.masters,
-          accent: '#E97525',
-        },
-        {
-          icon: Briefcase,
-          title: t('home.closingCta.clientJobsTitle'),
-          desc: t('home.closingCta.clientJobsDesc'),
-          cta: t('home.heroPostJob'),
-          to: postJobPath,
-          accent: '#F59E0B',
-        },
-      ];
+  const cards = [
+    {
+      icon: Briefcase,
+      title: t('home.closingCta.masterJobsTitle'),
+      desc: t('home.closingCta.masterJobsDesc'),
+      cta: t('home.heroBrowseJobs'),
+      to: paths.jobs.list,
+      accent: '#F59E0B',
+    },
+    {
+      icon: CreditCard,
+      title: t('home.closingCta.masterPlansTitle'),
+      desc: t('home.closingCta.masterPlansDesc'),
+      cta: t('home.viewPlans'),
+      to: paths.plans,
+      accent: '#E97525',
+    },
+  ] as const;
 
   return (
-    <section className="relative scroll-mt-20 pt-10 md:pt-14">
-      <div className={cn('rounded-xl sm:rounded-2xl p-5 sm:p-7 md:p-8', surfaceCardCls)}>
-        <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8">
+    <section id="start" className="relative scroll-mt-20 pt-10 md:pt-14">
+      <div className={cn('rounded-[18px] p-5 sm:p-7 md:p-8', surfaceCardCls)}>
+        <div className="mb-5 max-w-xl sm:mb-6">
           <h2 className="text-[clamp(22px,2.5vw,30px)] font-bold tracking-[-0.025em] text-foreground">
-            {t('home.closingCta.title')}
+            {t('home.closingCta.masterTitle')}
           </h2>
-          <p className="mt-2 text-sm sm:text-[15px] text-muted-foreground leading-relaxed">
-            {t('home.closingCta.subtitle')}
+          <p className="mt-1.5 text-[13px] leading-snug text-[#6C757D] dark:text-white/50">
+            {t('home.closingCta.masterSubtitle')}
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           {cards.map(({ icon: Icon, title, desc, cta, to, accent }) => (
             <div
               key={title}
               className={cn(
-                'rounded-xl px-4 py-4 sm:px-5 sm:py-5 border',
-                'border-[#e8e8e8] dark:border-[#2d2d2d]',
-                'bg-[hsl(var(--secondary)/0.35)] dark:bg-white/[0.03]',
+                'flex flex-col rounded-[14px] border px-4 py-4',
+                'border-[#E9ECEF] bg-[hsl(var(--secondary)/0.35)] dark:border-white/10 dark:bg-white/[0.03]',
               )}
             >
               <div className="flex items-start gap-3">
                 <div
-                  className="shrink-0 p-2.5 rounded-xl"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px]"
                   style={{ backgroundColor: `${accent}18` }}
                 >
-                  <Icon className="w-5 h-5" style={{ color: accent }} strokeWidth={2} />
+                  <Icon className="size-5" style={{ color: accent }} strokeWidth={2} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-sm sm:text-[15px] text-foreground">{title}</p>
-                  <p className="mt-1.5 text-sm text-muted-foreground leading-snug">{desc}</p>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="mt-3 h-auto p-0 gap-1.5 text-[13px] font-medium hover:bg-transparent"
-                    style={{ color: accent }}
-                  >
-                    <RouterLink to={to}>
-                      {cta}
-                      <ArrowRight size={13} strokeWidth={2} />
-                    </RouterLink>
-                  </Button>
+                  <p className="text-sm font-semibold text-[#212529] dark:text-white">{title}</p>
+                  <p className="mt-1 text-xs leading-snug text-[#6C757D] dark:text-white/50">{desc}</p>
                 </div>
               </div>
+              <Button
+                asChild
+                variant="ghost"
+                className="mt-3 h-auto justify-start gap-1.5 p-0 text-[13px] font-medium hover:bg-transparent"
+                style={{ color: accent }}
+              >
+                <RouterLink to={to}>
+                  {cta}
+                  <ArrowRight size={13} strokeWidth={2} />
+                </RouterLink>
+              </Button>
             </div>
           ))}
         </div>

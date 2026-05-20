@@ -32,6 +32,7 @@ import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { OnlineStatusBadge } from '@/components/ui/OnlineStatusBadge';
 import { cn } from '@/lib/utils';
+import { CHAT_BUBBLE_OTHER_CLS, CHAT_HEADER_CLS } from '@/features/chat/chatStyles';
 import { SENDER_TYPE } from '@/constants/senderType';
 import {
   useMastersGetQuickRepliesQuery,
@@ -194,9 +195,7 @@ export default function ChatWindow({
         <ChatMessage
           message={msg}
           isOwn={isOwn}
-          showAvatar={true}
-          avatarUrl={isOwn ? undefined : otherParty?.avatar}
-          senderName={isOwn ? 'Я' : otherParty?.name}
+          showAvatar={false}
         />
       );
     },
@@ -207,15 +206,9 @@ export default function ChatWindow({
     () => ({
       Footer: () =>
         typingUsers.length > 0 ? (
-          <div className="flex items-end gap-2 mt-2 pb-1">
-            <Avatar className="size-8 shrink-0">
-              <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} alt="" />
-              <AvatarFallback className="text-[10px] bg-slate-500 text-white">
-                {(otherParty?.name ?? '?').slice(0, 2)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2">
-              <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
+          <div className="flex justify-start px-2 pb-1 pt-0.5">
+            <div className={cn(CHAT_BUBBLE_OTHER_CLS, 'py-1.5')}>
+              <p className="text-[11px] italic text-[#6C757D] dark:text-white/50">{t('common.typing')}…</p>
             </div>
           </div>
         ) : null,
@@ -263,76 +256,61 @@ export default function ChatWindow({
   }
 
   return (
-    <div className="flex h-full flex-col bg-background">
-      {/* Header */}
-      <div className="border-b border-slate-200/80 dark:border-white/10 bg-white dark:bg-white/5 px-3 sm:px-4 py-2.5 sm:py-3">
-        <div className="flex items-center gap-2 sm:gap-3">
-          {onBack && (
-            <Button variant="ghost" size="icon" className="shrink-0 size-9 sm:size-10 rounded-full" onClick={onBack}>
-              <ArrowLeft className="size-4 sm:size-5" />
-            </Button>
-          )}
+    <div className="flex h-full min-h-0 flex-col">
+      <div className={CHAT_HEADER_CLS}>
+        {onBack ? (
+          <Button variant="ghost" size="icon" className="size-8 shrink-0 rounded-full" onClick={onBack}>
+            <ArrowLeft className="size-4" />
+          </Button>
+        ) : null}
 
-          <div className="relative shrink-0">
-            <Avatar className="size-9 sm:size-11 bg-slate-600 dark:bg-slate-500 text-white">
-              <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
-              <AvatarFallback className="font-semibold bg-slate-600 dark:bg-slate-500 text-white">
-                {otherParty?.name
-                  ?.split(/\s+/)
-                  .map((n) => n[0])
-                  .join('')
-                  .toUpperCase()
-                  .slice(0, 2) ?? '?'}
-              </AvatarFallback>
-            </Avatar>
-            {currentUserRole === SENDER_TYPE.CLIENT && otherParty?.isOnline && (
-              <span className="absolute bottom-0 left-0 size-2.5 rounded-full border-2 border-white dark:border-white/10 bg-emerald-500" />
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm sm:text-base font-semibold text-foreground">{otherParty?.name ?? '—'}</p>
-            {typingUsers.length > 0 ? (
-              <p className="text-xs italic text-primary">{t('common.typing')}</p>
-            ) : conversation?.closedAt ? (
-              <Badge variant="destructive" className="text-[10px]">
-                {t('common.closedChat')}
-              </Badge>
-            ) : currentUserRole === SENDER_TYPE.CLIENT && otherParty ? (
-              <OnlineStatusBadge
-                isOnline={otherParty.isOnline}
-                lastActivityAt={otherParty.lastActivityAt}
-                variant="text"
-                size="small"
-              />
-            ) : null}
-          </div>
-
-          {isMaster ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
-              onClick={() => setSettingsOpen(true)}
-              aria-label={t('chat.settings', 'Настройки чата')}
-            >
-              <MoreVertical className="size-5" />
-            </Button>
-          ) : (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white"
-              aria-label={t('common.more', 'Ещё')}
-            >
-              <MoreVertical className="size-5" />
-            </Button>
-          )}
+        <div className="relative shrink-0">
+          <Avatar className="size-8 bg-[#6C757D] text-white dark:bg-white/20">
+            <AvatarImage src={otherParty?.avatar ? getFileUrl(otherParty.avatar) : undefined} />
+            <AvatarFallback className="bg-[#6C757D] text-[11px] font-semibold text-white dark:bg-white/20">
+              {otherParty?.name
+                ?.split(/\s+/)
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2) ?? '?'}
+            </AvatarFallback>
+          </Avatar>
+          {currentUserRole === SENDER_TYPE.CLIENT && otherParty?.isOnline ? (
+            <span className="absolute bottom-0 right-0 size-2 rounded-full border-2 border-white bg-emerald-500 dark:border-[hsl(var(--cabinet-card-bg))]" />
+          ) : null}
         </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[14px] font-semibold text-[#212529] dark:text-white">{otherParty?.name ?? '—'}</p>
+          {typingUsers.length > 0 ? (
+            <p className="text-[11px] italic text-[#E97525]">{t('common.typing')}…</p>
+          ) : conversation?.closedAt ? (
+            <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
+              {t('common.closedChat')}
+            </Badge>
+          ) : currentUserRole === SENDER_TYPE.CLIENT && otherParty ? (
+            <OnlineStatusBadge
+              isOnline={otherParty.isOnline}
+              lastActivityAt={otherParty.lastActivityAt}
+              variant="text"
+              size="small"
+            />
+          ) : null}
+        </div>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8 shrink-0 text-[#6C757D] hover:text-[#212529] dark:text-white/50 dark:hover:text-white"
+          onClick={isMaster ? () => setSettingsOpen(true) : undefined}
+          aria-label={isMaster ? t('chat.settings', 'Настройки чата') : t('common.more', 'Ещё')}
+        >
+          <MoreVertical className="size-4" />
+        </Button>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 min-h-0 flex flex-col bg-muted/10 px-3 sm:px-4 py-3 sm:py-4 dark:bg-white/[0.02]">
+      <div className="relative flex min-h-0 flex-1 flex-col bg-[#F4F5F7] px-1 py-2 dark:bg-black/25">
         {loadingMessages ? (
           <div className="space-y-4 p-4">
             {[1, 2, 3, 4].map((i) => (
@@ -352,15 +330,8 @@ export default function ChatWindow({
             )}
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col h-full items-center justify-center p-4 sm:p-6 gap-4">
-            <p className="text-center text-xs sm:text-sm text-muted-foreground">
-              {t('common.firstMessage')}
-            </p>
-            {typingUsers.length > 0 && (
-              <div className="flex items-center gap-2 rounded-2xl rounded-bl-md bg-muted/80 dark:bg-white/10 px-3 py-2">
-                <p className="text-xs italic text-muted-foreground animate-pulse">{t('common.typing')}</p>
-              </div>
-            )}
+          <div className="flex h-full flex-col items-center justify-center gap-2 px-4">
+            <p className="text-center text-[12px] text-[#6C757D] dark:text-white/50">{t('common.firstMessage')}</p>
           </div>
         ) : (
           <Virtuoso<ChatTimelineItem, undefined>
@@ -370,8 +341,8 @@ export default function ChatWindow({
             data={chatTimeline}
             alignToBottom
             followOutput={reduceMotion ? 'auto' : 'smooth'}
-            defaultItemHeight={72}
-            increaseViewportBy={{ top: 120, bottom: 200 }}
+            defaultItemHeight={52}
+            increaseViewportBy={{ top: 80, bottom: 120 }}
             computeItemKey={(index, item) =>
               item.kind === 'date' ? `date-${item.dateKey}-${index}` : item.message.id
             }
@@ -380,13 +351,8 @@ export default function ChatWindow({
               if (item.kind === 'date') {
                 const isFirst = index === 0;
                 return (
-                  <div
-                    className={cn(
-                      'flex items-center justify-center',
-                      isFirst ? 'mt-0 mb-4' : 'my-4',
-                    )}
-                  >
-                    <span className="px-3 py-1 rounded-full bg-muted/60 text-muted-foreground text-xs border border-slate-200/40 dark:border-transparent">
+                  <div className={cn('flex justify-center py-1', isFirst ? 'pt-0' : 'pt-2')}>
+                    <span className="rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-medium text-[#6C757D] shadow-sm dark:bg-white/10 dark:text-white/50">
                       {getMessageDateLabel(item.createdAt, {
                         today: t('common.today'),
                         yesterday: t('common.yesterday'),
@@ -428,33 +394,26 @@ export default function ChatWindow({
         />
       )}
 
-      {!canSendMessages && conversation?.closedAt && (
-        <div className="border-t border-border bg-warning/10 p-3 sm:p-4 text-center text-xs sm:text-sm text-muted-foreground">
+      {!canSendMessages && conversation?.closedAt ? (
+        <div className="shrink-0 border-t border-[#E9ECEF] bg-[#FFF8EB]/80 px-3 py-2 text-center text-[12px] text-[#6C757D] dark:border-white/10 dark:bg-[#E97525]/8">
           {t('common.chatClosed')}
         </div>
-      )}
+      ) : null}
 
-      {!canSendMessages && !conversation?.closedAt && !isLeadActive && !isJobConversation && (
-        <div
-          className={cn(
-            'mx-3 sm:mx-4 mt-3 rounded-xl px-4 py-3.5 text-sm',
-            'bg-slate-100/90 dark:bg-white/[0.04]',
-            'border border-slate-200/70 dark:border-white/[0.06]',
-            'text-slate-700 dark:text-slate-300'
-          )}
-        >
+      {!canSendMessages && !conversation?.closedAt && !isLeadActive && !isJobConversation ? (
+        <div className="mx-2 mb-2 shrink-0 rounded-[12px] border border-[#E9ECEF] bg-white px-3 py-2.5 text-[12px] dark:border-white/10 dark:bg-white/[0.04]">
           <p className="font-medium">
             {currentUserRole === SENDER_TYPE.MASTER
               ? t('common.chatNoActiveLeadMaster')
               : t('common.chatNoActiveLead')}
           </p>
-          <p className="mt-1.5 text-slate-600 dark:text-slate-400">
+          <p className="mt-1 text-[#6C757D] dark:text-white/50">
             {currentUserRole === SENDER_TYPE.MASTER
               ? t('common.chatNoActiveLeadHintMaster')
               : t('common.chatNoActiveLeadHint')}
           </p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

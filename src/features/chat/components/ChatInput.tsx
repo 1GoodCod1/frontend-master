@@ -9,7 +9,6 @@ const LazyEmojiPicker = lazyWithRetry(() => import('emoji-picker-react'));
 const THEME_DARK = 'dark' as unknown as import('emoji-picker-react').Theme;
 const THEME_LIGHT = 'light' as unknown as import('emoji-picker-react').Theme;
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Popover,
   PopoverContent,
@@ -27,6 +26,7 @@ import type { ChatInputProps } from '@/types/chat';
 import { isRecord } from '@/utils/guards';
 import { validateChatFiles } from '@/utils/validateFile';
 import { toErrorMessage } from '@/utils/errors';
+import { CHAT_INPUT_BAR_CLS } from '@/features/chat/chatStyles';
 
 export default function ChatInput({
   onSend,
@@ -104,7 +104,13 @@ export default function ChatInput({
 
     onSend(trimmed, fileIds.length > 0 ? fileIds : undefined);
     setMessage('');
-    previews.forEach((u) => { try { URL.revokeObjectURL(u); } catch { /* noop */ } });
+    previews.forEach((u) => {
+      try {
+        URL.revokeObjectURL(u);
+      } catch {
+        /* noop */
+      }
+    });
     setPreviews([]);
     setFiles([]);
     setUploadedFileIds([]);
@@ -149,7 +155,11 @@ export default function ChatInput({
   const removeFile = (index: number) => {
     const file = files[index];
     if (file?.type.startsWith('image/') && previews[index]) {
-      try { URL.revokeObjectURL(previews[index]); } catch { /* noop */ }
+      try {
+        URL.revokeObjectURL(previews[index]);
+      } catch {
+        /* noop */
+      }
     }
     setFiles((prev) => prev.filter((_, i) => i !== index));
     setPreviews((prev) => prev.filter((_, i) => i !== index));
@@ -163,34 +173,34 @@ export default function ChatInput({
   };
 
   return (
-    <div className="border-t border-slate-200/80 dark:border-white/10 bg-white dark:bg-white/5 p-2.5 sm:p-3">
-      {files.length > 0 && (
-        <div className="mb-2 sm:mb-3 flex flex-wrap gap-1.5 sm:gap-2">
+    <div className={CHAT_INPUT_BAR_CLS}>
+      {files.length > 0 ? (
+        <div className="mb-1.5 flex w-full flex-wrap gap-1 px-0.5">
           {files.map((file, index) => (
             <span
               key={`${file.name}-${index}`}
-              className="inline-flex max-w-[160px] sm:max-w-[200px] items-center gap-1 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[11px] sm:text-xs"
+              className="inline-flex max-w-[180px] items-center gap-1 rounded-lg border border-[#E9ECEF] bg-[#F4F5F7] px-1.5 py-0.5 text-[10px] dark:border-white/10 dark:bg-white/[0.06]"
             >
-              {previews[index] && (
-                <img src={previews[index]} alt="" className="size-6 shrink-0 rounded object-cover" />
-              )}
-              <span className="truncate">
-                {file.name.length > 20 ? `${file.name.slice(0, 17)}...` : file.name}
+              {previews[index] ? (
+                <img src={previews[index]} alt="" className="size-5 shrink-0 rounded object-cover" />
+              ) : null}
+              <span className="truncate text-[#495057] dark:text-white/70">
+                {file.name.length > 18 ? `${file.name.slice(0, 15)}…` : file.name}
               </span>
               <button
                 type="button"
-                className="shrink-0 rounded p-0.5 hover:bg-primary/20"
+                className="shrink-0 rounded p-0.5 text-[#6C757D] hover:bg-[#E97525]/10 hover:text-[#E97525]"
                 onClick={() => removeFile(index)}
                 aria-label={t('common.remove')}
               >
-                <X className="size-3.5" />
+                <X className="size-3" />
               </button>
             </span>
           ))}
         </div>
-      )}
+      ) : null}
 
-      <div className="flex items-center gap-1.5 sm:gap-2 p-2 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-100/80 dark:bg-white/5 shadow-sm focus-within:ring-2 focus-within:ring-orange-500/20 focus-within:border-orange-500/40 dark:focus-within:ring-orange-500/15 dark:focus-within:border-orange-500/30 transition">
+      <div className="flex w-full items-end gap-0.5 rounded-[14px] border border-[#E9ECEF] bg-[#F4F5F7] px-1 py-1 focus-within:border-[#E97525]/40 focus-within:ring-2 focus-within:ring-[#E97525]/15 dark:border-white/10 dark:bg-white/[0.04]">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -198,11 +208,11 @@ export default function ChatInput({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="shrink-0 size-9 sm:size-10 rounded-xl text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80"
+                className="size-8 shrink-0 rounded-[10px] text-[#6C757D] hover:text-[#E97525] dark:text-white/50"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={disabled || isUploading}
               >
-                <Paperclip className="size-4 sm:size-5" />
+                <Paperclip className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t('common.attachFile')}</TooltipContent>
@@ -227,22 +237,22 @@ export default function ChatInput({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="shrink-0 size-9 sm:size-10 rounded-xl text-slate-500 dark:text-white/50 hover:text-slate-700 dark:hover:text-white/80"
+                    className="size-8 shrink-0 rounded-[10px] text-[#6C757D] hover:text-[#E97525] dark:text-white/50"
                     disabled={disabled}
                   >
-                    <Smile className="size-4 sm:size-5" />
+                    <Smile className="size-4" />
                   </Button>
                 </PopoverTrigger>
               </TooltipTrigger>
               <TooltipContent>{t('common.emoji')}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <PopoverContent className="w-auto p-0 border-0 shadow-none" align="start" side="top">
-            {emojiPopoverOpen && (
+          <PopoverContent className="w-auto border-0 p-0 shadow-lg" align="start" side="top">
+            {emojiPopoverOpen ? (
               <Suspense
                 fallback={
-                  <div className="w-[320px] h-[360px] flex items-center justify-center">
-                    <span className="size-6 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+                  <div className="flex h-[320px] w-[300px] items-center justify-center">
+                    <span className="size-5 animate-spin rounded-full border-2 border-[#E97525] border-t-transparent" />
                   </div>
                 }
               >
@@ -253,16 +263,16 @@ export default function ChatInput({
                       ? THEME_DARK
                       : THEME_LIGHT
                   }
-                  width={320}
-                  height={360}
+                  width={300}
+                  height={320}
                 />
               </Suspense>
-            )}
+            ) : null}
           </PopoverContent>
         </Popover>
 
-        <Textarea
-          className="min-h-[36px] sm:min-h-[40px] max-h-20 sm:max-h-24 resize-none rounded-xl border-0 bg-transparent focus-visible:ring-0 focus-visible:shadow-none text-sm sm:text-base flex-1 placeholder:text-slate-400 dark:placeholder:text-white/50"
+        <textarea
+          className="max-h-20 min-h-[32px] flex-1 resize-none border-0 bg-transparent py-1.5 text-[13px] leading-snug text-[#212529] placeholder:text-[#6C757D]/80 focus:outline-none focus-visible:ring-0 dark:text-white/90"
           placeholder={placeholder ?? defaultPlaceholder}
           value={message}
           onChange={(e) => {
@@ -277,14 +287,14 @@ export default function ChatInput({
         <Button
           type="button"
           size="icon"
-          className="size-9 sm:size-10 shrink-0 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/30 hover:shadow-orange-500/40 hover:opacity-95 transition"
+          className="mb-0.5 size-8 shrink-0 rounded-full bg-[#E97525] text-white shadow-none hover:bg-[#d86920] disabled:opacity-40"
           onClick={handleSend}
           disabled={!canSend}
         >
           {isUploading ? (
-            <span className="size-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+            <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
           ) : (
-            <Send className="size-4 sm:size-5" />
+            <Send className="size-3.5" />
           )}
         </Button>
       </div>

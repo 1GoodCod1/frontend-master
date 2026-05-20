@@ -103,6 +103,8 @@ export interface ChatListProps {
   onSelectConversation: (conversationId: string) => void;
   selectedConversationId?: string;
   userRole: ChatUserRole;
+  title?: string;
+  className?: string;
 }
 
 export interface ChatInputProps {

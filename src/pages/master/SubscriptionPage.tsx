@@ -35,35 +35,41 @@ import {
 } from '@/components/ui/alert';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { cn } from '@/lib/utils';
+import {
+    masterCardStaticCls,
+    masterIconWrapCls,
+    masterOutlineBtnCls,
+    masterPageClassName,
+    masterPrimaryBtnCls,
+    masterSectionTitleCls,
+    masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 import { toErrorMessage } from '@/utils/errors';
 import type { MasterTariffResponse, PaymentDto } from '@/types';
 
-const PLAN_COLORS: Record<string, { bg: string; border: string; text: string; icon: string }> = {
+const PLAN_ACCENT: Record<string, { wash: string; text: string; iconWrap: string }> = {
     BASIC: {
-        bg: 'bg-slate-50 dark:bg-slate-900/40',
-        border: 'border-slate-200 dark:border-slate-700',
-        text: 'text-slate-700 dark:text-slate-300',
-        icon: 'text-slate-500 dark:text-slate-400',
+        wash: 'bg-[#F4F5F7]/80 dark:bg-white/[0.03]',
+        text: 'text-[#495057] dark:text-white/80',
+        iconWrap: 'bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.08] dark:text-white/55',
     },
     VIP: {
-        bg: 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
-        border: 'border-amber-300 dark:border-amber-600/40',
-        text: 'text-amber-700 dark:text-amber-300',
-        icon: 'text-amber-500 dark:text-amber-400',
+        wash: 'bg-[#FFF8EB]/60 dark:bg-[#E97525]/8',
+        text: 'text-[#E97525]',
+        iconWrap: masterIconWrapCls,
     },
     PREMIUM: {
-        bg: 'bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30',
-        border: 'border-teal-300 dark:border-teal-600/40',
-        text: 'text-teal-700 dark:text-teal-300',
-        icon: 'text-teal-500 dark:text-teal-400',
+        wash: 'bg-[#E97525]/8 dark:bg-[#E97525]/12',
+        text: 'text-[#c45f1a] dark:text-[#f08540]',
+        iconWrap: 'flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E97525]/15 text-[#E97525] dark:bg-[#E97525]/20',
     },
 };
 
 const PlanIcon = ({ plan }: { plan: string }) => {
-    const colors = PLAN_COLORS[plan] || PLAN_COLORS.BASIC;
-    if (plan === 'PREMIUM') return <Sparkles className={cn('h-8 w-8', colors.icon)} />;
-    if (plan === 'VIP') return <Crown className={cn('h-8 w-8', colors.icon)} />;
-    return <Zap className={cn('h-8 w-8', colors.icon)} />;
+    const accent = PLAN_ACCENT[plan] || PLAN_ACCENT.BASIC;
+    if (plan === 'PREMIUM') return <Sparkles className={cn('h-7 w-7', accent.text)} />;
+    if (plan === 'VIP') return <Crown className={cn('h-7 w-7', accent.text)} />;
+    return <Zap className={cn('h-7 w-7', accent.text)} />;
 };
 
 export default function SubscriptionPage() {
@@ -96,7 +102,7 @@ export default function SubscriptionPage() {
     const effectivePlan: TariffPlan = !isExpired && tariffType !== 'BASIC' ? tariffType : 'BASIC';
 
     const isActive = !isExpired && effectivePlan !== 'BASIC';
-    const colors = PLAN_COLORS[effectivePlan] || PLAN_COLORS.BASIC;
+    const accent = PLAN_ACCENT[effectivePlan] || PLAN_ACCENT.BASIC;
 
     const handleCancelUpgrade = async () => {
         try {
@@ -141,38 +147,29 @@ export default function SubscriptionPage() {
     }
 
     return (
-        <div className="faber-page-enter space-y-6">
+        <div className={cn(masterPageClassName, 'faber-page-enter')}>
             {/* Header */}
             <div>
-                <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">
-                    {t('subscription.title')}
-                </h1>
-                <p className="text-muted-foreground mt-1">
-                    {t('subscription.subtitle')}
-                </p>
+                <h1 className={masterSectionTitleCls}>{t('subscription.title')}</h1>
+                <p className={cn(masterTextMuted, 'mt-1')}>{t('subscription.subtitle')}</p>
             </div>
 
             {/* Current Plan Card */}
             <Card className={cn(
-                'overflow-hidden relative border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300',
-                effectivePlan === 'VIP' && 'border-amber-200/50 dark:border-amber-600/30',
-                effectivePlan === 'PREMIUM' && 'border-teal-200/50 dark:border-teal-600/30'
+                masterCardStaticCls,
+                'relative overflow-hidden',
+                effectivePlan !== 'BASIC' && 'border-[#E97525]/30',
             )}>
-                <div className={cn('absolute inset-0 opacity-50', colors.bg)} />
+                <div className={cn('absolute inset-0', accent.wash)} />
                 <CardContent className="relative p-6 md:p-8">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-                        <div className={cn(
-                            'flex items-center justify-center w-16 h-16 rounded-2xl',
-                            effectivePlan === 'PREMIUM' ? 'bg-teal-100 dark:bg-teal-900/40' :
-                                effectivePlan === 'VIP' ? 'bg-amber-100 dark:bg-amber-900/40' :
-                                    'bg-slate-100 dark:bg-slate-800'
-                        )}>
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                        <div className={cn('flex h-14 w-14 items-center justify-center rounded-2xl', accent.iconWrap)}>
                             <PlanIcon plan={effectivePlan} />
                         </div>
 
                         <div className="flex-1">
-                            <div className="flex items-center gap-3 flex-wrap">
-                                <h2 className={cn('text-2xl font-extrabold', colors.text)}>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <h2 className={cn('text-2xl font-extrabold', accent.text)}>
                                     {t(`plans.${effectivePlan.toLowerCase()}.name`)}
                                 </h2>
                                 {isActive && (
@@ -188,7 +185,7 @@ export default function SubscriptionPage() {
                                     </Badge>
                                 )}
                                 {cancelAtPeriodEnd && (
-                                    <Badge variant="outline" className="text-amber-600 border-amber-300 dark:text-amber-400 dark:border-amber-600 text-xs px-3">
+                                    <Badge variant="outline" className="text-[#E97525] border-amber-300 dark:text-[#f08540] dark:border-amber-600 text-xs px-3">
                                         <XCircle className="h-3 w-3 mr-1" />
                                         {t('subscription.cancelledAlready')}
                                     </Badge>
@@ -196,23 +193,17 @@ export default function SubscriptionPage() {
                             </div>
 
                             {isActive && tariffExpiresAt ? (
-                                <p className="text-sm text-muted-foreground mt-2">
+                                <p className={cn(masterTextMuted, 'mt-2')}>
                                     <Clock className="h-3.5 w-3.5 inline mr-1 -mt-0.5" />
                                     {t('subscription.expiresAt')}: <strong>{formatDateShort(tariffExpiresAt, locale)}</strong>
                                 </p>
                             ) : effectivePlan === 'BASIC' ? (
-                                <p className="text-sm text-muted-foreground mt-2">
-                                    {t('subscription.noPaidPlanDesc')}
-                                </p>
+                                <p className={cn(masterTextMuted, 'mt-2')}>{t('subscription.noPaidPlanDesc')}</p>
                             ) : null}
                         </div>
 
                         {effectivePlan === 'BASIC' && (
-                            <Button
-                                asChild
-                                size="lg"
-                                className="shadow-lg hover:shadow-xl transition hover:-translate-y-0.5"
-                            >
+                            <Button asChild className={masterPrimaryBtnCls}>
                                 <RouterLink to="/plans">
                                     <ArrowUpCircle className="h-4 w-4" />
                                     {t('subscription.viewPlans')}
@@ -226,14 +217,14 @@ export default function SubscriptionPage() {
             {/* Pending Upgrade Alert */}
             {pendingUpgrade && (
                 <div className="faber-view-swap">
-                    <Alert className="border-amber-300 dark:border-amber-600/40 bg-amber-50/80 dark:bg-amber-900/20">
-                        <ArrowUpCircle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    <Alert className="rounded-[14px] border-[#E97525]/30 bg-[#FFF8EB]/90 dark:bg-[#E97525]/10">
+                        <ArrowUpCircle className="h-5 w-5 text-[#E97525]" />
                         <AlertDescription className="flex flex-col gap-3">
                             <div>
-                                <strong className="text-amber-700 dark:text-amber-300">
+                                <strong className="text-[#c45f1a] dark:text-[#f08540]">
                                     {t('subscription.pendingUpgrade')}
                                 </strong>
-                                <p className="text-sm mt-1">
+                                <p className={cn(masterTextMuted, 'mt-1')}>
                                     {t('subscription.pendingUpgradeDesc', {
                                         tariff: pendingUpgrade.to,
                                         hours: Math.ceil(pendingUpgrade.hoursRemaining ?? 0),
@@ -241,17 +232,15 @@ export default function SubscriptionPage() {
                                 </p>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                <Button
-                                    variant="default"
-                                    size="sm"
-                                    onClick={handleConfirmUpgrade}
-                                >
+                                <Button type="button" size="sm" className={masterPrimaryBtnCls} onClick={handleConfirmUpgrade}>
                                     <CheckCircle className="h-4 w-4" />
                                     {t('subscription.confirmUpgrade')}
                                 </Button>
                                 <Button
+                                    type="button"
                                     variant="outline"
                                     size="sm"
+                                    className={masterOutlineBtnCls}
                                     disabled={cancelUpgradeState.isLoading}
                                     onClick={handleCancelUpgrade}
                                 >
@@ -267,25 +256,18 @@ export default function SubscriptionPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upgrade Section */}
                 {effectivePlan !== 'PREMIUM' && !pendingUpgrade && (
-                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300 border-teal-200/50 dark:border-teal-600/30">
-                        <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20 pointer-events-none" />
-                        <CardHeader className="relative">
-                            <CardTitle className="flex items-center gap-2 text-teal-700 dark:text-teal-300">
+                    <Card className={cn(masterCardStaticCls, 'overflow-hidden border-[#E97525]/25')}>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-[#E97525]">
                                 <ArrowUpCircle className="h-5 w-5" />
                                 {t('subscription.upgradeTitle')}
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="relative space-y-4">
-                            <p className="text-sm text-muted-foreground">
-                                {t('subscription.upgradeDesc')}
-                            </p>
+                        <CardContent className="space-y-4">
+                            <p className={masterTextMuted}>{t('subscription.upgradeDesc')}</p>
 
                             <Button
-                                size="lg"
-                                className={cn(
-                                    'w-full font-semibold shadow-lg hover:shadow-xl transition hover:-translate-y-0.5',
-                                    'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white'
-                                )}
+                                className={cn(masterPrimaryBtnCls, 'w-full')}
                                 onClick={effectivePlan === 'BASIC' ? () => navigate('/plans') : handleUpgrade}
                             >
                                 <Sparkles className="h-4 w-4" />
@@ -301,7 +283,7 @@ export default function SubscriptionPage() {
 
                 {/* Cancel Subscription Section */}
                 {isActive && (
-                    <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
+                    <Card className={cn(masterCardStaticCls, 'overflow-hidden')}>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-foreground">
                                 <XCircle className="h-5 w-5 text-muted-foreground" />
@@ -310,20 +292,16 @@ export default function SubscriptionPage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {cancelAtPeriodEnd ? (
-                                <Alert className="border-amber-200 dark:border-amber-700/30 bg-amber-50/50 dark:bg-amber-950/20">
-                                    <AlertTriangle className="h-4 w-4 text-amber-500" />
+                                <Alert className="rounded-[12px] border-[#E97525]/25 bg-[#FFF8EB]/80 dark:bg-[#E97525]/8">
+                                    <AlertTriangle className="h-4 w-4 text-[#E97525]" />
                                     <AlertDescription className="text-sm">
                                         <strong>{t('subscription.cancelledAlready')}</strong>
-                                        <p className="mt-1 text-muted-foreground">
-                                            {t('subscription.cancelledAlreadyDesc')}
-                                        </p>
+                                        <p className={cn('mt-1', masterTextMuted)}>{t('subscription.cancelledAlreadyDesc')}</p>
                                     </AlertDescription>
                                 </Alert>
                             ) : (
                                 <>
-                                    <p className="text-sm text-muted-foreground">
-                                        {t('subscription.cancelDesc')}
-                                    </p>
+                                    <p className={masterTextMuted}>{t('subscription.cancelDesc')}</p>
                                     <Button
                                         variant="outline"
                                         size="sm"
@@ -354,7 +332,7 @@ export default function SubscriptionPage() {
                 )}
 
                 {/* Plan Benefits */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
+                <Card className={cn(masterCardStaticCls, 'overflow-hidden')}>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-foreground">
                             <CheckCircle className="h-5 w-5 text-green-500" />
@@ -383,7 +361,7 @@ export default function SubscriptionPage() {
                 </Card>
 
                 {/* Payment History Card */}
-                <Card className="overflow-hidden border-transparent dark:border-white/[0.08] bg-white dark:bg-black/40 dark:backdrop-blur-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-none transition duration-300">
+                <Card className={cn(masterCardStaticCls, 'overflow-hidden')}>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-foreground">
                             <CreditCard className="h-5 w-5 text-muted-foreground" />
@@ -406,10 +384,8 @@ export default function SubscriptionPage() {
                                     >
                                         <div className="flex items-center gap-3">
                                             <div className={cn(
-                                                'flex items-center justify-center w-8 h-8 rounded-lg',
-                                                payment.tariffType === 'PREMIUM' ? 'bg-teal-100 dark:bg-teal-900/30' :
-                                                    payment.tariffType === 'VIP' ? 'bg-amber-100 dark:bg-amber-900/30' :
-                                                        'bg-slate-100 dark:bg-slate-800'
+                                                'flex h-8 w-8 items-center justify-center rounded-lg',
+                                                PLAN_ACCENT[payment.tariffType || 'BASIC']?.iconWrap ?? PLAN_ACCENT.BASIC.iconWrap,
                                             )}>
                                                 <PlanIcon plan={payment.tariffType || 'BASIC'} />
                                             </div>

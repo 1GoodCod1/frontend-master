@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Zap } from 'lucide-react';
+import { JointsBadge } from '@/components/joints';
 import type { JobApplicationDto } from '@/types';
 
 interface ProposalTermsViewProps {
@@ -31,9 +31,7 @@ export function ProposalTermsView({ application }: ProposalTermsViewProps) {
         )}
         <div className="flex items-center justify-between rounded-xl bg-white dark:bg-zinc-800 px-4 py-3 shadow-sm">
           <span className="text-sm text-muted-foreground">{t('jobs.jointsSpent', 'Joints bid')}</span>
-          <span className="flex items-center gap-1 text-sm font-bold text-primary">
-            <Zap className="h-3.5 w-3.5" />{application.jointsSpent}
-          </span>
+          <JointsBadge value={application.jointsSpent} size="sm" />
         </div>
       </div>
 

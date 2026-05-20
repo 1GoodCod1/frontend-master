@@ -48,11 +48,27 @@ export function CabinetSidebar({
   const role = useAppSelector(selectRole);
   const { data: masterProfile } = useMastersMyProfileQuery(undefined, { skip: role !== 'MASTER' });
 
-  const meData = me as { firstName?: string; lastName?: string; email?: string; avatarFile?: { path?: string } } | null;
-  const profileData = (masterProfile as { data?: { isOnline?: boolean; user?: { firstName?: string; lastName?: string }; avatarFile?: { path?: string } } } | undefined)?.data ?? (masterProfile as { isOnline?: boolean; user?: { firstName?: string; lastName?: string }; avatarFile?: { path?: string } } | undefined);
+  const meData = me as {
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    avatarFile?: { path?: string };
+  } | null;
+  const profileData =
+    (masterProfile as { data?: { isOnline?: boolean; user?: { firstName?: string; lastName?: string; avatarFile?: { path?: string } }; avatarFile?: { path?: string } } } | undefined)
+      ?.data ??
+    (masterProfile as {
+      isOnline?: boolean;
+      user?: { firstName?: string; lastName?: string; avatarFile?: { path?: string } };
+      avatarFile?: { path?: string };
+    } | undefined);
   const isOnline = profileData?.isOnline ?? false;
 
-  const avatarPath = (profileData as { avatarFile?: { path?: string } } | undefined)?.avatarFile?.path ?? meData?.avatarFile?.path;
+  const avatarPath =
+    meData?.avatarFile?.path ??
+    profileData?.avatarFile?.path ??
+    profileData?.user?.avatarFile?.path;
   const avatarUrl = avatarPath ? mediaUrl(avatarPath) : undefined;
 
   const masterUser = profileData?.user;
@@ -210,6 +226,8 @@ export function CabinetSidebar({
         collapsed={collapsed}
         displayName={displayName}
         avatarUrl={avatarUrl}
+        avatarPath={avatarPath}
+        userId={meData?.id}
         role={role}
         plan={plan}
         isOnline={isOnline}

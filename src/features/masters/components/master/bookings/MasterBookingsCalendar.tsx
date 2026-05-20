@@ -35,7 +35,7 @@ function bookingBadgeClass(status: string): string {
   const color = getBookingStatusChipColor(status);
   switch (color) {
     case 'warning':
-      return 'border-amber-500/70 bg-amber-500/15 text-amber-700 dark:text-amber-400';
+      return 'border-[#E97525]/70 bg-[#FFF8EB] text-[#c45f1a] dark:text-[#f08540]';
     case 'info':
       return 'bg-blue-600 text-white';
     case 'success':
@@ -102,14 +102,14 @@ export function MasterBookingsCalendar({
                 className={cn(
                   'flex items-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold',
                   isToday
-                    ? 'bg-amber-500/15 text-amber-800 dark:text-amber-200 border border-amber-500/30'
+                    ? 'bg-[#FFF8EB] text-[#c45f1a] dark:text-amber-200 border border-[#E97525]/30'
                     : 'bg-muted/50 text-foreground border border-transparent',
                 )}
               >
-                <CalendarDays className="size-4 shrink-0 text-amber-600 dark:text-amber-500" />
+                <CalendarDays className="size-4 shrink-0 text-[#E97525] dark:text-[#E97525]" />
                 <span className="capitalize">{dayLabel}</span>
                 {isToday && (
-                  <span className="text-xs font-medium text-amber-600 dark:text-amber-400 ml-1">
+                  <span className="text-xs font-medium text-[#E97525] dark:text-[#f08540] ml-1">
                     ({t('bookings.today', 'today')})
                   </span>
                 )}
@@ -138,7 +138,7 @@ export function MasterBookingsCalendar({
                         <div className="p-3 space-y-2.5">
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
-                              <Clock className="size-3.5 shrink-0 text-amber-600 dark:text-amber-500" />
+                              <Clock className="size-3.5 shrink-0 text-[#E97525] dark:text-[#E97525]" />
                               {formatTimeOnly(start, locale)} — {formatTimeOnly(end, locale)}
                             </div>
                             <Badge
@@ -151,7 +151,7 @@ export function MasterBookingsCalendar({
 
                           {leadShortId && (
                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                              <FileText className="size-3.5 shrink-0 text-amber-600/80 dark:text-amber-500/80" />
+                              <FileText className="size-3.5 shrink-0 text-[#E97525]/80 dark:text-[#E97525]/80" />
                               <span>
                                 {t('bookings.fromLead')} <span className="font-mono font-medium text-foreground/90">#{leadShortId}</span>
                               </span>

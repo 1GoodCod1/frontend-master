@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { MapPin, Zap, DollarSign, Briefcase } from 'lucide-react';
+import { MapPin, DollarSign, Briefcase } from 'lucide-react';
+import { JointsMark } from '@/components/joints';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -114,7 +115,7 @@ export default function ClientCreateJobPage() {
 
         <div className="space-y-1.5">
           <Label htmlFor="minJoints" className={cn('flex flex-wrap items-center gap-2', clientFormLabelCls)}>
-            <Zap className="h-3.5 w-3.5 text-[#E97525]" />
+            <JointsMark className="h-4 w-4 text-[#D97706] dark:text-[#FBBF24]" />
             {t('jobs.minJoints', 'Minimum Joints to Apply')}
             <span className={cn('font-normal', clientTextMuted)}>
               {t('jobs.minJointsHint', '(Masters spend joints to rank higher)')}

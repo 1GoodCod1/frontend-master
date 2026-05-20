@@ -1,12 +1,21 @@
-﻿import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { Crown } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { NotificationChannelsForm } from '@/features/masters/components/master/NotificationChannelsForm';
 import { useNotificationSettings } from '@/hooks/master/useNotificationSettings';
+import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterIconWrapCls,
+  masterPageClassName,
+  masterPrimaryBtnCls,
+  masterSectionTitleCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
 
 export default function NotificationsSettingsPage() {
   const { t } = useTranslation();
@@ -16,33 +25,27 @@ export default function NotificationsSettingsPage() {
   if (isError) return <ErrorState onRetry={refetch} />;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
-      <div className="mb-8">
-        <PageHeader
-          title={t('notificationSettings.title')}
-          subtitle={t('notificationSettings.subtitle')}
-        />
-      </div>
+    <div className={masterPageClassName}>
+      <PageHeader
+        title={t('notificationSettings.title')}
+        subtitle={t('notificationSettings.subtitle')}
+      />
 
       {!isPremium ? (
-        <Card className="overflow-hidden border-amber-200/60 dark:border-amber-600/30 bg-amber-500/5 dark:bg-amber-500/10 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] dark:shadow-none transition duration-300">
+        <div className={cn(masterCardStaticCls, 'border-[#E97525]/25')}>
           <CardContent className="flex flex-col items-center gap-4 py-10 text-center sm:flex-row sm:text-left">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-amber-500/20">
-              <Crown className="size-7 text-amber-600 dark:text-amber-400" />
-            </div>
+            <span className={cn(masterIconWrapCls, 'h-14 w-14 rounded-[12px]')}>
+              <Crown className="size-7" />
+            </span>
             <div className="space-y-1">
-              <h3 className="text-lg font-semibold text-foreground">
-                {t('notificationSettings.premiumRequired')}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t('notificationSettings.premiumRequiredDesc')}
-              </p>
-              <Button asChild className="mt-4 border-0 bg-amber-600 text-white shadow-md transition hover:bg-amber-700 hover:shadow-lg dark:bg-amber-600 dark:hover:bg-amber-500">
+              <h3 className={masterSectionTitleCls}>{t('notificationSettings.premiumRequired')}</h3>
+              <p className={masterTextMuted}>{t('notificationSettings.premiumRequiredDesc')}</p>
+              <Button asChild className={cn(masterPrimaryBtnCls, 'mt-4')}>
                 <RouterLink to="/plans">{t('notificationSettings.viewPlans')}</RouterLink>
               </Button>
             </div>
           </CardContent>
-        </Card>
+        </div>
       ) : (
         <NotificationChannelsForm />
       )}

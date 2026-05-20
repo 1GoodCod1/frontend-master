@@ -262,13 +262,13 @@ export function AvailabilityControl({
             className={cn(
               "py-3.5 px-4 rounded-xl animate-in fade-in slide-in-from-bottom-2 border-0",
               status === AVAILABILITY_STATUS.BUSY
-                ? "bg-amber-500/10 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300"
+                ? "bg-[#FFF8EB]/80 text-[#c45f1a] dark:bg-[#FFF8EB]/80 dark:text-amber-300"
                 : "bg-destructive/10 text-destructive dark:bg-destructive/10 dark:text-red-400"
             )}
           >
             <AlertTriangle className={cn(
               "size-4.5 mt-0.5",
-              status === AVAILABILITY_STATUS.BUSY ? "text-amber-600 dark:text-amber-400" : "text-destructive"
+              status === AVAILABILITY_STATUS.BUSY ? "text-[#E97525] dark:text-[#f08540]" : "text-destructive"
             )} />
             <AlertTitle className="sr-only">Info</AlertTitle>
             <AlertDescription className="ml-2.5 text-[13px] font-medium leading-relaxed">

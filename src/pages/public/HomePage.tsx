@@ -273,17 +273,19 @@ export default function HomePage() {
                 link={{ label: t('home.howItWorks.cta'), href: paths.howItWorks }}
               />
               <Suspense fallback={null}>
-                <HowItWorksSection hideHeader />
+                <HowItWorksSection hideHeader isAuthed={isAuthed} role={role} />
               </Suspense>
             </section>
+
+            {isAuthed && role === USER_ROLE.MASTER ? (
+              <HomeClosingCtaSection />
+            ) : null}
 
             <section id="faq" className="relative scroll-mt-20 pt-10 md:pt-14">
               <Suspense fallback={null}>
                 <FAQSection />
               </Suspense>
             </section>
-
-            <HomeClosingCtaSection isAuthed={isAuthed} role={role} />
           </div>
         </div>
       </div>

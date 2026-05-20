@@ -36,14 +36,11 @@ export const companii = {
         statusSoon: 'Coming soon',
         statusPlanned: 'Planned',
         f1Title: 'Company profile',
-        f1Desc:
-          'One page for your whole company: your team, a shared rating and a portfolio of work. Clients see a real team — not a lone master.',
+        f1Desc: 'One page: team, shared rating and portfolio — a real team image.',
         f2Title: 'Your master team',
-        f2Desc:
-          'Invite masters into your team — shared requests, a shared rating and one workspace for everyone.',
+        f2Desc: 'Invite masters — shared requests, rating and one workspace.',
         f3Title: 'Ready-made service packages',
-        f3Desc:
-          'Publish services at a fixed price — clients book instantly, with no calls and no haggling.',
+        f3Desc: 'Fixed-price services — clients book instantly.',
         f4Title: 'Clients & history',
         f4Desc:
           'Your whole client base and the full history of every job, always at hand.',
@@ -132,14 +129,11 @@ export const companii = {
         statusSoon: 'Скоро',
         statusPlanned: 'В планах',
         f1Title: 'Профиль компании',
-        f1Desc:
-          'Единая страница всей компании: ваша команда, общий рейтинг и портфолио работ. Клиент видит настоящую команду, а не одного мастера.',
+        f1Desc: 'Одна страница: команда, рейтинг и портфолио — образ настоящей команды.',
         f2Title: 'Команда мастеров',
-        f2Desc:
-          'Приглашайте мастеров в команду — общие заявки, общий рейтинг и один кабинет на всех.',
+        f2Desc: 'Приглашайте мастеров — общие заявки, рейтинг и один кабинет.',
         f3Title: 'Готовые пакеты услуг',
-        f3Desc:
-          'Публикуйте услуги по фиксированной цене — клиент бронирует сразу, без звонков и торга.',
+        f3Desc: 'Услуги по фиксированной цене — бронирование сразу.',
         f4Title: 'Клиенты и история',
         f4Desc:
           'Вся база ваших клиентов и полная история каждого заказа — всегда под рукой.',
@@ -228,14 +222,11 @@ export const companii = {
         statusSoon: 'În curând',
         statusPlanned: 'Planificat',
         f1Title: 'Profilul companiei',
-        f1Desc:
-          'O singură pagină pentru toată compania: echipa ta, un rating comun și un portofoliu de lucrări. Clientul vede o echipă reală, nu un singur meșter.',
+        f1Desc: 'O pagină: echipă, rating comun și portofoliu — imagine de echipă reală.',
         f2Title: 'Echipa ta de meșteri',
-        f2Desc:
-          'Invită meșteri în echipă — cereri comune, un rating comun și un singur cabinet pentru toți.',
+        f2Desc: 'Invită meșteri — cereri comune, rating și cabinet unic.',
         f3Title: 'Pachete de servicii gata',
-        f3Desc:
-          'Publică servicii la preț fix — clientul rezervă instant, fără apeluri și negocieri.',
+        f3Desc: 'Servicii la preț fix — rezervare instant.',
         f4Title: 'Clienți și istoric',
         f4Desc:
           'Toată baza ta de clienți și istoricul complet al fiecărei lucrări — mereu la îndemână.',

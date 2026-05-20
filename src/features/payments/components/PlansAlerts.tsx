@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { TariffPlan } from '@/features/auth/plan';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { cabinetInsetPanelCls, cabinetPrimaryBtnCls, cabinetOutlineBtnCls } from '@/lib/cabinetStyles';
 
 interface PlansAlertsProps {
   isAuthed: boolean;
@@ -29,46 +30,48 @@ export const PlansAlerts = ({
   if (!isAuthed) return null;
 
   return (
-    <div className="flex flex-col gap-4">
-      {pendingUpgrade && (
-        <Alert className="rounded-lg border-[#f5f4eb] dark:border-amber-800/50 bg-amber-50/80 dark:bg-amber-900/20 text-foreground dark:text-slate-100">
-          <AlertDescription className="flex flex-col gap-3">
-            <span className="text-sm">
-              <strong>{t('plans.pendingUpgradeTitle')}:</strong>{' '}
-              {t('plans.pendingUpgradeMessage', {
-                tariff: pendingUpgrade.to,
-                hours: Math.ceil(pendingUpgrade.hoursRemaining ?? 0),
-              })}
-            </span>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="default"
-                size="sm"
-                disabled={confirmLoading}
-                onClick={onConfirmUpgrade}
-              >
-                {t('plans.confirmUpgrade')}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={cancelLoading}
-                onClick={onCancelUpgrade}
-              >
-                {t('plans.cancelUpgrade')}
-              </Button>
-            </div>
-          </AlertDescription>
-        </Alert>
-      )}
+    <div className="mb-6 flex flex-col gap-3 sm:mb-8">
+      {pendingUpgrade ? (
+        <div
+          className={cn(
+            cabinetInsetPanelCls,
+            'border-[#E97525]/30 bg-[#FFF8EB]/80 dark:bg-[#E97525]/10',
+          )}
+        >
+          <p className="text-[13px] text-[#212529] dark:text-white/90">
+            <strong className="text-[#c45f1a] dark:text-[#f08540]">{t('plans.pendingUpgradeTitle')}:</strong>{' '}
+            {t('plans.pendingUpgradeMessage', {
+              tariff: pendingUpgrade.to,
+              hours: Math.ceil(pendingUpgrade.hoursRemaining ?? 0),
+            })}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              disabled={confirmLoading}
+              onClick={onConfirmUpgrade}
+              className={cabinetPrimaryBtnCls}
+            >
+              {t('plans.confirmUpgrade')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={cancelLoading}
+              onClick={onCancelUpgrade}
+              className={cabinetOutlineBtnCls}
+            >
+              {t('plans.cancelUpgrade')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
 
-      {isExpired && effectivePlan === 'BASIC' && (
-        <Alert variant="destructive" className="rounded-lg">
-          <AlertDescription className="text-sm">
-            {t('plans.tariffExpired')}
-          </AlertDescription>
-        </Alert>
-      )}
+      {isExpired && effectivePlan === 'BASIC' ? (
+        <div className="rounded-[12px] border border-destructive/30 bg-destructive/5 px-4 py-3 text-[13px] text-destructive dark:bg-destructive/10">
+          {t('plans.tariffExpired')}
+        </div>
+      ) : null}
     </div>
   );
 };

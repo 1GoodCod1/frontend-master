@@ -12,7 +12,14 @@ import {
 import { useMastersMyPhotosQuery } from '@/features/masters/masterPhotosApi';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { EmptyState } from '@/components/ui/EmptyState';
+import { cn } from '@/lib/utils';
+import {
+  masterCardStaticCls,
+  masterPageClassName,
+  masterPrimaryBtnCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { BeforeAfterSlider } from '@/features/portfolio/components/BeforeAfterSlider';
@@ -101,37 +108,33 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 lg:px-8">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <PageHeader
-          title={t('portfolio.title')}
-          subtitle={t('portfolio.subtitle')}
-        />
+    <div className={masterPageClassName}>
+      <PageHeader
+        title={t('portfolio.title')}
+        subtitle={t('portfolio.subtitle')}
+        actions={
         <Button
           onClick={() => setCreateOpen(true)}
           disabled={photosWithId.length < 2}
-          className="gap-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-500"
+          className={cn(masterPrimaryBtnCls, 'gap-2')}
         >
           <Plus className="size-4" />
           {t('portfolio.addWork')}
         </Button>
-      </div>
+        }
+      />
 
       {photosWithId.length < 2 && (
-        <Card className="mb-6 border-amber-500/30 bg-amber-500/5">
-          <CardContent className="py-4">
-            <p className="text-sm text-muted-foreground">
-              {t('portfolio.needPhotosHint', { count: 2 })}
-            </p>
-          </CardContent>
-        </Card>
+        <div className={cn(masterCardStaticCls, 'border-[#E97525]/25 p-4')}>
+          <p className={masterTextMuted}>{t('portfolio.needPhotosHint', { count: 2 })}</p>
+        </div>
       )}
 
       {items.length === 0 ? (
-        <EmptyState
+        <CabinetEmptyState
+          icon={Layers}
           title={t('portfolio.noWorks')}
           description={t('portfolio.noWorksDescription')}
-          icon={<Layers className="size-16 text-amber-500" />}
         />
       ) : (
         <div className="portfolio-grid">
@@ -171,7 +174,7 @@ export default function PortfolioPage() {
                     <h4 className="font-semibold">{item.title}</h4>
                   )}
                   {item.description && (
-                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                    <p className={cn('mt-1 line-clamp-2', masterTextMuted)}>
                       {item.description}
                     </p>
                   )}

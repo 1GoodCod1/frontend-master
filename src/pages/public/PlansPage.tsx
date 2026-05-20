@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { CreditCard } from 'lucide-react';
@@ -10,10 +11,55 @@ import { PlanCard } from '@/features/payments/components/PlanCard';
 import { PlansAlerts } from '@/features/payments/components/PlansAlerts';
 import { PlansComparisonTable } from '@/features/payments/components/PlansComparisonTable';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { isRecord } from '@/utils/guards';
 import { USER_ROLE } from '@/constants/roles';
+import { cn } from '@/lib/utils';
+import {
+  cabinetCardStaticCls,
+  cabinetIconWrapCls,
+  cabinetLinkCls,
+  cabinetOutlineBtnCls,
+  cabinetPrimaryBtnCls,
+  cabinetTextMuted,
+  cabinetTextTitle,
+} from '@/lib/cabinetStyles';
+import {
+  plansHeroSubtitleCls,
+  plansHeroTitleCls,
+  plansPageInnerCls,
+  plansPageWrapCls,
+  plansVerifyBannerCls,
+} from '@/features/payments/planStyles';
+
+function PlansGateCard({
+  icon,
+  title,
+  subtitle,
+  description,
+  actions,
+}: {
+  icon: ReactNode;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  actions: ReactNode;
+}) {
+  return (
+    <div className={cn(plansPageWrapCls, 'flex justify-center py-8 sm:py-12')}>
+      <div className={cn(cabinetCardStaticCls, 'w-full max-w-md overflow-hidden text-center')}>
+        <CardContent className="p-6 sm:p-8 md:p-10">
+          <div className={cn(cabinetIconWrapCls, 'mx-auto mb-5 size-14 rounded-2xl')}>{icon}</div>
+          <h2 className={cn('mb-2 text-xl font-bold sm:text-2xl', cabinetTextTitle)}>{title}</h2>
+          {subtitle ? <p className="mb-3 text-base font-semibold text-[#E97525]">{subtitle}</p> : null}
+          {description ? <p className={cn('mb-6 max-w-lg mx-auto', cabinetTextMuted)}>{description}</p> : null}
+          {actions}
+        </CardContent>
+      </div>
+    </div>
+  );
+}
 
 export default function PlansPage() {
   const { t } = useTranslation();
@@ -37,14 +83,13 @@ export default function PlansPage() {
     onConfirmPendingUpgrade,
     onCancelPendingUpgrade,
   } = usePlansLogic();
+
   const pendingUpgradeSafe: { to: string; hoursRemaining?: number } | null =
     isRecord(pendingUpgrade) && typeof pendingUpgrade.to === 'string'
       ? {
           to: pendingUpgrade.to,
           hoursRemaining:
-            typeof pendingUpgrade.hoursRemaining === 'number'
-              ? pendingUpgrade.hoursRemaining
-              : undefined,
+            typeof pendingUpgrade.hoursRemaining === 'number' ? pendingUpgrade.hoursRemaining : undefined,
         }
       : null;
 
@@ -52,28 +97,16 @@ export default function PlansPage() {
     return (
       <>
         <SEOHead title={t('plans.adminView.title')} noindex />
-        <div className="w-full max-w-md mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-        <div className="faber-page-enter flex justify-center">
-          <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
-            <CardContent className="p-6 sm:p-8 md:p-10">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
-                <CreditCard className="h-8 w-8" />
-              </div>
-              <h2 className="text-xl font-bold text-foreground mb-2">
-                {t('plans.adminView.title')}
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                {t('plans.adminView.subtitle')}
-              </p>
-              <Button asChild size="lg" className="rounded-xl">
-                <RouterLink to="/admin/tariffs">
-                  {t('plans.adminView.goToAdmin')}
-                </RouterLink>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+        <PlansGateCard
+          icon={<CreditCard className="size-8" />}
+          title={t('plans.adminView.title')}
+          description={t('plans.adminView.subtitle')}
+          actions={
+            <Button asChild className={cabinetPrimaryBtnCls}>
+              <RouterLink to="/admin/tariffs">{t('plans.adminView.goToAdmin')}</RouterLink>
+            </Button>
+          }
+        />
       </>
     );
   }
@@ -82,36 +115,22 @@ export default function PlansPage() {
     return (
       <>
         <SEOHead title={t('plans.becomeMaster.title')} noindex />
-        <div className="w-full max-w-2xl mx-auto py-6 sm:py-8 md:py-12 px-4 sm:px-6">
-        <div className="faber-page-enter flex justify-center">
-          <Card className="border border-border text-center overflow-hidden rounded-2xl w-full">
-            <CardContent className="p-6 sm:p-8 md:p-10">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 text-primary mb-6">
-                <CreditCard className="h-8 w-8" />
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                {t('plans.becomeMaster.title')}
-              </h2>
-              <p className="text-base font-medium text-primary mb-4">
-                {t('plans.becomeMaster.comingSoon')}
-              </p>
-              <p className="text-sm text-muted-foreground mb-6 max-w-lg mx-auto">
-                {t('plans.becomeMaster.description')}
-              </p>
-              <div className="flex flex-col sm:flex-row flex-wrap justify-center items-stretch sm:items-center gap-3">
-                <Button variant="outline" asChild className="rounded-xl">
-                  <RouterLink to="/">{t('common.back')}</RouterLink>
-                </Button>
-                <Button asChild className="rounded-xl">
-                  <RouterLink to="/masters">
-                    {t('plans.becomeMaster.browseMasters')}
-                  </RouterLink>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+        <PlansGateCard
+          icon={<CreditCard className="size-8" />}
+          title={t('plans.becomeMaster.title')}
+          subtitle={t('plans.becomeMaster.comingSoon')}
+          description={t('plans.becomeMaster.description')}
+          actions={
+            <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+              <Button variant="outline" asChild className={cabinetOutlineBtnCls}>
+                <RouterLink to="/">{t('common.back')}</RouterLink>
+              </Button>
+              <Button asChild className={cabinetPrimaryBtnCls}>
+                <RouterLink to="/masters">{t('plans.becomeMaster.browseMasters')}</RouterLink>
+              </Button>
+            </div>
+          }
+        />
       </>
     );
   }
@@ -127,76 +146,69 @@ export default function PlansPage() {
         description={t('plans.subtitle')}
         keywords={t('plans.seoKeywords')}
       />
-      <div className="faber-page-enter min-h-screen bg-gray-50/50 dark:bg-transparent">
-      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-[max(3rem,env(safe-area-inset-bottom,0px))] sm:pb-16">
-        <div className="text-center mb-8 sm:mb-12 pt-6 sm:pt-8 md:pt-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 tracking-tight">
-            {isMaster ? t('plans.myPlan') : t('plans.title')}
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-1">
-            {isMaster ? t('plans.myPlanSubtitle') : t('plans.subtitle')}
-          </p>
-        </div>
-
-        {isMaster && !isVerified && (
-          <div className="rounded-xl sm:rounded-2xl border border-amber-500/40 bg-amber-50/80 dark:bg-amber-900/20 p-4 sm:p-5 text-center mb-6 sm:mb-8">
-            <p className="text-sm font-medium text-gray-900 dark:text-amber-100">
-              {t('plans.verifyBanner')}
+      <div className={plansPageWrapCls}>
+        <div className={plansPageInnerCls}>
+          <div className="mb-8 pt-6 text-center sm:mb-12 sm:pt-8 md:pt-12">
+            <h1 className={plansHeroTitleCls}>{isMaster ? t('plans.myPlan') : t('plans.title')}</h1>
+            <p className={cn(plansHeroSubtitleCls, 'mt-2 sm:mt-3')}>
+              {isMaster ? t('plans.myPlanSubtitle') : t('plans.subtitle')}
             </p>
-            <RouterLink
-              to="/dashboard/verification"
-              className="text-sm font-semibold text-primary hover:underline mt-1 inline-block"
-            >
-              {t('plans.goToVerification')}
-            </RouterLink>
           </div>
-        )}
 
-        <PlansAlerts
-          isAuthed={isAuthed}
-          effectivePlan={effectivePlan}
-          isExpired={isExpired}
-          pendingUpgrade={pendingUpgradeSafe}
-          confirmLoading={confirmLoading}
-          cancelLoading={cancelLoading}
-          onConfirmUpgrade={onConfirmPendingUpgrade}
-          onCancelUpgrade={onCancelPendingUpgrade}
-        />
+          {isMaster && !isVerified ? (
+            <div className={plansVerifyBannerCls}>
+              <p className="text-[13px] font-medium text-[#212529] dark:text-white/90">{t('plans.verifyBanner')}</p>
+              <RouterLink to="/dashboard/verification" className={cn(cabinetLinkCls, 'mt-1 inline-block text-sm')}>
+                {t('plans.goToVerification')}
+              </RouterLink>
+            </div>
+          ) : null}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 mb-6 sm:mb-8 items-stretch">
-          {plansToShow.map((p) => {
-            const isUpgradeOption =
-              isAuthed &&
-              ((effectivePlan === 'BASIC' &&
-                (p.name === 'VIP' || p.name === 'PREMIUM')) ||
-                (effectivePlan === 'VIP' && p.name === 'PREMIUM'));
+          <PlansAlerts
+            isAuthed={isAuthed}
+            effectivePlan={effectivePlan}
+            isExpired={isExpired}
+            pendingUpgrade={pendingUpgradeSafe}
+            confirmLoading={confirmLoading}
+            cancelLoading={cancelLoading}
+            onConfirmUpgrade={onConfirmPendingUpgrade}
+            onCancelUpgrade={onCancelPendingUpgrade}
+          />
 
-            return (
-              <ScrollReveal
-                key={p.name}
-                delay={0.05 * plansToShow.indexOf(p)}
-                duration={0.4}
-                className="h-full min-h-0"
-              >
-                <PlanCard
-                  plan={p}
-                  isAuthed={isAuthed}
-                  isMaster={isMaster}
-                  isVerified={isVerified}
-                  effectivePlan={effectivePlan}
-                  isUpgradeOption={isUpgradeOption}
-                  checkoutLoading={checkoutLoading}
-                  claimLoading={claimLoading}
-                  onBuy={onBuy}
-                />
-              </ScrollReveal>
-            );
-          })}
+          {!isAuthed ? (
+            <p className={cn(plansVerifyBannerCls, 'mb-6 text-[13px] font-medium sm:mb-8')}>
+              {t('plans.registerToGetFreeDesc')}
+            </p>
+          ) : null}
+
+          <div className="mb-6 grid grid-cols-1 items-stretch gap-4 sm:mb-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+            {plansToShow.map((p, index) => {
+              const isUpgradeOption =
+                isAuthed &&
+                ((effectivePlan === 'BASIC' && (p.name === 'VIP' || p.name === 'PREMIUM')) ||
+                  (effectivePlan === 'VIP' && p.name === 'PREMIUM'));
+
+              return (
+                <ScrollReveal key={p.name} delay={0.05 * index} duration={0.4} className="h-full min-h-0">
+                  <PlanCard
+                    plan={p}
+                    isAuthed={isAuthed}
+                    isMaster={isMaster}
+                    isVerified={isVerified}
+                    effectivePlan={effectivePlan}
+                    isUpgradeOption={isUpgradeOption}
+                    checkoutLoading={checkoutLoading}
+                    claimLoading={claimLoading}
+                    onBuy={onBuy}
+                  />
+                </ScrollReveal>
+              );
+            })}
+          </div>
+
+          <PlansComparisonTable />
         </div>
-
-        <PlansComparisonTable />
       </div>
-    </div>
     </>
   );
 }

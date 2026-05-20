@@ -16,12 +16,29 @@ import { VerificationGate } from '@/components/common/VerificationGate';
 import type { PromotionDto } from '@/types';
 import { formatDateShort, getLocaleFromLanguage } from '@/utils/date';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { cn } from '@/lib/utils';
+import {
+  masterBadgeCls,
+  masterCardCls,
+  masterDialogContentCls,
+  masterFormLabelCls,
+  masterIconWrapCls,
+  masterInputCls,
+  masterInsetPanelCls,
+  masterOutlineBtnCls,
+  masterPageClassName,
+  masterPrimaryBtnCls,
+  masterSectionTitleCls,
+  masterSelectTriggerCls,
+  masterTextareaCls,
+  masterTextMuted,
+} from '@/lib/masterCabinetStyles';
+import { CabinetEmptyState } from '@/components/cabinet/CabinetEmptyState';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -233,12 +250,11 @@ export default function PromotionsPage() {
 
   return (
     <VerificationGate isVerified={isVerified}>
-    <div className="mx-auto max-w-5xl px-4 py-6 md:py-8">
+    <div className={masterPageClassName}>
       <PageHeader
         title={t('promotionsPage.title')}
-        subtitle={t('promotionsPage.subtitle')}
         actions={
-          <Button onClick={openCreate} className="gap-2 bg-rose-600 text-white hover:bg-rose-700 dark:bg-rose-700 dark:hover:bg-rose-600">
+          <Button type="button" onClick={openCreate} className={cn(masterPrimaryBtnCls, 'gap-2')}>
             <Plus className="size-4" />
             {t('promotionsPage.create')}
           </Button>
@@ -246,97 +262,121 @@ export default function PromotionsPage() {
       />
 
       {promotions.length === 0 ? (
-        <Alert className="rounded-xl border-2 border-dashed">
-          <Tag className="size-5" />
-          <AlertDescription>
-            <p className="font-medium">{t('promotionsPage.noPromotions')}</p>
-            <p className="mt-1 text-sm opacity-90">{t('promotionsPage.noPromotionsHint')}</p>
-            <Button onClick={openCreate} variant="outline" size="sm" className="mt-3 gap-2 border-rose-500/50 text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/50">
-              <Plus className="size-4" />
-              {t('promotionsPage.create')}
-            </Button>
-          </AlertDescription>
-        </Alert>
+        <CabinetEmptyState
+          icon={Tag}
+          title={t('promotionsPage.noPromotions')}
+          description={t('promotionsPage.noPromotionsHint')}
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
           {promotions.map((p) => {
             const status = statusInfo(p);
             return (
-              <Card key={p.id} className="overflow-hidden border-border dark:border-white/[0.08] transition hover:shadow-md">
+              <div key={p.id} className={masterCardCls}>
                 <CardContent className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-semibold text-foreground truncate">{p.title}</h3>
-                        <Badge className="shrink-0 gap-1 bg-gradient-to-r from-rose-500 to-orange-500 text-white border-0">
+                        <h3 className={cn('truncate font-semibold', masterSectionTitleCls)}>{p.title}</h3>
+                        <span className={cn(masterBadgeCls, 'gap-1 normal-case bg-[#FFF8EB] text-[#E97525] dark:bg-[#E97525]/12')}>
                           <Flame className="size-3" />
                           -{p.discount}%
-                        </Badge>
+                        </span>
                       </div>
-                      <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{p.description}</p>
-                      <p className="mt-1.5 text-xs text-muted-foreground">
-                        {t('promotionsPage.serviceLabel')}: <span className="font-medium text-foreground">{p.serviceTitle?.trim() ? p.serviceTitle : t('promotionsPage.allServices')}</span>
+                      {p.description ? (
+                        <p className={cn('mt-1 line-clamp-2', masterTextMuted)}>{p.description}</p>
+                      ) : null}
+                      <p className={cn('mt-1.5', masterTextMuted)}>
+                        {t('promotionsPage.serviceLabel')}:{' '}
+                        <span className="font-medium text-[#212529] dark:text-white">
+                          {p.serviceTitle?.trim() ? p.serviceTitle : t('promotionsPage.allServices')}
+                        </span>
                       </p>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className="text-xs text-muted-foreground">
+                        <span className={masterTextMuted}>
                           {formatDateShort(p.validFrom, locale)} – {formatDateShort(p.validUntil, locale)}
                         </span>
-                        <Badge variant={status.type === 'destructive' ? 'destructive' : status.type === 'secondary' ? 'secondary' : 'default'} className="text-xs">
+                        <Badge
+                          variant={
+                            status.type === 'destructive'
+                              ? 'destructive'
+                              : status.type === 'secondary'
+                                ? 'secondary'
+                                : 'default'
+                          }
+                          className="text-xs"
+                        >
                           {status.label}
                         </Badge>
                       </div>
                     </div>
                     <div className="flex shrink-0 gap-1">
-                      <Button variant="outline" size="icon" className="size-9" onClick={() => openEdit(p)} aria-label={t('promotionsPage.edit')}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className={cn(masterOutlineBtnCls, 'size-9 shrink-0 p-0')}
+                        onClick={() => openEdit(p)}
+                        aria-label={t('promotionsPage.edit')}
+                      >
                         <Pencil className="size-4" />
                       </Button>
-                      <Button variant="outline" size="icon" className="size-9 text-destructive hover:bg-destructive hover:text-destructive-foreground" onClick={() => setDeleteId(p.id)} aria-label={t('common.delete')}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="size-9 shrink-0 border-destructive/30 text-destructive hover:bg-destructive/10"
+                        onClick={() => setDeleteId(p.id)}
+                        aria-label={t('common.delete')}
+                      >
                         <Trash2 className="size-4" />
                       </Button>
                     </div>
                   </div>
                 </CardContent>
-              </Card>
+              </div>
             );
           })}
         </div>
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[32rem] overflow-hidden rounded-[1.5rem] border-0 bg-card p-0 shadow-2xl">
-          <div className="relative border-b border-black/5 px-8 pb-5 pt-7 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/50">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-3 text-2xl font-bold tracking-tight text-foreground">
-                <div className="h-6 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-rose-500 to-orange-500"></div>
+        <DialogContent className={cn(masterDialogContentCls, 'flex max-h-[min(90vh,calc(100dvh-2rem))] w-[calc(100vw-1.5rem)] max-w-lg flex-col overflow-hidden p-0 sm:w-full')}>
+          <DialogHeader className="border-b border-[#e8e8e8] px-6 py-5 text-left dark:border-[#2d2d2d]">
+            <DialogTitle className="flex items-center gap-3">
+              <span className={masterIconWrapCls}>
+                <Tag className="size-5" />
+              </span>
+              <span className={masterSectionTitleCls}>
                 {editingId ? t('promotionsPage.edit') : t('promotionsPage.create')}
-              </DialogTitle>
-            </DialogHeader>
-          </div>
-          <div className="max-h-[65vh] overflow-y-auto px-8 py-6 custom-scrollbar">
+              </span>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[65vh] overflow-y-auto px-6 py-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="sm:col-span-2 space-y-2">
-                <Label htmlFor="promo-title" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.titleLabel')} *</Label>
+                <Label htmlFor="promo-title" className={masterFormLabelCls}>{t('promotionsPage.titleLabel')} *</Label>
                 <Input
                   id="promo-title"
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                   placeholder={t('promotionsPage.titlePlaceholder')}
-                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className={masterInputCls}
                 />
               </div>
               <div className="sm:col-span-2 space-y-2">
-                <Label htmlFor="promo-desc" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.descriptionLabel')}</Label>
+                <Label htmlFor="promo-desc" className={masterFormLabelCls}>{t('promotionsPage.descriptionLabel')}</Label>
                 <Textarea
                   id="promo-desc"
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   placeholder={t('promotionsPage.descriptionPlaceholder')}
                   rows={3}
-                  className="rounded-2xl bg-slate-50/80 border-transparent p-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08] resize-none"
+                  className={cn(masterTextareaCls, 'p-4')}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="promo-discount" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.discountLabel')} *</Label>
+                <Label htmlFor="promo-discount" className={masterFormLabelCls}>{t('promotionsPage.discountLabel')} *</Label>
                 <Input
                   id="promo-discount"
                   type="number"
@@ -344,69 +384,84 @@ export default function PromotionsPage() {
                   max={100}
                   value={form.discount}
                   onChange={(e) => setForm((f) => ({ ...f, discount: Number(e.target.value) || 0 }))}
-                  className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className={masterInputCls}
                 />
-                <p className="pl-1 text-[11px] text-muted-foreground/70">{t('promotionsPage.discountHint')}</p>
+                <p className={masterTextMuted}>{t('promotionsPage.discountHint')}</p>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.serviceLabel')}</Label>
+                <Label className={masterFormLabelCls}>{t('promotionsPage.serviceLabel')}</Label>
                 <Select
                   value={form.serviceTitle || '__all__'}
                   onValueChange={(v) => setForm((f) => ({ ...f, serviceTitle: v === '__all__' ? '' : v }))}
                 >
-                  <SelectTrigger id="promo-service" className="h-11 rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]">
+                  <SelectTrigger id="promo-service" className={masterSelectTriggerCls}>
                     <SelectValue placeholder={t('promotionsPage.allServices')} />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-none shadow-xl dark:bg-slate-800">
-                    <SelectItem value="__all__" className="rounded-xl cursor-pointer py-2 focus:bg-rose-50 dark:focus:bg-white/10" disabled={!canApplyToAll}>
+                  <SelectContent>
+                    <SelectItem value="__all__" disabled={!canApplyToAll}>
                       {t('promotionsPage.allServices')}
                       {!canApplyToAll && serviceTitles.length > 0 ? ` (${t('promotionsPage.allServicesDisabled')})` : ''}
                     </SelectItem>
                     {serviceTitles.map((st) => (
-                      <SelectItem key={st} value={st} className="rounded-xl cursor-pointer py-2 focus:bg-rose-50 dark:focus:bg-white/10" disabled={takenServiceTitles.has(st)}>
+                      <SelectItem key={st} value={st} disabled={takenServiceTitles.has(st)}>
                         <div className="truncate pr-2">{st}</div>
-                        {takenServiceTitles.has(st) ? <span className="text-[10px] text-rose-500"> {t('promotionsPage.alreadyHasPromotion')}</span> : ''}
+                        {takenServiceTitles.has(st) ? (
+                          <span className="text-[10px] text-[#E97525]"> {t('promotionsPage.alreadyHasPromotion')}</span>
+                        ) : null}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {!form.serviceTitle && !canApplyToAll && serviceTitles.length > 0 && (
-                  <p className="pl-1 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+                  <p className="pl-1 text-[10px] font-medium text-[#E97525] dark:text-[#f08540]">
                     {t('promotionsPage.allServicesAlreadyHavePromotion')}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="promo-from" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.validFromLabel')} *</Label>
+                <Label htmlFor="promo-from" className={masterFormLabelCls}>{t('promotionsPage.validFromLabel')} *</Label>
                 <Input
                   id="promo-from"
                   type="date"
                   value={form.validFrom}
                   onChange={(e) => setForm((f) => ({ ...f, validFrom: e.target.value }))}
-                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className={masterInputCls}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="promo-until" className="text-xs font-bold uppercase tracking-wider text-muted-foreground/80">{t('promotionsPage.validUntilLabel')} *</Label>
+                <Label htmlFor="promo-until" className={masterFormLabelCls}>{t('promotionsPage.validUntilLabel')} *</Label>
                 <Input
                   id="promo-until"
                   type="date"
                   value={form.validUntil}
                   onChange={(e) => setForm((f) => ({ ...f, validUntil: e.target.value }))}
-                  className="h-11 w-full block rounded-2xl bg-slate-50/80 border-transparent px-4 shadow-sm transition focus-visible:bg-white focus-visible:ring-1 focus-visible:ring-rose-500 hover:bg-slate-100 dark:bg-white/[0.04] dark:focus-visible:bg-slate-900 dark:hover:bg-white/[0.08]"
+                  className={masterInputCls}
                 />
               </div>
-              <div className="sm:col-span-2 mt-1 flex items-center justify-between rounded-2xl border border-transparent bg-slate-50/80 px-5 py-4 shadow-sm transition dark:border-white/[0.02] dark:bg-white/[0.04]">
-                <Label htmlFor="promo-active" className="cursor-pointer text-sm font-bold text-foreground">{t('promotionsPage.isActiveLabel')}</Label>
-                <Switch id="promo-active" checked={form.isActive} onCheckedChange={(v) => setForm((f) => ({ ...f, isActive: v }))} className="shadow-sm" />
+              <div className={cn(masterInsetPanelCls, 'sm:col-span-2 flex items-center justify-between')}>
+                <Label htmlFor="promo-active" className={cn('cursor-pointer', masterFormLabelCls)}>
+                  {t('promotionsPage.isActiveLabel')}
+                </Label>
+                <Switch
+                  id="promo-active"
+                  checked={form.isActive}
+                  onCheckedChange={(v) => setForm((f) => ({ ...f, isActive: v }))}
+                />
               </div>
             </div>
           </div>
-          <DialogFooter className="border-t border-black/5 bg-slate-50/50 px-8 py-5 dark:border-white/5 dark:bg-slate-900/50 sm:justify-between flex-col-reverse sm:flex-row gap-3">
-            <Button variant="ghost" onClick={() => setDialogOpen(false)} disabled={createLoading || updateLoading} className="w-full sm:w-auto rounded-2xl font-medium">
+          <DialogFooter className="flex flex-col-reverse gap-3 border-t border-[#e8e8e8] px-6 py-4 dark:border-[#2d2d2d] sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDialogOpen(false)}
+              disabled={createLoading || updateLoading}
+              className={cn(masterOutlineBtnCls, 'w-full sm:w-auto')}
+            >
               {t('common.cancel')}
             </Button>
             <Button
+              type="button"
               onClick={handleSubmit}
               disabled={
                 createLoading ||
@@ -416,7 +471,7 @@ export default function PromotionsPage() {
                 !form.validUntil ||
                 (!form.serviceTitle?.trim() && !canApplyToAll)
               }
-              className="w-full sm:w-auto rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 px-8 text-white shadow-md hover:from-rose-600 hover:to-orange-600 dark:from-rose-600 dark:to-orange-600"
+              className={cn(masterPrimaryBtnCls, 'w-full sm:w-auto')}
             >
               {createLoading || updateLoading ? t('common.loading') : editingId ? t('common.save') : t('promotionsPage.create')}
             </Button>

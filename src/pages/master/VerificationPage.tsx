@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { masterPageNarrowClassName } from '@/lib/masterCabinetStyles';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import {
   useGetMyVerificationStatusQuery,
@@ -64,7 +65,7 @@ export default function VerificationPage() {
   const canSubmit = !pendingVerification || verification?.status === 'REJECTED';
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 md:py-8 lg:px-8">
+    <div className={masterPageNarrowClassName}>
       <div className="mb-8">
         <PageHeader title={t('verification.title')} subtitle={t('verification.subtitle')} />
       </div>
