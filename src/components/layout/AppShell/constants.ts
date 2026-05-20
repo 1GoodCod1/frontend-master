@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Shield,
   Briefcase,
+  Building2,
 } from 'lucide-react';
 import { USER_ROLE } from '@/constants/roles';
 import type { AppShellNavItem } from './types';
@@ -16,6 +17,7 @@ export const APP_SHELL_NAV_ITEMS: AppShellNavItem[] = [
     icon: Briefcase,
     hideForRoles: [USER_ROLE.ADMIN],
   },
+  { to: '/companii', labelKey: 'nav.companii', icon: Building2 },
   {
     to: '/plans',
     labelKey: 'nav.plans',

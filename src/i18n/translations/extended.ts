@@ -40,6 +40,7 @@ import { dataGrid } from './dataGrid';
 import { compliance } from './compliance';
 import { clients } from './clients';
 import { jobs } from './jobs';
+import { companii } from './companii';
 
 /** Остальные экраны — отдельный async-чанк (уменьшает initial JS). */
 const extendedModules = [
@@ -84,6 +85,7 @@ const extendedModules = [
   compliance,
   clients,
   jobs,
+  companii,
 ];
 
 export function buildExtendedResources() {

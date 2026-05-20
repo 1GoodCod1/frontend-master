@@ -12,6 +12,7 @@ function j(...parts: string[]): string {
 /** Сегменты URL (как в `path` у роутов, без начального слэша) */
 export const routeSeg = {
   masters: 'masters',
+  companii: 'companii',
   plans: 'plans',
   checkout: 'checkout',
   success: 'success',
@@ -70,6 +71,8 @@ export const paths = {
 
   masters: j(routeSeg.masters),
   masterProfile: (slug: string) => j(routeSeg.masters, slug),
+
+  companii: j(routeSeg.companii),
 
   plans: j(routeSeg.plans),
   plansCheckout: j(routeSeg.plans, routeSeg.checkout),
@@ -160,6 +163,7 @@ export const paths = {
 
 /** Набор «прочих» публичных страниц (как в AppShellMain) */
 export const OTHER_PUBLIC_PATHS = [
+  paths.companii,
   paths.faq,
   paths.howItWorks,
   paths.contact,

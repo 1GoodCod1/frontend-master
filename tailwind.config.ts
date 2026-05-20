@@ -12,7 +12,7 @@ const config: Config = {
         extend: {
             fontFamily: {
                 sans: ['var(--font-sans)', 'Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                mono: ['var(--font-mono)', 'Iosevka Charon Mono', 'ui-monospace', 'monospace'],
+                mono: ['var(--font-mono)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
             },
             colors: {
                 border: 'hsl(var(--border))',

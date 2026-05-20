@@ -2,6 +2,7 @@ import { lazyWithRetry } from '@/utils/lazyWithRetry';
 
 export const HomePage = lazyWithRetry(() => import('@/pages/public/HomePage'));
 export const MastersPage = lazyWithRetry(() => import('@/pages/public/MastersPage'));
+export const CompaniiLandingPage = lazyWithRetry(() => import('@/pages/public/CompaniiLandingPage'));
 export const MasterDetailsPage = lazyWithRetry(() => import('@/pages/public/MasterDetailsPage'));
 export const PlansPage = lazyWithRetry(() => import('@/pages/public/PlansPage'));
 export const PaymentOptionsPage = lazyWithRetry(() => import('@/pages/checkout/PaymentOptionsPage'));

@@ -5,30 +5,31 @@
 /* ========== Design system: shadcn + professional light / warm dark ========== */
 :root {
   --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Iosevka Charon Mono', ui-monospace, 'Cascadia Mono', monospace;
-  --background: 220 14% 97%;
-  --foreground: 220 18% 14%;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  /* Light canvas #F9F7F2 */
+  --background: 43 37% 96%;
+  --foreground: 40 18% 14%;
   --card: 0 0% 100%;
-  --card-foreground: 220 18% 14%;
+  --card-foreground: 40 18% 14%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 18% 14%;
+  --popover-foreground: 40 18% 14%;
   --primary: 174 58% 39%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 14% 93%;
-  --secondary-foreground: 220 18% 14%;
-  --muted: 220 14% 93%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 220 14% 93%;
-  --accent-foreground: 220 18% 14%;
+  --secondary: 43 22% 92%;
+  --secondary-foreground: 40 18% 14%;
+  --muted: 43 22% 92%;
+  --muted-foreground: 40 12% 45%;
+  --accent: 43 22% 92%;
+  --accent-foreground: 40 18% 14%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 220 14% 93%;
-  --input: 214 32% 91%;
+  --border: 43 18% 90%;
+  --input: 43 20% 88%;
   --ring: 174 58% 39%;
   --cta: 25 95% 53%;
   --cta-foreground: 0 0% 100%;
   --radius: 0.75rem;
-  --home-bg: 220 18% 98%;
+  --home-bg: 43 37% 96%;
   --button-bg: 220 18% 22%;
   --button-bg-hover: 220 18% 18%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.18);
@@ -93,8 +94,8 @@ html[data-theme="dark"],
 /* ── Cabinet layout scope ── */
 .cabinet-theme-scope {
   --cabinet-sidebar-bg: 0 0% 100%;
-  --cabinet-sidebar-border: 220 14% 93%;
-  --cabinet-main-bg: 220 14% 96%;
+  --cabinet-sidebar-border: 43 18% 90%;
+  --cabinet-main-bg: 43 30% 94%;
 }
 
 html[data-theme="dark"] .cabinet-theme-scope,

@@ -30,7 +30,7 @@
     "docker:prod:down": "docker-compose -f docker-compose.prod.yml down"
   },
   "dependencies": {
-    "@fontsource/iosevka-charon-mono": "^5.2.1",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/poppins": "^5.2.7",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",

@@ -9,6 +9,7 @@ const plansCheckoutSuccess = `${plansCheckout}/${routeSeg.success}`;
 export const publicRoutes = [
   { index: true, element: <LazyPage><P.HomePage /></LazyPage> },
   { path: routeSeg.masters, element: <LazyPage><P.MastersPage /></LazyPage> },
+  { path: routeSeg.companii, element: <LazyPage><P.CompaniiLandingPage /></LazyPage> },
   {
     path: `${routeSeg.masters}/:slug`,
     element: <Suspense fallback={null}><P.MasterDetailsPage /></Suspense>,
