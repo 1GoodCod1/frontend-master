@@ -1,20 +1,26 @@
 import { useState, useEffect } from 'react';
 
+function readIsDark(): boolean {
+  if (typeof document === 'undefined') return false;
+  const el = document.documentElement;
+  return el.classList.contains('dark') || el.getAttribute('data-theme') === 'dark';
+}
+
 /**
- * Returns true when document has class "dark" (shadcn/dark mode).
- * Subscribes to class changes on document.documentElement.
+ * Returns true when document is in dark mode (`class="dark"` or `data-theme="dark"`).
  */
 export function useIsDark(): boolean {
-  const [isDark, setIsDark] = useState(() =>
-    typeof document !== 'undefined' ? document.documentElement.classList.contains('dark') : false
-  );
+  const [isDark, setIsDark] = useState(readIsDark);
 
   useEffect(() => {
     const el = document.documentElement;
-    const check = () => setIsDark(el.classList.contains('dark'));
+    const check = () => setIsDark(readIsDark());
 
     const observer = new MutationObserver(check);
-    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(el, {
+      attributes: true,
+      attributeFilter: ['class', 'data-theme'],
+    });
     return () => observer.disconnect();
   }, []);
 

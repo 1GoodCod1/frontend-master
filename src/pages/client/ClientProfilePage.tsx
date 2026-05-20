@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { cn } from '@/lib/utils';
+import { clientPageClassName } from '@/lib/clientCabinetStyles';
 import { LoadingState, ErrorState } from '@/components/common/States';
 import { useClientProfile } from '@/hooks/client/profile';
 import AvatarSection from '@/features/clients/components/profile/AvatarSection';
@@ -29,7 +31,7 @@ function ClientProfilePage() {
   if (isError) return <ErrorState error={error} onRetry={refetch} />;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 animate-in fade-in duration-500">
+    <div className={cn(clientPageClassName, 'animate-in fade-in duration-500')}>
       <PageHeader
         title={t('clientProfile.title')}
         subtitle={t('clientProfile.subtitle')}

@@ -79,6 +79,7 @@ export const paths = {
   plansCheckoutSuccess: j(routeSeg.plans, routeSeg.checkout, routeSeg.success),
 
   faq: j(routeSeg.faq),
+  categories: j(routeSeg.categories),
   howItWorks: j(routeSeg.howItWorks),
   contact: j(routeSeg.contact),
   privacy: j(routeSeg.privacy),
@@ -133,6 +134,8 @@ export const paths = {
     chatConversation: (conversationId: string) =>
       j(routeSeg.clientDashboard, routeSeg.chat, conversationId),
     referrals: j(routeSeg.clientDashboard, routeSeg.referrals),
+    jobs: j(routeSeg.clientDashboard, routeSeg.jobs),
+    jobsCreate: j(routeSeg.clientDashboard, routeSeg.jobs, routeSeg.jobCreate),
   },
 
   jobs: {
@@ -164,6 +167,7 @@ export const paths = {
 /** Набор «прочих» публичных страниц (как в AppShellMain) */
 export const OTHER_PUBLIC_PATHS = [
   paths.companii,
+  paths.categories,
   paths.faq,
   paths.howItWorks,
   paths.contact,

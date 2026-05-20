@@ -23,6 +23,7 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { Button } from '@/components/ui/button';
 import { paths } from '@/constants/routes';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 
 const clientSteps = [
   { icon: Search, titleKey: 'step1', descKey: 'step1' },
@@ -61,8 +62,7 @@ const jointsFacts = [
 // Unified card style — matches homepage sections (Categories, JobsFlow, HowItWorks, Roadmap)
 const cardCls = cn(
   'group relative h-full flex flex-col rounded-xl sm:rounded-2xl p-5 sm:p-6',
-  'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
-  'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
+  surfaceCardCls,
   'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
   'transition duration-300',
 );

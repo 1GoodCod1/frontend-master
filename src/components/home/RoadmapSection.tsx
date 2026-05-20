@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useIsDark } from '@/hooks/useIsDark';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 import { ROADMAP_ITEMS } from '@/constants';
 
 export const RoadmapSection = () => {
@@ -59,8 +60,7 @@ export const RoadmapSection = () => {
               key={titleKey}
               className={cn(
                 'relative h-full flex flex-col items-center text-center px-4 py-6 sm:px-5 sm:py-7 rounded-xl sm:rounded-2xl',
-                'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
-                'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
+                surfaceCardCls,
                 'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
                 'transition duration-300',
               )}

@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { CATEGORY_META, CATEGORY_DEFAULT_META } from '@/constants';
 import type { MastersFilterItem } from '@/types';
 import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
 
@@ -31,7 +32,8 @@ export function HeroCategoryPills({
       </p>
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => {
-          const emoji = cat.icon?.trim() || '📋';
+          const meta = CATEGORY_META[cat.slug] ?? CATEGORY_DEFAULT_META;
+          const Icon = meta.icon;
           const translatedName = getTranslatedCategoryName(t, cat, i18n.language);
           return (
             <RouterLink
@@ -46,7 +48,7 @@ export function HeroCategoryPills({
                 'text-foreground/80'
               )}
             >
-              <span>{emoji}</span>
+              <Icon className={cn('h-3.5 w-3.5 shrink-0', meta.color)} strokeWidth={1.75} />
               {translatedName}
             </RouterLink>
           );

@@ -1,16 +1,14 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, Rocket, X } from 'lucide-react';
 import { useAppSelector } from '@/app/hooks';
-import { selectMe, selectRole } from '@/features/auth/selectors';
-import { selectPlan } from '@/features/auth/selectors';
+import { selectMe, selectPlan, selectRole } from '@/features/auth/selectors';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { CabinetProfileMenu } from '@/components/layout/CabinetSidebar/CabinetProfileMenu';
+import { CABINET_COLUMN_HEIGHT } from '@/components/layout/CabinetContentShell';
 import { mediaUrl } from '@/utils/media';
 import { cn } from '@/lib/utils';
-import { USER_ROLE } from '@/constants/roles';
 
 export interface CabinetNavItem {
   key: string;
@@ -20,9 +18,14 @@ export interface CabinetNavItem {
   badge?: number;
 }
 
-interface CabinetSidebarProps {
-  sectionLabel: string;
+export interface CabinetNavSection {
+  key: string;
+  label: string;
   items: CabinetNavItem[];
+}
+
+interface CabinetSidebarProps {
+  sections: CabinetNavSection[];
   showPremiumBanner?: boolean;
   collapsed: boolean;
   onToggle: () => void;
@@ -31,8 +34,7 @@ interface CabinetSidebarProps {
 }
 
 export function CabinetSidebar({
-  sectionLabel,
-  items,
+  sections,
   showPremiumBanner = false,
   collapsed,
   onToggle,
@@ -40,7 +42,6 @@ export function CabinetSidebar({
   onMobileClose,
 }: CabinetSidebarProps) {
   const reduceMotion = useReducedMotionPreference();
-  const { t } = useTranslation();
   const location = useLocation();
   const me = useAppSelector(selectMe);
   const plan = useAppSelector(selectPlan);
@@ -62,221 +63,172 @@ export function CabinetSidebar({
     ? `${meData?.firstName ?? ''} ${meData?.lastName ?? ''}`.trim()
     : '';
   const displayName = fullNameFromMaster || fullNameFromMe || '';
-  const initials =
-    displayName
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((s) => s[0])
-      .join('')
-      .slice(0, 2)
-      .toUpperCase() || meData?.email?.slice(0, 2)?.toUpperCase() || 'U';
+
+  const allItems = sections.flatMap((section) => section.items);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
-      {isMobileOpen && (
-        <button
-          onClick={onMobileClose}
-          className="absolute top-3 right-3 md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition"
-        >
-          <X size={16} />
-        </button>
-      )}
-
-      {/* User Profile Header */}
-      <div className="p-4 border-b border-[hsl(var(--cabinet-sidebar-border))]">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="relative shrink-0">
-            <Avatar className="w-10 h-10 rounded-xl shadow-lg shadow-violet-500/25">
-              <AvatarImage src={avatarUrl} alt="" className="object-cover" />
-              <AvatarFallback className="rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white text-sm font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            {role === USER_ROLE.MASTER && (
-              <div
-                className={cn(
-                  'absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[hsl(var(--cabinet-sidebar-bg))]',
-                  isOnline ? 'bg-emerald-400' : 'bg-slate-400'
-                )}
-              />
-            )}
-          </div>
-          <AnimatePresence>
-            {!collapsed && (
-              <motion.div
-                initial={reduceMotion ? false : { opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: reduceMotion ? 0 : 0.15 }}
-                className="min-w-0 flex-1 overflow-hidden"
-              >
-                <p
-                  className="text-sm font-semibold text-foreground line-clamp-2 break-words"
-                  title={displayName || undefined}
-                >
-                  {displayName || '—'}
-                </p>
-                {role === USER_ROLE.MASTER && (
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span
-                      className={cn(
-                        'w-1.5 h-1.5 rounded-full inline-block',
-                        isOnline ? 'bg-emerald-500' : 'bg-slate-400'
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        'text-xs',
-                        isOnline ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'
-                      )}
-                    >
-                      {isOnline ? t('master.status.online') : t('master.status.offline')}
-                    </span>
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {/* Premium Banner */}
-      <AnimatePresence>
-        {!collapsed && showPremiumBanner && plan === 'PREMIUM' && (
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.2 }}
-            className="mx-3 mt-3 overflow-hidden"
+    <div className="grid h-full min-h-0 grid-rows-[1fr_auto]">
+      <div className="min-h-0 overflow-y-auto overscroll-y-contain">
+        {isMobileOpen && (
+          <button
+            onClick={onMobileClose}
+            className="absolute top-3 right-3 z-10 md:hidden flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted"
           >
-            <div className="relative rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 p-3 overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage:
-                    'radial-gradient(circle at 80% 50%, white 0%, transparent 60%)',
-                }}
-              />
-              <div className="relative flex items-center gap-2">
-                <Rocket size={16} className="text-white shrink-0" />
-                <div>
-                  <p className="text-xs font-bold text-white">PREMIUM ACTIV</p>
-                  <p className="text-[10px] text-white/80">Acces complet</p>
+            <X size={16} />
+          </button>
+        )}
+
+        {/* Premium Banner */}
+        <AnimatePresence>
+          {!collapsed && showPremiumBanner && plan === 'PREMIUM' && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}
+              className="mx-3 mt-3 shrink-0 overflow-hidden"
+            >
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 p-3">
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage:
+                      'radial-gradient(circle at 80% 50%, white 0%, transparent 60%)',
+                  }}
+                />
+                <div className="relative flex items-center gap-2">
+                  <Rocket size={16} className="shrink-0 text-white" />
+                  <div>
+                    <p className="text-xs font-bold text-white">PREMIUM ACTIV</p>
+                    <p className="text-[10px] text-white/80">Acces complet</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto p-3 space-y-0.5 mt-1">
-        <AnimatePresence>
-          {!collapsed && (
-            <motion.p
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reduceMotion ? 0 : 0.15 }}
-              className="px-3 pt-1 pb-2 text-[10px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest"
-            >
-              {sectionLabel}
-            </motion.p>
+            </motion.div>
           )}
         </AnimatePresence>
 
-        {items.map((item) => {
-          const exactMatch = location.pathname === item.to;
-          const anyExactMatch = items.some((i) => i.to === location.pathname);
-          const nestedMatch =
-            !anyExactMatch &&
-            item.to !== '/dashboard' &&
-            item.to !== '/client-dashboard' &&
-            item.to !== '/admin' &&
-            location.pathname.startsWith(item.to + '/');
-          const selected = exactMatch || nestedMatch;
-
-          const navButton = (
-            <div
-              className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition duration-150 relative group',
-                selected
-                  ? 'bg-violet-50 dark:bg-violet-950/20 text-violet-700 dark:text-violet-300'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-muted hover:text-foreground',
-                collapsed ? 'justify-center' : ''
-              )}
-            >
-              {selected &&
-                (reduceMotion ? (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-violet-600 rounded-r-full" />
-                ) : (
-                  <motion.div
-                    layoutId="cabinetActiveIndicator"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-violet-600 rounded-r-full"
-                  />
-                ))}
-              <span
-                className={cn(
-                  'shrink-0 transition-colors flex items-center justify-center',
-                  selected ? 'text-violet-600 dark:text-violet-400' : ''
-                )}
-              >
-                {item.icon}
-              </span>
-              <AnimatePresence>
-                {!collapsed && (
-                  <motion.span
-                    initial={reduceMotion ? false : { opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.15 }}
-                    className="flex-1 text-left truncate"
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-              {!collapsed && item.badge !== undefined && item.badge > 0 && (
-                <span
-                  className={cn(
-                    'text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 min-w-[18px] text-center',
-                    selected
-                      ? 'bg-violet-600 text-white'
-                      : 'bg-muted text-muted-foreground'
-                  )}
+        {/* Navigation */}
+        <nav className="mt-2 px-2.5 py-3">
+        {sections.map((section, sectionIndex) => (
+          <div key={section.key} className={cn(sectionIndex > 0 && 'mt-4')}>
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.p
+                  initial={reduceMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.15 }}
+                  className="px-3 pb-2 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#9C958C] dark:text-white/30"
                 >
-                  {item.badge > 99 ? '99+' : item.badge}
-                </span>
+                  {section.label}
+                </motion.p>
               )}
-              {collapsed && item.badge !== undefined && item.badge > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full border border-[hsl(var(--cabinet-sidebar-bg))]" />
-              )}
-            </div>
-          );
+            </AnimatePresence>
 
-          return (
-            <RouterLink
-              key={item.to}
-              to={item.to}
-              onClick={onMobileClose}
-            >
-              {navButton}
-            </RouterLink>
-          );
-        })}
-      </nav>
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const exactMatch = location.pathname === item.to;
+                const anyExactMatch = allItems.some((i) => i.to === location.pathname);
+                const nestedMatch =
+                  !anyExactMatch &&
+                  item.to !== '/dashboard' &&
+                  item.to !== '/client-dashboard' &&
+                  item.to !== '/admin' &&
+                  location.pathname.startsWith(item.to + '/');
+                const selected = exactMatch || nestedMatch;
+
+                const navButton = (
+                  <div
+                    className={cn(
+                      'group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] transition-all duration-200',
+                      '[&_svg]:size-[1.125rem] [&_svg]:shrink-0 [&_svg]:stroke-[1.75]',
+                      selected
+                        ? 'bg-[#FFF7ED] font-semibold text-[#D97706] dark:bg-[#E97525]/12 dark:text-[#E97525]'
+                        : 'font-medium text-[#475569] hover:bg-[#F4F6F8] hover:text-[#334155] dark:text-slate-400 dark:hover:bg-white/[0.05] dark:hover:text-slate-200',
+                      collapsed && 'justify-center px-2.5',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'flex shrink-0 items-center justify-center transition-colors',
+                        selected
+                          ? 'text-[#E97525]'
+                          : 'text-[#64748b] group-hover:text-[#475569] dark:text-slate-400 dark:group-hover:text-slate-300',
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+                    <AnimatePresence>
+                      {!collapsed && (
+                        <motion.span
+                          initial={reduceMotion ? false : { opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: reduceMotion ? 0 : 0.15 }}
+                          className="flex-1 truncate text-left leading-snug"
+                        >
+                          {item.label}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                    {!collapsed && item.badge !== undefined && item.badge > 0 && (
+                      <span
+                        className={cn(
+                          'min-w-[1.125rem] shrink-0 rounded-full px-1.5 py-0.5 text-center text-[10px] font-bold',
+                          selected
+                            ? 'bg-[#E97525] text-white'
+                            : 'bg-[#EEF1F4] text-[#64748b] dark:bg-white/10 dark:text-slate-400',
+                        )}
+                      >
+                        {item.badge > 99 ? '99+' : item.badge}
+                      </span>
+                    )}
+                    {collapsed && item.badge !== undefined && item.badge > 0 && (
+                      <span className="absolute right-1.5 top-1.5 size-2 rounded-full border border-[#FAF9F6] bg-[#E97525] dark:border-[hsl(var(--cabinet-sidebar-bg))]" />
+                    )}
+                  </div>
+                );
+
+                return (
+                  <RouterLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={onMobileClose}
+                  >
+                    {navButton}
+                  </RouterLink>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        </nav>
+      </div>
+
+      <CabinetProfileMenu
+        collapsed={collapsed}
+        displayName={displayName}
+        avatarUrl={avatarUrl}
+        role={role}
+        plan={plan}
+        isOnline={isOnline}
+        onMobileClose={onMobileClose}
+      />
     </div>
   );
 
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="relative hidden md:flex shrink-0">
+      <div className="relative hidden min-h-0 shrink-0 md:block">
         <motion.aside
           animate={{ width: collapsed ? 72 : 256 }}
           transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.4, 0, 0.2, 1] }}
-          className="flex flex-col h-full bg-[hsl(var(--cabinet-sidebar-bg))] border-r border-[hsl(var(--cabinet-sidebar-border))] overflow-hidden transition-colors duration-300"
+          className={cn(
+            CABINET_COLUMN_HEIGHT,
+            'flex min-h-0 flex-col overflow-hidden border-r border-[#E8E4DE] bg-[#FAF9F6] transition-colors duration-300 dark:border-[hsl(var(--cabinet-sidebar-border))] dark:bg-[hsl(var(--cabinet-sidebar-bg))]',
+          )}
         >
           {sidebarContent}
         </motion.aside>
@@ -284,12 +236,12 @@ export function CabinetSidebar({
           onClick={onToggle}
           whileHover={reduceMotion ? undefined : { scale: 1.05 }}
           whileTap={reduceMotion ? undefined : { scale: 0.95 }}
-          className="absolute -right-3.5 top-8 z-30 w-7 h-7 bg-[hsl(var(--cabinet-sidebar-bg))] border border-[hsl(var(--cabinet-sidebar-border))] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition"
+          className="absolute -right-3.5 top-8 z-30 flex size-7 items-center justify-center rounded-full border border-[#E8E4DE] bg-white shadow-[0_2px_8px_rgba(15,23,42,0.08)] transition hover:shadow-md dark:border-[hsl(var(--cabinet-sidebar-border))] dark:bg-[hsl(var(--cabinet-sidebar-bg))]"
         >
           {collapsed ? (
-            <ChevronRight size={12} className="text-slate-500 dark:text-slate-400" />
+            <ChevronRight size={12} className="text-[#64748b] dark:text-slate-400" />
           ) : (
-            <ChevronLeft size={12} className="text-slate-500 dark:text-slate-400" />
+            <ChevronLeft size={12} className="text-[#64748b] dark:text-slate-400" />
           )}
         </motion.button>
       </div>
@@ -311,9 +263,9 @@ export function CabinetSidebar({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ duration: reduceMotion ? 0 : 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="fixed top-0 left-0 h-full w-72 bg-[hsl(var(--cabinet-sidebar-bg))] z-50 md:hidden overflow-hidden"
+              className="fixed top-0 left-0 z-50 flex h-full w-72 min-h-0 flex-col overflow-hidden border-r border-[#E8E4DE] bg-[#FAF9F6] dark:border-[hsl(var(--cabinet-sidebar-border))] dark:bg-[hsl(var(--cabinet-sidebar-bg))] md:hidden"
             >
-              <div className="relative h-full">{sidebarContent}</div>
+              <div className="relative h-full min-h-0">{sidebarContent}</div>
             </motion.aside>
           </>
         )}

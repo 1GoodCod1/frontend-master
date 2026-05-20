@@ -30,7 +30,18 @@ export const jobsApi = api.injectEndpoints({
 
     jobsList: build.query<
       JobsListResponse,
-      { status?: string; type?: string; cityId?: string; recommended?: boolean; mine?: boolean; page?: number; limit?: number; search?: string; sort?: 'recent' | 'best' } | void
+      {
+        status?: string;
+        type?: string;
+        cityId?: string;
+        categoryId?: string;
+        recommended?: boolean;
+        mine?: boolean;
+        page?: number;
+        limit?: number;
+        search?: string;
+        sort?: 'recent' | 'best';
+      } | void
     >({
       query: (params) => ({ url: '/jobs', method: 'GET', params: params ?? {} }),
       providesTags: ['Jobs'],

@@ -8,6 +8,7 @@ export const PlansPage = lazyWithRetry(() => import('@/pages/public/PlansPage'))
 export const PaymentOptionsPage = lazyWithRetry(() => import('@/pages/checkout/PaymentOptionsPage'));
 export const PaymentSuccessPage = lazyWithRetry(() => import('@/pages/checkout/PaymentSuccessPage'));
 export const FAQPage = lazyWithRetry(() => import('@/pages/public/FAQPage'));
+export const CategoriesPage = lazyWithRetry(() => import('@/pages/public/CategoriesPage'));
 export const HowItWorksPage = lazyWithRetry(() => import('@/pages/public/HowItWorksPage'));
 export const ContactsPage = lazyWithRetry(() => import('@/pages/public/ContactsPage'));
 export const PrivacyPolicyPage = lazyWithRetry(() => import('@/pages/public/PrivacyPolicyPage'));

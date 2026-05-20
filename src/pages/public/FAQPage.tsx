@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 
 type FAQItem = {
   questionKey: string;
@@ -76,11 +77,7 @@ const FAQ_SECTIONS: FAQSection[] = [
 ];
 
 // Unified card style — matches homepage / masters / jobs pages
-const cardCls = cn(
-  'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
-  'border border-gray-200/80 dark:border-white/[0.08]',
-  'shadow-sm dark:shadow-lg dark:shadow-black/20',
-);
+const cardCls = cn('rounded-2xl', surfaceCardCls);
 
 export default function FAQPage() {
   const { t } = useTranslation();
@@ -129,8 +126,7 @@ export default function FAQPage() {
           <div className="mt-6 max-w-2xl mx-auto">
             <div className={cn(
               'flex items-center gap-2.5 rounded-full px-4 py-2.5 transition-colors',
-              'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
-              'border border-gray-200/80 dark:border-white/[0.08]',
+              surfaceCardCls,
               'focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/15',
             )}>
               <Search className="h-4 w-4 shrink-0 text-slate-500 dark:text-slate-400" />

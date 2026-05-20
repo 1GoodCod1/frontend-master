@@ -45,7 +45,7 @@ export function AppShellMain({
     isJobsPage;
   const fullWidth = isDashboardOrAdmin || isPublicPage;
   const isAuthPage = AUTH_PATHS.has(pathname);
-  const hideFooter = pathname.startsWith('/admin');
+  const hideFooter = isDashboardOrAdmin;
 
   return (
     <>
@@ -56,13 +56,22 @@ export function AppShellMain({
           exit={{ opacity: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.2 }}
           className={cn(
-            'flex min-h-[calc(100dvh-3.5rem)] min-w-0 flex-col overflow-x-hidden transition-colors',
-            isPublicPage || isAuthPage ? 'bg-[hsl(var(--background))] dark:bg-[#171510]' : 'bg-background',
-            fullWidth ? 'pt-14' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-20 md:pt-24 pb-6 md:pb-8'
+            'flex min-w-0 flex-col overflow-x-hidden transition-colors',
+            isDashboardOrAdmin
+              ? 'flex min-h-0 flex-1 flex-col overflow-hidden bg-[hsl(var(--background))] pt-14'
+              : cn(
+                  'min-h-[calc(100dvh-3.5rem)]',
+                  isPublicPage || isAuthPage
+                    ? 'bg-[hsl(var(--background))] dark:bg-[#0a0a0a]'
+                    : 'bg-background',
+                  fullWidth ? 'pt-14' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-20 md:pt-24 pb-6 md:pb-8',
+                ),
           )}
         >
           {fullWidth ? (
-            <Outlet />
+            <div className={cn(isDashboardOrAdmin && 'flex h-full min-h-0 flex-1 flex-col overflow-hidden')}>
+              <Outlet />
+            </div>
           ) : (
             <div className="container mx-auto min-w-0 max-w-7xl flex-1 px-4 sm:px-6">
               <Outlet />

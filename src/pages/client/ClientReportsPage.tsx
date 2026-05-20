@@ -19,10 +19,23 @@ import {
   DialogBody,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { ClientEmptyState } from '@/components/client/ClientEmptyState';
+import {
+  clientCardCls,
+  clientCardStaticCls,
+  clientIconWrapCls,
+  clientInsetPanelCls,
+  clientPageClassName,
+  clientPrimaryBtnCls,
+  clientSectionTitleCls,
+  clientTextBody,
+  clientTextMuted,
+  clientTextTitle,
+} from '@/lib/clientCabinetStyles';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { isRecord } from '@/utils/guards';
 
 type MasterForReport = { id: string; user?: { firstName?: string; lastName?: string }; category?: Record<string, unknown> };
@@ -106,7 +119,7 @@ export default function ClientReportsPage() {
   if (reports.isError) return <ErrorState error={reports.error} onRetry={reports.refetch} />;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8">
+    <div className={clientPageClassName}>
       <PageHeader
         title={t('clientDashboard.reports')}
         subtitle={t('clientDashboard.reportsSubtitle')}
@@ -114,121 +127,110 @@ export default function ClientReportsPage() {
 
       {/* Section to select a master to report */}
       <div className="mb-10">
-        <h3 className="mb-4 flex items-center gap-2 text-lg font-bold">
-          <AlertTriangle className="size-5 text-amber-600" />
+        <h3 className={cn('mb-4 flex items-center gap-2', clientSectionTitleCls)}>
+          <AlertTriangle className="size-5 text-[#E97525]" />
           {t('reports.selectMasterToReport', 'Подать новую жалобу на мастера')}
         </h3>
         {mastersFromLeads.length === 0 ? (
-          <Card className="border-dashed border-black/10 bg-black/[0.02] dark:border-white/10 dark:bg-white/[0.02]">
-            <CardContent className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
-              <p className="text-sm italic text-foreground/70">{t('reports.noLeadsForReports', 'У вас пока нет мастеров, на которых можно подать жалобу')}</p>
-              <p className="mt-1 text-xs">{t('reports.noLeadsForReportsDesc', '(Жалобу можно подать только на мастера, с которым вы контактировали)')}</p>
-            </CardContent>
-          </Card>
+          <div className={cn(clientCardStaticCls, 'border-dashed p-8 text-center')}>
+            <p className={clientTextBody}>{t('reports.noLeadsForReports', 'У вас пока нет мастеров, на которых можно подать жалобу')}</p>
+            <p className={cn('mt-1', clientTextMuted)}>{t('reports.noLeadsForReportsDesc', '(Жалобу можно подать только на мастера, с которым вы контактировали)')}</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {mastersFromLeads.map((master) => (
-              <Button
+              <button
                 key={master.id}
-                variant="outline"
-                className="group relative h-auto flex-col items-start gap-3 overflow-hidden rounded-xl border border-black/10 bg-card p-5 text-left text-foreground shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:bg-amber-50 hover:text-foreground hover:shadow-md dark:border-white/10 dark:hover:border-amber-500/40 dark:hover:bg-amber-500/10 dark:hover:text-foreground"
+                type="button"
+                className={cn(clientCardCls, 'flex h-auto w-full flex-col items-start gap-3 p-5 text-left')}
                 onClick={() => handleOpenDialog(master)}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100" />
-                <div className="relative z-10 flex w-full items-center justify-between gap-2">
-                  <span className="text-base font-bold text-foreground transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500">
+                <div className="flex w-full items-center justify-between gap-2">
+                  <span className={cn('text-base font-semibold', clientTextTitle)}>
                     {[master.user?.firstName, master.user?.lastName].filter(Boolean).join(' ') || t('reports.unknownMaster')}
                   </span>
-                  <AlertTriangle className="size-4 text-muted-foreground transition-colors group-hover:text-amber-500" />
+                  <AlertTriangle className="size-4 text-[#6C757D]" />
                 </div>
                 {master.category && (
-                  <span className="relative z-10 text-xs text-muted-foreground transition-colors group-hover:text-muted-foreground">
-                    {getTranslatedCategoryName(t, master.category)}
-                  </span>
+                  <span className={clientTextMuted}>{getTranslatedCategoryName(t, master.category)}</span>
                 )}
-                <div className="relative z-10 mt-1 flex w-full items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-600/80 opacity-80 transition-opacity group-hover:opacity-100 dark:text-amber-500/80">
+                <span className={cn('mt-1 text-[10px] font-semibold uppercase tracking-wider text-[#E97525]/80')}>
                   {t('reports.clickToReport', 'Нажмите, чтобы подать жалобу')}
-                </div>
-              </Button>
+                </span>
+              </button>
             ))}
           </div>
         )}
       </div>
 
       <div className="mb-6 flex items-center justify-between border-b pb-2">
-        <h3 className="text-lg font-bold">{t('reports.myReports', 'История моих жалоб')}</h3>
+        <h3 className={clientSectionTitleCls}>{t('reports.myReports', 'История моих жалоб')}</h3>
       </div>
 
       {reportsList.length === 0 ? (
-        <Card className="flex flex-col items-center justify-center border-dashed border-black/10 p-12 text-center dark:border-white/10 dark:bg-card/5">
-          <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-amber-100/50 text-amber-500 dark:bg-amber-500/10">
-            <AlertTriangle className="size-6" />
-          </div>
-          <p className="mb-2 text-lg font-semibold text-foreground">{t('reports.noReports')}</p>
-          <p className="max-w-md text-sm text-muted-foreground">{t('reports.noReportsDescription')}</p>
-        </Card>
+        <ClientEmptyState
+          icon={AlertTriangle}
+          title={t('reports.noReports')}
+          description={t('reports.noReportsDescription')}
+        />
       ) : (
         <div className="flex flex-col gap-4">
           {(reportsList as ReportItem[]).map((report) => (
-            <Card key={report.id} className="overflow-hidden rounded-xl border border-black/5 bg-card/50 shadow-sm transition hover:bg-card/80 hover:shadow-md dark:border-white/5 dark:bg-card/20 dark:hover:bg-card/40">
-              <CardContent className="p-0">
-                <div className="flex flex-col sm:flex-row">
-                  <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+            <div key={report.id} className={clientCardCls}>
+              <div className="p-5 sm:p-6">
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <div className="flex size-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
-                          <AlertTriangle className="size-5" />
-                        </div>
+                        <span className={clientIconWrapCls}>
+                          <AlertTriangle className="size-4" />
+                        </span>
                         <div>
-                          <h4 className="text-sm font-bold sm:text-base">
+                          <h4 className={cn('text-sm font-semibold sm:text-base', clientTextTitle)}>
                             {report.master?.user?.firstName} {report.master?.user?.lastName}
                           </h4>
-                          <p className="text-xs text-muted-foreground">
+                          <p className={clientTextMuted}>
                             {formatDateTimeString(report.createdAt ?? null, locale)}
                           </p>
                         </div>
                       </div>
                       <span
-                        className="rounded-full px-3 py-1 text-xs font-semibold text-white shadow-sm"
+                        className="rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white"
                         style={{ backgroundColor: getStatusColor(report.status ?? 'PENDING') }}
                       >
                         {t(`reports.status.${report.status ?? 'PENDING'}`)}
                       </span>
                     </div>
 
-                    <div className="rounded-lg bg-black/5 p-4 dark:bg-white/5">
-                      <p className="mb-2 text-sm">
-                        <strong className="text-foreground">{t('reports.reason')}:</strong> {report.reason}
+                    <div className={clientInsetPanelCls}>
+                      <p className={cn('mb-2', clientTextBody)}>
+                        <strong className={clientTextTitle}>{t('reports.reason')}:</strong> {report.reason}
                       </p>
-                      <p className="whitespace-pre-wrap text-sm text-muted-foreground italic">
+                      <p className={cn('whitespace-pre-wrap italic', clientTextMuted)}>
                         &quot;{report.description}&quot;
                       </p>
                     </div>
 
                     {report.notes && (
-                      <div className="mt-4 border-t border-black/5 pt-4 dark:border-white/5">
-                        <p className="text-sm text-muted-foreground">
-                          <strong className="text-foreground">{t('reports.adminNotes')}:</strong> {report.notes}
+                      <div className="mt-4 border-t border-[#e8e8e8] pt-4 dark:border-[#2d2d2d]">
+                        <p className={clientTextBody}>
+                          <strong className={clientTextTitle}>{t('reports.adminNotes')}:</strong> {report.notes}
                         </p>
                       </div>
                     )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       )}
 
       {/* Report Creation Modal */}
       <Dialog open={openDialog} onOpenChange={(open) => !open && setOpenDialog(false)}>
-        <DialogContent className="overflow-hidden rounded-2xl border-black/10 p-0 shadow-2xl dark:border-white/10 dark:bg-zinc-950 sm:max-w-md">
-          <div className="relative bg-gradient-to-b from-amber-50 to-transparent p-6 pb-4 dark:from-amber-950/20">
+        <DialogContent className="overflow-hidden rounded-[18px] border-[#e8e8e8] p-0 shadow-2xl dark:border-[#2d2d2d] sm:max-w-md">
+          <div className="border-b border-[#e8e8e8] bg-[#FFF8EB]/50 p-6 pb-4 dark:border-[#2d2d2d] dark:bg-[#E97525]/8">
             <DialogHeader className="space-y-3">
-              <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+              <div className={cn(clientIconWrapCls, 'mx-auto size-12 rounded-full')}>
                 <AlertTriangle className="size-6" />
               </div>
-              <DialogTitle className="text-center text-xl font-bold text-foreground">
+              <DialogTitle className={cn('text-center text-xl font-bold', clientTextTitle)}>
                 {t('reports.createReport', 'Подать жалобу')}
               </DialogTitle>
             </DialogHeader>
@@ -236,11 +238,11 @@ export default function ClientReportsPage() {
 
           <DialogBody className="px-6 pb-6 pt-2">
             {selectedMaster && (
-              <div className="mb-6 flex flex-col items-center rounded-xl border border-amber-100 bg-amber-50/50 p-4 text-center dark:border-amber-500/10 dark:bg-amber-500/5">
-                <p className="mb-1 text-xs font-medium uppercase tracking-wider text-amber-600/70 dark:text-amber-400/80">
+              <div className={cn(clientInsetPanelCls, 'mb-6 text-center')}>
+                <p className={cn('mb-1 text-[11px] font-medium uppercase tracking-wider', clientTextMuted)}>
                   {t('reports.reportingMaster', 'Вы подаете жалобу на мастера')}
                 </p>
-                <p className="text-base font-bold text-foreground">
+                <p className={cn('text-base font-semibold', clientTextTitle)}>
                   {selectedMaster.user?.firstName} {selectedMaster.user?.lastName}
                 </p>
               </div>
@@ -253,7 +255,7 @@ export default function ClientReportsPage() {
                 </Label>
                 <Input
                   id="report-reason"
-                  className="rounded-xl border-black/10 bg-black/5 px-4 py-2 transition-colors hover:bg-black/10 focus-visible:ring-amber-500 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-visible:ring-amber-500"
+                  className="rounded-[12px] border-[#E9ECEF] bg-white px-4 py-2 focus-visible:ring-[#E97525] dark:border-white/12 dark:bg-white/[0.04]"
                   placeholder={t('reports.reasonPlaceholder', 'Напр. Не пришел на встречу')}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
@@ -266,7 +268,7 @@ export default function ClientReportsPage() {
                 </Label>
                 <Textarea
                   id="report-description"
-                  className="min-h-[120px] resize-none rounded-xl border-black/10 bg-black/5 px-4 py-3 transition-colors hover:bg-black/10 focus-visible:ring-amber-500 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-visible:ring-amber-500"
+                  className="min-h-[120px] resize-none rounded-[12px] border-[#E9ECEF] bg-white px-4 py-3 focus-visible:ring-[#E97525] dark:border-white/12 dark:bg-white/[0.04]"
                   placeholder={t('reports.descriptionPlaceholder', 'Опишите ситуацию подробнее...')}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -276,10 +278,10 @@ export default function ClientReportsPage() {
             </div>
           </DialogBody>
 
-          <DialogFooter className="border-t border-black/5 bg-black/[0.02] p-6 dark:border-white/5 dark:bg-white/[0.02] sm:justify-between">
+          <DialogFooter className="border-t border-[#e8e8e8] bg-[hsl(var(--secondary)/0.35)] p-6 dark:border-[#2d2d2d] sm:justify-between">
             <Button
               variant="ghost"
-              className="w-full rounded-xl hover:bg-black/5 sm:w-auto dark:hover:bg-white/5"
+              className="w-full rounded-[12px] sm:w-auto"
               onClick={() => setOpenDialog(false)}
             >
               {t('common.cancel')}
@@ -287,7 +289,7 @@ export default function ClientReportsPage() {
             <Button
               onClick={handleCreateReport}
               disabled={createState.isLoading || !reason || !description}
-              className="w-full rounded-xl bg-amber-600 text-white transition-colors hover:bg-amber-700 sm:w-auto dark:bg-amber-600 dark:hover:bg-amber-700"
+              className={cn(clientPrimaryBtnCls, 'w-full sm:w-auto')}
             >
               {createState.isLoading ? t('common.loading') : t('reports.submit')}
             </Button>

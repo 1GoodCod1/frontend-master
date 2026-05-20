@@ -1,14 +1,15 @@
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Briefcase, Clock, DollarSign, Zap, Users, UserPlus, LogIn } from 'lucide-react';
+import { Briefcase, Clock, DollarSign, Zap, Users } from 'lucide-react';
 import { useJobByIdQuery } from '@/features/jobs/jobsApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
-import { Button } from '@/components/ui/button';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { paths } from '@/constants/routes';
 import { USER_ROLE } from '@/constants/roles';
 import { formatDateTimeString } from '@/utils/date';
+import { displayJobTitle } from '@/utils/jobs';
+import { JobApplyCta } from '@/features/jobs/components/JobApplyCta';
 
 export default function PublicJobDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -50,7 +51,7 @@ export default function PublicJobDetailPage() {
           </span>
         </div>
 
-        <h1 className="mb-2 text-xl font-bold text-foreground">{job.title}</h1>
+        <h1 className="mb-2 text-xl font-bold text-foreground">{displayJobTitle(job.title)}</h1>
         <p className="mb-5 whitespace-pre-line text-sm text-muted-foreground">{job.description}</p>
 
         {/* Meta */}
@@ -89,47 +90,15 @@ export default function PublicJobDetailPage() {
         </p>
       </div>
 
-      {/* CTA */}
-      <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
-        {job.status !== 'OPEN' ? (
-          <p className="text-center text-sm text-muted-foreground">
-            {t('jobs.notAccepting', 'This job is no longer accepting applications')}
-          </p>
-        ) : isMaster ? (
-          <Button asChild className="w-full gap-2" size="lg">
-            <Link to={`/jobs?apply=${job.id}`}>
-              <Zap className="h-4 w-4" />
-              {t('jobs.applyNow', 'Apply Now')}
-            </Link>
-          </Button>
-        ) : isAuthed ? (
-          /* CLIENT or other role */
-          <p className="text-center text-sm text-muted-foreground">
-            {t('jobs.mastersOnly', 'Only masters can apply to jobs')}
-          </p>
-        ) : (
-          /* Not authenticated */
-          <div className="space-y-3 text-center">
-            <p className="text-sm text-muted-foreground">
-              {t('jobs.registerToApply', 'Register as a master to apply for this job')}
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-              <Button asChild size="lg" className="gap-2">
-                <Link to={paths.register}>
-                  <UserPlus className="h-4 w-4" />
-                  {t('jobs.registerAsMaster', 'Register as Master')}
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="gap-2">
-                <Link to={paths.login}>
-                  <LogIn className="h-4 w-4" />
-                  {t('nav.login', 'Log In')}
-                </Link>
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      <JobApplyCta
+        className="mt-6"
+        jobId={job.id}
+        minJoints={job.minJoints}
+        isOpen={job.status === 'OPEN'}
+        isAuthed={isAuthed}
+        isMaster={isMaster}
+        alreadyApplied={false}
+      />
     </div>
   );
 }

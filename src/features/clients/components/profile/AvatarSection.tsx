@@ -1,11 +1,12 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Trash2, Upload, Loader2 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { clientCardStaticCls, clientOutlineBtnCls, clientPrimaryBtnCls } from '@/lib/clientCabinetStyles';
 
 interface AvatarSectionProps {
   avatarUrl: string | null;
@@ -43,15 +44,14 @@ export default function AvatarSection({
   };
 
   return (
-    <Card className="group h-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
+    <div className={cn(clientCardStaticCls, 'h-full')}>
       <CardContent className="relative flex min-h-[400px] flex-col items-center justify-center p-8 text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none" />
-        <div className="group/avatar relative mb-8 z-10">
+        <div className="group/avatar relative mb-8">
           <Avatar
             key={avatarPath ?? 'no-avatar'}
             className={cn(
-              "size-48 border-[6px] border-background transition duration-500 group-hover/avatar:scale-105",
-              hasAvatar ? "shadow-2xl ring-4 ring-amber-500/20" : "shadow-xl ring-1 ring-black/5 dark:ring-white/5"
+              'size-48 border-[6px] border-background transition duration-300',
+              hasAvatar ? 'shadow-xl ring-4 ring-[#E97525]/20' : 'shadow-lg ring-1 ring-[#E9ECEF] dark:ring-white/10',
             )}
           >
             <AvatarImage src={avatarUrl ?? undefined} alt="Avatar" className="object-cover" />
@@ -67,7 +67,7 @@ export default function AvatarSection({
           )}
         </div>
 
-        <div className="flex flex-col gap-3 w-full max-w-[200px] relative z-10">
+        <div className="flex w-full max-w-[200px] flex-col gap-3">
           <input
             ref={fileInputRef}
             type="file"
@@ -81,7 +81,7 @@ export default function AvatarSection({
             <Button
               onClick={handleEditClick}
               disabled={uploadLoading || !phoneVerified}
-              className="w-full gap-2 rounded-xl bg-amber-600 text-white shadow-lg shadow-amber-500/20 hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 transition font-semibold"
+              className={cn(clientPrimaryBtnCls, 'w-full')}
             >
               <Upload className="size-4" />
               {uploadLoading ? t('common.loading') : t('clientProfile.uploadAvatar', 'Загрузить фото')}
@@ -92,7 +92,7 @@ export default function AvatarSection({
                 variant="outline"
                 onClick={handleEditClick}
                 disabled={uploadLoading || !phoneVerified}
-                className="w-full gap-2 rounded-xl border-amber-500/30 text-amber-600 bg-amber-500/5 hover:bg-amber-600 hover:text-white shadow-sm transition font-semibold"
+                className={cn(clientOutlineBtnCls, 'w-full')}
               >
                 <Upload className="size-4" />
                 {t('clientProfile.changeAvatar', 'Сменить фото')}
@@ -101,7 +101,7 @@ export default function AvatarSection({
                 variant="outline"
                 onClick={handleRemoveClick}
                 disabled={removeLoading || !phoneVerified}
-                className="w-full gap-2 rounded-xl border-destructive/30 text-destructive bg-destructive/5 hover:bg-destructive hover:text-white transition shadow-sm font-semibold"
+                className="w-full gap-2 rounded-[14px] border-destructive/30 text-destructive hover:bg-destructive hover:text-white"
               >
                 {removeLoading ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -114,12 +114,12 @@ export default function AvatarSection({
           )}
 
           {!phoneVerified && (
-            <p className="mt-2 text-xs text-muted-foreground animate-pulse">
+            <p className="mt-2 text-[12px] text-[#6C757D] dark:text-white/50">
               {t('clientProfile.verifyToUpload', 'Верифицируйте номер для фото')}
             </p>
           )}
         </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }

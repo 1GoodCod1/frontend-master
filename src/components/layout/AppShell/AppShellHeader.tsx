@@ -43,12 +43,9 @@ export function AppShellHeader({
   const { t } = useTranslation();
   const navItems = getVisibleNavItems(isAuthed, role as 'ADMIN' | 'MASTER' | 'CLIENT' | null);
 
-  const headerBg =
-    isInCabinet && colorMode === 'dark'
-      ? 'bg-[#171510]/85'
-      : isInCabinet && colorMode === 'light'
-        ? 'bg-white/85'
-        : 'bg-background/85';
+  const headerBg = isInCabinet
+    ? 'bg-[hsl(var(--cabinet-header-bg)/0.92)] border-b border-[hsl(var(--border))]'
+    : 'bg-background/85';
 
   return (
     <motion.header
@@ -124,13 +121,15 @@ export function AppShellHeader({
             </div>
           )}
 
-          <AppShellSettingsMenu
-            colorMode={colorMode}
-            onToggleColorMode={onToggleColorMode}
-            onLanguageChange={onLanguageChange}
-          />
+          {!isInCabinet && (
+            <AppShellSettingsMenu
+              colorMode={colorMode}
+              onToggleColorMode={onToggleColorMode}
+              onLanguageChange={onLanguageChange}
+            />
+          )}
 
-          {isAuthed && (
+          {isAuthed && !isInCabinet && (
             <AppShellAccountMenu onLogout={onLogout} />
           )}
         </div>

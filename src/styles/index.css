@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&&:where(.dark, .dark *));
+@custom-variant dark (&&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 /* ========== Design system: shadcn + professional light / warm dark ========== */
 :root {
@@ -23,7 +23,7 @@
   --accent-foreground: 40 18% 14%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 43 18% 90%;
+  --border: 0 0% 91%;
   --input: 43 20% 88%;
   --ring: 174 58% 39%;
   --cta: 25 95% 53%;
@@ -34,6 +34,10 @@
   --button-bg-hover: 220 18% 18%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.18);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.35);
+  /* Unified surface cards (category, masters, jobs, plans, …) */
+  --surface-card: #ffffff;
+  --surface-card-border: #e8e8e8;
+  --surface-card-border-hover: #d1d5db;
   /* MasterCard design tokens */
   --card-accent-band: #f0f1f6;
   --card-rating-bg: #f8f8fc;
@@ -53,22 +57,22 @@ html[data-theme="dark"],
   /* Base: тёмная тема с коричнево-серыми карточками */
   --background: 0 0% 5%;
   --foreground: 0 0% 98%;
-  --card: 43 16% 10%;
+  --card: 0 0% 10%;
   --card-foreground: 0 0% 98%;
-  --popover: 43 16% 10%;
+  --popover: 0 0% 10%;
   --popover-foreground: 0 0% 98%;
   --primary: 174 72% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 43 14% 12%;
+  --secondary: 0 0% 12%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 43 14% 12%;
+  --muted: 0 0% 12%;
   --muted-foreground: 0 0% 55%;
-  --accent: 43 14% 12%;
+  --accent: 0 0% 12%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 63% 55%;
   --destructive-foreground: 0 0% 98%;
-  --border: 43 12% 18%;
-  --input: 43 14% 12%;
+  --border: 0 0% 18%;
+  --input: 0 0% 12%;
   --ring: 174 72% 45%;
   --cta: 38 92% 50%;
   --cta-foreground: 0 0% 100%;
@@ -77,6 +81,9 @@ html[data-theme="dark"],
   --button-bg-hover: 174 72% 40%;
   --scrollbar-thumb: hsl(var(--muted-foreground) / 0.22);
   --scrollbar-thumb-hover: hsl(var(--muted-foreground) / 0.4);
+  --surface-card: #1a1a1a;
+  --surface-card-border: #2d2d2d;
+  --surface-card-border-hover: #3a3a3a;
   /* MasterCard design tokens — glass style, гармония с чёрным фоном */
   --card-accent-band: rgba(255,255,255,0.04);
   --card-rating-bg: rgba(255,255,255,0.06);
@@ -91,25 +98,12 @@ html[data-theme="dark"],
   --card-button-shadow: 0 4px 20px rgba(233,117,37,0.4);
 }
 
-/* ── Cabinet layout scope ── */
+/* ── Cabinet layout scope — sidebar, main and header share app background ── */
 .cabinet-theme-scope {
-  --cabinet-sidebar-bg: 0 0% 100%;
-  --cabinet-sidebar-border: 43 18% 90%;
-  --cabinet-main-bg: 43 30% 94%;
-}
-
-html[data-theme="dark"] .cabinet-theme-scope,
-.dark .cabinet-theme-scope {
-  --background: 43 18% 8%;
-  --cabinet-sidebar-bg: 43 16% 10%;
-  --cabinet-sidebar-border: 43 12% 18%;
-  --cabinet-main-bg: 43 18% 8%;
-  --card: 43 16% 10%;
-  --popover: 43 16% 10%;
-  --secondary: 43 14% 12%;
-  --muted: 43 14% 12%;
-  --input: 43 14% 12%;
-  --border: 43 12% 18%;
+  --cabinet-sidebar-bg: var(--background);
+  --cabinet-main-bg: var(--background);
+  --cabinet-header-bg: var(--background);
+  --cabinet-sidebar-border: var(--border);
 }
 
 .bg-home-gradient {
@@ -171,7 +165,8 @@ html {
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   overscroll-behavior-x: none;
-  overflow-y: scroll; /* скроллбар всегда виден — нет сдвига при открытии Select */
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
   overflow-anchor: auto;
   min-height: 100%;
   background-color: hsl(var(--background));

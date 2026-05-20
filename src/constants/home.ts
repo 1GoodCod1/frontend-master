@@ -26,6 +26,8 @@ import {
   Building2,
   ShoppingBag,
   Trophy,
+  Users,
+  Package,
   Tractor,
   Waves,
   Compass,
@@ -143,6 +145,98 @@ export const CATEGORY_META: Record<string, { icon: LucideIcon; gradient: string;
   'sofer-personal': { icon: CarFront, gradient: 'from-slate-700 to-zinc-600', color: 'text-slate-600 dark:text-slate-400' },
 };
 
+/** Emoji per category slug — synced with api-master/prisma/seeds/core.ts */
+export const CATEGORY_EMOJI: Record<string, string> = {
+  santehnika: '🚿',
+  elektrika: '⚡',
+  plitka: '🧱',
+  'otdelochnye-raboty': '🔨',
+  'krovlya-fasad': '🏠',
+  'okna-dveri': '🪟',
+  'bytovaya-tehnika': '🔌',
+  'remont-telefonov-pk': '📱',
+  'ustanovka-tehniki': '📺',
+  'kondicionery-otoplenie': '❄️',
+  pereezdy: '🚚',
+  'master-na-chas': '🧰',
+  'vyvoz-musora': '🗑️',
+  uborka: '🧹',
+  mebel: '🛋️',
+  landshaft: '🌳',
+  internet: '📡',
+  avto: '🚗',
+  'foto-video': '📷',
+  manikyur: '💅',
+  massazh: '💆',
+  'agro-servicii': '🚜',
+  'fantani-puturi': '💧',
+  'ghid-turism': '🗺️',
+  'it-dezvoltare': '💻',
+  'smm-marketing': '📣',
+  'design-grafic': '🎨',
+  'videomontaj-animatie': '🎬',
+  '3d-laser': '🖨️',
+  'panouri-solare': '☀️',
+  'antrenori-fitness': '🏋️',
+  'yoga-pilates': '🧘',
+  'psihologi-coaching': '🧠',
+  fizioterapie: '🩺',
+  'ingrijire-varstnici': '👵',
+  'dj-muzicieni': '🎧',
+  'animatori-copii': '🎉',
+  'sunet-evenimente': '🎤',
+  'tatuaje-piercing': '✒️',
+  tamplarie: '🪚',
+  'tractare-auto': '🚛',
+  'sofer-personal': '🚙',
+};
+
+/** Pastel icon box backgrounds per slug — Faber HomePage v2 */
+export const CATEGORY_ICON_WRAP: Record<string, string> = {
+  santehnika: 'bg-[#EBF5FF] dark:bg-sky-500/12',
+  elektrika: 'bg-[#FFF8EB] dark:bg-amber-500/12',
+  plitka: 'bg-[#FFF1E6] dark:bg-orange-500/12',
+  'otdelochnye-raboty': 'bg-[#F1F5F9] dark:bg-white/[0.06]',
+  'krovlya-fasad': 'bg-[#FFF8EB] dark:bg-amber-500/12',
+  'okna-dveri': 'bg-[#EEF2FF] dark:bg-indigo-500/12',
+  'bytovaya-tehnika': 'bg-[#FFF8EB] dark:bg-amber-500/12',
+  'remont-telefonov-pk': 'bg-[#EBF5FF] dark:bg-sky-500/12',
+  'ustanovka-tehniki': 'bg-[#EEF2FF] dark:bg-indigo-500/12',
+  'kondicionery-otoplenie': 'bg-[#EBF5FF] dark:bg-cyan-500/12',
+  pereezdy: 'bg-[#EEF2FF] dark:bg-violet-500/12',
+  'master-na-chas': 'bg-[#FFF8EB] dark:bg-amber-500/12',
+  'vyvoz-musora': 'bg-[#F1F5F9] dark:bg-white/[0.06]',
+  uborka: 'bg-[#EBF5FF] dark:bg-sky-500/12',
+  mebel: 'bg-[#ECFDF5] dark:bg-emerald-500/12',
+  landshaft: 'bg-[#ECFDF5] dark:bg-green-500/12',
+  internet: 'bg-[#EEF2FF] dark:bg-violet-500/12',
+  avto: 'bg-[#EBF5FF] dark:bg-sky-500/12',
+  'foto-video': 'bg-[#FDF0F5] dark:bg-rose-500/12',
+  manikyur: 'bg-[#FDF0F5] dark:bg-pink-500/12',
+  massazh: 'bg-[#ECFDF5] dark:bg-emerald-500/12',
+  'agro-servicii': 'bg-[#ECFDF5] dark:bg-lime-500/12',
+  'fantani-puturi': 'bg-[#EBF5FF] dark:bg-cyan-500/12',
+  'ghid-turism': 'bg-[#FFF8EB] dark:bg-amber-500/12',
+  'it-dezvoltare': 'bg-[#EEF2FF] dark:bg-blue-500/12',
+  'smm-marketing': 'bg-[#FDF0F5] dark:bg-pink-500/12',
+  'design-grafic': 'bg-[#FDF0F5] dark:bg-violet-500/12',
+  'videomontaj-animatie': 'bg-[#FDF0F5] dark:bg-rose-500/12',
+  '3d-laser': 'bg-[#EEF2FF] dark:bg-sky-500/12',
+  'panouri-solare': 'bg-[#FFF8EB] dark:bg-yellow-500/12',
+  'antrenori-fitness': 'bg-[#FFF1E6] dark:bg-orange-500/12',
+  'yoga-pilates': 'bg-[#FDF0F5] dark:bg-purple-500/12',
+  'psihologi-coaching': 'bg-[#EEF2FF] dark:bg-indigo-500/12',
+  fizioterapie: 'bg-[#ECFDF5] dark:bg-teal-500/12',
+  'ingrijire-varstnici': 'bg-[#FDF0F5] dark:bg-rose-500/12',
+  'dj-muzicieni': 'bg-[#FDF0F5] dark:bg-fuchsia-500/12',
+  'animatori-copii': 'bg-[#FFF8EB] dark:bg-yellow-500/12',
+  'sunet-evenimente': 'bg-[#EBF5FF] dark:bg-cyan-500/12',
+  'tatuaje-piercing': 'bg-[#F1F5F9] dark:bg-white/[0.06]',
+  tamplarie: 'bg-[#FFF8EB] dark:bg-amber-500/12',
+  'tractare-auto': 'bg-[#FFF1E6] dark:bg-orange-500/12',
+  'sofer-personal': 'bg-[#F1F5F9] dark:bg-white/[0.06]',
+};
+
 /** Дефолтная мета для категории без маппинга */
 export const CATEGORY_DEFAULT_META = {
   icon: LayoutGrid,
@@ -184,5 +278,46 @@ export const ROADMAP_ITEMS = [
   },
 ] as const;
 
+/** Тизер Faber для компаний на главной */
+export const COMPANII_TEASER_ITEMS = [
+  {
+    icon: Building2,
+    titleKey: 'companii.features.f1Title',
+    descKey: 'companii.features.f1Desc',
+    statusKey: 'companii.features.statusSoon',
+    accent: 'text-violet-600 dark:text-violet-400',
+    bg: 'bg-violet-500/10 dark:bg-violet-400/10',
+  },
+  {
+    icon: Users,
+    titleKey: 'companii.features.f2Title',
+    descKey: 'companii.features.f2Desc',
+    statusKey: 'companii.features.statusSoon',
+    accent: 'text-primary dark:text-primary',
+    bg: 'bg-primary/10 dark:bg-primary/10',
+  },
+  {
+    icon: Package,
+    titleKey: 'companii.features.f3Title',
+    descKey: 'companii.features.f3Desc',
+    statusKey: 'companii.features.statusPlanned',
+    accent: 'text-orange-600 dark:text-[#E97525]',
+    bg: 'bg-orange-500/10 dark:bg-[#E97525]/10',
+  },
+] as const;
+
 /** Сколько карточек «Популярные мастера» на главной */
 export const POPULAR_MASTERS_HOME_LIMIT = 8;
+
+/** Сколько городов на главной */
+export const HOME_CITIES_LIMIT = 12;
+
+/** Сколько активных job-uri на главной */
+export const HOME_ACTIVE_JOBS_LIMIT = 6;
+
+/** Интервал обновления списка job-uri на главной (свежесть) */
+export const HOME_ACTIVE_JOBS_POLL_MS = 60_000;
+
+export const CITIES_SECTION_ACCENT = '#10B981';
+export const JOBS_SECTION_ACCENT = '#F59E0B';
+export const COMPANII_SECTION_ACCENT = '#8B5CF6';

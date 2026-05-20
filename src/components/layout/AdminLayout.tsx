@@ -26,8 +26,8 @@ import { clearUnreadLeads, clearUnreadReviews } from '@/features/socket/socketSl
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
+import { CabinetContentShell } from '@/components/layout/CabinetContentShell';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 const items: { key: string; to: string; icon: React.ReactNode }[] = [
   { key: 'dashboard', to: '/admin', icon: <LayoutDashboard className="size-5" /> },
@@ -84,7 +84,7 @@ export function AdminLayout() {
   }));
 
   return (
-    <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
+    <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:flex-row">
       {!isMdUp && (
         <div className="fixed top-14 left-0 right-0 z-30 flex items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4 md:static md:z-auto">
           <Button
@@ -103,26 +103,17 @@ export function AdminLayout() {
       )}
 
       <CabinetSidebar
-        sectionLabel={t('nav.admin').toUpperCase()}
-        items={navItems}
+        sections={[{ key: 'admin', label: t('nav.admin').toUpperCase(), items: navItems }]}
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         isMobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main
-        data-app-scroll-region=""
-        className={cn(
-        'flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300',
-        !isMdUp && 'pt-14'
-      )}
-      >
-        <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
-          <AppBreadcrumbs />
-          <Outlet />
-        </div>
-      </main>
+      <CabinetContentShell mobileTopPadding={!isMdUp} showFooter={false} contentClassName="max-w-[1400px]">
+        <AppBreadcrumbs />
+        <Outlet />
+      </CabinetContentShell>
     </div>
   );
 }

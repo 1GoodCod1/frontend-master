@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { clientPageClassName } from '@/lib/clientCabinetStyles';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useClientFavorites } from '@/hooks/client/favorites';
@@ -15,7 +16,7 @@ export default function ClientFavoritesPage() {
   if (isError) return <ErrorState error={error as Error} onRetry={refetch} />;
 
   return (
-    <div className="mx-auto max-w-6xl py-6 md:py-8">
+    <div className={clientPageClassName}>
       <PageHeader
         title={t('clientDashboard.favorites')}
         subtitle={t('clientDashboard.favoritesSubtitle')}

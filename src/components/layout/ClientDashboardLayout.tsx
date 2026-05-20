@@ -21,24 +21,55 @@ import { useConfigReferralsEnabledQuery } from '@/features/referrals/referralsAp
 import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { VerificationRequiredBanner } from '@/components/common/VerificationRequiredBanner';
-import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
+import { CabinetSidebar, type CabinetNavItem, type CabinetNavSection } from '@/components/layout/CabinetSidebar';
+import { CabinetContentShell } from '@/components/layout/CabinetContentShell';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { USER_ROLE } from '@/constants/roles';
 
-function getItems(t: ReturnType<typeof useTranslation>['t']): CabinetNavItem[] {
-  return [
-    { key: 'overview', label: t('clientDashboard.overview'), to: '/client-dashboard', icon: <LayoutDashboard className="size-5" /> },
-    { key: 'bookings', label: t('clientDashboard.myBookings'), to: '/client-dashboard/bookings', icon: <Calendar className="size-5" /> },
-    { key: 'leads', label: t('clientDashboard.myLeads'), to: '/client-dashboard/leads', icon: <Mail className="size-5" /> },
-    { key: 'chat', label: t('clientDashboard.chat', 'Чаты'), to: '/client-dashboard/chat', icon: <MessageCircle className="size-5" /> },
-    { key: 'favorites', label: t('clientDashboard.favorites'), to: '/client-dashboard/favorites', icon: <Heart className="size-5" /> },
-    { key: 'reports', label: t('clientDashboard.reports'), to: '/client-dashboard/reports', icon: <AlertTriangle className="size-5" /> },
-    { key: 'profile', label: t('clientDashboard.profile'), to: '/client-dashboard/profile', icon: <User className="size-5" /> },
-    { key: 'security', label: t('dashboard.security'), to: '/client-dashboard/security', icon: <Shield className="size-5" /> },
-    { key: 'jobs', label: t('jobs.jobs', 'Jobs'), to: '/client-dashboard/jobs', icon: <Briefcase className="size-5" /> },
-    { key: 'referrals', label: t('referrals.title'), to: '/client-dashboard/referrals', icon: <Gift className="size-5" /> },
+const CLIENT_SECTION_ORDER = ['main', 'personal', 'account'] as const;
+
+function buildClientSections(
+  t: ReturnType<typeof useTranslation>['t'],
+  unreadChats: number,
+  referralsEnabled: boolean,
+): CabinetNavSection[] {
+  const defs: { key: string; sectionKey: (typeof CLIENT_SECTION_ORDER)[number]; label: string; to: string; icon: React.ReactNode }[] = [
+    { key: 'overview', sectionKey: 'main', label: t('clientDashboard.overview'), to: '/client-dashboard', icon: <LayoutDashboard className="size-5" /> },
+    { key: 'bookings', sectionKey: 'personal', label: t('clientDashboard.myBookings'), to: '/client-dashboard/bookings', icon: <Calendar className="size-5" /> },
+    { key: 'leads', sectionKey: 'personal', label: t('clientDashboard.myLeads'), to: '/client-dashboard/leads', icon: <Mail className="size-5" /> },
+    { key: 'chat', sectionKey: 'personal', label: t('clientDashboard.chat'), to: '/client-dashboard/chat', icon: <MessageCircle className="size-5" /> },
+    { key: 'favorites', sectionKey: 'personal', label: t('clientDashboard.favorites'), to: '/client-dashboard/favorites', icon: <Heart className="size-5" /> },
+    { key: 'reports', sectionKey: 'personal', label: t('clientDashboard.reports'), to: '/client-dashboard/reports', icon: <AlertTriangle className="size-5" /> },
+    { key: 'jobs', sectionKey: 'personal', label: t('jobs.myJobs'), to: '/client-dashboard/jobs', icon: <Briefcase className="size-5" /> },
+    { key: 'profile', sectionKey: 'account', label: t('clientDashboard.profile'), to: '/client-dashboard/profile', icon: <User className="size-5" /> },
+    { key: 'security', sectionKey: 'account', label: t('dashboard.security'), to: '/client-dashboard/security', icon: <Shield className="size-5" /> },
+    { key: 'referrals', sectionKey: 'account', label: t('referrals.title'), to: '/client-dashboard/referrals', icon: <Gift className="size-5" /> },
   ];
+
+  const filtered = defs.filter((it) => it.key !== 'referrals' || referralsEnabled);
+  const bySection = new Map<string, CabinetNavItem[]>();
+
+  for (const def of filtered) {
+    const items = bySection.get(def.sectionKey) ?? [];
+    items.push({
+      key: def.key,
+      label: def.label,
+      to: def.to,
+      icon: def.icon,
+      badge: def.key === 'chat' ? unreadChats : 0,
+    });
+    bySection.set(def.sectionKey, items);
+  }
+
+  return CLIENT_SECTION_ORDER.flatMap((sectionKey) => {
+    const items = bySection.get(sectionKey);
+    if (!items?.length) return [];
+    return [{
+      key: sectionKey,
+      label: t(`cabinetNav.sections.${sectionKey}`),
+      items,
+    }];
+  });
 }
 
 export function ClientDashboardLayout() {
@@ -49,7 +80,6 @@ export function ClientDashboardLayout() {
 
   const { data: referralsConfig } = useConfigReferralsEnabledQuery();
   const referralsEnabled = referralsConfig?.enabled ?? false;
-  const items = getItems(t).filter((it) => it.key !== 'referrals' || referralsEnabled);
   const role = useAppSelector(selectRole);
   const isVerified = useAppSelector(selectIsVerified);
   const location = useLocation();
@@ -64,13 +94,10 @@ export function ClientDashboardLayout() {
     }
   }, [location.pathname, refetchChatUnread]);
 
-  const itemsWithBadge: CabinetNavItem[] = items.map((it) => ({
-    ...it,
-    badge: it.key === 'chat' ? unreadChats : 0,
-  }));
+  const sections = buildClientSections(t, unreadChats, referralsEnabled);
 
   return (
-    <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
+    <div className="cabinet-theme-scope flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:flex-row md:items-stretch">
       {!isMdUp && (
         <div className="fixed top-14 left-0 right-0 z-30 flex items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4 md:static md:z-auto">
           <Button
@@ -89,32 +116,20 @@ export function ClientDashboardLayout() {
       )}
 
       <CabinetSidebar
-        sectionLabel="CLIENT"
-        items={itemsWithBadge}
+        sections={sections}
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         isMobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main
-        data-app-scroll-region=""
-        className={cn(
-        'flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300',
-        !isMdUp && 'pt-14'
-      )}
-      >
-        <div className="min-w-0 px-4 md:px-6 py-6 max-w-[1400px] mx-auto">
-          <AppBreadcrumbs />
-          {role === USER_ROLE.CLIENT && (
-            <VerificationRequiredBanner
-              role={USER_ROLE.CLIENT}
-              isVerified={isVerified}
-            />
-          )}
-          <Outlet />
-        </div>
-      </main>
+      <CabinetContentShell mobileTopPadding={!isMdUp} contentClassName="max-w-[1400px]">
+        <AppBreadcrumbs />
+        {role === USER_ROLE.CLIENT && (
+          <VerificationRequiredBanner role={USER_ROLE.CLIENT} isVerified={isVerified} />
+        )}
+        <Outlet />
+      </CabinetContentShell>
     </div>
   );
 }

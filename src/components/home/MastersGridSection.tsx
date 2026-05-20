@@ -4,6 +4,7 @@ import { ErrorState } from '@/components/common/States';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 import type { PublicMaster } from '@/types';
 
 interface MastersGridSectionProps {
@@ -19,12 +20,13 @@ interface MastersGridSectionProps {
   horizontalScroll?: boolean;
   sectionBg?: boolean;
   sectionBadge?: 'popular' | 'new';
+  hideTitle?: boolean;
   className?: string;
 }
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-200/80 bg-[#F9FAFB] shadow-sm p-4 space-y-3 dark:border-white/[0.08] dark:bg-[hsl(43,16%,12%)]">
+    <div className={cn('rounded-xl p-4 space-y-3', surfaceCardCls)}>
       <Skeleton className="h-14 w-14 rounded-full" />
       <Skeleton className="h-6 w-[70%]" />
       <Skeleton className="h-5 w-[50%]" />
@@ -51,6 +53,7 @@ export const MastersGridSection = ({
   iconBgColor,
   horizontalScroll = false,
   sectionBadge,
+  hideTitle = false,
   className,
 }: MastersGridSectionProps) => {
   const { t } = useTranslation();
@@ -59,7 +62,7 @@ export const MastersGridSection = ({
 
   return (
     <div className={cn('mb-6 md:mb-8', className)}>
-      {Icon ? (
+      {!hideTitle && Icon ? (
         <div className="mb-4">
           <div className="flex flex-row items-start gap-3">
             <div
@@ -78,7 +81,7 @@ export const MastersGridSection = ({
             </div>
           </div>
         </div>
-      ) : (
+      ) : !hideTitle ? (
         <div className="mb-8 text-center">
           <h2
             className={cn(
@@ -99,7 +102,7 @@ export const MastersGridSection = ({
             </p>
           ) : null}
         </div>
-      )}
+      ) : null}
       {isLoading ? (
         <div className={GRID_CLASS}>
           {Array.from({ length: skeletonCount }, (_, i) => (

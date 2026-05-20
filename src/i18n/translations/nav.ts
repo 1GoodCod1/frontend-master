@@ -21,7 +21,7 @@ export const nav = {
     nav: {
       home: 'Главная',
       masters: 'Мастера',
-      jobs: 'Jobs',
+      jobs: 'Вакансии',
       companii: 'Компании',
       login: 'Вход',
       register: 'Регистрация',

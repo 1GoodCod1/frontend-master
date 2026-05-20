@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { MapPin, ChevronRight } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import { SearchInputWithHistory } from '@/features/masters/components/search/SearchInputWithHistory';
 import type { SearchSuggestionEvent } from '@/features/masters/components/search/SearchInputWithHistory';
 import { Button } from '@/components/ui/button';
@@ -41,13 +41,15 @@ export function HeroSearchForm({
     <form onSubmit={onSubmit}>
       <div
         className={cn(
-          'flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-2xl backdrop-blur-md border transition duration-500 focus-within:shadow-[0_0_30px_hsl(var(--primary)/0.15)]',
+          'flex flex-col sm:flex-row sm:items-stretch gap-0 sm:gap-0 p-1.5 sm:p-2 rounded-[22px] border transition duration-500',
+          'focus-within:shadow-[0_8px_32px_rgba(233,117,37,0.12)]',
           isDark
-            ? 'bg-white/[0.06] border border-white/10 shadow-lg shadow-black/20'
-            : 'bg-white/90 border border-gray-200 shadow-md shadow-black/5',
+            ? 'bg-white/[0.06] border-white/10 shadow-lg shadow-black/30'
+            : 'bg-white border-gray-200/80 shadow-[0_8px_32px_rgba(0,0,0,0.08)]',
         )}
       >
-        <div className="flex items-center gap-3 flex-1 px-3 min-h-[44px] min-w-0">
+        <div className="flex items-center gap-2.5 flex-1 px-3 sm:px-4 min-h-[48px] min-w-0">
+          <Search size={18} className="text-muted-foreground shrink-0 hidden sm:block" aria-hidden />
           <SearchInputWithHistory
             value={searchQuery}
             onChange={onSearchQueryChange}
@@ -60,8 +62,8 @@ export function HeroSearchForm({
         </div>
         <div
           className={cn(
-            'flex items-center gap-2 px-3 border-t sm:border-t-0 sm:border-l min-h-[44px] min-w-0 flex-1 sm:flex-initial sm:min-w-[160px]',
-            isDark ? 'border-white/10 sm:border-l' : 'border-black/8 sm:border-l',
+            'flex items-center gap-2 px-3 sm:px-4 border-t sm:border-t-0 sm:border-l min-h-[48px] min-w-0 flex-1 sm:flex-initial sm:min-w-[150px]',
+            isDark ? 'border-white/10' : 'border-gray-200',
           )}
         >
           <MapPin size={16} className="text-muted-foreground shrink-0" />
@@ -91,9 +93,13 @@ export function HeroSearchForm({
         <Button
           type="submit"
           size="sm"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition duration-200 bg-[hsl(var(--button-bg))] text-white hover:bg-[hsl(var(--button-bg-hover))]"
+          className={cn(
+            'm-1 sm:m-0 flex items-center justify-center px-6 sm:px-7 min-h-[44px] sm:min-h-[48px]',
+            'rounded-[18px] sm:rounded-[18px] text-sm font-semibold whitespace-nowrap transition duration-200',
+            'bg-[#E97525] text-white hover:bg-[#d86920] shadow-none',
+          )}
         >
-          {t('home.searchButton')} <ChevronRight size={16} />
+          {t('home.searchButton')}
         </Button>
       </div>
     </form>

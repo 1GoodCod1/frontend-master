@@ -2,8 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { Bookmark, BookmarkCheck, CheckCircle2, MapPin, Users, Zap, Briefcase } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { surfaceCardInteractiveCls } from '@/lib/surfaceCard';
 import type { JobDto } from '@/types';
-import { timeAgo, proposalRange } from '@/utils/jobs';
+import { displayJobTitle, timeAgo, proposalRange } from '@/utils/jobs';
 
 interface JobListItemProps {
   job: JobDto;
@@ -21,11 +22,9 @@ export function JobListItem({ job, selected, onClick, saved, onSave, applied }: 
       <Card
         onClick={onClick}
         className={cn(
-          'group cursor-pointer transition-all duration-300 hover:-translate-y-0.5',
-          'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
-          'border border-gray-200/80 dark:border-white/[0.08]',
-          'shadow-sm hover:shadow-md hover:shadow-black/10 dark:shadow-lg dark:shadow-black/20',
-          selected && 'ring-2 ring-primary/30 border-primary/30',
+          'group cursor-pointer',
+          surfaceCardInteractiveCls,
+          selected && 'ring-2 ring-[#E97525]/30 border-[#E97525]/30',
         )}
       >
         <CardContent className="p-4">
@@ -35,7 +34,7 @@ export function JobListItem({ job, selected, onClick, saved, onSave, applied }: 
               'flex-1 min-w-0 text-sm font-semibold leading-snug line-clamp-1 transition-colors',
               selected ? 'text-primary' : 'text-slate-800 dark:text-slate-100 group-hover:text-primary',
             )}>
-              {job.title}
+              {displayJobTitle(job.title)}
             </h3>
             <button
               onClick={onSave}

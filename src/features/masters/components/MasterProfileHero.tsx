@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls, surfaceCardRingCls } from '@/lib/surfaceCard';
 import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
 
 interface MasterProfileHeroProps {
@@ -52,11 +53,7 @@ interface MasterProfileHeroProps {
 }
 
 // Unified card style — matches homepage / masters / jobs pages
-const baseCardCls = cn(
-  'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
-  'border border-gray-200/80 dark:border-white/[0.08]',
-  'shadow-sm dark:shadow-lg dark:shadow-black/20',
-);
+const baseCardCls = surfaceCardCls;
 
 export const MasterProfileHero = ({
   title,
@@ -187,7 +184,7 @@ export const MasterProfileHero = ({
               </div>
               {/* Online dot */}
               {isOnline && (
-                <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-[#F9FAFB] dark:ring-[hsl(43,16%,12%)]" />
+                <span className={cn('absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2', surfaceCardRingCls)} />
               )}
             </div>
 

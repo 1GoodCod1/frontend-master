@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { clientPageClassName } from '@/lib/clientCabinetStyles';
 import { ErrorState } from '@/components/common/States';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { useClientRequests, useRequestReviewModal } from '@/hooks/client/requests';
@@ -50,7 +51,7 @@ export default function ClientRequestsPage() {
   if (isError) return <ErrorState error={error as Error} onRetry={refetch} />;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8">
+    <div className={clientPageClassName}>
       <PageHeader
         title={t('clientDashboard.myLeads')}
         subtitle={t('clientDashboard.leadsSubtitle')}

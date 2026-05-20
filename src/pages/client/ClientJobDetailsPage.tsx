@@ -9,7 +9,6 @@ import {
   Eye,
   Star,
   Zap,
-  AlertCircle,
   X,
   MessageCircle,
   XCircle,
@@ -18,8 +17,11 @@ import {
   Award,
   ArchiveX,
   ExternalLink,
+  ArrowLeft,
+  Briefcase,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ClientEmptyState } from '@/components/client/ClientEmptyState';
 import { CardsSkeleton } from '@/components/common/Skeletons';
 import { ErrorState } from '@/components/common/States';
 import {
@@ -32,14 +34,28 @@ import {
 } from '@/features/jobs/jobsApi';
 import { useGetOrCreateJobConversationMutation } from '@/features/chat/chatApi';
 import { cn } from '@/lib/utils';
+import {
+  clientBadgeCls,
+  clientCardCls,
+  clientCardStaticCls,
+  clientInsetPanelCls,
+  clientLinkCls,
+  clientOutlineBtnCls,
+  clientPageClassName,
+  clientPrimaryBtnCls,
+  clientSectionTitleCls,
+  clientTextBody,
+  clientTextMuted,
+  clientTextTitle,
+} from '@/lib/clientCabinetStyles';
 import { formatDateTimeString } from '@/utils/date';
 import { mediaUrl } from '@/utils/media';
 import type { JobApplicationDto } from '@/types';
 import toast from 'react-hot-toast';
 
 const STATUS_CFG: Record<string, { label: string; cls: string }> = {
-  PENDING: { label: 'Pending', cls: 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400' },
-  PENDING_INACTIVE: { label: 'Not relevant', cls: 'bg-muted text-muted-foreground' },
+  PENDING: { label: 'Pending', cls: 'bg-[#FFF8EB] text-[#E97525] dark:bg-[#E97525]/12' },
+  PENDING_INACTIVE: { label: 'Not relevant', cls: 'bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.06] dark:text-white/55' },
   SELECTED: { label: 'Selected', cls: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400' },
   REJECTED: { label: 'Rejected', cls: 'bg-red-50 text-red-600 dark:bg-red-500/15 dark:text-red-400' },
 };
@@ -98,16 +114,15 @@ function ApplicationPanel({
     <>
       <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px]" onClick={onClose} />
 
-      <div className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-white dark:bg-zinc-950 shadow-2xl">
+      <div className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col rounded-l-[18px] border-l border-[#e8e8e8] bg-white shadow-2xl dark:border-[#2d2d2d] dark:bg-zinc-950">
 
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-black/5 dark:border-white/5 px-5 py-3.5">
+        <div className="flex items-center justify-between border-b border-[#e8e8e8] px-5 py-3.5 dark:border-[#2d2d2d]">
           <div className="flex items-center gap-2">
-            <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-semibold', status.cls)}>
+            <span className={cn(clientBadgeCls, 'normal-case tracking-normal', status.cls)}>
               {status.label}
             </span>
             {application.viewedAt && (
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <span className={cn('flex items-center gap-1', clientTextMuted)}>
                 <Eye className="h-3 w-3" /> {t('jobs.viewed', 'Viewed')}
               </span>
             )}
@@ -124,37 +139,37 @@ function ApplicationPanel({
         <div className="flex-1 overflow-y-auto">
 
           {/* Master hero section */}
-          <div className="border-b border-black/5 dark:border-white/5 px-5 py-5">
+          <div className="border-b border-[#e8e8e8] px-5 py-5 dark:border-[#2d2d2d]">
             <div className="flex items-start gap-4">
               <MasterAvatar master={master} size="lg" />
               <div className="flex-1 min-w-0">
                 {master ? (
                   <>
                     <div className="flex items-center gap-2">
-                      <p className="text-base font-bold text-foreground leading-tight">
+                      <p className={cn('text-base font-semibold leading-tight', clientTextTitle)}>
                         {master.user.firstName} {master.user.lastName}
                       </p>
                       <Link
                         to={`/masters/${master.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="shrink-0 text-muted-foreground hover:text-primary transition-colors"
+                        className={cn('shrink-0 transition-colors', clientLinkCls)}
                         title="View profile"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                       </Link>
                     </div>
                     {master.category && (
-                      <p className="mt-0.5 text-sm text-muted-foreground">{master.category.name}</p>
+                      <p className={cn('mt-0.5', clientTextMuted)}>{master.category.name}</p>
                     )}
                     <div className="mt-2 flex flex-wrap items-center gap-2.5">
                       <span className="flex items-center gap-1 text-sm">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                        <span className="font-semibold text-foreground">{master.rating.toFixed(1)}</span>
-                        <span className="text-muted-foreground text-xs">({master.totalReviews})</span>
+                        <Star className="h-3.5 w-3.5 fill-[#E97525] text-[#E97525]" />
+                        <span className={cn('font-semibold', clientTextTitle)}>{master.rating.toFixed(1)}</span>
+                        <span className={clientTextMuted}>({master.totalReviews})</span>
                       </span>
                       {master.city && (
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <span className={cn('flex items-center gap-1', clientTextMuted)}>
                           <MapPin className="h-3 w-3" /> {master.city.name}
                         </span>
                       )}
@@ -168,28 +183,28 @@ function ApplicationPanel({
 
             {/* Stat pills */}
             <div className="mt-4 flex gap-2">
-              <div className="flex flex-1 items-center gap-2 rounded-xl bg-primary/8 px-3 py-2.5 border border-primary/25">
-                <Zap className="h-4 w-4 text-primary shrink-0" />
+              <div className={cn(clientInsetPanelCls, 'flex flex-1 items-center gap-2 border-[#E97525]/25 bg-[#FFF8EB]/50 dark:bg-[#E97525]/8')}>
+                <Zap className="h-4 w-4 shrink-0 text-[#E97525]" />
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-primary/70">{t('jobs.jointsSpent', 'Joints spent')}</p>
-                  <p className="text-sm font-bold text-primary">{application.jointsSpent}</p>
+                  <p className={cn('text-[10px] font-medium uppercase tracking-wide', clientTextMuted)}>{t('jobs.jointsSpent', 'Joints spent')}</p>
+                  <p className="text-sm font-bold text-[#E97525]">{application.jointsSpent}</p>
                 </div>
               </div>
-              <div className="flex flex-1 items-center gap-2 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-3 py-2.5 border border-black/5 dark:border-white/5">
-                <DollarSign className="h-4 w-4 text-muted-foreground shrink-0" />
+              <div className={cn(clientInsetPanelCls, 'flex flex-1 items-center gap-2')}>
+                <DollarSign className="h-4 w-4 shrink-0 text-[#6C757D]" />
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">{t('jobs.payment', 'Payment')}</p>
-                  <p className="text-sm font-semibold text-foreground">
+                  <p className={cn('text-[10px] font-medium uppercase tracking-wide', clientTextMuted)}>{t('jobs.payment', 'Payment')}</p>
+                  <p className={cn('text-sm font-semibold', clientTextTitle)}>
                     {application.paymentType === 'FULL' ? t('jobs.fullPayment', 'Full') : t('jobs.partialPayment', 'Milestones')}
                   </p>
                 </div>
               </div>
               {application.rank && (
-                <div className="flex items-center gap-2 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] px-3 py-2.5 border border-black/5 dark:border-white/5">
-                  <Award className="h-4 w-4 text-muted-foreground shrink-0" />
+                <div className={cn(clientInsetPanelCls, 'flex items-center gap-2')}>
+                  <Award className="h-4 w-4 shrink-0 text-[#6C757D]" />
                   <div>
-                    <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">{t('jobs.rank', 'Rank')}</p>
-                    <p className="text-sm font-bold text-foreground">#{application.rank}</p>
+                    <p className={cn('text-[10px] font-medium uppercase tracking-wide', clientTextMuted)}>{t('jobs.rank', 'Rank')}</p>
+                    <p className={cn('text-sm font-bold', clientTextTitle)}>#{application.rank}</p>
                   </div>
                 </div>
               )}
@@ -199,10 +214,10 @@ function ApplicationPanel({
           {/* Cover letter */}
           <div className="px-5 py-5 space-y-5">
             <div>
-              <p className="mb-2.5 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <p className={cn('mb-2.5 text-[11px] font-semibold uppercase tracking-wider', clientTextMuted)}>
                 {t('jobs.coverLetter', 'Cover letter')}
               </p>
-              <p className="whitespace-pre-line break-words text-sm leading-relaxed text-foreground/90">
+              <p className={cn('whitespace-pre-line break-words leading-relaxed', clientTextBody)}>
                 {application.description}
               </p>
             </div>
@@ -210,7 +225,7 @@ function ApplicationPanel({
             {/* Photos */}
             {application.photos.length > 0 && (
               <div>
-                <p className="mb-2.5 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <p className={cn('mb-2.5 text-[11px] font-semibold uppercase tracking-wider', clientTextMuted)}>
                   {t('jobs.attachedPhotos', 'Attached photos')}
                 </p>
                 <div className="grid grid-cols-3 gap-2">
@@ -223,7 +238,7 @@ function ApplicationPanel({
               </div>
             )}
 
-            <p className="text-xs text-muted-foreground">
+            <p className={clientTextMuted}>
               {t('jobs.submitted', 'Submitted')} {formatDateTimeString(application.createdAt)}
             </p>
           </div>
@@ -231,10 +246,9 @@ function ApplicationPanel({
 
         {/* Footer actions */}
         {jobStatus === 'OPEN' && application.status === 'PENDING' && (
-          <div className="border-t border-black/5 dark:border-white/5 bg-white dark:bg-zinc-950 px-4 py-4 space-y-2.5">
+          <div className="space-y-2.5 border-t border-[#e8e8e8] bg-white px-4 py-4 dark:border-[#2d2d2d] dark:bg-zinc-950">
             <Button
-              className="w-full gap-2"
-              size="lg"
+              className={cn(clientPrimaryBtnCls, 'h-11 w-full')}
               onClick={() => onSelect(application.id)}
               disabled={isSelectLoading}
             >
@@ -251,7 +265,7 @@ function ApplicationPanel({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 gap-1.5"
+                  className={cn(clientOutlineBtnCls, 'h-9 flex-1 gap-1.5')}
                   onClick={() => onView(application.id)}
                 >
                   <Eye className="h-3.5 w-3.5" />
@@ -273,8 +287,8 @@ function ApplicationPanel({
         )}
 
         {application.status === 'SELECTED' && (
-          <div className="border-t border-black/5 dark:border-white/5 bg-white dark:bg-zinc-950 px-4 py-4">
-            <Button className="w-full gap-2" variant="outline" onClick={() => onOpenChat()}>
+          <div className="border-t border-[#e8e8e8] bg-white px-4 py-4 dark:border-[#2d2d2d] dark:bg-zinc-950">
+            <Button className={cn(clientOutlineBtnCls, 'w-full gap-2')} variant="outline" onClick={() => onOpenChat()}>
               <MessageCircle className="h-4 w-4" />
               {t('jobs.continueInChat', 'Continue in chat')}
             </Button>
@@ -304,7 +318,8 @@ function ApplicationRow({
     <button
       onClick={onClick}
       className={cn(
-        'group w-full rounded-xl border border-black/5 dark:border-white/5 bg-card p-4 text-left transition-all hover:border-amber-500/30 hover:shadow-sm',
+        clientCardCls,
+        'group w-full p-4 text-left hover:translate-y-0',
         isInactive && 'opacity-55',
       )}
     >
@@ -313,21 +328,21 @@ function ApplicationRow({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
-            <p className="truncate text-sm font-semibold text-foreground">
+            <p className={cn('truncate text-sm font-semibold', clientTextTitle)}>
               {master ? `${master.user.firstName ?? ''} ${master.user.lastName ?? ''}`.trim() : '—'}
             </p>
-            <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-medium', status.cls)}>
+            <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide', status.cls)}>
               {status.label}
             </span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <div className={cn('flex items-center gap-3', clientTextMuted)}>
             {master && (
               <span className="flex items-center gap-0.5">
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                <span className="font-medium text-foreground">{master.rating.toFixed(1)}</span>
+                <Star className="h-3 w-3 fill-[#E97525] text-[#E97525]" />
+                <span className={cn('font-medium', clientTextTitle)}>{master.rating.toFixed(1)}</span>
               </span>
             )}
-            <span className="flex items-center gap-1 font-medium text-primary">
+            <span className="flex items-center gap-1 font-medium text-[#E97525]">
               <Zap className="h-3 w-3" />
               {application.jointsSpent} joints
             </span>
@@ -345,11 +360,11 @@ function ApplicationRow({
           </div>
         </div>
 
-        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+        <ChevronRight className="h-4 w-4 shrink-0 text-[#6C757D] transition-transform group-hover:translate-x-0.5" />
       </div>
 
       {application.description && (
-        <p className="mt-2.5 line-clamp-2 break-words pl-14 text-xs text-muted-foreground leading-relaxed">
+        <p className={cn('mt-2.5 line-clamp-2 break-words pl-14 leading-relaxed', clientTextMuted)}>
           {application.description}
         </p>
       )}
@@ -449,19 +464,25 @@ export default function ClientJobDetailsPage() {
 
   const jobStatusCls =
     job.status === 'OPEN' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
-    : job.status === 'FOUND' ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400'
-    : job.status === 'PENDING_CLOSE' ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400'
-    : 'bg-muted text-muted-foreground';
+    : job.status === 'FOUND' ? 'bg-[#FFF8EB] text-[#E97525] dark:bg-[#E97525]/12'
+    : job.status === 'PENDING_CLOSE' ? 'bg-[#FFF8EB] text-[#c45f1a] dark:bg-[#E97525]/12'
+    : 'bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.06] dark:text-white/55';
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6 md:py-8">
+    <div className={clientPageClassName}>
+      <Link
+        to="/client-dashboard/jobs"
+        className={cn('mb-2 inline-flex items-center gap-1.5 text-[13px] font-medium', clientLinkCls)}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {t('jobs.myJobs', 'My Job Postings')}
+      </Link>
 
-      {/* Job header */}
-      <div className="mb-6 rounded-2xl border border-black/5 dark:border-white/5 bg-card p-6 shadow-sm">
+      <div className={cn(clientCardStaticCls, 'p-6')}>
         <div className="mb-1 flex items-start justify-between gap-3">
-          <h1 className="min-w-0 break-words text-xl font-bold text-foreground leading-snug">{job.title}</h1>
+          <h1 className={cn('min-w-0 break-words text-xl font-bold leading-snug', clientTextTitle)}>{job.title}</h1>
           <div className="flex shrink-0 items-center gap-2">
-            <span className={cn('rounded-full px-3 py-1 text-xs font-semibold', jobStatusCls)}>
+            <span className={cn(clientBadgeCls, 'normal-case tracking-normal px-3 py-1', jobStatusCls)}>
               {job.status === 'OPEN' ? t('jobs.open', 'Open')
                 : job.status === 'FOUND' ? t('jobs.found', 'Found')
                 : job.status === 'PENDING_CLOSE' ? t('jobs.pendingCloseStatus', 'Pending close')
@@ -471,7 +492,11 @@ export default function ClientJobDetailsPage() {
               <button
                 onClick={() => void handleDirectClose()}
                 disabled={isCloseLoading}
-                className="flex items-center gap-1.5 rounded-full border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] px-3 py-1 text-xs font-medium text-muted-foreground transition hover:border-red-400/40 hover:bg-red-500/5 hover:text-red-500 disabled:opacity-50"
+                className={cn(
+                  'flex items-center gap-1.5 rounded-full border border-[#E9ECEF] px-3 py-1 text-[12px] font-medium transition',
+                  'text-[#6C757D] hover:border-red-400/40 hover:bg-red-500/5 hover:text-red-500 disabled:opacity-50',
+                  'dark:border-white/12',
+                )}
               >
                 <ArchiveX className="h-3 w-3" />
                 {t('jobs.closeJob', 'Close job')}
@@ -481,14 +506,18 @@ export default function ClientJobDetailsPage() {
               <button
                 onClick={() => void handleRequestClose()}
                 disabled={isCloseLoading}
-                className="flex items-center gap-1.5 rounded-full border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] px-3 py-1 text-xs font-medium text-muted-foreground transition hover:border-red-400/40 hover:bg-red-500/5 hover:text-red-500 disabled:opacity-50"
+                className={cn(
+                  'flex items-center gap-1.5 rounded-full border border-[#E9ECEF] px-3 py-1 text-[12px] font-medium transition',
+                  'text-[#6C757D] hover:border-red-400/40 hover:bg-red-500/5 hover:text-red-500 disabled:opacity-50',
+                  'dark:border-white/12',
+                )}
               >
                 <ArchiveX className="h-3 w-3" />
                 {t('jobs.requestClose', 'Close job')}
               </button>
             )}
             {job.status === 'PENDING_CLOSE' && (
-              <span className="flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+              <span className={cn(clientBadgeCls, 'normal-case tracking-normal gap-1.5 px-3 py-1 text-[#E97525]')}>
                 <ArchiveX className="h-3 w-3" />
                 {t('jobs.pendingClose', 'Awaiting master confirmation')}
               </span>
@@ -496,36 +525,36 @@ export default function ClientJobDetailsPage() {
           </div>
         </div>
 
-        <p className="mb-5 text-xs text-muted-foreground">{formatDateTimeString(job.createdAt)}</p>
+        <p className={cn('mb-5', clientTextMuted)}>{formatDateTimeString(job.createdAt)}</p>
 
-        <p className="mb-5 whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground/80">
+        <p className={cn('mb-5 whitespace-pre-wrap break-words leading-relaxed', clientTextBody)}>
           {job.description}
         </p>
 
-        <div className="flex flex-wrap gap-3">
-          <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground">
+        <div className="flex flex-wrap gap-2">
+          <span className={cn(clientBadgeCls, 'gap-1.5 normal-case tracking-normal px-3 py-1.5')}>
             <Clock className="h-3.5 w-3.5" />
             {job.type === 'FIXED_PRICE' ? t('jobs.fixedPrice', 'Fixed Price') : t('jobs.hourly', 'Hourly')}
           </span>
           {job.budget != null && (
-            <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-foreground">
-              <DollarSign className="h-3.5 w-3.5 text-primary" />{job.budget} MDL
+            <span className={cn(clientBadgeCls, 'gap-1.5 normal-case tracking-normal px-3 py-1.5 font-semibold text-[#212529] dark:text-white')}>
+              <DollarSign className="h-3.5 w-3.5 text-[#E97525]" />{job.budget} MDL
             </span>
           )}
           {job.hourlyRate != null && (
-            <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-foreground">
-              <DollarSign className="h-3.5 w-3.5 text-primary" />{job.hourlyRate} MDL/h
+            <span className={cn(clientBadgeCls, 'gap-1.5 normal-case tracking-normal px-3 py-1.5 font-semibold text-[#212529] dark:text-white')}>
+              <DollarSign className="h-3.5 w-3.5 text-[#E97525]" />{job.hourlyRate} MDL/h
             </span>
           )}
           {job.city && (
-            <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs text-muted-foreground">
+            <span className={cn(clientBadgeCls, 'gap-1.5 normal-case tracking-normal px-3 py-1.5')}>
               <MapPin className="h-3.5 w-3.5" />{job.city.name}
             </span>
           )}
-          <span className="flex items-center gap-1.5 rounded-full bg-primary/8 border border-primary/15 px-3 py-1.5 text-xs font-semibold text-primary">
+          <span className={cn(clientBadgeCls, 'gap-1.5 border border-[#E97525]/20 bg-[#FFF8EB]/70 normal-case tracking-normal px-3 py-1.5 font-semibold text-[#E97525] dark:bg-[#E97525]/10')}>
             <Zap className="h-3.5 w-3.5" /> Min {job.minJoints} joints
           </span>
-          <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs text-muted-foreground">
+          <span className={cn(clientBadgeCls, 'gap-1.5 normal-case tracking-normal px-3 py-1.5')}>
             <Users className="h-3.5 w-3.5" />{applications.length} {t('jobs.applications', 'applications')}
           </span>
         </div>
@@ -546,7 +575,7 @@ export default function ClientJobDetailsPage() {
 
       {/* Master found banner */}
       {job.status === 'FOUND' && (
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-emerald-200 dark:border-emerald-500/25 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-3">
+        <div className={cn(clientInsetPanelCls, 'mb-4 flex items-center gap-3 border-emerald-200/80 bg-emerald-50/80 dark:border-emerald-500/25 dark:bg-emerald-500/10')}>
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <div>
             <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
@@ -559,27 +588,22 @@ export default function ClientJobDetailsPage() {
         </div>
       )}
 
-      {/* Applications section header */}
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground">
+        <h2 className={clientSectionTitleCls}>
           {t('jobs.applications', 'Applications')}
-          <span className="ml-2 text-sm font-normal text-muted-foreground">({applications.length})</span>
+          <span className={cn('ml-2 text-sm font-normal', clientTextMuted)}>({applications.length})</span>
         </h2>
         {applications.length > 0 && (
-          <p className="text-xs text-muted-foreground">{t('jobs.sortedByJoints', 'Sorted by joints ↓')}</p>
+          <p className={clientTextMuted}>{t('jobs.sortedByJoints', 'Sorted by joints ↓')}</p>
         )}
       </div>
 
       {applications.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/10 dark:border-white/10 py-16 text-center">
-          <AlertCircle className="mb-3 h-10 w-10 text-muted-foreground/30" />
-          <p className="text-sm font-medium text-muted-foreground">
-            {t('jobs.noApplicationsYet', 'No applications yet')}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground/70">
-            {t('jobs.mastersWillApply', 'Masters will apply soon!')}
-          </p>
-        </div>
+        <ClientEmptyState
+          icon={Briefcase}
+          title={t('jobs.noApplicationsYet', 'No applications yet')}
+          description={t('jobs.mastersWillApply', 'Masters will apply soon!')}
+        />
       ) : (
         <div className="space-y-2">
           {applications.map((app) => (

@@ -21,6 +21,7 @@ import { mastersApi } from '@/features/masters/mastersApi';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { cn } from '@/lib/utils';
+import { surfaceCardInteractiveCls, surfaceCardRingCls } from '@/lib/surfaceCard';
 import { USER_ROLE } from '@/constants/roles';
 import { ACCENT, ACCENT_LIGHT } from '@/constants/theme';
 import { useMasterCardData } from './masterCard/useMasterCardData';
@@ -127,11 +128,9 @@ export const MasterCard = React.memo(function MasterCard({
       onMouseEnter={handleMouseEnter}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group relative w-full h-full flex flex-col rounded-2xl overflow-hidden transition duration-300 cursor-pointer',
+        'group relative w-full h-full flex flex-col rounded-2xl overflow-hidden cursor-pointer',
         'outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-        'bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:border-white/[0.08] dark:bg-[hsl(43,16%,12%)]',
-        'dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]',
-        'hover:-translate-y-1 hover:shadow-md hover:shadow-black/8 dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]',
+        surfaceCardInteractiveCls,
       )}
     >
       {/* Header with avatar + info */}
@@ -153,7 +152,7 @@ export const MasterCard = React.memo(function MasterCard({
           </div>
           {master?.isOnline === true && (
             <div
-              className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-[#F9FAFB] dark:border-[hsl(43,16%,12%)] z-10"
+              className={cn('absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 z-10', surfaceCardRingCls)}
               title={t('masters.availableNow')}
             />
           )}

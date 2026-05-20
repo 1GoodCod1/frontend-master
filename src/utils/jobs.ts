@@ -1,4 +1,39 @@
+import type { TFunction } from 'i18next';
 import type { MilestoneDto } from '@/types';
+
+const SEED_JOB_TITLE_PREFIX = /^seed-job-/i;
+
+export function displayJobTitle(title: string): string {
+  return title.replace(SEED_JOB_TITLE_PREFIX, '').trim();
+}
+
+export function formatJobRelativeTime(t: TFunction, dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const minutes = Math.floor(diff / 60_000);
+  if (minutes < 1) return t('home.activeJobs.timeNow');
+  if (minutes < 60) return t('home.activeJobs.timeMinutes', { count: minutes });
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return t('home.activeJobs.timeHours', { count: hours });
+  const days = Math.floor(hours / 24);
+  return t('home.activeJobs.timeDays', { count: days });
+}
+
+export function formatJobPrice(
+  job: { budget: number | null; hourlyRate: number | null; type?: string },
+  t: TFunction,
+): string | null {
+  if (job.budget != null) {
+    return t('home.activeJobs.priceFixed', {
+      amount: job.budget.toLocaleString('ro-MD'),
+    });
+  }
+  if (job.hourlyRate != null) {
+    return t('home.activeJobs.priceHourly', {
+      amount: job.hourlyRate.toLocaleString('ro-MD'),
+    });
+  }
+  return null;
+}
 
 export function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();

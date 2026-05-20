@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { FileText, Zap, Trophy, Sparkles, ArrowRight, Check } from 'lucide-react';
+import { FileText, Zap, Trophy, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { paths } from '@/constants/routes';
+import { cn } from '@/lib/utils';
+import { getPostJobNavigationPath } from '@/utils/postJobNavigation';
+import { surfaceCardInteractiveCls } from '@/lib/surfaceCard';
 
 const STEPS = [
   {
@@ -12,15 +14,13 @@ const STEPS = [
     descKey: 'home.jobsFlow.step1Desc',
     accent: 'text-amber-600 dark:text-amber-400',
     bg: 'bg-amber-500/10 dark:bg-amber-400/10',
-    ring: 'ring-amber-500/20 dark:ring-amber-400/20',
   },
   {
     icon: Zap,
     titleKey: 'home.jobsFlow.step2Title',
     descKey: 'home.jobsFlow.step2Desc',
-    accent: 'text-orange-600 dark:text-orange-400',
-    bg: 'bg-orange-500/10 dark:bg-orange-400/10',
-    ring: 'ring-orange-500/20 dark:ring-orange-400/20',
+    accent: 'text-[#E97525] dark:text-[#E97525]',
+    bg: 'bg-[#E97525]/10 dark:bg-[#E97525]/12',
   },
   {
     icon: Trophy,
@@ -28,109 +28,99 @@ const STEPS = [
     descKey: 'home.jobsFlow.step3Desc',
     accent: 'text-emerald-600 dark:text-emerald-400',
     bg: 'bg-emerald-500/10 dark:bg-emerald-400/10',
-    ring: 'ring-emerald-500/20 dark:ring-emerald-400/20',
   },
-];
+] as const;
 
-export const JobsFlowSection = () => {
+const STEPS_GRID =
+  'grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-6 w-full';
+
+type JobsFlowSectionProps = {
+  hideHeader?: boolean;
+  showPostJobCta?: boolean;
+  isAuthed?: boolean;
+  role?: string | null;
+};
+
+export const JobsFlowSection = ({
+  hideHeader = false,
+  showPostJobCta = true,
+  isAuthed = false,
+  role = null,
+}: JobsFlowSectionProps) => {
   const { t } = useTranslation();
+  const postJobPath = getPostJobNavigationPath(isAuthed, role);
 
   return (
-    <div className="py-2">
-      <div className="text-center mb-6 sm:mb-8">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 dark:bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/20 dark:ring-amber-400/20 mb-3">
-          <Sparkles className="h-3 w-3" />
-          {t('home.jobsFlow.badge')}
+    <div className="w-full">
+      {!hideHeader ? (
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+            {t('home.jobsFlow.title')}
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
+            {t('home.jobsFlow.subtitle')}
+          </p>
         </div>
-        <h2
-          className={cn(
-            'text-2xl sm:text-3xl font-bold tracking-tight',
-            'text-slate-800 dark:text-slate-100',
-          )}
-        >
-          {t('home.jobsFlow.title')}
-        </h2>
-        <p
-          className={cn(
-            'mt-2 text-sm sm:text-base max-w-xl mx-auto',
-            'text-slate-500 dark:text-slate-400',
-          )}
-        >
-          {t('home.jobsFlow.subtitle')}
-        </p>
-      </div>
+      ) : null}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 max-w-3xl mx-auto">
-        {STEPS.map(({ icon: Icon, titleKey, descKey, accent, bg, ring }, i) => (
+      <div className={STEPS_GRID}>
+        {STEPS.map(({ icon: Icon, titleKey, descKey, accent, bg }, i) => (
           <div
             key={titleKey}
             className={cn(
-              'relative h-full flex flex-col items-center text-center px-4 py-6 sm:px-5 sm:py-7 rounded-xl sm:rounded-2xl min-w-0',
-              'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
-              'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
-              'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10',
-              'transition duration-300',
+              'relative flex flex-col gap-2 px-4 py-4 sm:px-5 sm:py-5 rounded-xl min-w-0',
+              surfaceCardInteractiveCls,
+              'transition duration-200',
             )}
           >
             <span
               className={cn(
-                'absolute -top-2.5 -left-1.5 sm:-top-3 sm:-left-2 text-xs font-bold px-2 py-0.5 sm:px-2.5 rounded-full ring-2',
+                'absolute top-3 left-3 sm:top-3.5 sm:left-3.5 text-[10px] font-bold tabular-nums w-5 h-5 rounded-full flex items-center justify-center',
                 bg,
                 accent,
-                ring,
               )}
+              aria-hidden
             >
               {i + 1}
             </span>
-            <div className={cn('p-2.5 sm:p-3 rounded-xl mb-3', bg)}>
-              <Icon className={cn('w-5 h-5 sm:w-6 sm:h-6', accent)} strokeWidth={2} />
+            <div className="flex items-start gap-3 sm:gap-4 ml-7 sm:ml-8 min-w-0">
+              <div className={cn('shrink-0 p-2.5 rounded-xl', bg)}>
+                <Icon className={cn('w-5 h-5', accent)} strokeWidth={2} />
+              </div>
+              <div className="min-w-0">
+                <p className="font-semibold text-sm sm:text-[15px] text-foreground leading-snug">
+                  {t(titleKey)}
+                </p>
+                <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-snug">
+                  {t(descKey)}
+                </p>
+              </div>
             </div>
-            <h3 className="font-semibold text-sm sm:text-base text-slate-800 dark:text-slate-100 mb-1">
-              {t(titleKey)}
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              {t(descKey)}
-            </p>
           </div>
         ))}
       </div>
 
-      {/* Joints feature card — compact inline */}
-      <div className="mt-5 max-w-3xl mx-auto rounded-xl border border-amber-500/15 dark:border-amber-400/10 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-500/[0.08] dark:to-orange-500/[0.05] px-4 py-3">
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <div className="flex items-center gap-2 shrink-0">
-            <Zap className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
-            <span className="font-semibold text-xs sm:text-sm text-slate-800 dark:text-slate-100">
-              {t('home.jobsFlow.jointsTitle')}
-            </span>
-          </div>
-          <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-            {[
-              t('home.jobsFlow.jointsRule1'),
-              t('home.jobsFlow.jointsRule2'),
-              t('home.jobsFlow.jointsRule3'),
-            ].map((rule) => (
-              <li key={rule} className="flex items-center gap-1.5">
-                <Check className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" strokeWidth={2.5} />
-                <span>{rule}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <Button asChild size="lg" className="gap-2 font-semibold w-full sm:w-auto">
+      <div className="mt-5 flex flex-wrap gap-2.5">
+        <Button
+          asChild
+          className="h-10 rounded-[14px] px-4 gap-2 text-sm font-semibold bg-[#E97525] text-white hover:bg-[#d86920] shadow-none"
+        >
           <RouterLink to={paths.jobs.list}>
             {t('home.jobsFlow.ctaBrowse')}
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight size={14} strokeWidth={2} />
           </RouterLink>
         </Button>
-        <Button asChild variant="outline" size="lg" className="gap-2 font-semibold w-full sm:w-auto">
-          <RouterLink to={paths.howItWorks}>
-            {t('home.jobsFlow.ctaLearn')}
-          </RouterLink>
-        </Button>
+        {showPostJobCta ? (
+          <Button
+            asChild
+            variant="outline"
+            className="h-10 rounded-[14px] px-4 text-sm font-medium"
+          >
+            <RouterLink to={postJobPath}>
+              {t('home.heroPostJob')}
+            </RouterLink>
+          </Button>
+        ) : null}
       </div>
     </div>
   );

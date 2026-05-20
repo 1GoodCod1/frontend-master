@@ -41,6 +41,8 @@ import { compliance } from './compliance';
 import { clients } from './clients';
 import { jobs } from './jobs';
 import { companii } from './companii';
+import { categoriesPage } from './categoriesPage';
+import { cabinetNav } from './cabinetNav';
 
 /** Остальные экраны — отдельный async-чанк (уменьшает initial JS). */
 const extendedModules = [
@@ -86,6 +88,8 @@ const extendedModules = [
   clients,
   jobs,
   companii,
+  categoriesPage,
+  cabinetNav,
 ];
 
 export function buildExtendedResources() {

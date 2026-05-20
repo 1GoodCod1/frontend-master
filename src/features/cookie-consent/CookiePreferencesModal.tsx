@@ -18,6 +18,7 @@ import {
   type CookiePreferences,
 } from '@/features/cookie-consent/storage';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 import { Search, UserCircle, MapPin, Eye, BarChart3 } from 'lucide-react';
 
 export interface CookiePreferencesModalProps {
@@ -62,7 +63,7 @@ export function CookiePreferencesModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08]">
+      <DialogContent className={cn('max-w-md', surfaceCardCls)}>
         <DialogHeader className="px-6 pt-5 pb-4 pr-12">
           <DialogTitle className="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100">
             {t('cookieConsent.preferencesTitle')}

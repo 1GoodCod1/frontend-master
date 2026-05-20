@@ -2,6 +2,7 @@ import { AnimatePresence } from 'framer-motion';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { CookieConsentBanner } from '@/components/common/CookieConsentBanner';
 import { ScrollToTopOnNavigate } from '@/components/common/ScrollToTopOnNavigate';
+import { cn } from '@/lib/utils';
 import { useAppShell } from './useAppShell';
 import { getVisibleNavItems } from './navUtils';
 import { AppShellHeader } from './AppShellHeader';
@@ -34,49 +35,51 @@ export function AppShell() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <ScrollToTopOnNavigate />
-      <AnimatePresence mode="wait">
-        {showNavbar && (
-          <AppShellHeader
-            isAuthed={isAuthed}
-            role={role}
-            colorMode={colorMode}
-            isInCabinet={isDashboardOrAdmin}
-            navLinkClass={navLinkClass}
-            isNavCentered={isNavCentered}
-            onLogout={onLogout}
-            onToggleColorMode={handleToggleColorMode}
-            onLanguageChange={handleLanguageChange}
-            onOpenMobileNav={() => setMobileNavOpen(true)}
-          />
-        )}
-      </AnimatePresence>
+      <div className={cn(isDashboardOrAdmin && 'cabinet-theme-scope flex h-dvh min-h-0 flex-col overflow-hidden')}>
+        <ScrollToTopOnNavigate />
+        <AnimatePresence mode="wait">
+          {showNavbar && (
+            <AppShellHeader
+              isAuthed={isAuthed}
+              role={role}
+              colorMode={colorMode}
+              isInCabinet={isDashboardOrAdmin}
+              navLinkClass={navLinkClass}
+              isNavCentered={isNavCentered}
+              onLogout={onLogout}
+              onToggleColorMode={handleToggleColorMode}
+              onLanguageChange={handleLanguageChange}
+              onOpenMobileNav={() => setMobileNavOpen(true)}
+            />
+          )}
+        </AnimatePresence>
 
-      <AppShellNavMobile
-        open={mobileNavOpen}
-        onOpenChange={setMobileNavOpen}
-        items={navItems}
-        isAuthed={isAuthed}
-        colorMode={colorMode}
-        onClose={closeMobileNav}
-        onLogout={onLogout}
-        onToggleColorMode={handleToggleColorMode}
-        onLanguageChange={handleLanguageChange}
-      />
-
-      <AnimatePresence>
-        <AppShellMain
-          isLoggingOut={isLoggingOut}
-          isDashboardOrAdmin={isDashboardOrAdmin}
-          isHomePage={location.pathname === '/'}
+        <AppShellNavMobile
+          open={mobileNavOpen}
+          onOpenChange={setMobileNavOpen}
+          items={navItems}
+          isAuthed={isAuthed}
+          colorMode={colorMode}
+          onClose={closeMobileNav}
+          onLogout={onLogout}
+          onToggleColorMode={handleToggleColorMode}
+          onLanguageChange={handleLanguageChange}
         />
-      </AnimatePresence>
 
-      <AnimatePresence>
-        {showScrollTop && <ScrollToTopButton onClick={scrollToTop} />}
-      </AnimatePresence>
+        <AnimatePresence>
+          <AppShellMain
+            isLoggingOut={isLoggingOut}
+            isDashboardOrAdmin={isDashboardOrAdmin}
+            isHomePage={location.pathname === '/'}
+          />
+        </AnimatePresence>
 
-      <CookieConsentBanner />
+        <AnimatePresence>
+          {showScrollTop && <ScrollToTopButton onClick={scrollToTop} />}
+        </AnimatePresence>
+
+        <CookieConsentBanner />
+      </div>
     </TooltipProvider>
   );
 }

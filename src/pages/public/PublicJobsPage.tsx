@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Bookmark, Briefcase } from 'lucide-react';
 import { useJobsListQuery, useMasterMyApplicationsQuery } from '@/features/jobs/jobsApi';
+import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole } from '@/features/auth/selectors';
 import { cn } from '@/lib/utils';
@@ -13,56 +14,125 @@ import { JobDetailPanel } from '@/features/jobs/components/JobDetailPanel';
 import { JobsSidebar } from '@/features/jobs/components/JobsSidebar';
 import { PublicJobsSearch } from '@/features/jobs/components/PublicJobsSearch';
 import { PublicJobsTabs } from '@/features/jobs/components/PublicJobsTabs';
+import { PublicJobsFilters } from '@/features/jobs/components/PublicJobsFilters';
+import { getTranslatedCategoryName, getTranslatedCityName } from '@/utils/translateCityCategory';
 
 const PAGE_LIMIT = 20;
 
 export default function PublicJobsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { saved, toggle: toggleSave } = useSavedJobs();
   const {
-    tab, setTab,
-    search, setSearch,
+    tab,
+    setTab,
+    search,
+    setSearch,
     debouncedSearch,
-    page, setPage,
-    selectedId, setSelectedId,
+    cityId,
+    setCityId,
+    categoryId,
+    setCategoryId,
+    page,
+    setPage,
+    selectedId,
+    setSelectedId,
     apiSort,
+    apiCityId,
+    apiCategoryId,
+    resetFilters,
   } = usePublicJobsState();
 
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
   const isMaster = role === USER_ROLE.MASTER;
 
-  const { data, isLoading, isFetching } = useJobsListQuery({
+  const { data: masterProfile } = useMastersMyProfileQuery(undefined, {
+    skip: !isMaster || !isAuthed,
+  });
+  const profileData =
+    (masterProfile as { data?: { category?: { slug: string; name: string }; city?: { slug: string; name: string } } })?.data ??
+    (masterProfile as { category?: { slug: string; name: string }; city?: { slug: string; name: string } });
+
+  const profileCategoryLabel = profileData?.category
+    ? getTranslatedCategoryName(t, profileData.category, i18n.language)
+    : null;
+  const profileCityLabel = profileData?.city
+    ? getTranslatedCityName(t, profileData.city, i18n.language)
+    : null;
+
+  useEffect(() => {
+    if (isMaster && isAuthed && !new URLSearchParams(window.location.search).get('sort')) {
+      setTab('best');
+    }
+  }, [isAuthed, isMaster, setTab]);
+
+  const listQuery = {
     limit: PAGE_LIMIT,
     page,
     search: debouncedSearch || undefined,
-    sort: apiSort,
-  } as Parameters<typeof useJobsListQuery>[0], { pollingInterval: 60_000 });
+    sort: tab === 'saved' ? undefined : apiSort,
+    cityId: apiCityId,
+    categoryId: apiCategoryId,
+  } as Parameters<typeof useJobsListQuery>[0];
+
+  const skipList = tab === 'saved';
+
+  const { data, isLoading, isFetching } = useJobsListQuery(listQuery, {
+    skip: skipList,
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    pollingInterval: 60_000,
+  });
 
   const [allItems, setAllItems] = useState<JobDto[]>([]);
-  const [trackedData, setTrackedData] = useState(data);
-  const [queryKey, setQueryKey] = useState(`${debouncedSearch}|${apiSort ?? ''}`);
 
-  const currentQueryKey = `${debouncedSearch}|${apiSort ?? ''}`;
-  if (currentQueryKey !== queryKey) {
-    setQueryKey(currentQueryKey);
-    setTrackedData(undefined);
+  const listKey = `${debouncedSearch}|${apiSort ?? ''}|${apiCityId ?? ''}|${apiCategoryId ?? ''}`;
+
+  useEffect(() => {
     setAllItems([]);
-    setPage(1);
-  } else if (data !== trackedData) {
-    setTrackedData(data);
-    if (data?.items) {
-      setAllItems((prev) => [
-        ...prev.slice(0, (page - 1) * PAGE_LIMIT),
-        ...data.items,
-      ]);
+  }, [listKey]);
+
+  useEffect(() => {
+    if (!data?.items || skipList) return;
+    if (page <= 1) {
+      setAllItems(data.items);
+      return;
     }
-  }
+    setAllItems((prev) => [
+      ...prev.slice(0, (page - 1) * PAGE_LIMIT),
+      ...data.items,
+    ]);
+  }, [data, page, listKey, skipList]);
+
+  const handleTabChange = (next: typeof tab) => {
+    setTab(next);
+    setPage(1);
+    setAllItems([]);
+  };
+
+  const handleCityChange = (value: string) => {
+    setCityId(value);
+    setPage(1);
+    setAllItems([]);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setCategoryId(value);
+    setPage(1);
+    setAllItems([]);
+  };
+
+  const handleResetFilters = () => {
+    resetFilters();
+    setAllItems([]);
+  };
 
   const total = data?.total ?? 0;
-  const hasMore = allItems.length < total;
+  const hasMore = !skipList && allItems.length < total;
 
-  const { data: myAppsData } = useMasterMyApplicationsQuery(undefined, { skip: !isMaster || !isAuthed });
+  const { data: myAppsData } = useMasterMyApplicationsQuery(undefined, {
+    skip: !isMaster || !isAuthed,
+  });
   const appliedIds = useMemo(
     () => new Set((myAppsData?.items ?? []).map((a) => a.jobId)),
     [myAppsData],
@@ -71,35 +141,52 @@ export default function PublicJobsPage() {
   const displayItems = tab === 'saved' ? allItems.filter((j) => saved.has(j.id)) : allItems;
   const savedCount = allItems.filter((j) => saved.has(j.id)).length;
 
+  const filterProps = {
+    cityId,
+    categoryId,
+    onCityChange: handleCityChange,
+    onCategoryChange: handleCategoryChange,
+    onReset: handleResetFilters,
+    showBestHint: isMaster && isAuthed && tab === 'best',
+    profileCategory: profileCategoryLabel,
+    profileCity: profileCityLabel,
+  };
+
   return (
-    <div className="relative flex h-[calc(100vh-64px)] overflow-hidden">
-      {/* Sidebar */}
-      <aside className="hidden lg:block w-[280px] shrink-0 overflow-y-auto px-5 py-4 border-r border-gray-200/60 dark:border-white/[0.06]">
-        <JobsSidebar isAuthed={isAuthed} isMaster={isMaster} />
+    <div className="relative flex h-[calc(100vh-64px)] overflow-hidden bg-[hsl(var(--background))]">
+      <aside className="hidden lg:block w-[280px] shrink-0 overflow-y-auto px-5 py-4 border-r border-[#E9ECEF] dark:border-white/[0.08]">
+        <JobsSidebar isAuthed={isAuthed} isMaster={isMaster} filters={filterProps} />
       </aside>
 
-      {/* List panel */}
       <div className="flex flex-1 min-w-0 flex-col">
         <PublicJobsSearch value={search} onChange={setSearch} />
+
+        <div className="lg:hidden px-4 pb-2">
+          <PublicJobsFilters {...filterProps} />
+        </div>
+
         <PublicJobsTabs
           activeTab={tab}
-          onTabChange={setTab}
+          onTabChange={handleTabChange}
           savedCount={savedCount}
-          total={total}
-          isLoading={isLoading}
+          total={tab === 'saved' ? savedCount : total}
+          isLoading={isLoading && !skipList}
+          isMaster={isMaster && isAuthed}
         />
 
         <div className="w-full max-w-4xl flex-1 overflow-y-auto py-2">
-          {isLoading && page === 1 ? (
+          {isLoading && page === 1 && !skipList ? (
             <div className="flex justify-center pt-24">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground/30" />
             </div>
           ) : displayItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-center px-6">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/60">
-                {tab === 'saved'
-                  ? <Bookmark className="h-6 w-6 text-muted-foreground/40" />
-                  : <Briefcase className="h-6 w-6 text-muted-foreground/40" />}
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F3F5] dark:bg-white/[0.06]">
+                {tab === 'saved' ? (
+                  <Bookmark className="h-6 w-6 text-muted-foreground/40" />
+                ) : (
+                  <Briefcase className="h-6 w-6 text-muted-foreground/40" />
+                )}
               </div>
               <p className="text-sm font-semibold text-foreground">
                 {tab === 'saved' ? t('jobs.noSavedJobs') : t('jobs.noJobsFound')}
@@ -117,16 +204,24 @@ export default function PublicJobsPage() {
                   selected={selectedId === job.id}
                   onClick={() => setSelectedId(job.id)}
                   saved={saved.has(job.id)}
-                  onSave={(e) => { e.stopPropagation(); toggleSave(job.id); }}
+                  onSave={(e) => {
+                    e.stopPropagation();
+                    toggleSave(job.id);
+                  }}
                   applied={appliedIds.has(job.id)}
                 />
               ))}
-              {hasMore && tab !== 'saved' && (
+              {hasMore && (
                 <div className="flex justify-center py-6">
                   <button
+                    type="button"
                     onClick={() => setPage((p) => p + 1)}
                     disabled={isFetching}
-                    className="flex items-center gap-2 rounded-xl bg-muted px-6 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
+                    className={cn(
+                      'flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-medium transition-colors duration-200',
+                      'bg-[#F1F3F5] text-[#495057] hover:bg-[#E9ECEF] dark:bg-white/[0.06] dark:text-white/70 dark:hover:bg-white/[0.1]',
+                      'disabled:opacity-50',
+                    )}
                   >
                     {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     {t('jobs.loadMore')}
@@ -138,17 +233,19 @@ export default function PublicJobsPage() {
         </div>
       </div>
 
-      {/* Detail overlay */}
       {selectedId && (
-        <div className="absolute inset-0 z-20 bg-black/30" onClick={() => setSelectedId(null)} />
+        <div
+          className="absolute inset-0 z-20 bg-black/30"
+          onClick={() => setSelectedId(null)}
+          aria-hidden
+        />
       )}
       <div
         className={cn(
           'absolute right-0 top-0 z-30 h-full w-full max-w-2xl flex flex-col overflow-hidden shadow-2xl',
-          'transition-transform duration-300 ease-in-out',
+          'transition-transform duration-300 ease-in-out bg-[hsl(var(--card))]',
           selectedId ? 'translate-x-0' : 'translate-x-full',
         )}
-        style={{ backgroundColor: 'hsl(var(--card))' }}
       >
         {selectedId && (
           <JobDetailPanel

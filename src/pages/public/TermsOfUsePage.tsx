@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 import {
   SUPPORT_EMAIL,
   SUPPORT_MAILTO,
@@ -54,9 +55,7 @@ export default function TermsOfUsePage() {
       <Card
         className={cn(
           'overflow-hidden rounded-2xl',
-          'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
-          'border border-gray-200/80 dark:border-white/[0.08]',
-          'shadow-sm dark:shadow-lg dark:shadow-black/20',
+          surfaceCardCls,
         )}
       >
         <CardContent className="space-y-6 p-6 sm:p-8">

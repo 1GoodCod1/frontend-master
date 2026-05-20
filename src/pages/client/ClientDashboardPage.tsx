@@ -8,16 +8,24 @@ import { useClientDashboard, type ClientBooking, type ClientLead } from '@/hooks
 import { useNow } from '@/hooks/useNow';
 import DashboardMetricCard from '@/features/clients/components/dashboard/DashboardMetricCard';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
+import { clientPageClassName, clientSectionTitleCls } from '@/lib/clientCabinetStyles';
 import { Button } from '@/components/ui/button';
 
 import { PushPermissionBanner } from '@/components/notifications/PushPermissionBanner';
 import { PendingBookingsBanner } from '@/features/bookings/components/PendingBookingsBanner';
 
-const iconClass = 'size-5';
+const iconClass = 'size-4';
+
+/** Shared timeline badge — matches homepage job category pills. */
+const TIMELINE_BADGE =
+  'text-[10px] font-medium uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.06] dark:text-white/55';
+
+const FABER_LINK =
+  'p-0 h-auto h-7 mt-2 font-semibold text-[#E97525] hover:text-[#d86920] dark:text-[#E97525] dark:hover:text-[#f08540]';
 
 /** Shared block surface — matches the homepage cards (visible contour in both themes). */
-const CARD_SURFACE =
-  'bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20';
+const CARD_SURFACE = surfaceCardCls;
 const CARD_HOVER =
   'transition duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10 dark:hover:border-white/[0.14]';
 
@@ -164,7 +172,7 @@ export default function ClientDashboardPage() {
   }, [bookingsList, now]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:py-8 space-y-10">
+    <div className={cn(clientPageClassName, 'space-y-10')}>
       <PageHeader
         title={t('clientDashboard.title')}
         subtitle={t('clientDashboard.subtitle')}
@@ -173,14 +181,13 @@ export default function ClientDashboardPage() {
       <PendingBookingsBanner />
 
       {/* Metrics */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <DashboardMetricCard
           to="/client-dashboard/bookings"
           icon={<Calendar className={iconClass} />}
           value={bookingsCount}
           label={t('clientDashboard.bookings')}
           description={t('clientDashboard.bookingsDescription')}
-          accent="blue"
         />
         <DashboardMetricCard
           to="/client-dashboard/favorites"
@@ -188,7 +195,6 @@ export default function ClientDashboardPage() {
           value={favoritesCount}
           label={t('clientDashboard.favorites')}
           description={t('clientDashboard.favoritesDescription')}
-          accent="rose"
         />
         <DashboardMetricCard
           to="/client-dashboard/leads"
@@ -196,7 +202,6 @@ export default function ClientDashboardPage() {
           value={leadsCount}
           label={t('clientDashboard.myLeads')}
           description={t('clientDashboard.leadsDescription')}
-          accent="violet"
         />
         <DashboardMetricCard
           to="/client-dashboard/reports"
@@ -204,7 +209,6 @@ export default function ClientDashboardPage() {
           value="—"
           label={t('clientDashboard.reports')}
           description={t('clientDashboard.reportsDescription')}
-          accent="amber"
         />
       </div>
 
@@ -212,60 +216,48 @@ export default function ClientDashboardPage() {
         {/* Timeline */}
         <div className="min-w-0 md:col-span-2 space-y-6">
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold">{t('clientDashboard.timeline')}</h3>
+            <h3 className={clientSectionTitleCls}>{t('clientDashboard.timeline')}</h3>
           </div>
-          <div className="relative space-y-3 before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-px before:bg-border/40">
-            {timelineItems.length > 0 ? timelineItems.map((item) => {
-              const dotColor = item.type === 'BOOKING'
-                ? 'bg-teal-500'
-                : item.type === 'LEAD'
-                  ? 'bg-amber-500'
-                  : 'bg-violet-500';
-              const labelColor = item.type === 'BOOKING'
-                ? 'text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-500/10'
-                : item.type === 'LEAD'
-                  ? 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10'
-                  : 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10';
-              return (
+          <div className="relative space-y-3 before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-px before:bg-[#E9ECEF] dark:before:bg-white/[0.08]">
+            {timelineItems.length > 0 ? timelineItems.map((item) => (
                 <div key={item.id} className="relative flex items-start gap-5 pl-5">
-                  <div className={cn(
-                    'absolute left-[7px] top-5 size-2.5 -translate-x-1/2 rounded-full ring-4 ring-background',
-                    dotColor,
-                  )} />
-                  <div className={cn('flex-1 rounded-xl p-4', CARD_SURFACE, CARD_HOVER)}>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className={cn('text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md', labelColor)}>
-                        {item.type === 'BOOKING'
-                          ? t('clientDashboard.booking')
-                          : item.type === 'LEAD'
-                            ? t('clientDashboard.leadSource')
-                            : t('clientDashboard.review')}
+                  <div className="absolute left-[7px] top-5 size-2.5 -translate-x-1/2 rounded-full bg-[#E97525] ring-4 ring-background" />
+                  <div className={cn('flex-1 rounded-[18px] p-4', CARD_SURFACE, CARD_HOVER)}>
+                    <div className="flex justify-between items-center mb-2 gap-2">
+                      <span className={TIMELINE_BADGE}>
+                        <span className="inline-flex items-center gap-1">
+                          <span className="w-1 h-1 rounded-full bg-[#E97525] shrink-0" aria-hidden />
+                          {item.type === 'BOOKING'
+                            ? t('clientDashboard.booking')
+                            : item.type === 'LEAD'
+                              ? t('clientDashboard.leadSource')
+                              : t('clientDashboard.review')}
+                        </span>
                       </span>
-                      <span className="text-[11px] text-muted-foreground/70 tabular-nums">
+                      <span className="text-[11px] text-[#6C757D] dark:text-white/50 tabular-nums shrink-0">
                         {new Date(item.date).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-sm text-foreground/80 dark:text-foreground/70">
+                    <p className="text-sm text-[#495057] dark:text-white/70">
                       {item.type === 'BOOKING'
                         ? t('clientDashboard.recordedTo')
                         : item.type === 'LEAD'
                           ? t('clientDashboard.sentLeadTo')
                           : t('clientDashboard.leftReviewFor')}
                       {' '}
-                      <span className="font-semibold text-foreground/90 dark:text-foreground/85">{item.masterName}</span>
+                      <span className="font-semibold text-[#212529] dark:text-white">{item.masterName}</span>
                       {item.type === 'REVIEW' && typeof item.rating === 'number' && (
-                        <span className="ml-2 inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400/80">
-                          <Star className="size-3.5 fill-amber-500 text-amber-500" />
+                        <span className="ml-2 inline-flex items-center gap-1 text-xs text-[#E97525]">
+                          <Star className="size-3.5 fill-[#E97525] text-[#E97525]" />
                           {item.rating.toFixed(1)}
                         </span>
                       )}
                     </p>
                   </div>
                 </div>
-              );
-            }) : (
-              <div className={cn('flex min-h-[220px] items-center justify-center rounded-xl text-center', CARD_SURFACE)}>
-                <p className="text-sm text-muted-foreground">{t('clientDashboard.noHistory')}</p>
+              )) : (
+              <div className={cn('flex min-h-[220px] items-center justify-center rounded-[18px] text-center', CARD_SURFACE)}>
+                <p className="text-sm text-[#6C757D] dark:text-white/50">{t('clientDashboard.noHistory')}</p>
               </div>
             )}
           </div>
@@ -275,29 +267,29 @@ export default function ClientDashboardPage() {
         <div className="min-w-0 space-y-8">
           {/* Reminders */}
           {(pendingReviews.length > 0 || upcomingBookings.length > 0) && (
-            <div className={cn('rounded-2xl p-6', CARD_SURFACE)}>
-              <div className="mb-4 flex items-center gap-2">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400">
+            <div className={cn('rounded-[18px] p-5 sm:p-6', CARD_SURFACE)}>
+              <div className="mb-4 flex items-center gap-2.5">
+                <span className="flex size-8 items-center justify-center rounded-[10px] bg-[#FFF8EB] text-[#E97525] dark:bg-[#E97525]/12">
                   <AlertTriangle className="size-4" />
                 </span>
-                <h4 className="text-sm font-bold text-foreground">{t('clientDashboard.reminders')}</h4>
+                <h4 className="text-sm font-semibold text-[#212529] dark:text-white">{t('clientDashboard.reminders')}</h4>
               </div>
               <div className="space-y-4">
                 {upcomingBookings.map((b) => (
                   <div key={b.id} className="text-sm">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed text-[#495057] dark:text-white/70">
                       {t('clientDashboard.upcomingBooking')}
                       {' '}
-                      <span className="font-bold">{displayMasterName(b.master ?? null)}</span>
+                      <span className="font-semibold text-[#212529] dark:text-white">{displayMasterName(b.master ?? null)}</span>
                       {' '}
                       {b.startTime && (
-                        <span className="text-muted-foreground">
+                        <span className="text-[#6C757D] dark:text-white/50">
                           ({new Date(b.startTime).toLocaleString()})
                         </span>
                       )}
                       .
                     </p>
-                    <Button variant="link" className="p-0 h-auto text-amber-600 dark:text-amber-400 font-bold mt-2 h-7" asChild>
+                    <Button variant="link" className={FABER_LINK} asChild>
                       <a href="/client-dashboard/bookings">{t('clientDashboard.viewBookings')}</a>
                     </Button>
                   </div>
@@ -305,12 +297,12 @@ export default function ClientDashboardPage() {
 
                 {pendingReviews.map((b) => (
                   <div key={b.id} className="text-sm">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed text-[#495057] dark:text-white/70">
                       {t('clientDashboard.leaveReviewText')}
                       {' '}
-                      <span className="font-bold">{displayMasterName(b.master ?? null)}</span>.
+                      <span className="font-semibold text-[#212529] dark:text-white">{displayMasterName(b.master ?? null)}</span>.
                     </p>
-                    <Button variant="link" className="p-0 h-auto text-amber-600 dark:text-amber-400 font-bold mt-2 h-7" asChild>
+                    <Button variant="link" className={FABER_LINK} asChild>
                       <a href={b.masterId ? `/masters/${b.masterId}#reviews` : '/'}>{t('clientDashboard.leaveReviewNow')}</a>
                     </Button>
                   </div>

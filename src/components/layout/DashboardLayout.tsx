@@ -33,39 +33,70 @@ import { useIsMdUp } from '@/hooks/useMediaQuery';
 import { AppBreadcrumbs } from '@/components/common/AppBreadcrumbs';
 import { VerificationRequiredBanner } from '@/components/common/VerificationRequiredBanner';
 import { ReportsWarningBanner } from '@/components/common/ReportsWarningBanner';
-import { CabinetSidebar, type CabinetNavItem } from '@/components/layout/CabinetSidebar';
+import { CabinetSidebar, type CabinetNavItem, type CabinetNavSection } from '@/components/layout/CabinetSidebar';
+import { CabinetContentShell } from '@/components/layout/CabinetContentShell';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { USER_ROLE } from '@/constants/roles';
 
-function getItems(
+function getSections(
   t: ReturnType<typeof useTranslation>['t'],
-  plan: TariffPlan
-): CabinetNavItem[] {
-  const base = [
-    { key: 'overview', label: t('dashboard.overview'), to: '/dashboard', icon: <LayoutDashboard className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'profile', label: t('dashboard.profile'), to: '/dashboard/profile', icon: <User className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'services', label: t('dashboard.services'), to: '/dashboard/services', icon: <ListChecks className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'leads', label: t('dashboard.leads'), to: '/dashboard/leads', icon: <Mail className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'clients', label: t('dashboard.clients', 'Клиенты'), to: '/dashboard/clients', icon: <Users className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'chat', label: t('dashboard.chat', 'Чаты'), to: '/dashboard/chat', icon: <MessageCircle className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'reviews', label: t('dashboard.reviews'), to: '/dashboard/reviews', icon: <MessageSquareQuote className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'payments', label: t('dashboard.payments'), to: '/dashboard/payments', icon: <CreditCard className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'subscription', label: t('dashboard.subscription'), to: '/dashboard/subscription', icon: <Crown className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'analytics', label: t('dashboard.analytics'), to: '/dashboard/analytics', icon: <BarChart2 className="size-5" />, minPlan: 'VIP' as TariffPlan },
-    { key: 'promotions', label: t('dashboard.promotions'), to: '/dashboard/promotions', icon: <Tag className="size-5" />, minPlan: 'PREMIUM' as TariffPlan },
-    { key: 'bookings', label: t('dashboard.bookings'), to: '/dashboard/bookings', icon: <Calendar className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'files', label: t('dashboard.files'), to: '/dashboard/files', icon: <Paperclip className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'portfolio', label: t('dashboard.portfolio'), to: '/dashboard/portfolio', icon: <Layers className="size-5" />, minPlan: 'VIP' as TariffPlan },
-    { key: 'security', label: t('dashboard.security'), to: '/dashboard/security', icon: <Shield className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'notifications', label: t('dashboard.notifications'), to: '/dashboard/notifications', icon: <Bell className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'verification', label: t('dashboard.verification'), to: '/dashboard/verification', icon: <BadgeCheck className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'applications', label: t('jobs.myApplications', 'My Applications'), to: '/dashboard/jobs/applications', icon: <Briefcase className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'referrals', label: t('referrals.title'), to: '/dashboard/referrals', icon: <Gift className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-  ];
-  return base
-    .filter((it) => hasMinPlan(plan, it.minPlan))
-    .map(({ key, label, to, icon, minPlan: _ }) => ({ key, label, to, icon }));
+  plan: TariffPlan,
+): { key: string; sectionKey: string; label: string; to: string; icon: React.ReactNode; minPlan: TariffPlan }[] {
+  return [
+    { key: 'overview', sectionKey: 'main', label: t('dashboard.overview'), to: '/dashboard', icon: <LayoutDashboard className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'leads', sectionKey: 'work', label: t('dashboard.leads'), to: '/dashboard/leads', icon: <Mail className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'clients', sectionKey: 'work', label: t('dashboard.clients'), to: '/dashboard/clients', icon: <Users className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'chat', sectionKey: 'work', label: t('dashboard.chat'), to: '/dashboard/chat', icon: <MessageCircle className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'reviews', sectionKey: 'work', label: t('dashboard.reviews'), to: '/dashboard/reviews', icon: <MessageSquareQuote className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'bookings', sectionKey: 'work', label: t('dashboard.bookings'), to: '/dashboard/bookings', icon: <Calendar className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'applications', sectionKey: 'work', label: t('jobs.myApplications'), to: '/dashboard/jobs/applications', icon: <Briefcase className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'profile', sectionKey: 'business', label: t('dashboard.profile'), to: '/dashboard/profile', icon: <User className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'services', sectionKey: 'business', label: t('dashboard.services'), to: '/dashboard/services', icon: <ListChecks className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'files', sectionKey: 'business', label: t('dashboard.files'), to: '/dashboard/files', icon: <Paperclip className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'portfolio', sectionKey: 'business', label: t('dashboard.portfolio'), to: '/dashboard/portfolio', icon: <Layers className="size-5" />, minPlan: 'VIP' as TariffPlan },
+    { key: 'promotions', sectionKey: 'business', label: t('dashboard.promotions'), to: '/dashboard/promotions', icon: <Tag className="size-5" />, minPlan: 'PREMIUM' as TariffPlan },
+    { key: 'analytics', sectionKey: 'business', label: t('dashboard.analytics'), to: '/dashboard/analytics', icon: <BarChart2 className="size-5" />, minPlan: 'VIP' as TariffPlan },
+    { key: 'payments', sectionKey: 'finance', label: t('dashboard.payments'), to: '/dashboard/payments', icon: <CreditCard className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'subscription', sectionKey: 'finance', label: t('dashboard.subscription'), to: '/dashboard/subscription', icon: <Crown className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'security', sectionKey: 'account', label: t('dashboard.security'), to: '/dashboard/security', icon: <Shield className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'notifications', sectionKey: 'account', label: t('dashboard.notifications'), to: '/dashboard/notifications', icon: <Bell className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'verification', sectionKey: 'account', label: t('dashboard.verification'), to: '/dashboard/verification', icon: <BadgeCheck className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+    { key: 'referrals', sectionKey: 'account', label: t('referrals.title'), to: '/dashboard/referrals', icon: <Gift className="size-5" />, minPlan: 'BASIC' as TariffPlan },
+  ].filter((it) => hasMinPlan(plan, it.minPlan));
+}
+
+const MASTER_SECTION_ORDER = ['main', 'work', 'business', 'finance', 'account'] as const;
+
+function buildMasterSections(
+  t: ReturnType<typeof useTranslation>['t'],
+  plan: TariffPlan,
+  badgeFor: (key: string) => number,
+  referralsEnabled: boolean,
+): CabinetNavSection[] {
+  const defs = getSections(t, plan).filter((it) => it.key !== 'referrals' || referralsEnabled);
+  const bySection = new Map<string, CabinetNavItem[]>();
+
+  for (const def of defs) {
+    const items = bySection.get(def.sectionKey) ?? [];
+    items.push({
+      key: def.key,
+      label: def.label,
+      to: def.to,
+      icon: def.icon,
+      badge: badgeFor(def.key),
+    });
+    bySection.set(def.sectionKey, items);
+  }
+
+  return MASTER_SECTION_ORDER.flatMap((sectionKey) => {
+    const items = bySection.get(sectionKey);
+    if (!items?.length) return [];
+    return [{
+      key: sectionKey,
+      label: t(`cabinetNav.sections.${sectionKey}`),
+      items,
+    }];
+  });
 }
 
 export function DashboardLayout() {
@@ -100,7 +131,6 @@ export function DashboardLayout() {
   const isVerified = useAppSelector(selectIsVerified);
   const { data: referralsConfig } = useConfigReferralsEnabledQuery();
   const referralsEnabled = referralsConfig?.enabled ?? false;
-  const baseItems = getItems(t, plan).filter((it) => it.key !== 'referrals' || referralsEnabled);
 
   const badgeFor = (key: string) => {
     if (key === 'leads') return unreadLeads;
@@ -109,13 +139,10 @@ export function DashboardLayout() {
     return 0;
   };
 
-  const items: CabinetNavItem[] = baseItems.map((it) => ({
-    ...it,
-    badge: badgeFor(it.key),
-  }));
+  const sections = buildMasterSections(t, plan, badgeFor, referralsEnabled);
 
   return (
-    <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden md:flex-row">
+    <div className="cabinet-theme-scope flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:flex-row md:items-stretch">
       {!isMdUp && (
         <div className="fixed top-14 left-0 right-0 z-30 flex items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4 md:static md:z-auto">
           <Button
@@ -134,8 +161,7 @@ export function DashboardLayout() {
       )}
 
       <CabinetSidebar
-        sectionLabel="MASTER"
-        items={items}
+        sections={sections}
         showPremiumBanner
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -143,25 +169,17 @@ export function DashboardLayout() {
         onMobileClose={() => setMobileOpen(false)}
       />
 
-      <main
-        data-app-scroll-region=""
-        className={cn(
-        'flex-1 overflow-y-auto overflow-x-hidden bg-[hsl(var(--cabinet-main-bg))] transition-colors duration-300',
-        !isMdUp && 'pt-14'
-      )}
-      >
-        <div className="min-w-0 py-6 px-4 md:px-6 max-w-[1400px] mx-auto">
-          <AppBreadcrumbs />
-          {role === USER_ROLE.MASTER && (
-            <VerificationRequiredBanner
-              role={USER_ROLE.MASTER}
-              isVerified={isVerified}
-            />
-          )}
-          {role === USER_ROLE.MASTER && <ReportsWarningBanner />}
-          <Outlet />
-        </div>
-      </main>
+      <CabinetContentShell mobileTopPadding={!isMdUp} contentClassName="max-w-[1400px]">
+        <AppBreadcrumbs />
+        {role === USER_ROLE.MASTER && (
+          <VerificationRequiredBanner
+            role={USER_ROLE.MASTER}
+            isVerified={isVerified}
+          />
+        )}
+        {role === USER_ROLE.MASTER && <ReportsWarningBanner />}
+        <Outlet />
+      </CabinetContentShell>
     </div>
   );
 }

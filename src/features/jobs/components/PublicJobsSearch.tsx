@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Search, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 
 interface PublicJobsSearchProps {
   value: string;
@@ -11,7 +13,7 @@ export function PublicJobsSearch({ value, onChange }: PublicJobsSearchProps) {
 
   return (
     <div className="w-full max-w-4xl px-4 py-4">
-      <div className="flex items-center gap-2.5 rounded-xl border border-gray-200/80 dark:border-white/[0.08] bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] px-4 py-2.5 focus-within:border-primary/50 transition-colors">
+      <div className={cn('flex items-center gap-2.5 rounded-xl px-4 py-2.5 focus-within:border-primary/50 transition-colors', surfaceCardCls)}>
         <Search className="h-4 w-4 shrink-0 text-muted-foreground/60" />
         <input
           value={value}

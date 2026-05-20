@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Check, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 
 type FeatureValue = boolean | string;
 
@@ -136,7 +137,7 @@ export function PlansComparisonTable() {
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-xl sm:rounded-2xl border border-gray-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/95 overflow-hidden shadow-sm dark:shadow-none">
+    <div className={cn('rounded-xl sm:rounded-2xl overflow-hidden', surfaceCardCls)}>
       <div className="overflow-x-auto overscroll-x-contain">
         <div className="min-w-[320px] sm:min-w-0">
       <div className="grid grid-cols-[minmax(140px,1fr)_repeat(3,minmax(80px,100px))] sm:grid-cols-[1fr_repeat(3,_100px)] border-b border-gray-200 dark:border-zinc-800">

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { Mail, Clock, AtSign, CalendarDays, Hourglass, CheckCircle, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatDateShort, formatTimeOnly, getLocaleFromLanguage } from '@/utils/date';
@@ -14,6 +13,18 @@ import { RequestStatusProgress } from '@/features/requests/components/RequestSta
 import { mediaUrl } from '@/utils/media';
 import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
 import { useLeadsUpdateStatusMutation } from '@/features/leads/leadsApi';
+import { cn } from '@/lib/utils';
+import {
+  clientBadgeCls,
+  clientCardCls,
+  clientIconWrapCls,
+  clientInsetPanelCls,
+  clientLinkCls,
+  clientPrimaryBtnCls,
+  clientTextBody,
+  clientTextMuted,
+  clientTextTitle,
+} from '@/lib/clientCabinetStyles';
 
 const ClientRequestCard = React.memo(function ClientRequestCard({
   lead,
@@ -47,23 +58,21 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
   }, [lead.files]);
 
   return (
-    <Card className="group flex flex-col min-w-0 w-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none" />
-      
-      <CardContent className="relative flex min-w-0 flex-col gap-6 p-5 sm:p-6">
+    <div className={cn(clientCardCls, 'flex min-w-0 w-full flex-col overflow-hidden')}>
+      <div className="relative flex min-w-0 flex-col gap-6 p-5 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
-                <Mail className="size-5" />
-              </div>
-              <span className="text-lg font-bold text-foreground transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500">
+              <span className={clientIconWrapCls}>
+                <Mail className="size-4" />
+              </span>
+              <span className={cn('text-base font-semibold', clientTextTitle)}>
                 {lead.master?.user?.firstName} {lead.master?.user?.lastName}
               </span>
               <RequestStatusBadge status={status} />
             </div>
-            
-            <p className="mt-1 min-w-0 max-w-full whitespace-pre-wrap break-words [overflow-wrap:anywhere] text-base leading-relaxed text-muted-foreground">
+
+            <p className={cn('mt-1 min-w-0 max-w-full whitespace-pre-wrap break-words [overflow-wrap:anywhere]', clientTextBody)}>
               {lead.message ?? '—'}
             </p>
           </div>
@@ -71,52 +80,50 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
 
         {imageUrls.length > 0 && (
           <div className="flex flex-col gap-2">
-             <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
-               {t('leads.attachedPhotos', 'Отправленные фото')}
-             </p>
-             <div className="flex flex-wrap gap-3">
-               {imageUrls.map((src, idx) => (
-                 <button
-                   key={idx}
-                   type="button"
-                   onClick={() => {
-                     setLightboxIndex(idx);
-                     setLightboxOpen(true);
-                   }}
-                   className="relative block size-20 shrink-0 overflow-hidden rounded-xl border border-black/10 bg-muted transition-transform hover:scale-105 hover:shadow-md dark:border-white/10"
-                   aria-label={`View photo ${idx + 1}`}
-                 >
-                   <img src={src} alt="Attachment" className="h-full w-full object-cover" loading="lazy" />
-                 </button>
-               ))}
-             </div>
+            <p className={cn('text-[11px] font-semibold uppercase tracking-wider', clientTextMuted)}>
+              {t('leads.attachedPhotos', 'Отправленные фото')}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {imageUrls.map((src, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setLightboxIndex(idx);
+                    setLightboxOpen(true);
+                  }}
+                  className="relative block size-20 shrink-0 overflow-hidden rounded-xl border border-[#e8e8e8] bg-muted transition hover:scale-105 dark:border-[#2d2d2d]"
+                  aria-label={`View photo ${idx + 1}`}
+                >
+                  <img src={src} alt="Attachment" className="h-full w-full object-cover" loading="lazy" />
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Status Progress Tracker */}
-        <div className="rounded-xl border border-black/5 bg-black/[0.02] p-5 dark:border-white/5 dark:bg-white/[0.02]">
+        <div className={clientInsetPanelCls}>
           <RequestStatusProgress status={status} compact />
         </div>
 
-        {/* Pending Booking Proposal */}
         {pendingBooking && (
-          <div className="rounded-xl border-2 border-amber-500/40 bg-amber-50 dark:bg-amber-950/20 p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <CalendarDays className="size-5 text-amber-600 dark:text-amber-400" />
-              <span className="font-semibold text-amber-800 dark:text-amber-300">
+          <div className={cn(clientInsetPanelCls, 'border-[#E97525]/30 bg-[#FFF8EB]/60 dark:bg-[#E97525]/8')}>
+            <div className="mb-2 flex items-center gap-2">
+              <CalendarDays className="size-5 text-[#E97525]" />
+              <span className={cn('font-semibold', clientTextTitle)}>
                 {t('bookings.proposedTime', 'Proposed appointment')}
               </span>
             </div>
-            <p className="text-sm text-foreground mb-3">
+            <p className={cn('mb-3', clientTextBody)}>
               {formatDateShort(new Date(pendingBooking.startTime), locale)}{' '}
               {formatTimeOnly(new Date(pendingBooking.startTime), locale)}
               {' — '}
               {formatTimeOnly(new Date(pendingBooking.endTime), locale)}
               {pendingBooking.notes && (
-                <span className="text-muted-foreground ml-2">· {pendingBooking.notes}</span>
+                <span className={cn('ml-2', clientTextMuted)}>· {pendingBooking.notes}</span>
               )}
             </p>
-            <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-300 dark:border-amber-700">
+            <Badge variant="outline" className={clientBadgeCls}>
               <Hourglass className="mr-1 size-3" />
               {t('bookings.status.PENDING')}
             </Badge>
@@ -124,7 +131,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
         )}
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground/80 font-medium">
+          <div className={cn('flex items-center gap-2 font-medium', clientTextMuted)}>
             <Clock className="size-4 shrink-0" />
             {createdAt ? (
               <>
@@ -137,25 +144,24 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
 
           {lead.master?.user?.email && (
             <div className="flex flex-wrap items-center gap-4">
-              <span className="hidden text-sm text-border sm:inline">|</span>
+              <span className="hidden text-sm text-[#E9ECEF] sm:inline dark:text-white/10">|</span>
               <a
                 href={`mailto:${lead.master.user.email}`}
-                className="group flex items-center gap-1.5 text-sm font-semibold text-foreground no-underline transition-colors hover:text-amber-600 dark:hover:text-amber-500"
+                className={cn('group flex items-center gap-1.5 text-[13px] font-semibold no-underline', clientLinkCls)}
               >
-                <AtSign className="size-4 text-amber-500/70 transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500" />
+                <AtSign className="size-4 opacity-70" />
                 {lead.master.user.email}
               </a>
             </div>
           )}
         </div>
 
-        {/* Closure confirmation for client */}
         {status === 'PENDING_CLOSE' && (
-          <div className="rounded-xl border-2 border-purple-400/40 bg-purple-50 dark:bg-purple-950/20 p-4">
-            <p className="text-sm font-semibold text-purple-800 dark:text-purple-300 mb-3">
+          <div className={clientInsetPanelCls}>
+            <p className={cn('mb-3 text-[13px] font-semibold', clientTextTitle)}>
               {t('leads.closeConfirmationMessage')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Button
                 size="sm"
                 disabled={isConfirming}
@@ -167,7 +173,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
                     toast.error(t('leads.updateStatusFailed'));
                   }
                 }}
-                className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                className="gap-1.5 rounded-[12px] bg-emerald-600 text-white hover:bg-emerald-700"
               >
                 <CheckCircle className="size-3.5" />
                 {t('leads.confirmClose')}
@@ -184,7 +190,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
                     toast.error(t('leads.updateStatusFailed'));
                   }
                 }}
-                className="gap-1.5 border-rose-400/60 text-rose-700 hover:bg-rose-50 hover:text-rose-800 dark:text-rose-400 dark:border-rose-500/40 dark:hover:bg-rose-950/40 dark:hover:text-rose-300"
+                className="gap-1.5 rounded-[12px] border-rose-400/60 text-rose-700 hover:bg-rose-50 dark:text-rose-400"
               >
                 <XCircle className="size-3.5" />
                 {t('leads.rejectClose')}
@@ -192,17 +198,16 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
             </div>
           </div>
         )}
-
-      </CardContent>
+      </div>
 
       {lead.master && (
-        <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-black/5 bg-black/[0.02] p-4 dark:border-white/5 dark:bg-white/[0.02] sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e8e8e8] bg-[hsl(var(--secondary)/0.35)] p-4 dark:border-[#2d2d2d] dark:bg-white/[0.03] sm:px-6">
           <LeaveReviewButton
             lead={lead}
             onOpenModal={onOpenReviewModal}
             reviewsSubmittedMasterIds={reviewsSubmittedMasterIds}
           />
-          <Button size="default" asChild className="rounded-xl border-0 bg-amber-600 font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5 hover:bg-amber-700 hover:shadow-xl dark:bg-amber-600 dark:hover:bg-amber-700 ml-auto">
+          <Button size="default" asChild className={cn(clientPrimaryBtnCls, 'ml-auto')}>
             <RouterLink
               to={`/masters/${masterSlugOrId}${status === 'CLOSED' ? '?review=1' : ''}`}
             >
@@ -220,7 +225,7 @@ const ClientRequestCard = React.memo(function ClientRequestCard({
           initialIndex={lightboxIndex}
         />
       )}
-    </Card>
+    </div>
   );
 });
 

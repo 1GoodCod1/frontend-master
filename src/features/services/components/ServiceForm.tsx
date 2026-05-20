@@ -56,8 +56,12 @@ export function ServiceFormFields({ service, onChange, idPrefix = '' }: ServiceF
           </Label>
           <Select
             value={service.priceType}
-            onValueChange={(v: 'FIXED' | 'NEGOTIABLE') =>
-              onChange((s) => ({ ...s, priceType: v, price: v === 'NEGOTIABLE' ? '' : s.price }))
+            onValueChange={(v) =>
+              onChange((s) => ({
+                ...s,
+                priceType: v as ServiceItem['priceType'],
+                price: v === 'NEGOTIABLE' ? '' : s.price,
+              }))
             }
           >
             <SelectTrigger id={`${p}priceType`} className="mt-1 rounded-lg bg-background">
@@ -96,7 +100,9 @@ export function ServiceFormFields({ service, onChange, idPrefix = '' }: ServiceF
               </Label>
               <Select
                 value={service.currency}
-                onValueChange={(v: 'MDL' | 'EUR' | 'USD') => onChange((s) => ({ ...s, currency: v }))}
+                onValueChange={(v) =>
+                  onChange((s) => ({ ...s, currency: v as ServiceItem['currency'] }))
+                }
               >
                 <SelectTrigger id={`${p}currency`} className="mt-1 rounded-lg bg-background">
                   <SelectValue />

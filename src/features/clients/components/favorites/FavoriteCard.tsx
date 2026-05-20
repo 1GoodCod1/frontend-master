@@ -1,11 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { Heart, MapPin, FolderOpen, Star } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AvatarPlaceholder } from '@/components/ui/AvatarPlaceholder';
 import { mediaUrl } from '@/utils/media';
 import { getTranslatedCityName, getTranslatedCategoryName } from '@/utils/translateCityCategory';
+import { cn } from '@/lib/utils';
+import {
+  clientCardCls,
+  clientTextBody,
+  clientTextMuted,
+  clientTextTitle,
+} from '@/lib/clientCabinetStyles';
 import type { FavoriteDto } from '@/types';
 
 interface FavoriteCardProps {
@@ -20,33 +26,25 @@ export default function FavoriteCard({ favorite, onRemove }: FavoriteCardProps) 
   const fullName = [master?.user?.firstName, master?.user?.lastName].filter(Boolean).join(' ').trim() || master?.displayName || t('reports.unknownMaster', 'Unknown Master');
 
   return (
-    <Card className="group relative flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:-translate-y-1 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100" />
-      
+    <div className={cn(clientCardCls, 'flex flex-col overflow-hidden')}>
       <div className="relative flex items-center gap-4 p-5">
-        <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-black/10 bg-muted shadow-sm dark:border-white/10 dark:bg-white/5">
+        <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-[#e8e8e8] bg-muted shadow-sm dark:border-[#2d2d2d]">
           {avatarUrl ? (
-            <img src={avatarUrl} alt={fullName} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <img src={avatarUrl} alt={fullName} className="h-full w-full object-cover" />
           ) : (
             <AvatarPlaceholder id={master?.id} name={fullName} role="master" fillParent height={64} />
           )}
         </div>
-        
+
         <div className="flex flex-1 flex-col justify-center overflow-hidden pr-6">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-base font-bold text-foreground transition-colors group-hover:text-amber-600 dark:group-hover:text-amber-500">
-              {fullName}
-            </h3>
-          </div>
-          <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground opacity-90">
-             {master?.category && (
-               <div className="flex items-center gap-1 truncate">
-                 <FolderOpen className="size-3 shrink-0" />
-                 <span className="truncate">{getTranslatedCategoryName(t, master.category)}</span>
-               </div>
-             )}
-          </div>
-          <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground opacity-90">
+          <h3 className={cn('truncate text-base font-semibold', clientTextTitle)}>{fullName}</h3>
+          {master?.category && (
+            <div className={cn('mt-0.5 flex items-center gap-1 truncate', clientTextMuted)}>
+              <FolderOpen className="size-3 shrink-0" />
+              <span className="truncate">{getTranslatedCategoryName(t, master.category)}</span>
+            </div>
+          )}
+          <div className={cn('mt-1 flex items-center gap-3', clientTextMuted)}>
             {master?.city && (
               <div className="flex items-center gap-1">
                 <MapPin className="size-3 shrink-0" />
@@ -54,8 +52,8 @@ export default function FavoriteCard({ favorite, onRemove }: FavoriteCardProps) 
               </div>
             )}
             {typeof master?.rating === 'number' && (
-              <div className="flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
-                <Star className="size-3 shrink-0 fill-amber-500 text-amber-500" />
+              <div className="flex items-center gap-1 font-medium text-[#E97525]">
+                <Star className="size-3 shrink-0 fill-[#E97525] text-[#E97525]" />
                 <span>{master.rating.toFixed(1)}</span>
               </div>
             )}
@@ -65,7 +63,7 @@ export default function FavoriteCard({ favorite, onRemove }: FavoriteCardProps) 
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-3 top-3 size-8 shrink-0 rounded-full bg-transparent text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/20"
+          className="absolute right-3 top-3 size-8 shrink-0 rounded-full text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/20"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -73,17 +71,19 @@ export default function FavoriteCard({ favorite, onRemove }: FavoriteCardProps) 
           }}
           aria-label={t('common.delete')}
         >
-          <Heart className="size-4 fill-red-500 drop-shadow-sm transition-transform group-hover:scale-110" />
+          <Heart className="size-4 fill-red-500" />
         </Button>
       </div>
 
-      <div className="relative border-t border-black/5 bg-black/[0.02] p-2 dark:border-white/5 dark:bg-white/[0.02]">
-        <Button asChild variant="ghost" className="w-full justify-center rounded-xl text-sm font-semibold text-foreground transition-colors hover:bg-amber-100/50 hover:text-amber-700 dark:hover:bg-amber-500/10 dark:hover:text-amber-400">
-          <RouterLink to={`/masters/${master?.slug ?? master?.id}`}>
-            {t('common.view')}
-          </RouterLink>
+      <div className="border-t border-[#e8e8e8] bg-[hsl(var(--secondary)/0.35)] p-2 dark:border-[#2d2d2d] dark:bg-white/[0.03]">
+        <Button
+          asChild
+          variant="ghost"
+          className={cn('w-full justify-center rounded-[12px] text-[13px] font-semibold', clientTextBody, 'hover:bg-[#E97525]/10 hover:text-[#c45f1a]')}
+        >
+          <RouterLink to={`/masters/${master?.slug ?? master?.id}`}>{t('common.view')}</RouterLink>
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }

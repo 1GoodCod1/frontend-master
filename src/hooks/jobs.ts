@@ -9,15 +9,21 @@ import toast from 'react-hot-toast';
 
 export type PublicJobsTab = 'best' | 'recent' | 'saved';
 
+const ALL_FILTER = 'all';
+
 export function usePublicJobsState() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, setTab] = useState<PublicJobsTab>((searchParams.get('sort') as PublicJobsTab) ?? 'recent');
+  const sortParam = searchParams.get('sort') as PublicJobsTab | null;
+  const [tab, setTab] = useState<PublicJobsTab>(
+    sortParam === 'best' || sortParam === 'saved' ? sortParam : 'recent',
+  );
   const [search, setSearch] = useState(searchParams.get('q') ?? '');
   const [debouncedSearch, setDebouncedSearch] = useState(searchParams.get('q') ?? '');
+  const [cityId, setCityId] = useState(searchParams.get('city') ?? ALL_FILTER);
+  const [categoryId, setCategoryId] = useState(searchParams.get('category') ?? ALL_FILTER);
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(searchParams.get('apply'));
 
-  // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -30,19 +36,43 @@ export function usePublicJobsState() {
     const params: Record<string, string> = {};
     if (tab !== 'recent') params.sort = tab;
     if (search) params.q = search;
+    if (cityId && cityId !== ALL_FILTER) params.city = cityId;
+    if (categoryId && categoryId !== ALL_FILTER) params.category = categoryId;
     if (selectedId) params.apply = selectedId;
     setSearchParams(params, { replace: true });
-  }, [tab, search, selectedId, setSearchParams]);
+  }, [tab, search, cityId, categoryId, selectedId, setSearchParams]);
 
-  const apiSort: 'recent' | 'best' | undefined = tab === 'best' ? 'best' : tab === 'recent' ? 'recent' : undefined;
+  const apiSort: 'recent' | 'best' | undefined =
+    tab === 'best' ? 'best' : tab === 'recent' ? 'recent' : undefined;
+
+  const apiCityId = cityId !== ALL_FILTER ? cityId : undefined;
+  const apiCategoryId = categoryId !== ALL_FILTER ? categoryId : undefined;
+
+  const resetFilters = useCallback(() => {
+    setCityId(ALL_FILTER);
+    setCategoryId(ALL_FILTER);
+    setPage(1);
+  }, []);
 
   return {
-    tab, setTab,
-    search, setSearch,
+    tab,
+    setTab,
+    search,
+    setSearch,
     debouncedSearch,
-    page, setPage,
-    selectedId, setSelectedId,
+    cityId,
+    setCityId,
+    categoryId,
+    setCategoryId,
+    page,
+    setPage,
+    selectedId,
+    setSelectedId,
     apiSort,
+    apiCityId,
+    apiCategoryId,
+    resetFilters,
+    allFilterValue: ALL_FILTER,
   };
 }
 

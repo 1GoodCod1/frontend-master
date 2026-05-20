@@ -140,7 +140,7 @@ export const MasterDetailsLeadForm = ({
   // ─── Re-contact: client has completed lead with this master ───
   if (hasCompletedLead && !activeLead && !submittedLeadId && !showRecontactForm) {
     return (
-      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
+      <Card className="rounded-2xl">
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4">
             <RefreshCw className="h-10 w-10" />
@@ -176,7 +176,7 @@ export const MasterDetailsLeadForm = ({
 
   if (activeLead && !submittedLeadId) {
     return (
-      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
+      <Card className="rounded-2xl">
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
             <Clock className="h-10 w-10" />
@@ -205,7 +205,7 @@ export const MasterDetailsLeadForm = ({
 
   if (submittedLeadId) {
     return (
-      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
+      <Card className="rounded-2xl">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-500/80" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mx-auto mb-4">
@@ -243,7 +243,7 @@ export const MasterDetailsLeadForm = ({
 
   if (!isAuthed || role !== USER_ROLE.CLIENT) {
     return (
-      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
+      <Card className="rounded-2xl">
         <CardContent className="p-5 space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 dark:bg-[#E97525]/15 flex items-center justify-center shrink-0">
@@ -286,7 +286,7 @@ export const MasterDetailsLeadForm = ({
     const isBusy = availabilityStatus === AVAILABILITY_STATUS.BUSY;
 
     return (
-      <Card className="bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] rounded-2xl shadow-sm dark:shadow-lg dark:shadow-black/20">
+      <Card className="rounded-2xl">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">

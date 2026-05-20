@@ -112,7 +112,7 @@ export function MastersFiltersCard({
   );
 
   return (
-    <Card className="mb-3 sm:mb-5 md:mb-6 bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)] border border-gray-200/80 dark:border-white/[0.08] shadow-sm dark:shadow-lg dark:shadow-black/20">
+    <Card className="mb-3 sm:mb-5 md:mb-6">
       <CardContent className="p-3 sm:p-4 md:p-5 lg:p-6">
         {showTop && (
           <div className="flex items-center gap-2 sm:gap-3 mb-2">

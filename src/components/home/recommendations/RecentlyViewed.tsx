@@ -12,6 +12,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { surfaceCardCls } from '@/lib/surfaceCard';
+import { cn } from '@/lib/utils';
 import { mediaUrl } from '@/utils/media';
 import type { RecommendedMasterDto } from '@/types';
 import { RECENTLY_VIEWED_AVATAR_SIZE, RECENTLY_VIEWED_ACCENT } from '@/constants';
@@ -95,7 +97,7 @@ export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
   if (layout === 'sidebar') {
     const visible = masters.slice(0, limit);
     return (
-      <div className="overflow-hidden rounded-2xl bg-[#F9FAFB] border border-gray-200/80 shadow-sm dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20">
+      <div className={cn('overflow-hidden rounded-2xl', surfaceCardCls)}>
         {/* Header */}
         <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-1">
           <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#E97525]/10 text-[#E97525]">

@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsDark } from '@/hooks/useIsDark';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { Button } from '@/components/ui/button';
 
@@ -175,8 +176,7 @@ export default function CompaniiLandingPage() {
                 key={key}
                 className={cn(
                   'flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl',
-                  'bg-[#F9FAFB] border border-gray-200/80',
-                  'dark:bg-white/[0.04] dark:border-white/[0.07]',
+                  surfaceCardCls,
                 )}
               >
                 <div className="shrink-0 p-2 rounded-xl bg-rose-500/10 text-rose-600 dark:bg-rose-400/10 dark:text-rose-400">
@@ -215,8 +215,7 @@ export default function CompaniiLandingPage() {
                     key={key}
                     className={cn(
                       'group h-full flex flex-col p-5 sm:p-6 rounded-2xl',
-                      'bg-white border border-gray-200/80 shadow-sm',
-                      'dark:bg-white/[0.05] dark:border-white/[0.08] dark:shadow-none',
+                      surfaceCardCls,
                       'hover:-translate-y-1 hover:shadow-md transition duration-300',
                     )}
                   >
@@ -275,7 +274,7 @@ export default function CompaniiLandingPage() {
                   'flex flex-col p-5 sm:p-6 rounded-2xl border',
                   current
                     ? 'bg-primary/[0.06] border-primary/30 dark:bg-primary/[0.08] dark:border-primary/25'
-                    : 'bg-[#F9FAFB] border-gray-200/80 dark:bg-white/[0.04] dark:border-white/[0.07]',
+                    : surfaceCardCls,
                 )}
               >
                 <div className="flex items-center gap-2.5 mb-1">
@@ -340,8 +339,7 @@ export default function CompaniiLandingPage() {
             <div
               className={cn(
                 'rounded-3xl p-6 sm:p-9 text-center',
-                'bg-white border border-gray-200/80 shadow-sm',
-                'dark:bg-white/[0.05] dark:border-white/[0.08] dark:shadow-none',
+                surfaceCardCls,
               )}
             >
               {submitted ? (

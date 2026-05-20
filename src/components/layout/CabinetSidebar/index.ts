@@ -1,2 +1,3 @@
 export { CabinetSidebar } from './CabinetSidebar';
-export type { CabinetNavItem } from './CabinetSidebar';
+export { CabinetProfileMenu } from './CabinetProfileMenu';
+export type { CabinetNavItem, CabinetNavSection } from './CabinetSidebar';

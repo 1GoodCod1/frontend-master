@@ -14,7 +14,7 @@ export const FAQSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="mt-12 flex flex-col items-center md:mt-16">
+    <section className="flex flex-col items-center md:mt-0">
       <div className="mb-10 max-w-[600px] text-center">
         <div className="mb-2 flex items-center justify-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-primary dark:bg-primary/25 dark:text-primary">

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { PlanUI } from '@/types/plans';
 import { PaidTariff, TariffPlan } from '@/features/auth/plan';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 
 interface PlanCardProps {
   plan: PlanUI;
@@ -80,10 +81,8 @@ export const PlanCard = ({
   const isPremium = planName === 'PREMIUM';
 
   const cardClassName = cn(
-    'relative rounded-xl sm:rounded-2xl border p-4 sm:p-5 flex flex-col transition overflow-hidden h-full min-h-[280px]',
-    'bg-white dark:bg-zinc-900/95',
-    'border border-gray-200 dark:border-zinc-800',
-    'shadow-sm dark:shadow-none'
+    'relative rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col transition overflow-hidden h-full min-h-[280px]',
+    surfaceCardCls,
   );
 
   const ctaDisabled = isCurrentPlan;

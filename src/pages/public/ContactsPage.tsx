@@ -4,6 +4,7 @@ import { Mail, Send, Clock, ArrowRight, HelpCircle, Sparkles } from 'lucide-reac
 import { SEOHead } from '@/components/seo/SEOHead';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { surfaceCardCls } from '@/lib/surfaceCard';
 import {
   SUPPORT_EMAIL,
   SUPPORT_MAILTO,
@@ -12,11 +13,7 @@ import {
 } from '@/config/support';
 
 // Unified card style — matches the rest of the site
-const cardCls = cn(
-  'bg-[#F9FAFB] dark:bg-[hsl(43,16%,12%)]',
-  'border border-gray-200/80 dark:border-white/[0.08]',
-  'shadow-sm dark:shadow-lg dark:shadow-black/20',
-);
+const cardCls = cn('rounded-2xl', surfaceCardCls);
 
 interface ContactChannel {
   Icon: typeof Mail;

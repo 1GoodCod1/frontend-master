@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed } from '@/features/auth/selectors';
@@ -20,7 +20,17 @@ export default function RegisterPage() {
   const role = useAppSelector((s) => s.auth.role);
   const restoring = useAppSelector((s) => s.auth.restoring);
 
-  const [selectedRole, setSelectedRole] = useState<RegisterRole>('CLIENT');
+  const [searchParams] = useSearchParams();
+
+  const roleFromQuery = searchParams.get('role')?.toUpperCase();
+  const [selectedRole, setSelectedRole] = useState<RegisterRole>(() =>
+    roleFromQuery === 'MASTER' ? USER_ROLE.MASTER : USER_ROLE.CLIENT,
+  );
+
+  useEffect(() => {
+    if (roleFromQuery === 'MASTER') setSelectedRole(USER_ROLE.MASTER);
+    else if (roleFromQuery === 'CLIENT') setSelectedRole(USER_ROLE.CLIENT);
+  }, [roleFromQuery]);
 
   const form = useRegistrationForm(selectedRole);
 

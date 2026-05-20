@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { surfaceCardCls } from "@/lib/surfaceCard"
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -9,7 +10,8 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-2xl border border-slate-200 dark:border-[#2c2a24] bg-card text-card-foreground shadow-sm transition-colors duration-300",
+      "rounded-2xl text-card-foreground",
+      surfaceCardCls,
       className
     )}
     {...props}

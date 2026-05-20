@@ -2,15 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-export type MetricAccent = 'blue' | 'rose' | 'amber' | 'violet';
-
-const ACCENT_CLASS: Record<MetricAccent, string> = {
-  blue: 'bg-blue-50 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400',
-  rose: 'bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400',
-  amber: 'bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400',
-  violet: 'bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400',
-};
+import { surfaceCardInteractiveCls } from '@/lib/surfaceCard';
 
 export interface DashboardMetricCardProps {
   to: string;
@@ -18,8 +10,10 @@ export interface DashboardMetricCardProps {
   value: string | number;
   label: string;
   description: string;
-  accent?: MetricAccent;
 }
+
+const FABER_ICON_WRAP = 'bg-[#FFF8EB] dark:bg-[#E97525]/12';
+const FABER_ICON_COLOR = 'text-[#E97525]';
 
 export default function DashboardMetricCard({
   to,
@@ -27,35 +21,39 @@ export default function DashboardMetricCard({
   value,
   label,
   description,
-  accent = 'blue',
 }: DashboardMetricCardProps) {
   return (
     <RouterLink
       to={to}
       className={cn(
-        'group flex h-full flex-col gap-4 rounded-2xl p-5 no-underline transition duration-200',
-        'bg-[#F9FAFB] border border-gray-200/80 shadow-sm',
-        'dark:bg-white/[0.06] dark:border-white/[0.08] dark:shadow-lg dark:shadow-black/20',
-        'hover:-translate-y-1 hover:shadow-md hover:shadow-black/10 dark:hover:border-white/[0.14]',
+        'group flex h-full min-h-[132px] flex-col gap-3 rounded-[18px] p-4 no-underline',
+        surfaceCardInteractiveCls,
+        'transition duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-black/10',
       )}
     >
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-2">
         <span
           className={cn(
-            'flex size-11 items-center justify-center rounded-xl',
-            ACCENT_CLASS[accent],
+            'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]',
+            FABER_ICON_WRAP,
+            FABER_ICON_COLOR,
+            '[&_svg]:size-4',
           )}
         >
           {icon}
         </span>
-        <ArrowUpRight className="size-4 text-muted-foreground/40 transition-colors group-hover:text-foreground/60" />
+        <ArrowUpRight className="size-4 shrink-0 text-[#ADB5BD] transition-colors group-hover:text-[#E97525] dark:text-white/35 dark:group-hover:text-[#E97525]" />
       </div>
-      <div>
-        <p className="text-3xl font-bold tracking-tight tabular-nums text-foreground">
+      <div className="mt-auto min-w-0">
+        <p className="text-[28px] font-bold leading-none tracking-tight tabular-nums text-[#212529] dark:text-white">
           {value}
         </p>
-        <p className="mt-0.5 text-sm font-semibold text-foreground/80">{label}</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
+        <p className="mt-2 text-[13px] font-semibold leading-tight text-[#212529] dark:text-white">
+          {label}
+        </p>
+        <p className="mt-1 text-[11px] leading-snug text-[#6C757D] dark:text-white/50">
+          {description}
+        </p>
       </div>
     </RouterLink>
   );

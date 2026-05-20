@@ -24,13 +24,16 @@ export default function LeadsStatusFilter({ status, onChange }: LeadsStatusFilte
   ];
 
   return (
-    <div className="mb-6 flex items-center gap-2">
+    <div className="mb-2 flex items-center gap-2">
       <Label htmlFor="status-filter" className="sr-only">
         {t('clientDashboard.filterByStatus')}
       </Label>
-      <Filter className="size-4 shrink-0 text-amber-600 dark:text-amber-500" />
+      <Filter className="size-4 shrink-0 text-[#E97525]" />
       <Select value={status} onValueChange={(v) => onChange(v as FilterStatus)}>
-        <SelectTrigger id="status-filter" className="min-w-[200px]">
+        <SelectTrigger
+          id="status-filter"
+          className="h-9 min-w-[200px] rounded-[10px] border-[#E9ECEF] bg-white text-[13px] text-[#495057] dark:border-white/12 dark:bg-white/[0.04] dark:text-white/70"
+        >
           <SelectValue placeholder={t('clientDashboard.filterByStatus')} />
         </SelectTrigger>
         <SelectContent>

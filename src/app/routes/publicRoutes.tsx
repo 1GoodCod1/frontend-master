@@ -18,6 +18,7 @@ export const publicRoutes = [
   { path: plansCheckout, element: <LazyPage><P.PaymentOptionsPage /></LazyPage> },
   { path: plansCheckoutSuccess, element: <LazyPage><P.PaymentSuccessPage /></LazyPage> },
   { path: routeSeg.faq, element: <LazyPage><P.FAQPage /></LazyPage> },
+  { path: routeSeg.categories, element: <LazyPage><P.CategoriesPage /></LazyPage> },
   { path: routeSeg.howItWorks, element: <LazyPage><P.HowItWorksPage /></LazyPage> },
   { path: routeSeg.contact, element: <LazyPage><P.ContactsPage /></LazyPage> },
   { path: routeSeg.privacy, element: <LazyPage><P.PrivacyPolicyPage /></LazyPage> },

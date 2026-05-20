@@ -1,12 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { Badge, Mail, Phone, User } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { PhoneVerification } from '@/features/security/components/PhoneVerification';
 import AccountInfoField from './AccountInfoField';
-
-const iconClass = 'size-5 text-amber-500 shrink-0';
+import { cn } from '@/lib/utils';
+import {
+  clientCardStaticCls,
+  clientIconWrapCls,
+  clientSectionTitleCls,
+} from '@/lib/clientCabinetStyles';
 
 interface AccountInfoSectionProps {
   user: { email?: string; phone?: string; role?: string } | null;
@@ -24,32 +28,31 @@ export default function AccountInfoSection({
   const { t } = useTranslation();
 
   return (
-    <Card className="group relative h-full overflow-hidden rounded-2xl border border-black/5 bg-card shadow-sm transition duration-300 hover:border-amber-500/30 hover:shadow-md dark:border-white/5 dark:bg-card/40 dark:hover:border-amber-500/30">
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-transparent to-amber-500/0 opacity-0 transition-opacity duration-300 group-hover:from-amber-500/5 group-hover:to-transparent group-hover:opacity-100 pointer-events-none z-0" />
-      <CardContent className="relative z-10 p-6 sm:p-8">
-        <h3 className="mb-6 flex items-center gap-3 text-xl font-bold text-foreground">
-          <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-100/60 dark:bg-amber-500/10">
-            <Badge className={iconClass} />
-          </div>
+    <div className={cn(clientCardStaticCls, 'h-full')}>
+      <CardContent className="p-6 sm:p-8">
+        <h3 className={cn('mb-6 flex items-center gap-3', clientSectionTitleCls)}>
+          <span className={clientIconWrapCls}>
+            <Badge className="size-4" />
+          </span>
           {t('clientProfile.accountInfo', 'Информация аккаунта')}
         </h3>
 
         <div className="flex flex-col gap-6">
           <AccountInfoField
             icon={
-              <div className="flex size-10 items-center justify-center rounded-xl bg-black/5 dark:bg-white/5 group-hover:bg-amber-100/50 dark:group-hover:bg-amber-500/20 transition-colors">
-                <Mail className={iconClass} />
-              </div>
+              <span className={clientIconWrapCls}>
+                <Mail className="size-4" />
+              </span>
             }
             label={t('clientProfile.email', 'EMAIL')}
             value={user?.email ?? '—'}
           />
-          <Separator className="bg-border/50 dark:bg-white/5" />
+          <Separator className="bg-[#E9ECEF] dark:bg-white/[0.08]" />
           <AccountInfoField
             icon={
-              <div className="flex size-10 items-center justify-center rounded-xl bg-black/5 dark:bg-white/5 group-hover:bg-amber-100/50 dark:group-hover:bg-amber-500/20 transition-colors">
-                <Phone className={iconClass} />
-              </div>
+              <span className={clientIconWrapCls}>
+                <Phone className="size-4" />
+              </span>
             }
             label={t('clientProfile.phone', 'ТЕЛЕФОН')}
             value={user?.phone ?? '—'}
@@ -71,18 +74,18 @@ export default function AccountInfoSection({
               )
             }
           />
-          <Separator className="bg-border/50 dark:bg-white/5" />
+          <Separator className="bg-[#E9ECEF] dark:bg-white/[0.08]" />
           <AccountInfoField
             icon={
-              <div className="flex size-10 items-center justify-center rounded-xl bg-black/5 dark:bg-white/5 group-hover:bg-amber-100/50 dark:group-hover:bg-amber-500/20 transition-colors">
-                <User className={iconClass} />
-              </div>
+              <span className={clientIconWrapCls}>
+                <User className="size-4" />
+              </span>
             }
             label={t('clientProfile.role', 'РОЛЬ')}
             value={user?.role ?? 'CLIENT'}
           />
         </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }
