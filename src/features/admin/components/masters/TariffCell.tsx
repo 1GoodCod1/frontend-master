@@ -15,7 +15,7 @@ export default function TariffCell({ master }: TariffCellProps) {
   const tariffUpper = String(tariff).toUpperCase();
 
   const variant =
-    tariffUpper === 'VIP' ? 'destructive' : tariffUpper === 'PREMIUM' ? 'secondary' : 'outline';
+    tariffUpper === 'PLUS' ? 'destructive' : tariffUpper === 'PRO' ? 'secondary' : 'outline';
 
   return (
     <div className="flex items-center gap-1">

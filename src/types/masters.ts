@@ -52,8 +52,8 @@ export type PublicMaster = {
   maxActiveLeads?: number | null;
 
   // plans/tariffs (used by MasterCard and listing/search responses)
-  tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' | null;
-  effectiveTariffType?: 'BASIC' | 'VIP' | 'PREMIUM' | null;
+  tariffType?: 'BASIC' | 'PLUS' | 'PRO' | null;
+  effectiveTariffType?: 'BASIC' | 'PLUS' | 'PRO' | null;
   tariffExpiresAt?: string | null;
   planExpiresAt?: string | null;
   tariff?: unknown;
@@ -71,7 +71,6 @@ export type PublicMaster = {
   isVerified?: boolean | null;
   latitude?: number | null;
   longitude?: number | null;
-  vip?: boolean | null;
   createdAt?: string | null;
 };
 
@@ -161,16 +160,15 @@ export type MasterPrivateProfileResponse = {
   experienceYears?: number;
   cityId: string;
   categoryId: string;
-  tariffType?: 'BASIC' | 'VIP' | 'PREMIUM';
+  tariffType?: 'BASIC' | 'PLUS' | 'PRO';
   tariffExpiresAt?: string | null;
   tariffCancelAtPeriodEnd?: boolean;
-  pendingUpgradeTo?: 'BASIC' | 'VIP' | 'PREMIUM' | null;
+  pendingUpgradeTo?: 'BASIC' | 'PLUS' | 'PRO' | null;
   pendingUpgradeCreatedAt?: string | null;
   isFeatured?: boolean;
   views?: number;
   leadsCount?: number;
   extraPhotosCount?: number;
-  lifetimePremium?: boolean;
   isOnline?: boolean;
   lastActivityAt?: string | null;
   availabilityStatus?: string;
@@ -195,13 +193,12 @@ export type MasterPrivateProfileResponse = {
 };
 
 export type MasterTariffResponse = {
-  tariffType: 'BASIC' | 'VIP' | 'PREMIUM';
+  tariffType: 'BASIC' | 'PLUS' | 'PRO';
   tariffExpiresAt: string | null;
   tariffCancelAtPeriodEnd: boolean;
-  lifetimePremium: boolean;
   isExpired: boolean;
   pendingUpgrade: {
-    to: 'BASIC' | 'VIP' | 'PREMIUM';
+    to: 'BASIC' | 'PLUS' | 'PRO';
     createdAt: string;
     expiresAt: string;
     hoursRemaining: number;

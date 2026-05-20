@@ -167,14 +167,13 @@ export type FileDto = {
   mimetype: string;
   size: number;
   createdAt?: string;
-  /** Prisma FileType, если API отдаёт назначение файла */
   type?: import('@/constants/fileType').FileType | null;
 };
 
-export const PAID_TARIFFS = ['VIP', 'PREMIUM'] as const;
+export const PAID_TARIFFS = ['PLUS', 'PRO'] as const;
 export type PaidTariff = (typeof PAID_TARIFFS)[number];
 
-export const PLAN_NAMES = ['BASIC', 'VIP', 'PREMIUM'] as const;
+export const PLAN_NAMES = ['BASIC', 'PLUS', 'PRO'] as const;
 export type PlanName = (typeof PLAN_NAMES)[number];
 
 export type Plan = {
@@ -189,7 +188,7 @@ export type Plan = {
 
 export type CreatePaymentDto = {
   masterId: string;
-  tariffType: 'BASIC' | 'VIP' | 'PREMIUM';
+  tariffType: 'BASIC' | 'PLUS' | 'PRO';
 };
 
 export type Role = 'CLIENT' | 'MASTER' | 'ADMIN';

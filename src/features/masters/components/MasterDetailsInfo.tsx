@@ -10,7 +10,7 @@ interface MasterDetailsInfoProps {
   description: string;
   isVerified: boolean;
   tariff?: string;
-  isVip?: boolean;
+  isPlus?: boolean;
   showContactInfo?: boolean;
   phone?: string;
   email?: string;
@@ -24,7 +24,7 @@ export const MasterDetailsInfo = ({
   description,
   isVerified,
   tariff,
-  isVip,
+  isPlus,
   showContactInfo = false,
   phone,
   email,
@@ -66,9 +66,9 @@ export const MasterDetailsInfo = ({
               {t('masterDetails.tariffLabel', { name: tariff })}
             </Badge>
           )}
-          {isVip && (
+          {isPlus && (
             <Badge className="bg-red-600 text-white font-semibold shadow-sm">
-              {t('masters.vip')}
+              {t('masters.plus')}
             </Badge>
           )}
         </div>

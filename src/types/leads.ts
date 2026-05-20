@@ -31,7 +31,6 @@ export type LeadDto = {
     category?: { name?: string | null } | null;
   } | null;
   files?: Array<{ id?: string; path?: string | null }> | null;
-  isPremium?: boolean | null;
 } & Record<string, unknown>;
 
 export type ActiveLeadToMasterResponse = LeadDto | null;
@@ -100,5 +99,4 @@ export interface StatisticsCardsLeadsProps {
   newCount: number;
   inProgressCount: number;
   closedCount: number;
-  premiumCount?: number;
 }

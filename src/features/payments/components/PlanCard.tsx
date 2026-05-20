@@ -30,7 +30,7 @@ interface PlanCardProps {
 function PlanTierIcon({ tier }: { tier: TariffPlan }) {
   const wrap = planIconWrapCls(tier);
   if (tier === 'BASIC') return null;
-  if (tier === 'VIP') {
+  if (tier === 'PLUS') {
     return (
       <span className={wrap}>
         <Star className="size-4 fill-current" />
@@ -60,7 +60,7 @@ export const PlanCard = ({
   const tier = plan.name as TariffPlan;
   const isCurrentPlan = isAuthed && plan.name === effectivePlan;
   const isPaid =
-    plan.tariffType !== null && (plan.tariffType === 'VIP' || plan.tariffType === 'PREMIUM');
+    plan.tariffType !== null && (plan.tariffType === 'PLUS' || plan.tariffType === 'PRO');
 
   const planKey = plan.name.toLowerCase();
   const regularPrice =
@@ -140,7 +140,7 @@ export const PlanCard = ({
     <div
       className={planCardShellCls({
         isCurrent: isCurrentPlan,
-        isHighlighted: isPopular || tier === 'PREMIUM',
+        isHighlighted: isPopular || tier === 'PRO',
         tier,
       })}
     >
@@ -150,8 +150,8 @@ export const PlanCard = ({
       <div className="mb-2 flex items-center gap-2 sm:mb-3">
         <PlanTierIcon tier={tier} />
         <span className={planNameCls(tier)}>{t(`plans.${planKey}.name`, plan.name)}</span>
-        {tier === 'VIP' ? <Crown className="size-4 text-[#E97525] opacity-80" aria-hidden /> : null}
-        {tier === 'PREMIUM' ? <Zap className="size-4 text-[#c45f1a] opacity-80 dark:text-[#f08540]" aria-hidden /> : null}
+        {tier === 'PLUS' ? <Crown className="size-4 text-[#E97525] opacity-80" aria-hidden /> : null}
+        {tier === 'PRO' ? <Zap className="size-4 text-[#c45f1a] opacity-80 dark:text-[#f08540]" aria-hidden /> : null}
       </div>
 
       <div className="mb-3">

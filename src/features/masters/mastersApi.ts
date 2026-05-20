@@ -72,7 +72,7 @@ export type MastersQuery = {
   categoryId?: string;
   cityId?: string;
   search?: string;
-  tariffType?: 'BASIC' | 'VIP' | 'PREMIUM';
+  tariffType?: 'BASIC' | 'PLUS' | 'PRO';
   isFeatured?: boolean;
   minRating?: number;
   minPrice?: number;
@@ -328,7 +328,7 @@ export const mastersApi = api.injectEndpoints({
       invalidatesTags: ['Master'],
     }),
 
-    mastersClaimFreePlan: build.mutation<unknown, { tariffType: 'VIP' | 'PREMIUM' }>({
+    mastersClaimFreePlan: build.mutation<unknown, { tariffType: 'PLUS' | 'PRO' }>({
       query: (body) => ({
         url: '/masters/tariff/claim-free',
         method: 'POST',

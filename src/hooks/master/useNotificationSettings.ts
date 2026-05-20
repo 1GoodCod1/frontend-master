@@ -14,7 +14,7 @@ import { LEAD_NOTIFY_CHANNEL_INPUT } from '@/constants/leadNotifyChannel';
 export function useNotificationSettings() {
   const { t } = useTranslation();
   const plan = useAppSelector(selectPlan) ?? 'BASIC';
-  const isPremium = hasMinPlan(plan, 'VIP');
+  const isPro = hasMinPlan(plan, 'PLUS');
 
   const { data, isLoading, isError, refetch } = useMastersGetNotificationSettingsQuery();
 
@@ -55,7 +55,7 @@ export function useNotificationSettings() {
   };
 
   const save = async (overrides?: Partial<UpdateNotificationSettingsDto>) => {
-    if (!isPremium) return;
+    if (!isPro) return;
     try {
       await update({ ...form, ...overrides }).unwrap();
       toast.success(t('notificationSettings.saved'));
@@ -68,7 +68,7 @@ export function useNotificationSettings() {
 
   return {
     plan,
-    isPremium,
+    isPro,
     settings,
     form,
     updateForm,

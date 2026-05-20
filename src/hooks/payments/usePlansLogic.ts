@@ -9,7 +9,7 @@ import {
 } from '@/features/payments/paymentsApi';
 import { useAppSelector } from '@/app/hooks';
 import { selectIsAuthed, selectRole, selectIsVerified } from '@/features/auth/selectors';
-import { PaidTariff, TariffPlan, effectivePlanFromMasterProfile, isPlan } from '@/features/auth/plan';
+import { PaidTariff, TariffPlan, effectivePlanFromMasterProfile, normalizeTariffPlan } from '@/features/auth/plan';
 import { useGetActiveTariffsQuery } from '@/features/tariffs/tariffsApi';
 import { plans, type PlanUI } from '@/types/plans';
 import { isRecord } from '@/utils/guards';
@@ -65,7 +65,7 @@ export function usePlansLogic() {
             const expired = rawTariff.isExpired === true;
             const type = rawTariff.tariffType;
             if (expired) return 'BASIC';
-            return isPlan(type) ? type : 'BASIC';
+            return normalizeTariffPlan(type);
         }
         return myProfile.data
             ? effectivePlanFromMasterProfile(unwrapEnvelope(myProfile.data))
@@ -138,7 +138,7 @@ export function usePlansLogic() {
             .map((t): PlanUI | null => {
                 if (!isRecord(t)) return null;
                 const type = t.type;
-                if (type !== 'BASIC' && type !== 'VIP' && type !== 'PREMIUM') return null;
+                if (type !== 'BASIC' && type !== 'PLUS' && type !== 'PRO') return null;
 
                 const staticPlan = plans.find((p) => p.name === type);
                 const features = Array.isArray(t.features) ? t.features.filter((x) => typeof x === 'string') : [];
@@ -147,7 +147,7 @@ export function usePlansLogic() {
                 price: typeof t.price === 'string' ? t.price : staticPlan?.price ?? '',
                 description: typeof t.description === 'string' ? t.description : (staticPlan?.description ?? ''),
                 features,
-                highlight: type === 'VIP',
+                highlight: type === 'PLUS',
                 tariffType: type === 'BASIC' ? null : (type as PaidTariff),
                 icon: staticPlan?.icon || null,
             };
@@ -169,7 +169,7 @@ export function usePlansLogic() {
         }
 
         return tariffPlans.sort((a, b) => {
-            const order: Record<string, number> = { BASIC: 0, VIP: 1, PREMIUM: 2 };
+            const order: Record<string, number> = { BASIC: 0, PLUS: 1, PRO: 2 };
             return (order[a.name] || 0) - (order[b.name] || 0);
         });
     }, [tariffsData]);
@@ -177,9 +177,9 @@ export function usePlansLogic() {
     const plansToShow = isMaster
         ? dbPlans.filter((p) => {
             if (p.name === effectivePlan) return true;
-            if (effectivePlan === 'BASIC' && (p.name === 'VIP' || p.name === 'PREMIUM')) return true;
-            // VIP masters always see PREMIUM upgrade option
-            if (effectivePlan === 'VIP' && p.name === 'PREMIUM') return true;
+            if (effectivePlan === 'BASIC' && (p.name === 'PLUS' || p.name === 'PRO')) return true;
+            // Plus masters always see Pro upgrade option
+            if (effectivePlan === 'PLUS' && p.name === 'PRO') return true;
             return false;
         })
         : dbPlans;

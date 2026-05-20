@@ -3,9 +3,9 @@ export const analyticsPage = {
     analyticsPage: {
       title: 'Analytics',
       subtitle: 'Trends and performance',
-      subtitleVip: 'Basic analytics and trends',
+      subtitlePlus: 'Basic analytics and trends',
       subtitleBoost: 'Advanced analytics and forecasts',
-      premiumBadge: 'PREMIUM - Advanced Analytics',
+      proBadge: 'Pro - Advanced Analytics',
       loading: 'Loading analytics...',
       summary: 'Key Metrics',
       summarySubtitle: 'Last {{days}} days',
@@ -51,7 +51,7 @@ export const analyticsPage = {
       topSources: 'Top Sources',
       ratingChart: 'Rating',
       upgradeMessage:
-        'Upgrade to VIP or PREMIUM plan to access analytics',
+        'Upgrade to Plus or Pro plan to access analytics',
       bookings: 'Bookings',
       roiTitle: 'ROI / Efficiency',
       roiPayback: 'Payback',
@@ -72,9 +72,9 @@ export const analyticsPage = {
     analyticsPage: {
       title: 'Аналитика',
       subtitle: 'Тренды и производительность',
-      subtitleVip: 'Базовая аналитика и тренды',
+      subtitlePlus: 'Базовая аналитика и тренды',
       subtitleBoost: 'Расширенная аналитика и прогнозы',
-      premiumBadge: 'PREMIUM - Расширенная аналитика',
+      proBadge: 'Pro - Расширенная аналитика',
       loading: 'Загрузка аналитики...',
       summary: 'Основные показатели',
       summarySubtitle: 'За последние {{days}} дней',
@@ -120,7 +120,7 @@ export const analyticsPage = {
       topSources: 'Топ источники',
       ratingChart: 'Рейтинг',
       upgradeMessage:
-        'Обновите тариф до VIP или PREMIUM для доступа к аналитике',
+        'Обновите тариф до Plus или Pro для доступа к аналитике',
       bookings: 'Записи',
       roiTitle: 'ROI / Эффективность',
       roiPayback: 'Окупаемость',
@@ -141,9 +141,9 @@ export const analyticsPage = {
     analyticsPage: {
       title: 'Analiză',
       subtitle: 'Tendințe și performanță',
-      subtitleVip: 'Analiză de bază și tendințe',
+      subtitlePlus: 'Analiză de bază și tendințe',
       subtitleBoost: 'Analiză avansată și previziuni',
-      premiumBadge: 'PREMIUM - Analiză avansată',
+      proBadge: 'Pro - Analiză avansată',
       loading: 'Se încarcă analiza...',
       summary: 'Metrici cheie',
       summarySubtitle: 'Ultimele {{days}} zile',
@@ -189,7 +189,7 @@ export const analyticsPage = {
       topSources: 'Surse top',
       ratingChart: 'Rating',
       upgradeMessage:
-        'Actualizează la planul VIP sau PREMIUM pentru acces la analiză',
+        'Actualizează la planul Plus sau Pro pentru acces la analiză',
       bookings: 'Rezervări',
       roiTitle: 'ROI / Eficiență',
       roiPayback: 'Rentabilitate',

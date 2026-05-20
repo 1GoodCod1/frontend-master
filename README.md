@@ -331,7 +331,7 @@ frontend-master/
 | **bookings** | Online booking: slots, schedule, booking management |
 | **reviews** | Reviews and ratings |
 | **payments** | MIA/MAIB payments |
-| **promotions** | Master promotions and discounts (PREMIUM) |
+| **promotions** | Master promotions and discounts (Pro) |
 | **recommendations** | Master recommendations |
 | **favorites** | Favorite masters (for clients) |
 | **admin** | Admin panel |

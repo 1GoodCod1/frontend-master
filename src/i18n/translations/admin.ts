@@ -513,7 +513,6 @@ export const admin = {
         newLeads: 'New',
         inProgressLeads: 'In Progress',
         closedLeads: 'Closed',
-        premiumLeads: 'Premium',
       },
       payments: {
         title: 'Payments',
@@ -1065,7 +1064,6 @@ export const admin = {
         newLeads: 'Новые',
         inProgressLeads: 'В работе',
         closedLeads: 'Закрыты',
-        premiumLeads: 'Премиум',
       },
       payments: {
         title: 'Платежи',
@@ -1617,7 +1615,6 @@ export const admin = {
         newLeads: 'Noi',
         inProgressLeads: 'În progres',
         closedLeads: 'Închise',
-        premiumLeads: 'Premium',
       },
       payments: {
         title: 'Plăți',

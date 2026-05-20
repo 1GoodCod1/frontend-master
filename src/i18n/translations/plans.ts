@@ -4,17 +4,17 @@ export const plans = {
       title: 'Choose your plan',
       subtitle: 'Grow your visibility and get more clients',
       seoKeywords:
-        'Faber plans, tariffs Moldova, VIP PREMIUM master, visibility Chisinau, subscription craftsman, promote profile, analytics leads, portfolio master',
+        'Faber plans, tariffs Moldova, Plus Pro master, visibility Chisinau, subscription craftsman, promote profile, analytics leads, portfolio master',
       myPlan: 'My Plan',
       myPlanSubtitle: 'Your current plan and upgrade options',
       currentPlan: 'Current Plan',
       manageSubscription: 'Manage subscription',
       current: 'Current',
       expiresAt: 'Expires',
-      upgradeAvailable: 'Upgrade to PREMIUM available',
+      upgradeAvailable: 'Upgrade to Pro available',
       upgradeTo: 'Upgrade to',
       tariffExpired:
-        'Your tariff has expired. Upgrade to continue using premium features.',
+        'Your tariff has expired. Upgrade to continue using Pro features.',
       loading: 'Loading plans...',
       adminView: {
         title: 'Tariff management',
@@ -53,7 +53,7 @@ export const plans = {
       verifyToGetFree: 'Verify to get free',
       verifyToGetFreeDesc: 'Verify your account to get this plan free for 30 days',
       verifyFirstToGetFree: 'Verify your account first to get any plan free for 1 month',
-      verifyBanner: 'Verify your account to get VIP or PREMIUM free for 30 days. No payment required.',
+      verifyBanner: 'Verify your account to get Plus or Pro free for 30 days. No payment required.',
       goToVerification: 'Go to verification →',
       profileNotLoaded: 'Profile not loaded yet. Try again in 1 second.',
       noCheckoutUrl: 'No checkoutUrl returned from server',
@@ -70,12 +70,12 @@ export const plans = {
           basicAnalytics14: 'Basic analytics',
         },
       },
-      vip: {
-        name: 'VIP',
+      plus: {
+        name: 'Plus',
         price: '149 MDL / month',
         description: 'More visibility, more clients',
         features: {
-          vipBadge: 'VIP badge',
+          plusBadge: 'Plus badge',
           higherInSearch: 'Higher in search results',
           portfolio: 'Portfolio (Before/After)',
           upTo10Photos: 'Up to 10 photos',
@@ -91,7 +91,7 @@ export const plans = {
         receiveLeads: 'Receive requests',
         reviews: 'Reviews',
         analytics: 'Analytics',
-        vipBadge: 'VIP badge',
+        plusBadge: 'Plus badge',
         higherInSearch: 'Higher in search results',
         telegramWhatsapp: 'Telegram notifications',
         topPositions: 'Top positions in catalog',
@@ -103,8 +103,8 @@ export const plans = {
         basicValue: 'Basic',
         advancedValue: 'Advanced',
       },
-      premium: {
-        name: 'PREMIUM',
+      pro: {
+        name: 'Pro',
         price: '299 MDL / month',
         description: 'Maximum exposure & requests',
         features: {
@@ -126,14 +126,14 @@ export const plans = {
       title: 'Выберите ваш тариф',
       subtitle: 'Увеличьте видимость и получите больше клиентов',
       seoKeywords:
-        'тарифы Faber, планы для мастеров Молдова, VIP PREMIUM, продвижение профиля, подписка мастер, аналитика заявки, портфолио мастера, видимость Кишинёв',
+        'тарифы Faber, планы для мастеров Молдова, Plus Pro, продвижение профиля, подписка мастер, аналитика заявки, портфолио мастера, видимость Кишинёв',
       myPlan: 'Мой план',
       myPlanSubtitle: 'Текущий план и опции обновления',
       currentPlan: 'Текущий план',
       manageSubscription: 'Управление подпиской',
       current: 'Текущий',
       expiresAt: 'Истекает',
-      upgradeAvailable: 'Доступно обновление до PREMIUM',
+      upgradeAvailable: 'Доступно обновление до Pro',
       upgradeTo: 'Обновить до',
       tariffExpired:
         'Ваш тариф истёк. Обновите, чтобы продолжать пользоваться премиум-функциями.',
@@ -151,8 +151,6 @@ export const plans = {
           'Зарегистрируйтесь как мастер, чтобы получить профиль, заявки и развивать бизнес.',
         browseMasters: 'Найти мастеров',
       },
-      lifetimePremium:
-        'У вас PREMIUM-аккаунт навсегда! 🎉',
       registerToBuy: 'Зарегистрироваться как мастер',
       registerToGetFreeDesc: 'Зарегистрируйтесь как мастер, чтобы получить этот план бесплатно на 30 дней',
       pendingUpgradeTitle: 'Ожидает обновления',
@@ -177,7 +175,7 @@ export const plans = {
       verifyToGetFree: 'Верифицировать для бесплатного доступа',
       verifyToGetFreeDesc: 'Верифицируйте аккаунт, чтобы получить этот план бесплатно на 30 дней',
       verifyFirstToGetFree: 'Сначала верифицируйте аккаунт, чтобы получить любой план бесплатно на месяц',
-      verifyBanner: 'Верифицируйте аккаунт, чтобы получить VIP или PREMIUM бесплатно на 30 дней. Оплата не требуется.',
+      verifyBanner: 'Верифицируйте аккаунт, чтобы получить Plus или Pro бесплатно на 30 дней. Оплата не требуется.',
       goToVerification: 'Перейти к верификации →',
       profileNotLoaded: 'Профиль ещё не загружен. Попробуйте через 1 секунду.',
       noCheckoutUrl: 'Не получен checkoutUrl от сервера',
@@ -194,12 +192,12 @@ export const plans = {
           basicAnalytics14: 'Базовая аналитика',
         },
       },
-      vip: {
-        name: 'VIP',
+      plus: {
+        name: 'Plus',
         price: '149 MDL / месяц',
         description: 'Больше видимости, больше клиентов',
         features: {
-          vipBadge: 'VIP значок',
+          plusBadge: 'Plus значок',
           higherInSearch: 'Выше в результатах поиска',
           portfolio: 'Портфолио (до/после)',
           upTo10Photos: 'До 10 фото',
@@ -215,7 +213,7 @@ export const plans = {
         receiveLeads: 'Получать заявки',
         reviews: 'Отзывы',
         analytics: 'Аналитика',
-        vipBadge: 'VIP значок',
+        plusBadge: 'Plus значок',
         higherInSearch: 'Выше в результатах поиска',
         telegramWhatsapp: 'Уведомления в Telegram',
         topPositions: 'Топ позиции в каталоге',
@@ -227,8 +225,8 @@ export const plans = {
         basicValue: 'Базовая',
         advancedValue: 'Расширенная',
       },
-      premium: {
-        name: 'PREMIUM',
+      pro: {
+        name: 'Pro',
         price: '299 MDL / месяц',
         description: 'Максимальная видимость и заявки',
         features: {
@@ -250,17 +248,17 @@ export const plans = {
       title: 'Alege planul tău',
       subtitle: 'Crește-ți vizibilitatea și obține mai mulți clienți',
       seoKeywords:
-        'planuri Faber, tarife Moldova, VIP PREMIUM meșter, vizibilitate Chișinău, abonament specialist, promovare profil, analitică cereri, portofoliu meșter',
+        'planuri Faber, tarife Moldova, Plus Pro meșter, vizibilitate Chișinău, abonament specialist, promovare profil, analitică cereri, portofoliu meșter',
       myPlan: 'Planul Meu',
       myPlanSubtitle: 'Planul tău curent și opțiuni de actualizare',
       currentPlan: 'Plan Curent',
       manageSubscription: 'Gestionează abonamentul',
       current: 'Curent',
       expiresAt: 'Expiră',
-      upgradeAvailable: 'Actualizare la PREMIUM disponibilă',
+      upgradeAvailable: 'Actualizare la Pro disponibilă',
       upgradeTo: 'Actualizează la',
       tariffExpired:
-        'Tariful tău a expirat. Actualizează tariful pentru a continua să folosești funcțiile premium.',
+        'Tariful tău a expirat. Actualizează tariful pentru a continua să folosești funcțiile Pro.',
       loading: 'Se încarcă planurile...',
       adminView: {
         title: 'Gestionare tarife',
@@ -299,7 +297,7 @@ export const plans = {
       verifyToGetFree: 'Verifică pentru a obține gratuit',
       verifyToGetFreeDesc: 'Verifică-ți contul pentru a obține acest plan gratuit 30 zile',
       verifyFirstToGetFree: 'Verifică-ți contul pentru a obține orice plan gratuit o lună',
-      verifyBanner: 'Verifică-ți contul pentru a obține VIP sau PREMIUM gratuit 30 zile. Plata nu este necesară.',
+      verifyBanner: 'Verifică-ți contul pentru a obține Plus sau Pro gratuit 30 zile. Plata nu este necesară.',
       goToVerification: 'Mergi la verificare →',
       profileNotLoaded: 'Profilul nu este încărcat încă. Încearcă din nou peste 1 secundă.',
       noCheckoutUrl: 'Nu s-a returnat checkoutUrl de la server',
@@ -316,12 +314,12 @@ export const plans = {
           basicAnalytics14: 'Analiză de bază',
         },
       },
-      vip: {
-        name: 'VIP',
+      plus: {
+        name: 'Plus',
         price: '149 MDL / lună',
         description: 'Mai multă vizibilitate, mai mulți clienți',
         features: {
-          vipBadge: 'Insignă VIP',
+          plusBadge: 'Insignă Plus',
           higherInSearch: 'Mai sus în rezultatele căutării',
           portfolio: 'Portofoliu (înainte/după)',
           upTo10Photos: 'Până la 10 poze',
@@ -337,7 +335,7 @@ export const plans = {
         receiveLeads: 'Primește cereri',
         reviews: 'Recenzii',
         analytics: 'Analiză',
-        vipBadge: 'Insignă VIP',
+        plusBadge: 'Insignă Plus',
         higherInSearch: 'Mai sus în rezultate căutare',
         telegramWhatsapp: 'Notificări Telegram',
         topPositions: 'Poziții de top în catalog',
@@ -349,8 +347,8 @@ export const plans = {
         basicValue: 'Bază',
         advancedValue: 'Avansată',
       },
-      premium: {
-        name: 'PREMIUM',
+      pro: {
+        name: 'Pro',
         price: '299 MDL / lună',
         description: 'Vizibilitate maximă și cereri',
         features: {

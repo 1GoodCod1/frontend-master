@@ -19,7 +19,7 @@ export function AvatarPlaceholder({
   height?: number;
   /** When true, don't set inline height — the component fills its parent via CSS h-full. height is still used for font-size calculation. */
   fillParent?: boolean;
-  variant?: 'default' | 'vip' | 'premium';
+  variant?: 'default' | 'plus' | 'pro';
   /** When set, shows a black gradient with "M" (master) or "C" (client) instead of initials */
   role?: 'master' | 'client';
 }) {
@@ -29,9 +29,9 @@ export function AvatarPlaceholder({
 
   const gradient = useRoleStyle
     ? ROLE_GRADIENT
-    : variant === 'vip'
+    : variant === 'plus'
       ? 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)'
-      : variant === 'premium'
+      : variant === 'pro'
         ? 'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)'
         : `linear-gradient(135deg, ${c1} 0%, ${c2} 100%)`;
 

@@ -159,7 +159,8 @@ export default function MasterDetailsPage() {
   const services = Array.isArray(m?.services) ? m.services : undefined;
   const description = typeof m?.description === 'string' ? m.description : '';
   const tariff = typeof m?.tariff === 'string' ? m.tariff : undefined;
-  const isVip = m?.vip === true;
+  const rawTariff = (m?.effectiveTariffType ?? m?.tariffType ?? tariff ?? 'BASIC').toString().toUpperCase();
+  const isPlus = rawTariff === 'PLUS';
   const experienceYears = typeof m?.experienceYears === 'number' ? m.experienceYears : undefined;
   const reviewsCount = m?.totalReviews ?? reviewsQuery.data?.length ?? 0;
   const completedProjects = m?.leadsCount ?? 0;
@@ -260,7 +261,7 @@ export default function MasterDetailsPage() {
                   description={description}
                   isVerified={Boolean(m?.user?.isVerified)}
                   tariff={tariff}
-                  isVip={isVip}
+                  isPlus={isPlus}
                   showContactInfo={false}
                   experienceYears={experienceYears}
                   masterId={masterId}

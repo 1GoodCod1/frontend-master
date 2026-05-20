@@ -35,8 +35,8 @@ export function planCardShellCls(options: {
   return cn(
     cabinetCardStaticCls,
     'relative flex h-full min-h-[260px] flex-col p-4 sm:min-h-[280px] sm:p-5',
-    tier === 'PREMIUM' && (isCurrent || isHighlighted) && 'ring-2 ring-[#E97525]/25',
-    tier === 'VIP' && isHighlighted && !isCurrent && 'border-[#E97525]/40',
+    tier === 'PRO' && (isCurrent || isHighlighted) && 'ring-2 ring-[#E97525]/25',
+    tier === 'PLUS' && isHighlighted && !isCurrent && 'border-[#E97525]/40',
     isCurrent && 'border-[#E97525]/50',
   );
 }
@@ -48,7 +48,7 @@ export function planIconWrapCls(tier: TariffPlan): string {
       'bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.08] dark:text-white/55',
     );
   }
-  if (tier === 'VIP') {
+  if (tier === 'PLUS') {
     return cabinetIconWrapCls;
   }
   return cn(
@@ -61,8 +61,8 @@ export function planNameCls(tier: TariffPlan): string {
   return cn(
     'text-sm font-bold tracking-wide',
     tier === 'BASIC' && cabinetTextTitle,
-    tier === 'VIP' && 'text-[#E97525]',
-    tier === 'PREMIUM' && 'text-[#c45f1a] dark:text-[#f08540]',
+    tier === 'PLUS' && 'text-[#E97525]',
+    tier === 'PRO' && 'text-[#c45f1a] dark:text-[#f08540]',
   );
 }
 
@@ -94,12 +94,12 @@ export const planDescCls = cn('mb-2 text-sm sm:mb-3', cabinetTextMuted);
 export const comparisonTableCls = cn(cabinetCardStaticCls, 'overflow-hidden rounded-[18px]');
 export const comparisonHeaderCellCls =
   'px-4 py-3 text-[11px] font-semibold uppercase tracking-wide text-[#6C757D] dark:text-white/50 sm:px-5';
-export const comparisonPlanHeaderCls = (tier: 'basic' | 'vip' | 'premium') =>
+export const comparisonPlanHeaderCls = (tier: 'basic' | 'plus' | 'pro') =>
   cn(
     'py-3 text-center text-[11px] font-bold sm:text-xs',
     tier === 'basic' && 'text-[#495057] dark:text-white/70',
-    tier === 'vip' && 'text-[#E97525]',
-    tier === 'premium' && 'text-[#c45f1a] dark:text-[#f08540]',
+    tier === 'plus' && 'text-[#E97525]',
+    tier === 'pro' && 'text-[#c45f1a] dark:text-[#f08540]',
   );
 export const comparisonRowCls = (even: boolean) =>
   cn(
@@ -109,7 +109,7 @@ export const comparisonRowCls = (even: boolean) =>
 export const comparisonLabelCls =
   'min-w-0 px-4 py-3 text-[13px] text-[#212529] dark:text-white/90 sm:px-5';
 
-export function comparisonCheckCls(tier: 'gray' | 'orange' | 'premium'): string {
+export function comparisonCheckCls(tier: 'gray' | 'orange' | 'pro'): string {
   const base =
     'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border';
   if (tier === 'gray') {
@@ -121,7 +121,7 @@ export function comparisonCheckCls(tier: 'gray' | 'orange' | 'premium'): string 
   return cn(base, 'border-[#c45f1a]/40 bg-[#E97525]/12 text-[#c45f1a] dark:text-[#f08540]');
 }
 
-export function comparisonValuePillCls(tier: 'gray' | 'orange' | 'premium'): string {
+export function comparisonValuePillCls(tier: 'gray' | 'orange' | 'pro'): string {
   const base =
     'inline-flex min-w-[2rem] items-center justify-center rounded-full px-2.5 py-1 text-xs font-medium';
   if (tier === 'gray') {

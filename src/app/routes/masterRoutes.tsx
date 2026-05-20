@@ -27,7 +27,7 @@ export const masterRoutes = {
           element: <LazyPage><P.SubscriptionPage /></LazyPage>,
         },
         {
-          element: <PlanRoute min="VIP" />,
+          element: <PlanRoute min="PLUS" />,
           children: [
             {
               path: routeSeg.analytics,
@@ -36,7 +36,7 @@ export const masterRoutes = {
           ],
         },
         {
-          element: <PlanRoute min="PREMIUM" />,
+          element: <PlanRoute min="PRO" />,
           children: [
             {
               path: routeSeg.promotions,
@@ -47,7 +47,7 @@ export const masterRoutes = {
         { path: routeSeg.bookings, element: <LazyPage><P.BookingsPage /></LazyPage> },
         { path: routeSeg.files, element: <LazyPage><P.FilesPage /></LazyPage> },
         {
-          element: <PlanRoute min="VIP" />,
+          element: <PlanRoute min="PLUS" />,
           children: [
             {
               path: routeSeg.portfolio,

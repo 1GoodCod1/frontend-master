@@ -54,7 +54,7 @@ export interface VerificationDetail {
   notes?: string;
   approvedCount?: number;
   first100Limit?: number;
-  willReceivePremium?: boolean;
+  willReceiveFreePlan?: boolean;
   nextSlotNumber?: number;
   master: {
     id: string;

@@ -55,7 +55,7 @@ export const MasterCard = React.memo(function MasterCard({
 
   const {
     displayName, city, rating, totalReviews, categoryName,
-    avatarSrc, isVip, isPremium, placeholderVariant,
+    avatarSrc, isPlus, isPro, placeholderVariant,
     isVerified, activePromotionDiscount, serviceTags,
   } = useMasterCardData(master, promotionDiscountProp);
 
@@ -173,8 +173,8 @@ export const MasterCard = React.memo(function MasterCard({
               )}
             </div>
             <MasterCardBadges
-              isVip={isVip}
-              isPremium={isPremium}
+              isPlus={isPlus}
+              isPro={isPro}
               sectionBadge={sectionBadge === 'new' ? 'new' : undefined}
               showTopBadge={master.topMaster === true}
             />

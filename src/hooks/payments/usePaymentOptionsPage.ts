@@ -34,7 +34,7 @@ export function usePaymentOptionsPage() {
 
   const [createMiaCheckout, miaCheckoutState] = usePaymentsCreateMiaCheckoutMutation();
 
-  const planKey: PaidTariff | null = isPendingUpgrade ? (planFromQuery ?? 'PREMIUM') : planFromQuery;
+  const planKey: PaidTariff | null = isPendingUpgrade ? (planFromQuery ?? 'PRO') : planFromQuery;
   const planLabel = planKey ? t(`plans.${planKey.toLowerCase()}.name`) : '';
   const miaLoading = miaCheckoutState.isLoading;
 

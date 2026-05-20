@@ -5,12 +5,12 @@ import { mediaUrl } from '@/utils/media';
 import { useNow } from '@/hooks/useNow';
 import type { PublicMaster } from '@/types';
 
-type TariffType = 'BASIC' | 'VIP' | 'PREMIUM';
+type TariffType = 'BASIC' | 'PLUS' | 'PRO';
 
 function normalizeTariffType(v: unknown): TariffType {
   if (typeof v !== 'string') return 'BASIC';
   const x = v.toUpperCase();
-  if (x === 'VIP' || x === 'PREMIUM' || x === 'BASIC') return x;
+  if (x === 'PLUS' || x === 'PRO' || x === 'BASIC') return x;
   return 'BASIC';
 }
 
@@ -54,9 +54,9 @@ export function useMasterCardData(
   const effectiveTariff: TariffType =
     rawTariff === 'BASIC' ? 'BASIC' : isActivePaid ? rawTariff : 'BASIC';
 
-  const isVip = effectiveTariff === 'VIP';
-  const isPremium = effectiveTariff === 'PREMIUM';
-  const placeholderVariant: 'default' | 'vip' | 'premium' = isVip ? 'vip' : isPremium ? 'premium' : 'default';
+  const isPlus = effectiveTariff === 'PLUS';
+  const isPro = effectiveTariff === 'PRO';
+  const placeholderVariant: 'default' | 'plus' | 'pro' = isPlus ? 'plus' : isPro ? 'pro' : 'default';
   const isVerified = (master?.user?.isVerified ?? master?.isVerified) === true;
 
   const activePromotion = master?.activePromotion ?? master?.promotions?.[0] ?? null;
@@ -80,8 +80,8 @@ export function useMasterCardData(
     categoryName,
     avatarSrc,
     effectiveTariff,
-    isVip,
-    isPremium,
+    isPlus,
+    isPro,
     placeholderVariant,
     isVerified,
     activePromotionDiscount,

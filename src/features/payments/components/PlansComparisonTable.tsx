@@ -12,7 +12,7 @@ import {
 } from '@/features/payments/planStyles';
 
 type FeatureValue = boolean | string;
-type PlanColor = 'gray' | 'orange' | 'premium';
+type PlanColor = 'gray' | 'orange' | 'pro';
 
 interface FeatureRow {
   labelKey: string;
@@ -27,7 +27,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   { labelKey: 'plans.comparisonTable.receiveLeads', values: [true, true, true] },
   { labelKey: 'plans.comparisonTable.reviews', values: [true, true, true] },
   { labelKey: 'plans.comparisonTable.analytics', values: ['basic', 'basic', 'advanced'] },
-  { labelKey: 'plans.comparisonTable.vipBadge', values: [false, true, true] },
+  { labelKey: 'plans.comparisonTable.plusBadge', values: [false, true, true] },
   { labelKey: 'plans.comparisonTable.higherInSearch', values: [false, true, true] },
   { labelKey: 'plans.comparisonTable.telegramWhatsapp', values: [false, true, true] },
   { labelKey: 'plans.comparisonTable.topPositions', values: [false, false, true] },
@@ -38,7 +38,7 @@ const FEATURE_ROWS: FeatureRow[] = [
   { labelKey: 'plans.comparisonTable.servicePromotions', values: [false, false, true] },
 ];
 
-const PLAN_COLORS: PlanColor[] = ['gray', 'orange', 'premium'];
+const PLAN_COLORS: PlanColor[] = ['gray', 'orange', 'pro'];
 
 function FeatureCell({
   value,
@@ -95,7 +95,7 @@ export function PlansComparisonTable() {
         <div className="min-w-[320px] sm:min-w-0">
           <div className="grid grid-cols-[minmax(140px,1fr)_repeat(3,minmax(80px,100px))] border-b border-[#E9ECEF] dark:border-white/10 sm:grid-cols-[1fr_repeat(3,_100px)]">
             <div className={comparisonHeaderCellCls}>{t('plans.comparisonTable.featureLabel')}</div>
-            {(['basic', 'vip', 'premium'] as const).map((plan) => (
+            {(['basic', 'plus', 'pro'] as const).map((plan) => (
               <div key={plan} className={comparisonPlanHeaderCls(plan)}>
                 {t(`plans.${plan}.name`)}
               </div>

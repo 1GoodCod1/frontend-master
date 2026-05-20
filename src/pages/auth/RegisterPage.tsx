@@ -8,7 +8,7 @@ import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import RegisterHeader from '@/features/auth/components/register/RegisterHeader';
 import RoleTabs from '@/features/auth/components/register/RoleTabs';
 import RegisterForm from '@/features/auth/components/register/RegisterForm';
-import PremiumAfterVerificationBanner from '@/features/auth/components/register/PremiumAfterVerificationBanner';
+import PlusProAfterVerificationBanner from '@/features/auth/components/register/PlusProAfterVerificationBanner';
 import { useRegistrationForm, type RegisterRole, type RegisterFormValues } from '@/hooks/auth/register';
 import { USER_ROLE } from '@/constants/roles';
 
@@ -67,7 +67,7 @@ export default function RegisterPage() {
               onChange={setSelectedRole}
             />
             {!isClient && (
-              <PremiumAfterVerificationBanner />
+              <PlusProAfterVerificationBanner />
             )}
             <Formik<RegisterFormValues>
               key={`${selectedRole}-${i18n.language}`}

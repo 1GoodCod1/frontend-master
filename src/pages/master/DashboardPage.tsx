@@ -64,7 +64,7 @@ export default function DashboardPage() {
   const [viewsHistoryOpen, setViewsHistoryOpen] = useState(false);
   const isChartWide = useMediaQuery('(min-width: 640px)');
 
-  type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; tariffType?: 'BASIC' | 'VIP' | 'PREMIUM' };
+  type MasterProfileData = { isOnline?: boolean; lastActivityAt?: string | null; tariffType?: 'BASIC' | 'PLUS' | 'PRO' };
   type AvailabilityData = {
     availabilityStatus?: AvailabilityStatus;
     maxActiveLeads?: number;
@@ -408,7 +408,7 @@ export default function DashboardPage() {
           </Card>
 
           {/* Availability Control Card */}
-          {masterData?.tariffType === 'PREMIUM' ? (
+          {masterData?.tariffType === 'PRO' ? (
             <AvailabilityControl
               currentStatus={currentStatus}
               maxActiveLeads={maxActiveLeads}
@@ -426,12 +426,12 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="space-y-4 pt-2 relative z-10">
                 <p className="text-sm text-muted-foreground">
-                  {t('dashboard.availabilityControl.premiumOnly', 'Настройки доступности (Готов взять заявку, Занят и т.д.) и лимит заявок доступны только для Premium.')}
+                  {t('dashboard.availabilityControl.proOnly', 'Настройки доступности (Готов взять заявку, Занят и т.д.) и лимит заявок доступны только для Pro.')}
                 </p>
                 <Button asChild className="w-full bg-amber-500 hover:bg-[#E97525] text-white shadow-md shadow-amber-500/20 transition rounded-xl">
                   <Link to="/plans" className="flex items-center justify-center gap-2">
                     <Rocket className="size-4" />
-                    {t('dashboard.unlockFeature', 'Разблокировать с Premium')}
+                    {t('dashboard.unlockFeature', 'Разблокировать с Pro')}
                   </Link>
                 </Button>
               </CardContent>

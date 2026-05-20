@@ -111,7 +111,7 @@ export function CabinetProfileMenu({
       : null;
 
   const placeholderVariant =
-    plan === 'PREMIUM' ? 'premium' : plan === 'VIP' ? 'vip' : 'default';
+    plan === 'PRO' ? 'pro' : plan === 'PLUS' ? 'plus' : 'default';
 
   const placeholderRole = role === USER_ROLE.CLIENT ? 'client' : 'master';
 

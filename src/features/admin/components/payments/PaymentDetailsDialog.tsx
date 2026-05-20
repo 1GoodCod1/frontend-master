@@ -46,9 +46,9 @@ interface PaymentDetailsDialogProps {
 function TariffBadge({ tariff }: { tariff: string }) {
   const tariffUpper = String(tariff).toUpperCase();
   const variant =
-    tariffUpper === 'VIP'
+    tariffUpper === 'PLUS'
       ? 'destructive'
-      : tariffUpper === 'PREMIUM'
+      : tariffUpper === 'PRO'
         ? 'secondary'
         : 'outline';
   return (

@@ -26,7 +26,7 @@ export interface CabinetNavSection {
 
 interface CabinetSidebarProps {
   sections: CabinetNavSection[];
-  showPremiumBanner?: boolean;
+  showProBanner?: boolean;
   collapsed: boolean;
   onToggle: () => void;
   isMobileOpen?: boolean;
@@ -35,7 +35,7 @@ interface CabinetSidebarProps {
 
 export function CabinetSidebar({
   sections,
-  showPremiumBanner = false,
+  showProBanner = false,
   collapsed,
   onToggle,
   isMobileOpen = false,
@@ -94,9 +94,9 @@ export function CabinetSidebar({
           </button>
         )}
 
-        {/* Premium Banner */}
+        {/* Pro plan banner */}
         <AnimatePresence>
-          {!collapsed && showPremiumBanner && plan === 'PREMIUM' && (
+          {!collapsed && showProBanner && plan === 'PRO' && (
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -115,7 +115,7 @@ export function CabinetSidebar({
                 <div className="relative flex items-center gap-2">
                   <Rocket size={16} className="shrink-0 text-white" />
                   <div>
-                    <p className="text-xs font-bold text-white">PREMIUM ACTIV</p>
+                    <p className="text-xs font-bold text-white">PRO ACTIV</p>
                     <p className="text-[10px] text-white/80">Acces complet</p>
                   </div>
                 </div>

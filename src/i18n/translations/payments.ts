@@ -21,8 +21,8 @@ export const payments = {
       createdAt: 'Created',
       tariff: {
         basic: 'BASIC',
-        vip: 'VIP',
-        premium: 'PREMIUM',
+        plus: 'Plus',
+        pro: 'Pro',
       },
     },
   },
@@ -48,8 +48,8 @@ export const payments = {
       createdAt: 'Создано',
       tariff: {
         basic: 'BASIC',
-        vip: 'VIP',
-        premium: 'PREMIUM',
+        plus: 'Plus',
+        pro: 'Pro',
       },
     },
   },
@@ -75,8 +75,8 @@ export const payments = {
       createdAt: 'Creat',
       tariff: {
         basic: 'BASIC',
-        vip: 'VIP',
-        premium: 'PREMIUM',
+        plus: 'Plus',
+        pro: 'Pro',
       },
     },
   },

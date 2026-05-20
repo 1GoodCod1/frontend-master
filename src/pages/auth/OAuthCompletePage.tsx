@@ -9,7 +9,7 @@ import { AuthLayout } from '@/features/auth/components/AuthLayout';
 import { AuthFormField } from '@/features/auth/components/AuthFormField';
 import { AuthFormSelect } from '@/features/auth/components/AuthFormSelect';
 import { AuthFormTextarea } from '@/features/auth/components/AuthFormTextarea';
-import PremiumAfterVerificationBanner from '@/features/auth/components/register/PremiumAfterVerificationBanner';
+import PlusProAfterVerificationBanner from '@/features/auth/components/register/PlusProAfterVerificationBanner';
 import RoleTabs from '@/features/auth/components/register/RoleTabs';
 import {
   useCompleteOAuthMutation,
@@ -204,7 +204,7 @@ export default function OAuthCompletePage() {
               </p>
             </div>
 
-            {isMaster && <PremiumAfterVerificationBanner />}
+            {isMaster && <PlusProAfterVerificationBanner />}
 
             <Formik<OAuthCompleteFormValues>
               initialValues={initialValues}

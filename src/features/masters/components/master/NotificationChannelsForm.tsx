@@ -37,7 +37,7 @@ const POLL_DURATION_MS = 60000;
 
 export function NotificationChannelsForm() {
   const { t } = useTranslation();
-  const { isPremium, settings, form, updateForm, save, isLoading, isSaving, refetch } =
+  const { isPro, settings, form, updateForm, save, isLoading, isSaving, refetch } =
     useNotificationSettings();
   const [createLink, { isLoading: isCreatingLink }] =
     useMastersCreateTelegramConnectLinkMutation();
@@ -93,7 +93,7 @@ export function NotificationChannelsForm() {
 
   return (
     <div className="space-y-6">
-      {isPremium && (
+      {isPro && (
         <>
           <div className={masterCardStaticCls}>
             <CardContent className="p-6">
@@ -166,7 +166,7 @@ export function NotificationChannelsForm() {
             <p className={cn('mb-4', masterTextMuted)}>
               {t('notificationSettings.telegram.description')}
             </p>
-            {isPremium &&
+            {isPro &&
               (settings.telegramChatId ? (
                 <Button
                   type="button"

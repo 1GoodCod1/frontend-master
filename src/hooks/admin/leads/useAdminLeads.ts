@@ -65,7 +65,7 @@ export function useAdminLeads() {
 
   const statsRaw = statsQ.data as Record<string, unknown> | undefined;
   const statsData = (statsRaw && 'data' in statsRaw ? statsRaw.data : statsRaw) as
-    | { total?: number; newCount?: number; inProgressCount?: number; closedCount?: number; premiumCount?: number }
+    | { total?: number; newCount?: number; inProgressCount?: number; closedCount?: number }
     | undefined;
 
   const statistics = {
@@ -73,7 +73,6 @@ export function useAdminLeads() {
     newLeads: Number(statsData?.newCount ?? 0),
     inProgressLeads: Number(statsData?.inProgressCount ?? 0),
     closedLeads: Number(statsData?.closedCount ?? 0),
-    premiumLeads: Number(statsData?.premiumCount ?? 0),
   };
 
   // Lazy export — fetches ALL leads matching current filters
@@ -92,7 +91,7 @@ export function useAdminLeads() {
       const inner = ('data' in raw ? raw.data : raw) as Record<string, unknown>;
       const leads = (Array.isArray(inner?.leads) ? inner.leads : []) as AdminLeadRow[];
 
-      const headers = ['ID', 'Status', 'Client Name', 'Phone', 'Master', 'Message', 'Premium', 'Created At'];
+      const headers = ['ID', 'Status', 'Client Name', 'Phone', 'Master', 'Message', 'Created At'];
       const rows = leads.map((lead) => [
         lead.id,
         lead.status,
@@ -100,7 +99,6 @@ export function useAdminLeads() {
         lead.clientPhone || lead.phone || '-',
         lead.master ? `${lead.master.user?.firstName || ''} ${lead.master.user?.lastName || ''}`.trim() : '-',
         lead.message || '-',
-        lead.isPremium ? 'Yes' : 'No',
         lead.createdAt ? formatDateTimeString(lead.createdAt) : '',
       ]);
 

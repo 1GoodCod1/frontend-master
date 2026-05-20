@@ -33,7 +33,7 @@ export const faq = {
       q3: {
         question: 'What if the master is busy or offline?',
         answer:
-          'Masters with PREMIUM plan can set their status: Available, Busy, or Offline. If the master is unavailable, you will see a notification. Click "Notify me" to receive a notification when the master becomes available again.',
+          'Masters with Pro plan can set their status: Available, Busy, or Offline. If the master is unavailable, you will see a notification. Click "Notify me" to receive a notification when the master becomes available again.',
       },
       q4: {
         question: 'How do I chat with a master and book a time?',
@@ -63,17 +63,17 @@ export const faq = {
       q9: {
         question: 'What are the tariff plans for masters?',
         answer:
-          'BASIC (free): basic visibility, masked client phone numbers. VIP: analytics (14 days), full phone numbers, improved placement. PREMIUM: maximum visibility, 30-day advanced analytics, availability control (Available/Busy/Offline), limit on active leads, promotions. Visit the Plans page for details.',
+          'BASIC (free): basic visibility, masked client phone numbers. Plus: analytics (14 days), full phone numbers, improved placement. Pro: maximum visibility, 30-day advanced analytics, availability control (Available/Busy/Offline), limit on active leads, promotions. Visit the Plans page for details.',
       },
       q10: {
         question: 'What analytics are available for masters?',
         answer:
-          'VIP plan: views and leads for the last 14 days, charts and trends. PREMIUM plan: extended analytics for 30 days with advanced metrics. All masters see today\'s stats on the dashboard. Analytics help you understand your audience and optimize your profile.',
+          'Plus plan: views and leads for the last 14 days, charts and trends. Pro plan: extended analytics for 30 days with advanced metrics. All masters see today\'s stats on the dashboard. Analytics help you understand your audience and optimize your profile.',
       },
       q11: {
         question: 'Is my personal information safe?',
         answer:
-          'Yes. We take privacy seriously. Your phone number is visible in full only to masters with VIP or PREMIUM plans. Masters on BASIC see a masked version. We do not share your data with third parties. See our Privacy Policy for details.',
+          'Yes. We take privacy seriously. Your phone number is visible in full only to masters with Plus or Pro plans. Masters on BASIC see a masked version. We do not share your data with third parties. See our Privacy Policy for details.',
       },
       q12: {
         question: 'How can I contact support?',
@@ -83,12 +83,12 @@ export const faq = {
       q13: {
         question: 'How does online booking work?',
         answer:
-          'Masters with VIP or PREMIUM plans can enable online booking. On the master\'s profile, click "Book appointment" to see available time slots. Select a date and time, confirm your phone number and notes — the master gets notified instantly. You can track and manage all your bookings in the client dashboard under "My Bookings". Masters confirm or decline via their dashboard.',
+          'Masters with Plus or Pro plans can enable online booking. On the master\'s profile, click "Book appointment" to see available time slots. Select a date and time, confirm your phone number and notes — the master gets notified instantly. You can track and manage all your bookings in the client dashboard under "My Bookings". Masters confirm or decline via their dashboard.',
       },
       q14: {
         question: 'What are promotions and how do I create one?',
         answer:
-          'PREMIUM masters can create promotions (discounts) for their services. Go to your dashboard → Promotions, click "Create promotion", set a title, discount percentage (1–100%), select a service or apply to all, and set the validity period. Active promotions are displayed on the main page and your master card to attract more clients.',
+          'Pro masters can create promotions (discounts) for their services. Go to your dashboard → Promotions, click "Create promotion", set a title, discount percentage (1–100%), select a service or apply to all, and set the validity period. Active promotions are displayed on the main page and your master card to attract more clients.',
       },
       q15: {
         question: 'How do I post a job and get offers?',
@@ -144,7 +144,7 @@ export const faq = {
       q3: {
         question: 'Что делать, если мастер занят или не в сети?',
         answer:
-          'Мастера с планом PREMIUM могут устанавливать статус: Доступен, Занят или Не в сети. Если мастер недоступен, вы увидите уведомление. Нажмите «Уведомить меня», чтобы получить оповещение, когда мастер снова станет доступен.',
+          'Мастера с планом Pro могут устанавливать статус: Доступен, Занят или Не в сети. Если мастер недоступен, вы увидите уведомление. Нажмите «Уведомить меня», чтобы получить оповещение, когда мастер снова станет доступен.',
       },
       q4: {
         question: 'Как общаться с мастером в чате и выбрать время?',
@@ -174,17 +174,17 @@ export const faq = {
       q9: {
         question: 'Какие тарифные планы для мастеров?',
         answer:
-          'BASIC (бесплатный): базовая видимость, замаскированные номера клиентов. VIP: аналитика (14 дней), полные номера, улучшенное размещение. PREMIUM: максимальная видимость, расширенная аналитика за 30 дней, управление доступностью (Доступен/Занят/Не в сети), лимит активных заявок, акции. Подробности на странице Тарифы.',
+          'BASIC (бесплатный): базовая видимость, замаскированные номера клиентов. Plus: аналитика (14 дней), полные номера, улучшенное размещение. Pro: максимальная видимость, расширенная аналитика за 30 дней, управление доступностью (Доступен/Занят/Не в сети), лимит активных заявок, акции. Подробности на странице Тарифы.',
       },
       q10: {
         question: 'Какая аналитика доступна мастерам?',
         answer:
-          'План VIP: просмотры и заявки за последние 14 дней, графики и тренды. План PREMIUM: расширенная аналитика за 30 дней. Все мастера видят статистику за сегодня в дашборде. Аналитика помогает понять аудиторию и оптимизировать профиль.',
+          'План Plus: просмотры и заявки за последние 14 дней, графики и тренды. План Pro: расширенная аналитика за 30 дней. Все мастера видят статистику за сегодня в дашборде. Аналитика помогает понять аудиторию и оптимизировать профиль.',
       },
       q11: {
         question: 'Безопасна ли моя личная информация?',
         answer:
-          'Да. Мы серьёзно относимся к конфиденциальности. Ваш номер телефона полностью виден только мастерам с планами VIP или PREMIUM. Мастера на BASIC видят замаскированную версию. Мы не передаём данные третьим лицам. Подробнее в Политике конфиденциальности.',
+          'Да. Мы серьёзно относимся к конфиденциальности. Ваш номер телефона полностью виден только мастерам с планами Plus или Pro. Мастера на BASIC видят замаскированную версию. Мы не передаём данные третьим лицам. Подробнее в Политике конфиденциальности.',
       },
       q12: {
         question: 'Как связаться со службой поддержки?',
@@ -194,12 +194,12 @@ export const faq = {
       q13: {
         question: 'Как работает онлайн-запись?',
         answer:
-          'Мастера с планами VIP или PREMIUM могут подключить онлайн-запись. На странице мастера нажмите «Записаться», выберите удобную дату и время из доступных слотов, укажите номер телефона и примечания — мастер сразу получит уведомление. Все ваши записи доступны в личном кабинете клиента в разделе «Мои записи». Мастер подтверждает или отклоняет запись через свой дашборд.',
+          'Мастера с планами Plus или Pro могут подключить онлайн-запись. На странице мастера нажмите «Записаться», выберите удобную дату и время из доступных слотов, укажите номер телефона и примечания — мастер сразу получит уведомление. Все ваши записи доступны в личном кабинете клиента в разделе «Мои записи». Мастер подтверждает или отклоняет запись через свой дашборд.',
       },
       q14: {
         question: 'Что такое акции и как их создать?',
         answer:
-          'Мастера с планом PREMIUM могут создавать акции (скидки) на свои услуги. Перейдите в дашборд → Акции, нажмите «Создать акцию», укажите название, размер скидки (1–100%), выберите услугу или примените ко всем, и установите сроки действия. Активные акции отображаются на главной странице и на карточке мастера — это помогает привлечь больше клиентов.',
+          'Мастера с планом Pro могут создавать акции (скидки) на свои услуги. Перейдите в дашборд → Акции, нажмите «Создать акцию», укажите название, размер скидки (1–100%), выберите услугу или примените ко всем, и установите сроки действия. Активные акции отображаются на главной странице и на карточке мастера — это помогает привлечь больше клиентов.',
       },
       q15: {
         question: 'Как опубликовать задачу и получить предложения?',
@@ -255,7 +255,7 @@ export const faq = {
       q3: {
         question: 'Ce fac dacă meșterul este ocupat sau offline?',
         answer:
-          'Meșterii cu plan PREMIUM pot seta statusul: Disponibil, Ocupat sau Offline. Dacă meșterul nu e disponibil, veți vedea o notificare. Apăsați „Notifică-mă” pentru a primi o notificare când meșterul devine din nou disponibil.',
+          'Meșterii cu plan Pro pot seta statusul: Disponibil, Ocupat sau Offline. Dacă meșterul nu e disponibil, veți vedea o notificare. Apăsați „Notifică-mă” pentru a primi o notificare când meșterul devine din nou disponibil.',
       },
       q4: {
         question: 'Cum comunic cu meșterul în chat și aleg o oră?',
@@ -285,12 +285,12 @@ export const faq = {
       q9: {
         question: 'Care sunt planurile tarifare pentru meșteri?',
         answer:
-          'BASIC (gratuit): vizibilitate de bază, numere de telefon mascate. VIP: analiză, numere complete, plasare îmbunătățită. PREMIUM: vizibilitate maximă, analiză avansată, control disponibilitate (Disponibil/Ocupat/Offline), limită cereri active, promoții. Detalii pe pagina Planuri.',
+          'BASIC (gratuit): vizibilitate de bază, numere de telefon mascate. Plus: analiză, numere complete, plasare îmbunătățită. Pro: vizibilitate maximă, analiză avansată, control disponibilitate (Disponibil/Ocupat/Offline), limită cereri active, promoții. Detalii pe pagina Planuri.',
       },
       q10: {
         question: 'Ce analiză este disponibilă pentru meșteri?',
         answer:
-          'Plan VIP: vizualizări și cereri pentru ultimele 30 de zile, grafice și tendințe. Plan PREMIUM: analiză extinsă pentru 30 zile. Toți meșterii văd statisticile zilei în dashboard. Analiza vă ajută să înțelegeți audiența și să optimizați profilul.',
+          'Plan Plus: vizualizări și cereri pentru ultimele 30 de zile, grafice și tendințe. Plan Pro: analiză extinsă pentru 30 zile. Toți meșterii văd statisticile zilei în dashboard. Analiza vă ajută să înțelegeți audiența și să optimizați profilul.',
       },
       q11: {
         question: 'Informațiile mele personale sunt sigure?',
@@ -305,12 +305,12 @@ export const faq = {
       q13: {
         question: 'Cum funcționează rezervarea online?',
         answer:
-          'Meșterii cu planuri VIP sau PREMIUM pot activa rezervarea online. Pe pagina meșterului, apăsați „Rezervă", alegeți data și ora disponibile, confirmați numărul de telefon și notele — meșterul este notificat imediat. Toate rezervările tale sunt în panoul de control al clientului, secțiunea „Rezervările mele". Meșterul confirmă sau refuză rezervarea din dashboard-ul său.',
+          'Meșterii cu planuri Plus sau Pro pot activa rezervarea online. Pe pagina meșterului, apăsați „Rezervă", alegeți data și ora disponibile, confirmați numărul de telefon și notele — meșterul este notificat imediat. Toate rezervările tale sunt în panoul de control al clientului, secțiunea „Rezervările mele". Meșterul confirmă sau refuză rezervarea din dashboard-ul său.',
       },
       q14: {
         question: 'Ce sunt promoțiile și cum le creez?',
         answer:
-          'Meșterii cu plan PREMIUM pot crea promoții (reduceri) pentru serviciile lor. Mergeți în dashboard → Promoții, apăsați „Creează promoție", introduceți titlul, procentul de reducere (1–100%), selectați un serviciu sau aplicați la toate, și setați perioada de valabilitate. Promoțiile active sunt afișate pe pagina principală și pe cardul meșterului pentru a atrage mai mulți clienți.',
+          'Meșterii cu plan Pro pot crea promoții (reduceri) pentru serviciile lor. Mergeți în dashboard → Promoții, apăsați „Creează promoție", introduceți titlul, procentul de reducere (1–100%), selectați un serviciu sau aplicați la toate, și setați perioada de valabilitate. Promoțiile active sunt afișate pe pagina principală și pe cardul meșterului pentru a atrage mai mulți clienți.',
       },
       q15: {
         question: 'Cum public un job și primesc oferte?',

@@ -45,7 +45,7 @@ export const howItWorks = {
       masterStep4: {
         title: 'Grow & promote',
         description:
-          'Collect reviews and improve your rating. Use PREMIUM promotions to offer discounts that appear on the main page. Upgrade your plan for advanced analytics and maximum visibility.',
+          'Collect reviews and improve your rating. Use Pro promotions to offer discounts that appear on the main page. Upgrade your plan for advanced analytics and maximum visibility.',
       },
       jobs: {
         badge: 'New: Jobs Marketplace',
@@ -102,7 +102,7 @@ export const howItWorks = {
         jointsFact1: {
           title: 'Monthly from your plan',
           description:
-            'Every subscription tier grants joints automatically each month: BASIC 20, VIP 100, PREMIUM 200. No expiry within the period.',
+            'Every subscription tier grants joints automatically each month: BASIC 20, Plus 100, Pro 200. No expiry within the period.',
         },
         jointsFact2: {
           title: 'Refunds when fair',
@@ -170,7 +170,7 @@ export const howItWorks = {
       masterStep4: {
         title: 'Рост и продвижение',
         description:
-          'Собирайте отзывы и улучшайте рейтинг. Используйте акции PREMIUM, чтобы предлагать скидки — они показываются на главной странице. Обновите план для расширенной аналитики и максимальной видимости.',
+          'Собирайте отзывы и улучшайте рейтинг. Используйте акции Pro, чтобы предлагать скидки — они показываются на главной странице. Обновите план для расширенной аналитики и максимальной видимости.',
       },
       jobs: {
         badge: 'Новое: Маркетплейс заявок',
@@ -227,7 +227,7 @@ export const howItWorks = {
         jointsFact1: {
           title: 'Ежемесячно от тарифа',
           description:
-            'Каждый тариф даёт joints автоматически каждый месяц: BASIC 20, VIP 100, PREMIUM 200. Внутри периода не сгорают.',
+            'Каждый тариф даёт joints автоматически каждый месяц: BASIC 20, Plus 100, Pro 200. Внутри периода не сгорают.',
         },
         jointsFact2: {
           title: 'Возвраты по справедливости',
@@ -295,7 +295,7 @@ export const howItWorks = {
       masterStep4: {
         title: 'Creștere și promovare',
         description:
-          'Colectați recenzii și îmbunătățiți ratingul. Folosiți promoțiile PREMIUM pentru reduceri afișate pe pagina principală. Actualizați planul pentru analiză avansată și vizibilitate maximă.',
+          'Colectați recenzii și îmbunătățiți ratingul. Folosiți promoțiile Pro pentru reduceri afișate pe pagina principală. Actualizați planul pentru analiză avansată și vizibilitate maximă.',
       },
       jobs: {
         badge: 'Nou: Piața de joburi',
@@ -352,7 +352,7 @@ export const howItWorks = {
         jointsFact1: {
           title: 'Lunar din abonament',
           description:
-            'Fiecare tarif acordă joints automat în fiecare lună: BASIC 20, VIP 100, PREMIUM 200. Nu expiră în perioadă.',
+            'Fiecare tarif acordă joints automat în fiecare lună: BASIC 20, Plus 100, Pro 200. Nu expiră în perioadă.',
         },
         jointsFact2: {
           title: 'Refunduri corecte',

@@ -21,7 +21,7 @@ import type { CreateTariffDto } from '@/features/tariffs/tariffsApi';
 
 const Schema = Yup.object({
   name: Yup.string().trim().required('Required'),
-  type: Yup.string().oneOf(['BASIC', 'VIP', 'PREMIUM']).required('Required'),
+  type: Yup.string().oneOf(['BASIC', 'PLUS', 'PRO']).required('Required'),
   price: Yup.string().trim().required('Required'),
   amount: Yup.number().positive().required('Required'),
   days: Yup.number().positive().optional(),
@@ -89,19 +89,19 @@ export default function UpsertDialog({
                       Plan identity
                     </h3>
                     <p className="mt-1 text-xs text-muted-foreground/90">
-                      Internal name and tariff tier (BASIC / VIP / PREMIUM).
+                      Internal name and tariff tier (BASIC / PLUS / PRO).
                     </p>
                   </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <FormikTextField label="Name" name="name" placeholder="VIP Plan" />
+                    <FormikTextField label="Name" name="name" placeholder="Plus Plan" />
                     <FormikSelect
                       label="Type"
                       name="type"
                       placeholder="Select type"
                       options={[
                         { value: 'BASIC', label: 'BASIC' },
-                        { value: 'VIP', label: 'VIP' },
-                        { value: 'PREMIUM', label: 'PREMIUM' },
+                        { value: 'PLUS', label: 'PLUS' },
+                        { value: 'PRO', label: 'PRO' },
                       ]}
                       fullWidth
                       className="h-9 w-full"

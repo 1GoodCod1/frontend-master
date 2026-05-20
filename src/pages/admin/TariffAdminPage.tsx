@@ -180,7 +180,7 @@ export default function TariffAdminPage() {
           mode="edit"
           initial={{
             name: editRow?.name ?? '',
-            type: (editRow?.type as 'BASIC' | 'VIP' | 'PREMIUM') ?? 'BASIC',
+            type: (editRow?.type as 'BASIC' | 'PLUS' | 'PRO') ?? 'BASIC',
             price: editRow?.price ?? '',
             amount: Number(editRow?.amount) || 0,
             days: editRow?.days ?? 30,

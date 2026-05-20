@@ -6,6 +6,6 @@ interface TypeCellProps {
 
 export default function TypeCell({ type }: TypeCellProps) {
   if (!type) return <span className="text-sm text-muted-foreground">—</span>;
-  const variant = type === 'VIP' ? 'destructive' : type === 'PREMIUM' ? 'secondary' : 'outline';
+  const variant = type === 'PLUS' ? 'destructive' : type === 'PRO' ? 'secondary' : 'outline';
   return <Badge variant={variant} className="text-xs">{type}</Badge>;
 }

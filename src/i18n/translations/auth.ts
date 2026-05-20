@@ -172,8 +172,8 @@ export const auth = {
         remainingSlots: 'Spots left:',
         hurry: 'Hurry up — spots are running out!',
       },
-      premiumSteps: {
-        title: 'How to get VIP or PREMIUM for free',
+      plusProSteps: {
+        title: 'How to get Plus or Pro for free',
         step1: 'Register as a master (this form)',
         step2: 'Submit a verification request (documents) in your cabinet',
         step3: 'After approval — choose any plan with 1 click, free for 30 days',
@@ -403,8 +403,8 @@ export const auth = {
         remainingSlots: 'Осталось мест:',
         hurry: 'Скорее — места заканчиваются!',
       },
-      premiumSteps: {
-        title: 'Как получить VIP или PREMIUM бесплатно',
+      plusProSteps: {
+        title: 'Как получить Plus или Pro бесплатно',
         step1: 'Зарегистрируйтесь как мастер (эта форма)',
         step2: 'Подайте заявку на верификацию (документы) в кабинете',
         step3: 'После одобрения — выберите любой план 1 кликом, бесплатно на 30 дней',
@@ -635,8 +635,8 @@ export const auth = {
         remainingSlots: 'Locuri rămase:',
         hurry: 'Grăbiți-vă — locurile se termină!',
       },
-      premiumSteps: {
-        title: 'Cum obții VIP sau PREMIUM gratuit',
+      plusProSteps: {
+        title: 'Cum obții Plus sau Pro gratuit',
         step1: 'Înregistrează-te ca master (acest formular)',
         step2: 'Trimite cererea de verificare (documente) în cabinet',
         step3: 'După aprobare — alege orice plan cu 1 click, gratuit 30 zile',

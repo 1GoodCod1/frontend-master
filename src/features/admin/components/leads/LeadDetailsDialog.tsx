@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import {
-  Star,
   User,
   Phone,
   MessageSquare,
@@ -19,7 +18,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { StatusChip } from '@/components/ui/StatusChip';
 import { mediaUrl } from '@/utils/media';
 import { getTranslatedCategoryName } from '@/utils/translateCityCategory';
@@ -135,12 +133,6 @@ export default function RequestDetailsDialog({
             </div>
             <div className="flex items-center gap-2 min-w-0">
               {t('leads.leadDetailsTitle', { id: String(leadId) })}
-              {displayLead?.isPremium && (
-                <Badge className="bg-amber-600 hover:bg-amber-600 text-white gap-1 shrink-0">
-                  <Star className="size-3.5" />
-                  {t('leads.premiumBadge')}
-                </Badge>
-              )}
             </div>
           </DialogTitle>
         </DialogHeader>

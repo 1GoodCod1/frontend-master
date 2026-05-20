@@ -19,7 +19,7 @@ import {
 
 export default function NotificationsSettingsPage() {
   const { t } = useTranslation();
-  const { isPremium, isLoading, isError, refetch } = useNotificationSettings();
+  const { isPro, isLoading, isError, refetch } = useNotificationSettings();
 
   if (isLoading) return <LoadingState />;
   if (isError) return <ErrorState onRetry={refetch} />;
@@ -31,15 +31,15 @@ export default function NotificationsSettingsPage() {
         subtitle={t('notificationSettings.subtitle')}
       />
 
-      {!isPremium ? (
+      {!isPro ? (
         <div className={cn(masterCardStaticCls, 'border-[#E97525]/25')}>
           <CardContent className="flex flex-col items-center gap-4 py-10 text-center sm:flex-row sm:text-left">
             <span className={cn(masterIconWrapCls, 'h-14 w-14 rounded-[12px]')}>
               <Crown className="size-7" />
             </span>
             <div className="space-y-1">
-              <h3 className={masterSectionTitleCls}>{t('notificationSettings.premiumRequired')}</h3>
-              <p className={masterTextMuted}>{t('notificationSettings.premiumRequiredDesc')}</p>
+              <h3 className={masterSectionTitleCls}>{t('notificationSettings.proFeatureRequired')}</h3>
+              <p className={masterTextMuted}>{t('notificationSettings.proFeatureRequiredDesc')}</p>
               <Button asChild className={cn(masterPrimaryBtnCls, 'mt-4')}>
                 <RouterLink to="/plans">{t('notificationSettings.viewPlans')}</RouterLink>
               </Button>

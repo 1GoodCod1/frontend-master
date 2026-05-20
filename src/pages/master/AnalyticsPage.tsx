@@ -44,10 +44,10 @@ type ConversionData = { viewsToLeads?: number; leadsToBookings?: number; booking
 export default function AnalyticsPage() {
   const { t, i18n } = useTranslation();
   const plan = useAppSelector(selectPlan) ?? 'BASIC';
-  const isPremium = plan === 'PREMIUM';
-  const isVip = plan === 'VIP';
+  const isPro = plan === 'PRO';
+  const isPlus = plan === 'PLUS';
 
-  const defaultDays = isPremium ? 30 : 7;
+  const defaultDays = isPro ? 30 : 7;
   const [activeTab, setActiveTab] = useState<'overview' | 'details'>('overview');
 
   const { data: analytics, isLoading, error, refetch } = useAnalyticsMyQuery({ days: defaultDays });
@@ -60,7 +60,8 @@ export default function AnalyticsPage() {
   if (error) return <ErrorState error={error} onRetry={refetch} />;
 
   const data = analytics as Record<string, unknown> | undefined;
-  const analyticsData = (data?.data as Record<string, unknown>) || data || {};
+  const rootData = data ?? {};
+  const analyticsData = (data?.data as Record<string, unknown>) || rootData;
   const summary = (analyticsData?.summary as Record<string, unknown>) || (data?.summary as Record<string, unknown>) || {};
   const trends = (analyticsData?.trends as Record<string, unknown>) || (data?.trends as Record<string, unknown>);
   const conversion = (analyticsData?.conversion as Record<string, unknown>) || (data?.conversion as Record<string, unknown>);
@@ -68,13 +69,13 @@ export default function AnalyticsPage() {
   const forecast = (analyticsData?.forecast as Record<string, unknown>) || (data?.forecast as Record<string, unknown>);
   const peakHours = Array.isArray(analyticsData?.peakHours)
     ? analyticsData.peakHours
-    : Array.isArray(data?.peakHours)
-      ? data.peakHours
+    : Array.isArray(rootData.peakHours)
+      ? rootData.peakHours
       : [];
   const topSources = Array.isArray(analyticsData?.topSources)
     ? analyticsData.topSources
-    : Array.isArray(data?.topSources)
-      ? data.topSources
+    : Array.isArray(rootData.topSources)
+      ? rootData.topSources
       : [];
 
   const readNumber = (obj: Record<string, unknown>, keys: string[]): number => {
@@ -107,19 +108,19 @@ export default function AnalyticsPage() {
       <PageHeader
         title={t('analyticsPage.title', 'Аналитика')}
         subtitle={
-          isPremium
+          isPro
             ? t('analyticsPage.subtitleBoost', 'Расширенная аналитика и прогнозы')
-            : t('analyticsPage.subtitleVip', 'Базовая аналитика и тренды')
+            : t('analyticsPage.subtitlePlus', 'Базовая аналитика и тренды')
         }
         actions={
         <div className="flex flex-wrap items-center gap-2">
-          {isPremium && (
+          {isPro && (
             <Badge variant="secondary" className="gap-1 font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300 border-teal-200 dark:border-teal-700/50">
               <BarChart3 className="size-3.5" />
-              {t('analyticsPage.premiumBadge', 'PREMIUM')}
+              {t('analyticsPage.proBadge', 'PRO')}
             </Badge>
           )}
-          {isPremium && masterId && (
+          {isPro && masterId && (
             <Button
               size="sm"
               variant="outline"
@@ -180,8 +181,8 @@ export default function AnalyticsPage() {
         </CardContent>
       </Card>
 
-      {/* Conversion (Premium) */}
-      {isPremium && Boolean(conversion) && (
+      {/* Conversion (Pro) */}
+      {isPro && Boolean(conversion) && (
         <Card className={`overflow-hidden ${blockClass}`}>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -228,8 +229,8 @@ export default function AnalyticsPage() {
         </Card>
       )}
 
-      {/* Insights (Premium) */}
-      {isPremium && Array.isArray(analyticsData.insights) && analyticsData.insights.length > 0 && (
+      {/* Insights (Pro) */}
+      {isPro && Array.isArray(analyticsData.insights) && analyticsData.insights.length > 0 && (
         <Card className={`overflow-hidden border-l-4 border-l-blue-500 ${blockClass}`}>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2 text-blue-700 dark:text-blue-400">
@@ -257,8 +258,8 @@ export default function AnalyticsPage() {
         </Card>
       )}
 
-      {/* Comparison (Premium) */}
-      {isPremium && Boolean(comparison) && (
+      {/* Comparison (Pro) */}
+      {isPro && Boolean(comparison) && (
         <Card className={`overflow-hidden ${blockClass}`}>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -336,8 +337,8 @@ export default function AnalyticsPage() {
         </Card>
       )}
 
-      {/* Forecast (Premium) */}
-      {isPremium && forecast && (
+      {/* Forecast (Pro) */}
+      {isPro && forecast && (
         <Card className={`overflow-hidden ${blockClass}`}>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -375,7 +376,7 @@ export default function AnalyticsPage() {
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'overview' | 'details')} className="mb-4">
             <TabsList>
               <TabsTrigger value="overview">{t('analyticsPage.tabOverview', 'Обзор')}</TabsTrigger>
-              {isPremium && <TabsTrigger value="details">{t('analyticsPage.tabDetails')}</TabsTrigger>}
+              {isPro && <TabsTrigger value="details">{t('analyticsPage.tabDetails')}</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="overview" className="mt-4">
@@ -398,7 +399,7 @@ export default function AnalyticsPage() {
               </div>
             </TabsContent>
 
-            {isPremium && (
+            {isPro && (
               <TabsContent value="details" className="mt-4">
                 <div className="grid gap-6 md:grid-cols-2">
                   {peakHours.length > 0 && (
@@ -439,7 +440,7 @@ export default function AnalyticsPage() {
         </CardContent>
       </Card>
 
-      {!isPremium && !isVip && (
+      {!isPro && !isPlus && (
         <Alert className="rounded-xl border-border bg-muted/50">
           <AlertDescription>
             {t('analyticsPage.upgradeMessage')}

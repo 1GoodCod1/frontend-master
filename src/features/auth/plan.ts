@@ -1,16 +1,21 @@
 import { isRecord } from '@/utils/guards';
 
-export type TariffPlan = 'BASIC' | 'VIP' | 'PREMIUM';
-export type PaidTariff = Exclude<TariffPlan, 'BASIC'>; // 'VIP' | 'PREMIUM'
+export type TariffPlan = 'BASIC' | 'PLUS' | 'PRO';
+export type PaidTariff = Exclude<TariffPlan, 'BASIC'>; // 'PLUS' | 'PRO'
 
 export const PLAN_RANK: Record<TariffPlan, number> = {
   BASIC: 1,
-  VIP: 2,
-  PREMIUM: 3,
+  PLUS: 2,
+  PRO: 3,
 };
 
+export function normalizeTariffPlan(raw: unknown): TariffPlan {
+  if (raw === 'BASIC' || raw === 'PLUS' || raw === 'PRO') return raw;
+  return 'BASIC';
+}
+
 export function isPlan(x: unknown): x is TariffPlan {
-  return x === 'BASIC' || x === 'VIP' || x === 'PREMIUM';
+  return x === 'BASIC' || x === 'PLUS' || x === 'PRO';
 }
 
 export function hasMinPlan(current: TariffPlan, min: TariffPlan): boolean {
@@ -20,7 +25,7 @@ export function hasMinPlan(current: TariffPlan, min: TariffPlan): boolean {
 export function effectivePlanFromMasterProfile(mp: unknown): TariffPlan {
   if (!isRecord(mp)) return 'BASIC';
   const raw = mp.tariffType ?? mp.plan ?? mp.tariff ?? 'BASIC';
-  const plan: TariffPlan = isPlan(raw) ? raw : 'BASIC';
+  const plan: TariffPlan = normalizeTariffPlan(raw);
 
   if (plan === 'BASIC') return 'BASIC';
 
@@ -51,8 +56,8 @@ export function effectivePlanFromMe(me: unknown): TariffPlan | null {
 
 export const PHOTO_LIMIT_BY_PLAN: Record<TariffPlan, number> = {
   BASIC: 5,
-  VIP: 10,
-  PREMIUM: 15,
+  PLUS: 10,
+  PRO: 15,
 };
 
 export function maxPhotosForPlan(plan: TariffPlan): number {

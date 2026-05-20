@@ -56,7 +56,6 @@ export const leads = {
       closeRejected: 'Closure rejected, request is back in progress',
       nameLabel: 'Name',
       phoneLabel: 'Phone',
-      premiumBadge: 'Premium',
     },
   },
   ru: {
@@ -116,7 +115,6 @@ export const leads = {
       closeRejected: 'Закрытие отклонено, заявка снова в работе',
       nameLabel: 'Имя',
       phoneLabel: 'Телефон',
-      premiumBadge: 'Премиум',
     },
   },
   ro: {
@@ -176,7 +174,6 @@ export const leads = {
       closeRejected: 'Închiderea a fost respinsă, cererea este din nou în desfășurare',
       nameLabel: 'Nume',
       phoneLabel: 'Telefon',
-      premiumBadge: 'Premium',
     },
   },
 };

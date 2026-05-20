@@ -185,8 +185,8 @@ export default function PlansPage() {
             {plansToShow.map((p, index) => {
               const isUpgradeOption =
                 isAuthed &&
-                ((effectivePlan === 'BASIC' && (p.name === 'VIP' || p.name === 'PREMIUM')) ||
-                  (effectivePlan === 'VIP' && p.name === 'PREMIUM'));
+                ((effectivePlan === 'BASIC' && (p.name === 'PLUS' || p.name === 'PRO')) ||
+                  (effectivePlan === 'PLUS' && p.name === 'PRO'));
 
               return (
                 <ScrollReveal key={p.name} delay={0.05 * index} duration={0.4} className="h-full min-h-0">

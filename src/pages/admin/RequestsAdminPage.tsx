@@ -65,7 +65,7 @@ export default function RequestsAdminPage() {
       width: 140,
       cellClassName: 'status-cell',
       renderCell: (params) => (
-        <RequestStatusCell status={params.value as string} isPremium={Boolean(params.row?.isPremium)} />
+        <RequestStatusCell status={params.value as string} />
       ),
     },
     {
@@ -100,7 +100,6 @@ export default function RequestsAdminPage() {
           newLeads={statistics.newLeads}
           inProgressLeads={statistics.inProgressLeads}
           closedLeads={statistics.closedLeads}
-          premiumLeads={statistics.premiumLeads}
         />
 
         <SectionCard

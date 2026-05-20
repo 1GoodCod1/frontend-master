@@ -11,7 +11,6 @@ export type AdminLeadRow = {
   name?: string | null;
   phone?: string | null;
   message?: string | null;
-  isPremium?: boolean | null;
   createdAt?: string | null;
   client?: {
     avatarFile?: { path?: string | null } | null;

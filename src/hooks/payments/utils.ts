@@ -2,11 +2,11 @@ import type { PaidTariff } from '@/features/auth/plan';
 import { unwrapEnvelope } from '@/utils/data';
 import { isRecord } from '@/utils/guards';
 
-export const VALID_PLANS: PaidTariff[] = ['VIP', 'PREMIUM'];
+export const VALID_PLANS: PaidTariff[] = ['PLUS', 'PRO'];
 
 export function getPlanFromSearchParams(searchParams: URLSearchParams): PaidTariff | null {
   const plan = searchParams.get('plan')?.toUpperCase();
-  if (plan === 'VIP' || plan === 'PREMIUM') return plan;
+  if (plan === 'PLUS' || plan === 'PRO') return plan;
   return null;
 }
 

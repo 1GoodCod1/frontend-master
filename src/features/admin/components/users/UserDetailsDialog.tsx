@@ -98,7 +98,7 @@ export default function UserDetailsDialog({
     rawTariff === 'BASIC' ? 'BASIC' : isActivePaid ? rawTariff : 'BASIC';
   const tariffUpper = String(effectiveTariff).toUpperCase();
 
-  // Premium card styling without ugly black borders
+  // Highlight card styling without ugly black borders
   const blockClass = "group flex flex-col justify-center rounded-2xl bg-slate-50/80 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
   const rowBlockClass = "group flex items-center gap-4 rounded-2xl bg-slate-50/80 p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-transparent dark:border-white/[0.02]";
 
@@ -184,9 +184,9 @@ export default function UserDetailsDialog({
                       className="border-0 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm"
                       style={{
                         backgroundColor:
-                          tariffUpper === 'VIP'
+                          tariffUpper === 'PLUS'
                             ? '#DC143C'
-                            : tariffUpper === 'PREMIUM'
+                            : tariffUpper === 'PRO'
                               ? '#F39C12'
                               : '#4A90E2',
                       }}

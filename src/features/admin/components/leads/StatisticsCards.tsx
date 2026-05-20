@@ -1,4 +1,4 @@
-﻿import { Target, Sparkles, Hourglass, CheckCircle, Star } from 'lucide-react';
+﻿import { Target, Sparkles, Hourglass, CheckCircle } from 'lucide-react';
 import { AdminStatCard } from '@/features/admin/components/common/AdminStatCard';
 
 interface StatisticsCardsProps {
@@ -6,7 +6,6 @@ interface StatisticsCardsProps {
   newLeads: number;
   inProgressLeads: number;
   closedLeads: number;
-  premiumLeads: number;
 }
 
 export default function StatisticsCards({
@@ -14,10 +13,9 @@ export default function StatisticsCards({
   newLeads,
   inProgressLeads,
   closedLeads,
-  premiumLeads,
 }: StatisticsCardsProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <AdminStatCard staggerIndex={0} value={totalLeads}
         label="Total"
         icon={<Target className="size-6" />}
@@ -41,12 +39,6 @@ export default function StatisticsCards({
         icon={<CheckCircle className="size-6" />}
         iconBgClassName="bg-slate-600 dark:bg-slate-500"
         cardClassName="border-slate-200 dark:border-white/[0.08] bg-muted/30 dark:bg-white/[0.03]"
-      />
-      <AdminStatCard staggerIndex={4} value={premiumLeads}
-        label="Premium"
-        icon={<Star className="size-6" />}
-        iconBgClassName="bg-amber-600 dark:bg-amber-500"
-        cardClassName="border-slate-200 dark:border-white/[0.08] border-amber-500/20 bg-amber-500/5 dark:bg-amber-500/10"
       />
     </div>
   );

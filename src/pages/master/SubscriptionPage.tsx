@@ -53,12 +53,12 @@ const PLAN_ACCENT: Record<string, { wash: string; text: string; iconWrap: string
         text: 'text-[#495057] dark:text-white/80',
         iconWrap: 'bg-[#F1F3F5] text-[#6C757D] dark:bg-white/[0.08] dark:text-white/55',
     },
-    VIP: {
+    PLUS: {
         wash: 'bg-[#FFF8EB]/60 dark:bg-[#E97525]/8',
         text: 'text-[#E97525]',
         iconWrap: masterIconWrapCls,
     },
-    PREMIUM: {
+    PRO: {
         wash: 'bg-[#E97525]/8 dark:bg-[#E97525]/12',
         text: 'text-[#c45f1a] dark:text-[#f08540]',
         iconWrap: 'flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E97525]/15 text-[#E97525] dark:bg-[#E97525]/20',
@@ -67,8 +67,8 @@ const PLAN_ACCENT: Record<string, { wash: string; text: string; iconWrap: string
 
 const PlanIcon = ({ plan }: { plan: string }) => {
     const accent = PLAN_ACCENT[plan] || PLAN_ACCENT.BASIC;
-    if (plan === 'PREMIUM') return <Sparkles className={cn('h-7 w-7', accent.text)} />;
-    if (plan === 'VIP') return <Crown className={cn('h-7 w-7', accent.text)} />;
+    if (plan === 'PRO') return <Sparkles className={cn('h-7 w-7', accent.text)} />;
+    if (plan === 'PLUS') return <Crown className={cn('h-7 w-7', accent.text)} />;
     return <Zap className={cn('h-7 w-7', accent.text)} />;
 };
 
@@ -139,7 +139,7 @@ export default function SubscriptionPage() {
             navigate('/plans');
             return;
         }
-        navigate('/plans/checkout?plan=PREMIUM');
+        navigate('/plans/checkout?plan=PRO');
     };
 
     if (tariffLoading) {
@@ -255,7 +255,7 @@ export default function SubscriptionPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upgrade Section */}
-                {effectivePlan !== 'PREMIUM' && !pendingUpgrade && (
+                {effectivePlan !== 'PRO' && !pendingUpgrade && (
                     <Card className={cn(masterCardStaticCls, 'overflow-hidden border-[#E97525]/25')}>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-[#E97525]">
@@ -274,8 +274,8 @@ export default function SubscriptionPage() {
                                 {effectivePlan === 'BASIC'
                                     ? t('subscription.viewPlans')
                                     : isVerified
-                                        ? t('subscription.getPremiumFree')
-                                        : t('subscription.upgradeToPremium')}
+                                        ? t('subscription.getProFree')
+                                        : t('subscription.upgradeToPro')}
                             </Button>
                         </CardContent>
                     </Card>

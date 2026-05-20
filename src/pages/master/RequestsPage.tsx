@@ -58,7 +58,7 @@ export default function RequestsPage() {
 
   const recentMap = useAppSelector((s) => s.socket.recent.leads);
   const plan = useAppSelector(selectPlan) ?? 'BASIC';
-  const isPremium = plan === 'PREMIUM';
+  const isPro = plan === 'PRO';
 
   const myProfile = useMastersMyProfileQuery();
   const masterId = (myProfile.data as { data?: { id?: string }; id?: string })?.data?.id ?? (myProfile.data as { id?: string })?.id ?? null;
@@ -132,7 +132,7 @@ export default function RequestsPage() {
               </Select>
             </div>
 
-            {isPremium && masterId && (
+            {isPro && masterId && (
               <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"

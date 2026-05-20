@@ -8,7 +8,7 @@ function unwrap<T>(response: unknown): T {
 export interface Tariff {
   id: string;
   name: string;
-  type: 'BASIC' | 'VIP' | 'PREMIUM';
+  type: 'BASIC' | 'PLUS' | 'PRO';
   price: string;
   amount: number;
   days: number;
@@ -22,7 +22,7 @@ export interface Tariff {
 
 export interface CreateTariffDto {
   name: string;
-  type: 'BASIC' | 'VIP' | 'PREMIUM';
+  type: 'BASIC' | 'PLUS' | 'PRO';
   price: string;
   amount: number;
   days?: number;

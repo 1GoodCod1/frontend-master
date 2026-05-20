@@ -185,7 +185,7 @@ export default function ReviewDialog({
                 >
                   <Award className="size-4" />
                   <AlertDescription>
-                    {t('verification.ifApprovePremium')}
+                    {t('verification.ifApproveFreePlan')}
                   </AlertDescription>
                 </Alert>
               )}

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Gift } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function PremiumAfterVerificationBanner() {
+export default function PlusProAfterVerificationBanner() {
   const { t } = useTranslation();
 
   return (
@@ -26,12 +26,12 @@ export default function PremiumAfterVerificationBanner() {
               'text-[#7a3800] dark:text-[#f0a060]'
             )}
           >
-            {t('auth.premiumSteps.title')}
+            {t('auth.plusProSteps.title')}
           </p>
           {[
-            t('auth.premiumSteps.step1'),
-            t('auth.premiumSteps.step2'),
-            t('auth.premiumSteps.step3'),
+            t('auth.plusProSteps.step1'),
+            t('auth.plusProSteps.step2'),
+            t('auth.plusProSteps.step3'),
           ].map((s, i) => (
             <div key={i} className="mb-1 flex items-start gap-2">
               <span

@@ -53,9 +53,9 @@ function getSections(
     { key: 'profile', sectionKey: 'business', label: t('dashboard.profile'), to: '/dashboard/profile', icon: <User className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'services', sectionKey: 'business', label: t('dashboard.services'), to: '/dashboard/services', icon: <ListChecks className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'files', sectionKey: 'business', label: t('dashboard.files'), to: '/dashboard/files', icon: <Paperclip className="size-5" />, minPlan: 'BASIC' as TariffPlan },
-    { key: 'portfolio', sectionKey: 'business', label: t('dashboard.portfolio'), to: '/dashboard/portfolio', icon: <Layers className="size-5" />, minPlan: 'VIP' as TariffPlan },
-    { key: 'promotions', sectionKey: 'business', label: t('dashboard.promotions'), to: '/dashboard/promotions', icon: <Tag className="size-5" />, minPlan: 'PREMIUM' as TariffPlan },
-    { key: 'analytics', sectionKey: 'business', label: t('dashboard.analytics'), to: '/dashboard/analytics', icon: <BarChart2 className="size-5" />, minPlan: 'VIP' as TariffPlan },
+    { key: 'portfolio', sectionKey: 'business', label: t('dashboard.portfolio'), to: '/dashboard/portfolio', icon: <Layers className="size-5" />, minPlan: 'PLUS' as TariffPlan },
+    { key: 'promotions', sectionKey: 'business', label: t('dashboard.promotions'), to: '/dashboard/promotions', icon: <Tag className="size-5" />, minPlan: 'PRO' as TariffPlan },
+    { key: 'analytics', sectionKey: 'business', label: t('dashboard.analytics'), to: '/dashboard/analytics', icon: <BarChart2 className="size-5" />, minPlan: 'PLUS' as TariffPlan },
     { key: 'payments', sectionKey: 'finance', label: t('dashboard.payments'), to: '/dashboard/payments', icon: <CreditCard className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'subscription', sectionKey: 'finance', label: t('dashboard.subscription'), to: '/dashboard/subscription', icon: <Crown className="size-5" />, minPlan: 'BASIC' as TariffPlan },
     { key: 'security', sectionKey: 'account', label: t('dashboard.security'), to: '/dashboard/security', icon: <Shield className="size-5" />, minPlan: 'BASIC' as TariffPlan },
@@ -162,7 +162,7 @@ export function DashboardLayout() {
 
       <CabinetSidebar
         sections={sections}
-        showPremiumBanner
+        showProBanner
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         isMobileOpen={mobileOpen}

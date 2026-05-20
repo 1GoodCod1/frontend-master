@@ -68,8 +68,7 @@ export const verification = {
       reviewError: 'Failed to review verification',
       first100Banner: 'Approved: {{count}}',
       first100BannerHint: 'Verified masters can claim any plan free in their cabinet.',
-      ifApprovePremium: 'If you approve, this master can claim VIP or PREMIUM free in their cabinet.',
-      ifApproveNoPremium: 'If you approve, this master can claim VIP or PREMIUM free in their cabinet.',
+      ifApproveFreePlan: 'If you approve, this master can claim Plus or Pro free in their cabinet.',
       documentTypes: {
         PASSPORT: 'Passport',
         ID_CARD: 'ID card',
@@ -151,8 +150,7 @@ export const verification = {
       reviewError: 'Не удалось рассмотреть',
       first100Banner: 'Одобрено: {{count}}',
       first100BannerHint: 'Верифицированные мастера могут получить любой тариф бесплатно в кабинете.',
-      ifApprovePremium: 'При одобрении мастер сможет получить VIP или PREMIUM бесплатно в кабинете.',
-      ifApproveNoPremium: 'При одобрении мастер сможет получить VIP или PREMIUM бесплатно в кабинете.',
+      ifApproveFreePlan: 'При одобрении мастер сможет получить Plus или Pro бесплатно в кабинете.',
       documentTypes: {
         PASSPORT: 'Паспорт',
         ID_CARD: 'ID карта',
@@ -234,8 +232,7 @@ export const verification = {
       reviewError: 'Revizuire eșuată',
       first100Banner: 'Aprobate: {{count}}',
       first100BannerHint: 'Masterii verificați pot obține orice plan gratuit în cabinet.',
-      ifApprovePremium: 'Dacă aprobezi, acest master poate obține VIP sau PREMIUM gratuit în cabinet.',
-      ifApproveNoPremium: 'Dacă aprobezi, masterul poate obține VIP sau PREMIUM gratuit în cabinet.',
+      ifApproveFreePlan: 'Dacă aprobezi, masterul poate obține Plus sau Pro gratuit în cabinet.',
       documentTypes: {
         PASSPORT: 'Pașaport',
         ID_CARD: 'Carte de identitate',

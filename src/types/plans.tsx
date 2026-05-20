@@ -31,23 +31,23 @@ export const plans: readonly PlanUI[] = [
       icon: null
     },
     {
-      name: 'VIP',
+      name: 'PLUS',
       price: '149 MDL / month',
       description: 'More visibility, more clients',
       features: [
         '100 joints / month',
-        'VIP badge',
+        'Plus badge',
         'Higher in search results',
         'Up to 10 photos',
         'Basic analytics',
         'Telegram notifications',
       ],
       highlight: true,
-      tariffType: 'VIP',
+      tariffType: 'PLUS',
       icon: <Star className="size-5" />,
     },
     {
-      name: 'PREMIUM',
+      name: 'PRO',
       price: '299 MDL / month',
       description: 'Maximum exposure & leads',
       features: [
@@ -63,7 +63,7 @@ export const plans: readonly PlanUI[] = [
         'Telegram notifications',
       ],
       highlight: false,
-      tariffType: 'PREMIUM',
+      tariffType: 'PRO',
       icon: <JointsMark className="size-5 text-[#D97706] dark:text-[#FBBF24]" />,
     },
   ] as const;

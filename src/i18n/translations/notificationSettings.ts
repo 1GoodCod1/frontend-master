@@ -3,8 +3,8 @@ export const notificationSettings = {
     notificationSettings: {
       title: 'Notifications',
       subtitle: 'Link Telegram to receive alerts about new requests',
-      premiumRequired: 'Premium feature',
-      premiumRequiredDesc: 'Upgrade to VIP or PREMIUM to link Telegram for instant notifications about new requests.',
+      proFeatureRequired: 'Pro feature',
+      proFeatureRequiredDesc: 'Upgrade to Plus or Pro to link Telegram for instant notifications about new requests.',
       viewPlans: 'View plans',
 
       telegram: {
@@ -48,8 +48,8 @@ export const notificationSettings = {
     notificationSettings: {
       title: 'Уведомления',
       subtitle: 'Привяжите Telegram для получения уведомлений о новых заявках',
-      premiumRequired: 'Премиум функция',
-      premiumRequiredDesc: 'Перейдите на тариф VIP или PREMIUM, чтобы привязать Telegram для мгновенных уведомлений о новых заявках.',
+      proFeatureRequired: 'Функция Pro',
+      proFeatureRequiredDesc: 'Перейдите на тариф Plus или Pro, чтобы привязать Telegram для мгновенных уведомлений о новых заявках.',
       viewPlans: 'Смотреть тарифы',
 
       telegram: {
@@ -93,8 +93,8 @@ export const notificationSettings = {
     notificationSettings: {
       title: 'Notificări',
       subtitle: 'Conectează Telegram pentru a primi alerte despre cereri noi',
-      premiumRequired: 'Funcție premium',
-      premiumRequiredDesc: 'Actualizează la VIP sau PREMIUM pentru a conecta Telegram pentru notificări instant despre cereri noi.',
+      proFeatureRequired: 'Funcție Pro',
+      proFeatureRequiredDesc: 'Actualizează la Plus sau Pro pentru a conecta Telegram pentru notificări instant despre cereri noi.',
       viewPlans: 'Vezi planurile',
 
       telegram: {
