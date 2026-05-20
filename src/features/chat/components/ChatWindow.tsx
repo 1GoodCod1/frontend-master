@@ -199,7 +199,7 @@ export default function ChatWindow({
         />
       );
     },
-    [currentUserRole, otherParty?.avatar, otherParty?.name],
+    [currentUserRole],
   );
 
   const virtuosoComponents = useMemo<Components<ChatTimelineItem, undefined>>(
@@ -213,7 +213,7 @@ export default function ChatWindow({
           </div>
         ) : null,
     }),
-    [typingUsers.length, otherParty, t],
+    [typingUsers.length, t],
   );
 
   if (!isValid) {

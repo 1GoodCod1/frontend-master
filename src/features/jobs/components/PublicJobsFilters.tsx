@@ -47,9 +47,6 @@ export function PublicJobsFilters({
     pollingInterval: publicCachePolicy.mastersFiltersPollingInterval,
   });
 
-  const cities = filtersData?.cities ?? [];
-  const categories = filtersData?.categories ?? [];
-
   const getCityLabel = (c: { id: string; name: string; slug: string }) =>
     t(`cities.${c.slug}`, { defaultValue: c.name }) || c.name;
   const getCategoryLabel = (c: { id: string; name: string; slug: string }) =>
@@ -58,14 +55,15 @@ export function PublicJobsFilters({
   const hasActiveFilters = cityId !== ALL || categoryId !== ALL;
 
   const sortedCities = useMemo(
-    () => [...cities].sort((a, b) => (b.count ?? 0) - (a.count ?? 0)),
-    [cities],
+    () =>
+      [...(filtersData?.cities ?? [])].sort((a, b) => (b.count ?? 0) - (a.count ?? 0)),
+    [filtersData?.cities],
   );
   const sortedCategories = useMemo(
-    () => [...categories].sort((a, b) => (b.count ?? 0) - (a.count ?? 0)),
-    [categories],
+    () =>
+      [...(filtersData?.categories ?? [])].sort((a, b) => (b.count ?? 0) - (a.count ?? 0)),
+    [filtersData?.categories],
   );
-
   return (
     <div className={cn('space-y-3', className)}>
       <div className={cn('rounded-2xl p-4', surfaceCardCls)}>

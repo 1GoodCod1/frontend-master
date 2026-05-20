@@ -23,14 +23,24 @@ export default function RegisterPage() {
   const [searchParams] = useSearchParams();
 
   const roleFromQuery = searchParams.get('role')?.toUpperCase();
-  const [selectedRole, setSelectedRole] = useState<RegisterRole>(() =>
-    roleFromQuery === 'MASTER' ? USER_ROLE.MASTER : USER_ROLE.CLIENT,
-  );
+  const roleFromQueryParam: RegisterRole | null =
+    roleFromQuery === 'MASTER'
+      ? USER_ROLE.MASTER
+      : roleFromQuery === 'CLIENT'
+        ? USER_ROLE.CLIENT
+        : null;
 
-  useEffect(() => {
-    if (roleFromQuery === 'MASTER') setSelectedRole(USER_ROLE.MASTER);
-    else if (roleFromQuery === 'CLIENT') setSelectedRole(USER_ROLE.CLIENT);
-  }, [roleFromQuery]);
+  const [selectedRole, setSelectedRole] = useState<RegisterRole>(
+    () => roleFromQueryParam ?? USER_ROLE.CLIENT,
+  );
+  const [prevRoleFromQuery, setPrevRoleFromQuery] = useState(roleFromQuery);
+
+  if (roleFromQuery !== prevRoleFromQuery) {
+    setPrevRoleFromQuery(roleFromQuery);
+    if (roleFromQueryParam) {
+      setSelectedRole(roleFromQueryParam);
+    }
+  }
 
   const form = useRegistrationForm(selectedRole);
 

@@ -84,47 +84,49 @@ export default function PublicJobsPage() {
     pollingInterval: 60_000,
   });
 
-  const [allItems, setAllItems] = useState<JobDto[]>([]);
-
   const listKey = `${debouncedSearch}|${apiSort ?? ''}|${apiCityId ?? ''}|${apiCategoryId ?? ''}`;
 
-  useEffect(() => {
-    setAllItems([]);
-  }, [listKey]);
+  const [pagesCache, setPagesCache] = useState<{ listKey: string; pages: Map<number, JobDto[]> }>({
+    listKey: '',
+    pages: new Map(),
+  });
 
-  useEffect(() => {
-    if (!data?.items || skipList) return;
-    if (page <= 1) {
-      setAllItems(data.items);
-      return;
+  if (pagesCache.listKey !== listKey) {
+    setPagesCache({ listKey, pages: new Map() });
+  } else if (data?.items && !skipList && pagesCache.pages.get(page) !== data.items) {
+    const pages = new Map(pagesCache.pages);
+    pages.set(page, data.items);
+    setPagesCache({ listKey, pages });
+  }
+
+  const allItems = useMemo(() => {
+    const items: JobDto[] = [];
+    for (let p = 1; p <= page; p++) {
+      const pageItems = pagesCache.pages.get(p);
+      if (pageItems) {
+        items.push(...pageItems);
+      }
     }
-    setAllItems((prev) => [
-      ...prev.slice(0, (page - 1) * PAGE_LIMIT),
-      ...data.items,
-    ]);
-  }, [data, page, listKey, skipList]);
+    return items;
+  }, [pagesCache, page]);
 
   const handleTabChange = (next: typeof tab) => {
     setTab(next);
     setPage(1);
-    setAllItems([]);
   };
 
   const handleCityChange = (value: string) => {
     setCityId(value);
     setPage(1);
-    setAllItems([]);
   };
 
   const handleCategoryChange = (value: string) => {
     setCategoryId(value);
     setPage(1);
-    setAllItems([]);
   };
 
   const handleResetFilters = () => {
     resetFilters();
-    setAllItems([]);
   };
 
   const total = data?.total ?? 0;
