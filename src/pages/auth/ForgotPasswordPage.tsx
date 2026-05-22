@@ -9,22 +9,20 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthLayout view="forgot">
-      <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
-        <div className="faber-page-enter mx-auto w-full max-w-[360px]">
-          <ForgotPasswordHeader />
-          <Formik<ForgotPasswordFormValues>
-            initialValues={form.initialValues}
-            validationSchema={form.validationSchema}
-            onSubmit={form.onSubmit}
-            enableReinitialize
-          >
-            {({ handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
-                <ForgotPasswordForm isSubmitting={form.isSubmitting} />
-              </form>
-            )}
-          </Formik>
-        </div>
+      <div className="faber-page-enter">
+        <ForgotPasswordHeader />
+        <Formik<ForgotPasswordFormValues>
+          initialValues={form.initialValues}
+          validationSchema={form.validationSchema}
+          onSubmit={form.onSubmit}
+          enableReinitialize
+        >
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <ForgotPasswordForm isSubmitting={form.isSubmitting} />
+            </form>
+          )}
+        </Formik>
       </div>
     </AuthLayout>
   );

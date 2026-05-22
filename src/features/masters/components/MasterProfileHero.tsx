@@ -23,7 +23,8 @@ import {
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { surfaceCardCls, surfaceCardRingCls } from '@/lib/surfaceCard';
+import { surfaceCardRingCls } from '@/lib/surfaceCard';
+import { masterDetailCardCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
 import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
 
 interface MasterProfileHeroProps {
@@ -53,7 +54,7 @@ interface MasterProfileHeroProps {
 }
 
 // Unified card style — matches homepage / masters / jobs pages
-const baseCardCls = surfaceCardCls;
+const baseCardCls = masterDetailCardCls;
 
 export const MasterProfileHero = ({
   title,
@@ -147,24 +148,25 @@ export const MasterProfileHero = ({
 
   return (
     <TooltipProvider>
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-3 sm:pt-4">
         {/* Back link — sits above the card, muted */}
         <RouterLink
           to="/masters"
-          className="inline-flex items-center gap-1.5 text-sm mb-4 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm mb-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors"
         >
           <ArrowLeft size={14} />
           <span>{t('masterDetails.backToMasters', 'Back to Masters')}</span>
         </RouterLink>
 
         {/* Main profile card */}
-        <div className={cn(baseCardCls, 'rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8')}>
-          <div className="flex flex-col md:flex-row items-start gap-5 sm:gap-6">
+        <div className={cn(baseCardCls, 'p-4 sm:p-5')}>
+          <div className="flex flex-col md:flex-row items-start gap-4 sm:gap-5">
             {/* Avatar */}
             <div className="relative shrink-0">
               <div
                 className={cn(
-                  'w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden flex items-center justify-center',
+                  'w-24 h-24 sm:w-28 sm:h-28 overflow-hidden flex items-center justify-center',
+                  masterDetailInsetCls,
                   'bg-gray-100 dark:bg-white/[0.04]',
                   'border border-gray-200/80 dark:border-white/[0.08]',
                 )}
@@ -349,13 +351,13 @@ export const MasterProfileHero = ({
         </div>
 
         {/* Stats row — 5 cards below the profile card */}
-        <div className="mt-4 sm:mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+        <div className="mt-2 sm:mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
           {stats.map((stat) => (
             <div
               key={stat.label}
               className={cn(
                 baseCardCls,
-                'rounded-2xl p-4 transition duration-300 hover:-translate-y-0.5 hover:shadow-md',
+                'p-3 transition duration-300 hover:-translate-y-0.5 hover:shadow-md',
               )}
             >
               <div className="flex items-center justify-between mb-2">

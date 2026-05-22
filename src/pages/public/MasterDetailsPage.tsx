@@ -31,6 +31,7 @@ import { trackRecentView } from '@/utils/tracking';
 import { hasRecentViewsConsent } from '@/features/cookie-consent/storage';
 import { USER_ROLE } from '@/constants/roles';
 import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
+import { masterDetailCardCls, masterDetailIconWrapCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
 
 type TabId = 'about' | 'services' | 'gallery' | 'reviews';
 
@@ -174,7 +175,7 @@ export default function MasterDetailsPage() {
     reviews: `💬 ${t('masterDetails.reviews')}`,
   };
 
-  const cardCls = 'bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-3xl shadow-sm transition-colors duration-300';
+  const cardCls = masterDetailCardCls;
 
   const seoDescription =
     description?.slice(0, 160) ||
@@ -232,18 +233,18 @@ export default function MasterDetailsPage() {
         responseRate={responseRate}
       />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-3 sm:pt-4 pb-8 sm:pb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-6 sm:pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
           {/* Left column — tabs + content */}
-          <div className="lg:col-span-2 space-y-6 min-w-0">
-            {/* Tabs — Figma: active orange+white, inactive white+light grey border+dark grey text */}
-            <div className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-3xl p-2 flex gap-1.5 flex-wrap shadow-sm">
+          <div className="lg:col-span-2 space-y-3 min-w-0">
+            {/* Tabs */}
+            <div className={cn(cardCls, 'p-1.5 flex gap-1 flex-wrap')}>
               {(['about', 'services', 'gallery', 'reviews'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   className={cn(
-                    'flex-1 min-w-[100px] py-2.5 rounded-xl text-sm font-medium transition',
+                    'flex-1 min-w-[100px] py-2 rounded-[8px] text-sm font-medium transition',
                     activeTab === tab
                       ? 'bg-[hsl(var(--button-bg))] dark:bg-[#E97525] text-white shadow-sm'
                       : 'bg-transparent text-gray-700 dark:text-gray-400 border border-transparent hover:bg-gray-50 dark:hover:bg-white/5'
@@ -256,7 +257,7 @@ export default function MasterDetailsPage() {
 
             {/* ABOUT tab */}
             {activeTab === 'about' && (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <MasterDetailsInfo
                   description={description}
                   isVerified={Boolean(m?.user?.isVerified)}
@@ -275,14 +276,14 @@ export default function MasterDetailsPage() {
 
             {/* SERVICES tab */}
             {activeTab === 'services' && (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {services && services.length > 0 ? (
                   <MasterDetailsServices
                     services={services}
                     promotions={promotions}
                   />
                 ) : !m?.user?.isVerified && isOwnProfile ? (
-                  <Alert className="rounded-xl border-primary/30 bg-primary/5">
+                  <Alert className={cn(masterDetailInsetCls, 'border-primary/30 bg-primary/5')}>
                     <ShieldCheck className="size-5 text-primary" />
                     <AlertTitle className="font-bold text-foreground">
                       {t('verificationBanner.title')}
@@ -292,7 +293,7 @@ export default function MasterDetailsPage() {
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  <div className={cn(cardCls, 'p-8')}>
+                  <div className={cn(cardCls, 'p-4')}>
                     <p className="text-muted-foreground">{t('masterDetails.noServices')}</p>
                   </div>
                 )}
@@ -329,10 +330,10 @@ export default function MasterDetailsPage() {
           </div>
 
           {/* Right sidebar */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Lead form / CTA */}
             {!isOwnProfile && m?.user?.isVerified && role !== USER_ROLE.ADMIN && (
-              <div id="lead-form" className="lg:sticky lg:top-24 space-y-3">
+              <div id="lead-form" className="lg:sticky lg:top-24 space-y-2">
                 <MasterDetailsLeadForm
                   isAuthed={isAuthed}
                   role={role}
@@ -346,9 +347,9 @@ export default function MasterDetailsPage() {
             )}
 
             {/* Quick Info — Figma: white card, light grey border, dark grey text */}
-            <div className={cn(cardCls, 'p-6')}>
-              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-5 flex items-center gap-2.5">
-                <span className="w-7 h-7 rounded-xl bg-primary/10 flex items-center justify-center">
+            <div className={cn(cardCls, 'p-4')}>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+                <span className={cn(masterDetailIconWrapCls, 'w-7 h-7')}>
                   <ChevronRight size={14} className="text-primary" />
                 </span>
                 {t('masterDetails.quickInfo', 'Quick info')}
@@ -381,7 +382,7 @@ export default function MasterDetailsPage() {
 
             {/* Similar masters */}
             {masterId && (
-              <div className={cn(cardCls, 'p-6')}>
+              <div className={cn(cardCls, 'p-4')}>
                 <SimilarMasters masterId={masterId} limit={4} variant="sidebar" />
               </div>
             )}

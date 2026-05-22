@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { validateImageFiles } from '@/utils/validateFile';
 import type { ReviewCanCreateResponse } from '@/types/reviews';
 import type { ReviewSubmissionState } from '@/types/masterDetailsReviews';
+import { masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
 
 export function MasterReviewCreateForm({
   canCreateReview,
@@ -46,7 +47,7 @@ export function MasterReviewCreateForm({
   return (
     <>
       {canCreateReview.canCreate === true && (
-        <div className="rounded-xl border border-[#f5f4eb] dark:border-amber-500/25 bg-amber-100/70 dark:bg-amber-900/15 p-4 space-y-4">
+        <div className={cn('border border-[#f5f4eb] dark:border-amber-500/25 bg-amber-100/70 dark:bg-amber-900/15 p-3 space-y-3', masterDetailInsetCls)}>
           <p className="font-bold text-sm">{t('reviews.leaveReview')}</p>
           <div className="flex gap-0.5 items-center">
             {[1, 2, 3, 4, 5].map((v) => (
@@ -97,7 +98,7 @@ export function MasterReviewCreateForm({
             value={reviewComment}
             onChange={(e) => setReviewComment(e.target.value)}
             rows={2}
-            className="resize-none rounded-xl"
+            className={cn('resize-none', masterDetailInsetCls)}
           />
           <div>
             <Button

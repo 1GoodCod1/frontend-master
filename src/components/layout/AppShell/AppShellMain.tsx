@@ -18,6 +18,11 @@ type Props = {
   isHomePage: boolean;
 };
 
+const PAGE_MOTION = {
+  duration: 0.5,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
+
 export function AppShellMain({
   isLoggingOut,
   isDashboardOrAdmin,
@@ -51,20 +56,23 @@ export function AppShellMain({
     <>
       {!isLoggingOut && (
         <motion.main
-          initial={reduceMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.2 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 4 }}
+          transition={{
+            duration: reduceMotion ? 0 : PAGE_MOTION.duration,
+            ease: PAGE_MOTION.ease,
+          }}
           className={cn(
             'flex min-w-0 flex-col overflow-x-hidden transition-colors',
             isDashboardOrAdmin
-              ? 'flex min-h-0 flex-1 flex-col overflow-hidden bg-[hsl(var(--background))] pt-14'
+              ? 'flex min-h-0 flex-1 flex-col overflow-hidden bg-[hsl(var(--background))] pt-16'
               : cn(
-                  'min-h-[calc(100dvh-3.5rem)]',
+                  'min-h-[calc(100dvh-4rem)]',
                   isPublicPage || isAuthPage
                     ? 'bg-[hsl(var(--background))] dark:bg-[#0a0a0a]'
                     : 'bg-background',
-                  fullWidth ? 'pt-14' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-20 md:pt-24 pb-6 md:pb-8',
+                  fullWidth ? 'pt-16' : isAuthPage ? 'pt-4 md:pt-6 pb-6 md:pb-8' : 'pt-[4.5rem] md:pt-[5.5rem] pb-6 md:pb-8',
                 ),
           )}
         >

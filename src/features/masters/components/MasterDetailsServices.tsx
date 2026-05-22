@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { ListChecks, Banknote, HandCoins, Flame } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MasterServiceItem } from '@/features/masters/components/MasterServicesModal';
+import { masterDetailCardCls, masterDetailIconWrapCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
+import { cn } from '@/lib/utils';
 
 export type PromotionInfo = {
   discount: number;
@@ -52,10 +54,10 @@ export function MasterDetailsServices({ services, promotions }: MasterDetailsSer
   if (items.length === 0) return null;
 
   return (
-    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
-      <CardHeader>
+    <Card className={masterDetailCardCls}>
+      <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+          <div className={masterDetailIconWrapCls}>
             <ListChecks className="h-5 w-5" />
           </div>
           <div className="flex-1">
@@ -81,7 +83,10 @@ export function MasterDetailsServices({ services, promotions }: MasterDetailsSer
           return (
             <div
               key={`${s.title}-${idx}`}
-              className="group flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-3.5 sm:p-4 transition-colors hover:border-amber-500/40 hover:bg-amber-50/30 dark:hover:bg-white/10"
+              className={cn(
+                'group flex flex-wrap items-center gap-3 border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-3 transition-colors hover:border-amber-500/40 hover:bg-amber-50/30 dark:hover:bg-white/10',
+                masterDetailInsetCls,
+              )}
             >
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted/60 dark:bg-muted/40 text-muted-foreground group-hover:bg-amber-500/10 group-hover:text-amber-600 dark:group-hover:bg-amber-500/20 dark:group-hover:text-amber-400 transition-colors">
                   {isFixed ? <Banknote className="h-4.5 w-4.5" /> : <HandCoins className="h-4.5 w-4.5" />}

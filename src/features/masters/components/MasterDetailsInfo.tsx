@@ -3,6 +3,8 @@ import { Shield, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { masterDetailCardCls, masterDetailIconWrapCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
+import { cn } from '@/lib/utils';
 
 type ServiceItem = { title?: string };
 
@@ -36,10 +38,10 @@ export const MasterDetailsInfo = ({
   const { t } = useTranslation();
 
   return (
-    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
-      <CardHeader>
+    <Card className={masterDetailCardCls}>
+      <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+          <div className={masterDetailIconWrapCls}>
             <Shield className="h-5 w-5" />
           </div>
           <div className="flex-1">
@@ -48,9 +50,8 @@ export const MasterDetailsInfo = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Blue info box — Figma: light blue bg, blue border, dark blue text */}
-        <div className="flex items-start gap-3 p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+      <CardContent className="space-y-3">
+        <div className={cn('flex items-start gap-3 p-3 border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20', masterDetailInsetCls)}>
           <span className="text-blue-600 dark:text-blue-400 text-lg">ℹ️</span>
           <p className="text-blue-800 dark:text-blue-300 text-sm">
             {t('masterDetails.contactAfterLead')}
@@ -73,7 +74,7 @@ export const MasterDetailsInfo = ({
           )}
         </div>
 
-        <div className="min-w-0 max-w-full rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-4 overflow-hidden">
+        <div className={cn('min-w-0 max-w-full border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-3 overflow-hidden', masterDetailInsetCls)}>
           <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 font-medium">
             {t('masterDetails.descriptionLabel')}
           </p>
@@ -116,14 +117,14 @@ export const MasterDetailsInfo = ({
         {showContactInfo && (
           <>
             <Separator />
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              <div className="rounded-lg border border-gray-200 dark:border-amber-500/20 bg-amber-50/70 dark:bg-amber-900/15 p-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+              <div className={cn('border border-gray-200 dark:border-amber-500/20 bg-amber-50/70 dark:bg-amber-900/15 p-3', masterDetailInsetCls)}>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">
                   {t('masterDetails.phone')}
                 </p>
                 <p className="font-semibold text-amber-700 dark:text-amber-400">{phone ?? '—'}</p>
               </div>
-              <div className="rounded-lg border border-gray-200 dark:border-amber-500/20 bg-amber-50/70 dark:bg-amber-900/15 p-3">
+              <div className={cn('border border-gray-200 dark:border-amber-500/20 bg-amber-50/70 dark:bg-amber-900/15 p-3', masterDetailInsetCls)}>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-0.5">
                   {t('masterDetails.email')}
                 </p>

@@ -57,14 +57,7 @@ export default function MastersPage() {
         keywords={t('home.seoKeywords')}
       />
       <div className="faber-page-enter container max-w-7xl mx-auto py-3 sm:py-5 md:py-6 lg:py-8 px-3 sm:px-4">
-        <MastersPageHeader
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          onResetFilters={resetFilters}
-          activeFilterCount={activeFilterCount}
-          totalCount={total}
-          isFetching={list.isFetching}
-        />
+        <MastersPageHeader totalCount={total} isFetching={list.isFetching} />
 
         {(() => {
           const sharedFilterProps = {
@@ -96,13 +89,20 @@ export default function MastersPage() {
           return (
             <>
               {/* Top: search + category + city (full width) */}
-              <MastersFiltersCard {...sharedFilterProps} section="top" />
+              <MastersFiltersCard {...sharedFilterProps} section="top" viewMode={viewMode} onViewModeChange={setViewMode} onResetFilters={resetFilters} activeFilterCount={activeFilterCount} />
 
-              {/* Below: left sidebar (recently viewed + remaining filters) + masters grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-4 lg:gap-5 items-start">
-                <aside className="order-2 lg:order-1 lg:sticky lg:top-20 lg:self-start space-y-4">
+              {/* Below: left sidebar (filters + recently viewed) + masters grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-3 lg:gap-4 items-start">
+                <aside className="order-2 lg:order-1 lg:sticky lg:top-20 lg:self-start space-y-3">
+                  <MastersFiltersCard
+                    {...sharedFilterProps}
+                    section="sidebar"
+                    viewMode={viewMode}
+                    onViewModeChange={setViewMode}
+                    onResetFilters={resetFilters}
+                    activeFilterCount={activeFilterCount}
+                  />
                   <RecentlyViewed limit={8} layout="sidebar" />
-                  <MastersFiltersCard {...sharedFilterProps} section="sidebar" />
                 </aside>
                 <div className="order-1 lg:order-2 min-w-0">
                   <MastersResults

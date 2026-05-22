@@ -53,18 +53,15 @@ export function MastersAdvancedFilters({
 
   if (compact) {
     return (
-      <div className="mt-3 pt-3 border-t border-gray-200 dark:border-white/[0.08] space-y-2.5">
-        {/* Available now */}
-        <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary/50 dark:bg-secondary/25 px-2.5 py-2 border border-gray-200 dark:border-white/[0.06]">
-          <div className="flex items-center gap-2 min-w-0">
+      <>
+        <div className="flex items-center justify-between gap-2 px-3 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
             <CircleDot className="h-4 w-4 shrink-0 text-green-600 dark:text-green-400" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-foreground truncate">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold leading-snug text-foreground">
                 {t('masters.availableNow')}
               </p>
-              <p className="text-[10px] text-muted-foreground truncate">
-                {availableNowCount}
-              </p>
+              <p className="text-[10px] text-muted-foreground">{availableNowCount}</p>
             </div>
           </div>
           <Switch
@@ -77,17 +74,14 @@ export function MastersAdvancedFilters({
           />
         </div>
 
-        {/* With promotion */}
-        <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary/50 dark:bg-secondary/25 px-2.5 py-2 border border-gray-200 dark:border-white/[0.06]">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center justify-between gap-2 px-3 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
             <Tag className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-foreground truncate">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold leading-snug text-foreground">
                 {t('masters.withPromotion')}
               </p>
-              <p className="text-[10px] text-muted-foreground truncate">
-                {hasPromotionCount}
-              </p>
+              <p className="text-[10px] text-muted-foreground">{hasPromotionCount}</p>
             </div>
           </div>
           <Switch
@@ -100,13 +94,10 @@ export function MastersAdvancedFilters({
           />
         </div>
 
-        {/* Min rating */}
-        <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary/50 dark:bg-secondary/25 px-2.5 py-2 border border-gray-200 dark:border-white/[0.06]">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="space-y-1.5 px-3 py-2.5">
+          <div className="flex items-center gap-2">
             <Star className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-            <p className="text-xs font-semibold text-foreground truncate">
-              {t('masters.minRating')}
-            </p>
+            <span className="text-xs font-semibold text-foreground">{t('masters.minRating')}</span>
           </div>
           <Select
             value={String(query.minRating)}
@@ -114,7 +105,7 @@ export function MastersAdvancedFilters({
               onQueryChange((s) => ({ ...s, page: 1, minRating: Number(v) }))
             }
           >
-            <SelectTrigger className="h-8 w-20 text-xs border-gray-200 dark:border-white/10 bg-background">
+            <SelectTrigger className="h-8 w-full rounded-none border-[#e8e8e8] bg-white text-xs shadow-none focus:ring-0 focus:border-primary/40 dark:border-[#2d2d2d] dark:bg-[#1a1a1a]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -128,8 +119,8 @@ export function MastersAdvancedFilters({
           </Select>
         </div>
 
-        {/* Price range */}
         <MastersPriceRangeFilter
+          compact
           priceRange={priceRange}
           priceMinLocal={priceMinLocal}
           priceMaxLocal={priceMaxLocal}
@@ -166,7 +157,7 @@ export function MastersAdvancedFilters({
             onQueryChange((s) => ({ ...s, page: 1, maxPrice: clamped }));
           }}
         />
-      </div>
+      </>
     );
   }
 

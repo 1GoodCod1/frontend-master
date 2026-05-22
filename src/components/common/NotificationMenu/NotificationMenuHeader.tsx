@@ -37,7 +37,7 @@ export function NotificationMenuHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 w-8 rounded-md p-0 text-muted-foreground hover:text-foreground hover:bg-background/80"
+          className="h-8 w-8 rounded-md p-0 text-muted-foreground hover:text-foreground hover:bg-muted/70"
           onClick={onMarkAllRead}
           disabled={totalCount === 0}
           title={t('notifications.markAllRead')}
@@ -47,7 +47,7 @@ export function NotificationMenuHeader({
         <Button
           variant="ghost"
           size="sm"
-          className="h-8 w-8 rounded-md p-0 text-muted-foreground hover:text-destructive hover:bg-background/80"
+          className="h-8 w-8 rounded-md p-0 text-muted-foreground hover:text-destructive hover:bg-muted/70"
           onClick={onClearAll}
           disabled={totalCount === 0}
           title={t('notifications.clearAll')}

@@ -176,7 +176,7 @@ export default function PublicJobsPage() {
           isMaster={isMaster && isAuthed}
         />
 
-        <div className="w-full max-w-4xl flex-1 overflow-y-auto py-2">
+        <div className="w-full max-w-4xl flex-1 overflow-y-auto divide-y divide-[#e8e8e8] dark:divide-[#2d2d2d]">
           {isLoading && page === 1 && !skipList ? (
             <div className="flex justify-center pt-24">
               <Loader2 className="h-5 w-5 animate-spin text-muted-foreground/30" />

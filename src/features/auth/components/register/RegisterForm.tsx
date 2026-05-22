@@ -2,6 +2,8 @@ import { env } from '@/services/env';
 import { AuthFormField } from '@/features/auth/components/AuthFormField';
 import { AuthFormSelect } from '@/features/auth/components/AuthFormSelect';
 import { AuthFormTextarea } from '@/features/auth/components/AuthFormTextarea';
+import { AuthGoogleButton } from '@/features/auth/components/AuthGoogleButton';
+import { AuthDivider } from '@/features/auth/components/AuthDivider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import type { RegisterFormValues } from '@/hooks/auth/register';
@@ -361,42 +363,23 @@ export default function RegisterForm({
 
       {/* Social login — only on step 0 */}
       {showCredentials && (
-        <div className="flex flex-col gap-2">
-          <div className="relative flex items-center gap-2">
-            <div className="h-px flex-1 bg-border" />
-            <span className="text-[0.75rem] text-muted-foreground">{t('auth.social.orDivider')}</span>
-            <div className="h-px flex-1 bg-border" />
-          </div>
-          <a
+        <>
+          <AuthDivider />
+          <AuthGoogleButton
             href={`${env.apiUrl.replace(/\/api\/v1\/?$/, '')}/api/v1/auth/google?role=${isClient ? 'CLIENT' : 'MASTER'}`}
-            className="auth-outline-btn inline-flex items-center justify-center gap-2"
           >
-            <GoogleIcon />
             {isClient ? t('auth.social.loginGoogle') : t('auth.social.registerGoogle')}
-          </a>
-        </div>
+          </AuthGoogleButton>
+        </>
       )}
 
-      <div className="auth-divider text-center">
-        <p className="mb-3 text-[0.82rem] text-muted-foreground">
-          {t('auth.register.haveAccount')}
-        </p>
-        <RouterLink to="/login" className="auth-outline-btn inline-flex">
+      <p className="auth-footer-text">
+        {t('auth.register.haveAccount')}{' '}
+        <RouterLink to="/login" className="auth-link">
           {t('auth.login.title')}
         </RouterLink>
-      </div>
+      </p>
     </form>
-  );
-}
-
-function GoogleIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-    </svg>
   );
 }
 

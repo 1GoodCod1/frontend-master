@@ -208,10 +208,7 @@ export const MasterCard = React.memo(function MasterCard({
         <div className="px-2 min-[480px]:px-3 sm:px-4 pb-1 min-[480px]:pb-1.5 sm:pb-2">
           <div className="flex items-center gap-0.5 min-[480px]:gap-1 sm:gap-1.5 flex-wrap">
             {serviceTags.map((tag, idx) => (
-              <span
-                key={idx}
-                className="px-1 min-[480px]:px-1.5 sm:px-2 py-0.5 rounded-full text-[8px] min-[480px]:text-[9px] sm:text-[10px] font-medium truncate max-w-[42%] min-[480px]:max-w-[45%] sm:max-w-[100px] bg-orange-50 dark:bg-orange-500/8 text-orange-700 dark:text-orange-400/90 border border-orange-200/60 dark:border-orange-500/15"
-              >
+              <span key={idx} className="master-card-service-tag">
                 {tag}
               </span>
             ))}

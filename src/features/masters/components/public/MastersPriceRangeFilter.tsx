@@ -3,6 +3,7 @@ import { DollarSign } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
 
 interface MastersPriceRangeFilterProps {
   priceRange: { min: number; max: number };
@@ -20,6 +21,7 @@ interface MastersPriceRangeFilterProps {
   onMaxCommit: (v: number) => void;
   onMinInputChange: (v: number) => void;
   onMaxInputChange: (v: number) => void;
+  compact?: boolean;
 }
 
 export function MastersPriceRangeFilter({
@@ -38,25 +40,37 @@ export function MastersPriceRangeFilter({
   onMaxCommit,
   onMinInputChange,
   onMaxInputChange,
+  compact = false,
 }: MastersPriceRangeFilterProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-4 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06] md:col-span-2">
-      <div className="flex items-center gap-3 mb-2">
-        <div className="flex items-center justify-center h-9 w-9 rounded-lg bg-primary/15">
-          <DollarSign className="h-4.5 w-4.5 text-primary" />
+    <div
+      className={
+        compact
+          ? 'space-y-3 px-3 py-2.5'
+          : 'space-y-4 rounded-xl bg-secondary/60 dark:bg-secondary/30 px-3 sm:px-4 py-3 sm:py-3.5 border border-gray-200 dark:border-white/[0.06] md:col-span-2'
+      }
+    >
+      <div className={cn('flex items-center gap-3', compact ? 'mb-0' : 'mb-2')}>
+        <div
+          className={cn(
+            'flex items-center justify-center bg-primary/15',
+            compact ? 'h-7 w-7' : 'h-9 w-9 rounded-lg',
+          )}
+        >
+          <DollarSign className={cn('text-primary', compact ? 'h-3.5 w-3.5' : 'h-4.5 w-4.5')} />
         </div>
         <div>
-          <p className="text-sm font-semibold text-foreground">
+          <p className={cn('font-semibold text-foreground', compact ? 'text-xs' : 'text-sm')}>
             {t('masters.priceRange')}
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className={cn('text-muted-foreground', compact ? 'text-[10px]' : 'text-xs')}>
             {clampedMinPrice} – {clampedMaxPrice} {t('masters.currency')}
           </p>
         </div>
       </div>
-      <div className="space-y-4">
+      <div className={compact ? 'space-y-3' : 'space-y-4'}>
         <div className="space-y-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label className="text-xs font-medium text-foreground">
@@ -92,7 +106,7 @@ export function MastersPriceRangeFilter({
                 if (!Number.isFinite(num)) return;
                 onMinInputChange(num);
               }}
-              className="h-8 w-20 text-sm border-gray-200 dark:border-white/10 bg-background shrink-0"
+              className="h-8 w-20 rounded-none border-[#e8e8e8] text-sm dark:border-[#2d2d2d] bg-white dark:bg-[#1a1a1a] shrink-0"
             />
           </div>
         </div>
@@ -131,7 +145,7 @@ export function MastersPriceRangeFilter({
                 if (!Number.isFinite(num)) return;
                 onMaxInputChange(num);
               }}
-              className="h-8 w-20 text-sm border-gray-200 dark:border-white/10 bg-background shrink-0"
+              className="h-8 w-20 rounded-none border-[#e8e8e8] text-sm dark:border-[#2d2d2d] bg-white dark:bg-[#1a1a1a] shrink-0"
             />
           </div>
         </div>

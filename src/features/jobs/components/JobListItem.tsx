@@ -19,16 +19,16 @@ interface JobListItemProps {
 export function JobListItem({ job, selected, onClick, saved, onSave, applied }: JobListItemProps) {
   const { t } = useTranslation();
   return (
-    <div className="px-3 py-1.5">
+    <div className="px-3 py-0">
       <Card
         onClick={onClick}
         className={cn(
-          'group cursor-pointer',
+          'group cursor-pointer rounded-none border-0 shadow-none',
           surfaceCardInteractiveCls,
-          selected && 'ring-2 ring-[#E97525]/30 border-[#E97525]/30',
+          selected && 'ring-2 ring-inset ring-[#E97525]/30 bg-[#FFF8F3] dark:bg-[#E97525]/[0.06]',
         )}
       >
-        <CardContent className="p-4">
+        <CardContent className="px-4 py-3">
           {/* Row 1: title + bookmark */}
           <div className="mb-1.5 flex items-start justify-between gap-3">
             <h3 className={cn(

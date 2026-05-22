@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 import { usePortfolioByMasterQuery, usePortfolioTagsQuery } from '@/features/portfolio/portfolioApi';
 import { mediaUrl } from '@/utils/media';
+import { masterDetailCardCls, masterDetailIconWrapCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
+import { cn } from '@/lib/utils';
 import './portfolio.css';
 
 interface PortfolioSectionProps {
@@ -41,14 +43,14 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
 
     if (portfolioQuery.isLoading) {
         return (
-            <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none animate-pulse">
+            <Card className={cn(masterDetailCardCls, 'animate-pulse')}>
                 <CardHeader>
                     <div className="h-6 bg-amber-100 dark:bg-amber-900/20 rounded w-40" />
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {[1, 2].map((i) => (
-                            <div key={i} className="h-64 bg-amber-50 dark:bg-white/5 rounded-xl" />
+                            <div key={i} className={cn('h-64 bg-amber-50 dark:bg-white/5', masterDetailInsetCls)} />
                         ))}
                     </div>
                 </CardContent>
@@ -59,10 +61,10 @@ export const PortfolioSection = ({ masterId }: PortfolioSectionProps) => {
     if (!items.length) return null;
 
     return (
-        <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border-2 border-[#f5f4eb] dark:border-white/[0.08] shadow-xl shadow-amber-900/20 dark:shadow-none">
-            <CardHeader>
+        <Card className={masterDetailCardCls}>
+            <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                    <div className={masterDetailIconWrapCls}>
                         <Layers className="h-5 w-5" />
                     </div>
                     <div>

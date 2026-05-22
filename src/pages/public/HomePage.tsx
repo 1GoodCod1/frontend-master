@@ -12,7 +12,12 @@ import { SEOHead } from '@/components/seo/SEOHead';
 import { HeroSection } from '@/components/home/HeroSection';
 import { SectionHead } from '@/components/home/SectionHead';
 import { HomeClosingCtaSection } from '@/components/home/HomeClosingCtaSection';
-import { POPULAR_MASTERS_HOME_LIMIT, JOBS_SECTION_ACCENT } from '@/constants/home';
+import {
+  POPULAR_MASTERS_HOME_LIMIT,
+  JOBS_SECTION_ACCENT,
+  HOME_PAGE_CONTAINER,
+  HOME_SECTION_ALT_CLS,
+} from '@/constants/home';
 import { paths } from '@/constants/routes';
 import { cn } from '@/lib/utils';
 
@@ -53,6 +58,23 @@ interface MobileSectionPillsProps {
   active: string;
   isDark: boolean;
   onSectionClick: (id: string) => void;
+}
+
+interface HomePageSectionProps {
+  id?: string;
+  alt?: boolean;
+  children: React.ReactNode;
+}
+
+function HomePageSection({ id, alt = false, children }: HomePageSectionProps) {
+  return (
+    <section
+      id={id}
+      className={cn('relative scroll-mt-20 py-10 md:py-14', alt && HOME_SECTION_ALT_CLS)}
+    >
+      <div className={HOME_PAGE_CONTAINER}>{children}</div>
+    </section>
+  );
 }
 
 function MobileSectionPills({ sections, active, isDark, onSectionClick }: MobileSectionPillsProps) {
@@ -199,94 +221,96 @@ export default function HomePage() {
           <HeroSection isAuthed={isAuthed} role={role} />
         </section>
 
-        <div className="container mx-auto max-w-[1280px] px-4 sm:px-8 pt-2 pb-20">
-          <MobileSectionPills sections={sections} active={active} isDark={isDark} onSectionClick={handleSectionClick} />
-
-          <div className="min-w-0">
-            <section id="categories" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <Suspense fallback={null}>
-                <PopularCategoriesSection />
-              </Suspense>
-            </section>
-
-            <section id="jobs" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <Suspense fallback={null}>
-                <ActiveJobsSection />
-              </Suspense>
-              <div className="mt-8 md:mt-10">
-                <SectionHead
-                  kicker={t('home.jobsFlow.badge')}
-                  title={t('home.jobsFlow.title')}
-                  accent={JOBS_SECTION_ACCENT}
-                  link={{ label: t('home.jobsFlow.ctaLearn'), href: paths.howItWorks }}
-                />
-                <Suspense fallback={null}>
-                  <JobsFlowSection
-                    hideHeader
-                    showPostJobCta={role !== USER_ROLE.MASTER}
-                    isAuthed={isAuthed}
-                    role={role}
-                  />
-                </Suspense>
-              </div>
-            </section>
-
-            <section id="masters" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <SectionHead
-                kicker={t('home.kickerTrending', { defaultValue: 'Trending' })}
-                title={t('home.popularMasters')}
-                accent="#E97525"
-                link={{ label: t('home.findMasters'), href: paths.masters }}
-              />
-              <Suspense fallback={null}>
-                <MastersGridSection
-                  title=""
-                  masters={popularList}
-                  isLoading={popular.isLoading}
-                  isError={popular.isError}
-                  error={popular.error}
-                  onRetry={popular.refetch}
-                  horizontalScroll
-                  sectionBadge="popular"
-                  hideTitle
-                />
-              </Suspense>
-            </section>
-
-            <section id="cities" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <Suspense fallback={null}>
-                <PopularCitiesSection />
-              </Suspense>
-            </section>
-
-            <section id="companii" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <Suspense fallback={null}>
-                <CompaniiTeaserSection />
-              </Suspense>
-            </section>
-
-            <section id="how" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <SectionHead
-                kicker={t('home.kickerLearn', { defaultValue: 'Learn' })}
-                title={t('home.howItWorks.title')}
-                accent="#EC4899"
-                link={{ label: t('home.howItWorks.cta'), href: paths.howItWorks }}
-              />
-              <Suspense fallback={null}>
-                <HowItWorksSection hideHeader isAuthed={isAuthed} role={role} />
-              </Suspense>
-            </section>
-
-            {isAuthed && role === USER_ROLE.MASTER ? (
-              <HomeClosingCtaSection />
-            ) : null}
-
-            <section id="faq" className="relative scroll-mt-20 pt-10 md:pt-14">
-              <Suspense fallback={null}>
-                <FAQSection />
-              </Suspense>
-            </section>
+        <div className="pb-20 pt-2">
+          <div className={HOME_PAGE_CONTAINER}>
+            <MobileSectionPills sections={sections} active={active} isDark={isDark} onSectionClick={handleSectionClick} />
           </div>
+
+          <HomePageSection id="categories">
+            <Suspense fallback={null}>
+              <PopularCategoriesSection />
+            </Suspense>
+          </HomePageSection>
+
+          <HomePageSection id="jobs" alt>
+            <Suspense fallback={null}>
+              <ActiveJobsSection />
+            </Suspense>
+            <div className="mt-8 md:mt-10">
+              <SectionHead
+                kicker={t('home.jobsFlow.badge')}
+                title={t('home.jobsFlow.title')}
+                accent={JOBS_SECTION_ACCENT}
+                link={{ label: t('home.jobsFlow.ctaLearn'), href: paths.howItWorks }}
+              />
+              <Suspense fallback={null}>
+                <JobsFlowSection
+                  hideHeader
+                  showPostJobCta={role !== USER_ROLE.MASTER}
+                  isAuthed={isAuthed}
+                  role={role}
+                />
+              </Suspense>
+            </div>
+          </HomePageSection>
+
+          <HomePageSection id="masters">
+            <SectionHead
+              kicker={t('home.kickerTrending', { defaultValue: 'Trending' })}
+              title={t('home.popularMasters')}
+              accent="#E97525"
+              link={{ label: t('home.findMasters'), href: paths.masters }}
+            />
+            <Suspense fallback={null}>
+              <MastersGridSection
+                title=""
+                masters={popularList}
+                isLoading={popular.isLoading}
+                isError={popular.isError}
+                error={popular.error}
+                onRetry={popular.refetch}
+                horizontalScroll
+                sectionBadge="popular"
+                hideTitle
+              />
+            </Suspense>
+          </HomePageSection>
+
+          <HomePageSection id="cities" alt>
+            <Suspense fallback={null}>
+              <PopularCitiesSection />
+            </Suspense>
+          </HomePageSection>
+
+          <HomePageSection id="companii">
+            <Suspense fallback={null}>
+              <CompaniiTeaserSection />
+            </Suspense>
+          </HomePageSection>
+
+          <HomePageSection id="how" alt>
+            <SectionHead
+              kicker={t('home.kickerLearn', { defaultValue: 'Learn' })}
+              title={t('home.howItWorks.title')}
+              accent="#EC4899"
+              link={{ label: t('home.howItWorks.cta'), href: paths.howItWorks }}
+            />
+            <Suspense fallback={null}>
+              <HowItWorksSection hideHeader isAuthed={isAuthed} role={role} />
+            </Suspense>
+          </HomePageSection>
+
+          {isAuthed && role === USER_ROLE.MASTER ? (
+            <HomePageSection>
+              <HomeClosingCtaSection />
+            </HomePageSection>
+          ) : null}
+
+          <HomePageSection id="faq" alt={isAuthed && role === USER_ROLE.MASTER}>
+            <Suspense fallback={null}>
+              <FAQSection />
+            </Suspense>
+          </HomePageSection>
         </div>
       </div>
     </>

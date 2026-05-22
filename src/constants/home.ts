@@ -321,3 +321,9 @@ export const HOME_ACTIVE_JOBS_POLL_MS = 60_000;
 export const CITIES_SECTION_ACCENT = '#10B981';
 export const JOBS_SECTION_ACCENT = '#F59E0B';
 export const COMPANII_SECTION_ACCENT = '#8B5CF6';
+
+/** Shared layout tokens for homepage sections (matches Companii landing stripes). */
+export const HOME_PAGE_CONTAINER = 'container mx-auto max-w-[1280px] px-4 sm:px-8';
+
+export const HOME_SECTION_ALT_CLS =
+  'border-y border-[#E9ECEF] bg-[#FAFBFC] dark:border-white/10 dark:bg-white/[0.02]';

@@ -2,7 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useReducedMotionPreference } from '@/hooks/useReducedMotionPreference';
-import { Menu, LogIn, UserPlus } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { RemoveScroll } from 'react-remove-scroll';
 import { NotificationMenu } from '@/components/common/NotificationMenu';
 import { JointsBalanceBadge } from '@/components/common/JointsBalanceBadge';
@@ -13,6 +13,7 @@ import { getVisibleNavItems } from './navUtils';
 import { AppShellNavDesktop } from './AppShellNavDesktop';
 import { AppShellSettingsMenu } from './AppShellSettingsMenu';
 import { AppShellAccountMenu } from './AppShellAccountMenu';
+import { AppShellGuestAuthButtons } from './AppShellHeaderActions';
 
 type Props = {
   isAuthed: boolean;
@@ -60,10 +61,10 @@ export function AppShellHeader({
         'shadow-[0_2px_12px_rgba(0,0,0,0.06)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.25)]'
       )}
     >
-      <div className={cn('flex h-14 min-w-0 items-center gap-2 px-4 sm:px-4 md:px-6', isNavCentered && 'relative')}>
+      <div className="relative flex h-16 min-w-0 items-center gap-2 px-4 sm:px-4 md:px-6">
         <RouterLink
           to="/"
-          className="flex items-center gap-2 text-foreground no-underline hover:opacity-90 transition-opacity shrink-0"
+          className="relative z-10 flex shrink-0 items-center gap-2 text-foreground no-underline transition-opacity hover:opacity-90"
         >
           <img
             src={colorMode === 'dark' ? '/brand/logo-dark.svg' : '/brand/logo-light.svg'}
@@ -72,54 +73,16 @@ export function AppShellHeader({
           />
         </RouterLink>
 
-        <div className="flex-1" />
-
         <AppShellNavDesktop
           items={navItems}
           navLinkClass={navLinkClass}
           centered={isNavCentered}
         />
 
-        {/* Divider between nav links and the auth/settings cluster */}
-        {!isNavCentered && (
-          <div className="hidden md:block h-6 w-px bg-border/70 mx-3" aria-hidden />
-        )}
-
-        <div className="hidden md:flex items-center gap-1.5">
+        <div className="relative z-10 ml-auto hidden items-center gap-2 md:flex">
           {isAuthed && role === USER_ROLE.MASTER && <JointsBalanceBadge />}
           {isAuthed && <NotificationMenu />}
-          {!isAuthed && (
-            <div className="flex items-center gap-1.5">
-              <Button
-                variant="ghost"
-                className={cn(
-                  'h-9 rounded-lg px-3.5 gap-2 text-sm font-medium transition-colors duration-200',
-                  'text-slate-600 hover:bg-[#E97525]/10 hover:text-[#E97525]',
-                  'dark:text-white/75 dark:hover:bg-[#E97525]/15 dark:hover:text-[#E97525]'
-                )}
-                asChild
-              >
-                <RouterLink to="/login">
-                  <LogIn className="h-4 w-4 shrink-0" strokeWidth={2} />
-                  {t('nav.login')}
-                </RouterLink>
-              </Button>
-              <Button
-                className={cn(
-                  'h-9 rounded-lg px-4 gap-2 text-sm font-semibold text-white transition duration-200',
-                  'bg-[#E97525] hover:bg-[#d9651a]',
-                  'shadow-sm shadow-[#E97525]/25 hover:shadow-md hover:shadow-[#E97525]/35',
-                  'hover:-translate-y-0.5 motion-reduce:hover:translate-y-0'
-                )}
-                asChild
-              >
-                <RouterLink to="/register">
-                  <UserPlus className="h-4 w-4 shrink-0" strokeWidth={2} />
-                  {t('nav.register')}
-                </RouterLink>
-              </Button>
-            </div>
-          )}
+          {!isAuthed && <AppShellGuestAuthButtons />}
 
           {!isInCabinet && (
             <AppShellSettingsMenu
@@ -134,7 +97,7 @@ export function AppShellHeader({
           )}
         </div>
 
-        <div className="flex md:hidden items-center gap-1">
+        <div className="relative z-10 ml-auto flex items-center gap-1 md:hidden">
           {isAuthed && role === USER_ROLE.MASTER && <JointsBalanceBadge />}
           {isAuthed && <NotificationMenu />}
           <Button

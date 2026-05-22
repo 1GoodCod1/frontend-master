@@ -60,18 +60,12 @@ export default function LoginPage() {
   if (restoring) {
     return (
       <AuthLayout view="login">
-        <div className="flex flex-1 flex-col justify-center px-8 py-12 md:px-11 md:py-12">
-          <div className="mx-auto w-full max-w-[360px]">
-            <h2 className="mb-1 text-xl font-semibold text-foreground">
-              {t('auth.login.title')}
-            </h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              {t('auth.login.restoring')}
-            </p>
-            <Button disabled className="auth-primary-btn w-full py-3.5">
-              ...
-            </Button>
-          </div>
+        <div className="faber-page-enter">
+          <h2 className="auth-heading">{t('auth.login.title')}</h2>
+          <p className="auth-subheading mb-4">{t('auth.login.restoring')}</p>
+          <Button disabled className="auth-primary-btn w-full">
+            ...
+          </Button>
         </div>
       </AuthLayout>
     );
@@ -79,9 +73,8 @@ export default function LoginPage() {
 
   return (
     <AuthLayout view="login">
-      <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-11 md:py-12">
-        <div className="faber-page-enter mx-auto w-full max-w-[360px]">
-          <LoginHeader />
+      <div className="faber-page-enter">
+        <LoginHeader />
           <Formik<LoginFormValues>
             initialValues={form.initialValues}
             validationSchema={form.validationSchema}
@@ -102,7 +95,6 @@ export default function LoginPage() {
             )}
           </Formik>
         </div>
-      </div>
-    </AuthLayout>
-  );
+      </AuthLayout>
+    );
 }

@@ -55,9 +55,7 @@ export default function RegisterPage() {
   if (restoring) {
     return (
       <AuthLayout view="register">
-        <div className="flex flex-1 flex-col justify-center px-8 py-12 md:px-11">
-          <p className="mx-auto max-w-[360px] text-muted-foreground">{t('auth.register.restoring')}</p>
-        </div>
+        <p className="text-muted-foreground">{t('auth.register.restoring')}</p>
       </AuthLayout>
     );
   }
@@ -68,39 +66,33 @@ export default function RegisterPage() {
 
   return (
     <AuthLayout view="register">
-      <div className="flex flex-1 flex-col overflow-y-auto">
-        <div className="mx-auto w-full max-w-[420px] px-6 py-10 md:max-w-[440px] md:px-11 md:py-11">
-          <div className="faber-page-enter flex flex-col gap-4">
-            <RegisterHeader />
-            <RoleTabs
-              value={selectedRole === USER_ROLE.CLIENT ? 0 : 1}
-              onChange={setSelectedRole}
-            />
-            {!isClient && (
-              <PlusProAfterVerificationBanner />
-            )}
-            <Formik<RegisterFormValues>
-              key={`${selectedRole}-${i18n.language}`}
-              initialValues={form.initialValues}
-              validationSchema={form.validationSchema}
-              onSubmit={form.onSubmit}
-              enableReinitialize
-              validateOnChange={false}
-              validateOnBlur={false}
-            >
-              <RegisterForm
-                isClient={isClient}
-                isSubmitting={form.isSubmitting}
-                optionsLoading={form.optionsLoading}
-                cities={form.cities}
-                categories={form.categories}
-                referralInfo={form.referralInfo}
-                totalSteps={form.totalSteps}
-                validateRegistrationStep={form.validateRegistrationStep}
-              />
-            </Formik>
-          </div>
-        </div>
+      <div className="faber-page-enter flex flex-col gap-4">
+        <RegisterHeader />
+        <RoleTabs
+          value={selectedRole === USER_ROLE.CLIENT ? 0 : 1}
+          onChange={setSelectedRole}
+        />
+        {!isClient && <PlusProAfterVerificationBanner />}
+        <Formik<RegisterFormValues>
+          key={`${selectedRole}-${i18n.language}`}
+          initialValues={form.initialValues}
+          validationSchema={form.validationSchema}
+          onSubmit={form.onSubmit}
+          enableReinitialize
+          validateOnChange={false}
+          validateOnBlur={false}
+        >
+          <RegisterForm
+            isClient={isClient}
+            isSubmitting={form.isSubmitting}
+            optionsLoading={form.optionsLoading}
+            cities={form.cities}
+            categories={form.categories}
+            referralInfo={form.referralInfo}
+            totalSteps={form.totalSteps}
+            validateRegistrationStep={form.validateRegistrationStep}
+          />
+        </Formik>
       </div>
     </AuthLayout>
   );

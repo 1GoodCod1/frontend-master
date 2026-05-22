@@ -11,6 +11,7 @@ import { ReviewsSummaryPanel } from './ReviewsSummaryPanel';
 import { ReviewCard } from './ReviewCard';
 import { computeReviewStats } from '@/utils/reviewStats';
 import type { ReviewFile, MasterDetailsReviewsProps } from '@/types/masterDetailsReviews';
+import { masterDetailCardCls, masterDetailIconWrapCls } from '@/features/masters/components/masterDetailsUi';
 
 export function MasterDetailsReviews({
   reviews,
@@ -46,10 +47,10 @@ export function MasterDetailsReviews({
   );
 
   return (
-    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
-      <CardHeader>
+    <Card className={masterDetailCardCls}>
+      <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+          <div className={masterDetailIconWrapCls}>
             <MessageSquare className="h-5 w-5" />
           </div>
           <div className="flex-1">
@@ -59,7 +60,7 @@ export function MasterDetailsReviews({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         {isClient && canCreateReview && (
           <MasterReviewCreateForm canCreateReview={canCreateReview} reviewSubmission={reviewSubmission} />
         )}
@@ -69,7 +70,7 @@ export function MasterDetailsReviews({
         ) : isError ? (
           <ErrorState error={error} onRetry={onRetry} />
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <ReviewsSummaryPanel
               avgRating={avgRating}
               totalCount={totalCount}

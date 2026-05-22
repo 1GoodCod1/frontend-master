@@ -31,6 +31,8 @@ import { validateImageFiles } from '@/utils/validateFile';
 import { toErrorMessage } from '@/utils/errors';
 import { USER_ROLE } from '@/constants/roles';
 import { AVAILABILITY_STATUS } from '@/constants/availabilityStatus';
+import { masterDetailCardCls, masterDetailIconWrapCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
+import { cn } from '@/lib/utils';
 
 interface MasterDetailsLeadFormProps {
   isAuthed: boolean;
@@ -140,7 +142,7 @@ export const MasterDetailsLeadForm = ({
   // ─── Re-contact: client has completed lead with this master ───
   if (hasCompletedLead && !activeLead && !submittedLeadId && !showRecontactForm) {
     return (
-      <Card className="rounded-2xl">
+      <Card className={masterDetailCardCls}>
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4">
             <RefreshCw className="h-10 w-10" />
@@ -176,7 +178,7 @@ export const MasterDetailsLeadForm = ({
 
   if (activeLead && !submittedLeadId) {
     return (
-      <Card className="rounded-2xl">
+      <Card className={masterDetailCardCls}>
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
             <Clock className="h-10 w-10" />
@@ -205,7 +207,7 @@ export const MasterDetailsLeadForm = ({
 
   if (submittedLeadId) {
     return (
-      <Card className="rounded-2xl">
+      <Card className={masterDetailCardCls}>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-500/80" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mx-auto mb-4">
@@ -243,10 +245,10 @@ export const MasterDetailsLeadForm = ({
 
   if (!isAuthed || role !== USER_ROLE.CLIENT) {
     return (
-      <Card className="rounded-2xl">
+      <Card className={masterDetailCardCls}>
         <CardContent className="p-5 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 dark:bg-[#E97525]/15 flex items-center justify-center shrink-0">
+            <div className={cn(masterDetailIconWrapCls, 'w-10 h-10 shrink-0')}>
               <Heart className="h-5 w-5 text-primary dark:text-[#E97525]" />
             </div>
             <div className="min-w-0">
@@ -286,7 +288,7 @@ export const MasterDetailsLeadForm = ({
     const isBusy = availabilityStatus === AVAILABILITY_STATUS.BUSY;
 
     return (
-      <Card className="rounded-2xl">
+      <Card className={masterDetailCardCls}>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600" />
         <CardContent className="p-6 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4">
@@ -318,7 +320,7 @@ export const MasterDetailsLeadForm = ({
               {t('masterDetails.subscribeNotify', 'Notify me when available')}
             </Button>
           ) : (
-            <div className="rounded-xl border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/80 dark:bg-emerald-950/30 p-4">
+            <div className={cn('border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/80 dark:bg-emerald-950/30 p-3', masterDetailInsetCls)}>
               <div className="flex items-center justify-center gap-2 text-emerald-700 dark:text-emerald-400">
                 <CheckCircle className="h-5 w-5" />
                 <p className="text-sm font-semibold">
@@ -333,9 +335,9 @@ export const MasterDetailsLeadForm = ({
   }
 
   return (
-    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] relative overflow-hidden rounded-2xl shadow-sm transition-colors duration-300">
+    <Card className={cn(masterDetailCardCls, 'relative overflow-hidden')}>
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-amber-600 dark:from-amber-600 dark:to-amber-500/80" />
-      <CardContent className="p-5 space-y-4">
+      <CardContent className="p-4 space-y-3">
         <div>
           <h3 className="text-lg font-bold tracking-tight">{t('masterDetails.sendLead')}</h3>
           <p className="text-sm text-muted-foreground mt-0.5">{t('masterDetails.sendLeadSubtitle')}</p>
@@ -348,7 +350,7 @@ export const MasterDetailsLeadForm = ({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             rows={6}
-            className="rounded-xl min-h-[120px] resize-y"
+            className={cn(masterDetailInsetCls, 'min-h-[120px] resize-y')}
           />
         </div>
 
@@ -384,7 +386,7 @@ export const MasterDetailsLeadForm = ({
         </Button>
 
         {attach.length > 0 && (
-          <div className="rounded-xl border border-[#f5f4eb] dark:border-amber-500/20 bg-amber-50/80 dark:bg-amber-900/15 p-3 space-y-2">
+          <div className={cn('border border-[#f5f4eb] dark:border-amber-500/20 bg-amber-50/80 dark:bg-amber-900/15 p-3 space-y-2', masterDetailInsetCls)}>
             <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
               {t('masterDetails.photosSelectedCount', { count: attach.length })}
             </p>
@@ -392,7 +394,7 @@ export const MasterDetailsLeadForm = ({
               {attach.map((file, index) => (
                 <li
                   key={index}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-[#f5f4eb] dark:border-white/10 bg-white dark:bg-white/5 px-3 py-2"
+                  className={cn('flex items-center justify-between gap-2 border border-[#f5f4eb] dark:border-white/10 bg-white dark:bg-white/5 px-3 py-2', masterDetailInsetCls)}
                 >
                   {attachPreviews[index] && (
                     <img src={attachPreviews[index]} alt="" className="size-8 shrink-0 rounded object-cover" />

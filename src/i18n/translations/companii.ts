@@ -7,7 +7,7 @@ export const companii = {
 
       hero: {
         badge: 'Faber for companies',
-        titlePre: 'Your whole business,',
+        titlePre: 'Your whole business',
         titleAccent: 'in one place',
         subtitle:
           'Manage your team, your clients and your jobs — without the chaos of chat threads and paper notebooks.',
@@ -193,7 +193,7 @@ export const companii = {
 
       hero: {
         badge: 'Faber pentru companii',
-        titlePre: 'Tot business-ul tău,',
+        titlePre: 'Tot business-ul tău',
         titleAccent: 'într-un singur loc',
         subtitle:
           'Gestionează echipa, clienții și comenzile — fără haosul din conversații și caiete.',

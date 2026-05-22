@@ -86,7 +86,7 @@ export function AdminLayout() {
   return (
     <div className="cabinet-theme-scope flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:flex-row">
       {!isMdUp && (
-        <div className="fixed top-14 left-0 right-0 z-30 flex items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4 md:static md:z-auto">
+        <div className="fixed top-16 left-0 right-0 z-30 flex items-center gap-2 border-b border-[hsl(var(--cabinet-sidebar-border))] bg-[hsl(var(--cabinet-sidebar-bg))] py-2 px-4 md:static md:z-auto">
           <Button
             variant="ghost"
             size="icon"

@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { Moon, Sun, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { HeaderIconButton, HeaderUtilityGroup } from './AppShellHeaderActions';
 import type { SupportedLanguage } from './types';
 
 type Props = {
@@ -23,64 +23,48 @@ export function AppShellSettingsMenu({
   const { t, i18n } = useTranslation();
 
   return (
-    <div className="flex items-center gap-1">
-      {/* Theme Toggle Button */}
-      <Button
-        variant="ghost"
-        size="icon"
+    <HeaderUtilityGroup>
+      <HeaderIconButton
         onClick={onToggleColorMode}
-        className="h-9 w-9 rounded-lg text-slate-500 transition-colors duration-200 hover:bg-[#E97525]/10 hover:text-[#E97525] dark:text-white/65 dark:hover:bg-[#E97525]/15"
         aria-label={colorMode === 'dark' ? t('theme.light') : t('theme.dark')}
         title={colorMode === 'dark' ? t('theme.light') : t('theme.dark')}
       >
         {colorMode === 'dark' ? (
-          <Sun className="h-4 w-4 shrink-0" strokeWidth={2} />
+          <Sun className="h-[17px] w-[17px] shrink-0" strokeWidth={2} />
         ) : (
-          <Moon className="h-4 w-4 shrink-0" strokeWidth={2} />
+          <Moon className="h-[17px] w-[17px] shrink-0" strokeWidth={2} />
         )}
-      </Button>
+      </HeaderIconButton>
 
-      {/* Language Selector Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-lg text-slate-500 transition-colors duration-200 hover:bg-[#E97525]/10 hover:text-[#E97525] dark:text-white/65 dark:hover:bg-[#E97525]/15"
-            aria-label={t('nav.language')}
-            title={t('nav.language')}
-          >
-            <Globe className="h-4 w-4 shrink-0" strokeWidth={2} />
-          </Button>
+          <HeaderIconButton aria-label={t('nav.language')} title={t('nav.language')}>
+            <Globe className="h-[17px] w-[17px] shrink-0" strokeWidth={2} />
+          </HeaderIconButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
           sideOffset={10}
-          className="min-w-[140px] border border-black/5 dark:border-white/5 rounded-2xl p-2 shadow-xl bg-popover/90 backdrop-blur"
+          className="theme-panel-dropdown dropdown-smooth-open min-w-[140px] rounded-xl border border-border p-1.5 shadow-md dark:shadow-black/40"
         >
-          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+          <div className="px-2 py-1.5 text-[0.68rem] font-semibold uppercase tracking-wider text-muted-foreground">
             {t('nav.language')}
           </div>
-          <DropdownMenuItem
-            onClick={() => onLanguageChange('en')}
-            className={`cursor-pointer rounded-xl font-medium ${i18n.language === 'en' ? 'bg-[#E97525]/10 text-[#E97525]' : ''}`}
-          >
-            English
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => onLanguageChange('ru')}
-            className={`cursor-pointer rounded-xl font-medium ${i18n.language === 'ru' ? 'bg-[#E97525]/10 text-[#E97525]' : ''}`}
-          >
-            Русский
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => onLanguageChange('ro')}
-            className={`cursor-pointer rounded-xl font-medium ${i18n.language === 'ro' ? 'bg-[#E97525]/10 text-[#E97525]' : ''}`}
-          >
-            Română
-          </DropdownMenuItem>
+          {(['en', 'ru', 'ro'] as const).map((lang) => (
+            <DropdownMenuItem
+              key={lang}
+              onClick={() => onLanguageChange(lang)}
+              className={
+                i18n.language === lang
+                  ? 'cursor-pointer rounded-lg bg-muted font-semibold text-foreground focus:bg-muted focus:text-foreground'
+                  : 'cursor-pointer rounded-lg font-medium text-foreground/80 focus:bg-muted/70 focus:text-foreground'
+              }
+            >
+              {lang === 'en' ? 'English' : lang === 'ru' ? 'Русский' : 'Română'}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
-    </div>
+    </HeaderUtilityGroup>
   );
 }

@@ -50,9 +50,9 @@ export function ScrollReveal({
     children,
     className,
     delay = 0,
-    duration = 0.5,
+    duration = 0.55,
     direction = 'up',
-    distance = 24,
+    distance = 16,
     threshold = 0.15,
     once = true,
 }: ScrollRevealProps) {
@@ -70,7 +70,11 @@ export function ScrollReveal({
             whileInView="visible"
             viewport={{ once, amount: threshold }}
             variants={variants}
-            transition={{ duration, delay, ease: 'easeOut' }}
+            transition={{
+                duration,
+                delay,
+                ease: [0.22, 1, 0.36, 1],
+            }}
         >
             {children}
         </motion.div>

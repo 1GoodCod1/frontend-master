@@ -82,18 +82,22 @@ export function useAppShell() {
     (!isAuthed || (isAuthed && Boolean(role)));
 
   const navLinkBaseClass =
-    'relative inline-flex items-center gap-2 text-sm font-medium px-3 h-14 transition-colors duration-200';
+    'relative inline-flex items-center gap-2.5 px-3.5 h-16 text-[0.9375rem] font-semibold tracking-[-0.01em] transition-colors duration-200';
 
   const navLinkClass = (isActive: boolean) =>
     cn(
       navLinkBaseClass,
-      'after:absolute after:left-3 after:right-3 after:bottom-0 after:h-[2px] after:rounded-full after:transition-all after:duration-200',
+      'after:absolute after:left-3.5 after:right-3.5 after:bottom-0 after:h-[2px] after:rounded-full after:transition-all after:duration-200',
       isActive
         ? 'text-[#E97525] after:bg-[#E97525]'
-        : 'text-slate-600 dark:text-white/75 hover:text-slate-900 dark:hover:text-white after:bg-transparent hover:after:bg-slate-300 dark:hover:after:bg-white/20'
+        : cn(
+            'text-foreground/75 hover:text-foreground',
+            'dark:text-foreground/80 dark:hover:text-foreground',
+            'after:bg-transparent',
+          ),
     );
 
-  const isNavCentered = isAuthed;
+  const isNavCentered = true;
 
   const closeMobileNav = () => setMobileNavOpen(false);
 

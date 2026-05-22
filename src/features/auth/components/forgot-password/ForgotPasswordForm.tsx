@@ -7,9 +7,7 @@ interface ForgotPasswordFormProps {
   isSubmitting: boolean;
 }
 
-export default function ForgotPasswordForm({
-  isSubmitting,
-}: ForgotPasswordFormProps) {
+export default function ForgotPasswordForm({ isSubmitting }: ForgotPasswordFormProps) {
   const { t } = useTranslation();
 
   return (
@@ -22,22 +20,17 @@ export default function ForgotPasswordForm({
         autoComplete="email"
         icon={<Mail size={15} />}
       />
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="auth-primary-btn"
-      >
+      <button type="submit" disabled={isSubmitting} className="auth-primary-btn">
         {isSubmitting ? '...' : t('auth.forgotPassword.submit')}
         <ArrowRight size={15} />
       </button>
-      <div className="auth-divider text-center">
-        <p className="mb-3 text-[0.82rem] text-muted-foreground">
-          {t('auth.forgotPassword.rememberPassword')}
-        </p>
-        <RouterLink to="/login" className="auth-outline-btn inline-flex">
+
+      <p className="auth-footer-text">
+        {t('auth.forgotPassword.rememberPassword')}{' '}
+        <RouterLink to="/login" className="auth-link">
           {t('auth.login.title')}
         </RouterLink>
-      </div>
+      </p>
     </div>
   );
 }

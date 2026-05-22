@@ -8,7 +8,7 @@ import { NotificationList } from './NotificationList';
 import { USER_ROLE } from '@/constants/roles';
 
 const TAB_TRIGGER_CLASS =
-  'flex-1 min-w-0 rounded-lg text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:font-semibold hover:text-foreground text-xs px-2 py-2 transition-colors cursor-pointer';
+  'flex-1 min-w-0 rounded-lg text-muted-foreground data-[state=active]:bg-muted data-[state=active]:text-foreground data-[state=active]:font-semibold hover:text-foreground text-xs px-2 py-2 transition-colors cursor-pointer';
 
 type UnreadByTab = { leads: number; reviews: number; payments: number; system: number };
 

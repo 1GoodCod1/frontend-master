@@ -6,6 +6,8 @@ import { LazyImage } from '@/components/ui/LazyImage';
 import { ErrorState } from '@/components/common/States';
 import { ImageLightboxModal } from '@/components/common/ImageLightboxModal';
 import { mediaUrl } from '@/utils/media';
+import { masterDetailCardCls, masterDetailIconWrapCls, masterDetailInsetCls } from '@/features/masters/components/masterDetailsUi';
+import { cn } from '@/lib/utils';
 
 type PhotoItem = { id?: string; path?: string; url?: string; filename?: string };
 
@@ -36,10 +38,10 @@ export const MasterDetailsGallery = ({
   };
 
   return (
-    <Card className="bg-white dark:bg-[hsl(47,22%,9%)] border border-gray-200 dark:border-white/[0.08] rounded-2xl shadow-sm transition-colors duration-300">
-      <CardHeader>
+    <Card className={masterDetailCardCls}>
+      <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+          <div className={masterDetailIconWrapCls}>
             <Images className="h-5 w-5" />
           </div>
           <div className="flex-1">
@@ -55,11 +57,11 @@ export const MasterDetailsGallery = ({
         ) : isError ? (
           <ErrorState error={error} onRetry={onRetry} />
         ) : !photos.length ? (
-          <div className="h-48 rounded-xl border-2 border-dashed border-[#f5f4eb] dark:border-white/10 bg-amber-100/50 dark:bg-white/[0.03] flex items-center justify-center">
+          <div className={cn('h-48 border-2 border-dashed border-[#f5f4eb] dark:border-white/10 bg-amber-100/50 dark:bg-white/[0.03] flex items-center justify-center', masterDetailInsetCls)}>
             <p className="text-muted-foreground">{t('masterDetails.noPhotosYet')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2">
             {photos.map((f: PhotoItem, index: number) => {
               const src = mediaUrl(f.path ?? f.url);
               return (
