@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Check, ShieldCheck, Star, Users } from 'lucide-react';
 import { useMastersLandingStatsQuery } from '@/features/masters/mastersApi';
+import { useAppSelector } from '@/app/hooks';
 
 type AuthView = 'login' | 'register' | 'forgot';
 
@@ -33,17 +34,7 @@ function formatStat(n: number): string {
 export function AuthBrandPanel({ view }: AuthBrandPanelProps) {
   const { t } = useTranslation();
   const { data: landingStats } = useMastersLandingStatsQuery();
-
-  const appName = t('appName');
-  const wordmark =
-    appName.length >= 3 ? (
-      <>
-        {appName.slice(0, -2)}
-        <span className="text-[#f97316]">{appName.slice(-2)}</span>
-      </>
-    ) : (
-      appName
-    );
+  const colorMode = useAppSelector((s) => s.ui.colorMode);
 
   const stats = useMemo(() => {
     const clients = landingStats?.verifiedMastersCount ?? 2500;
@@ -70,8 +61,11 @@ export function AuthBrandPanel({ view }: AuthBrandPanelProps) {
     <div className="auth-brand-panel">
       <div>
         <Link to="/" className="auth-brand-panel__logo">
-          <img src="/brand/favicon.svg" alt="" className="h-9 w-9" width={36} height={36} />
-          <span className="text-[1.05rem] font-extrabold tracking-tight">{wordmark}</span>
+          <img
+            src={colorMode === 'dark' ? '/brand/logo-dark.svg' : '/brand/logo-light.svg'}
+            alt={t('appName')}
+            className="h-10 w-auto transition-transform hover:scale-[1.02]"
+          />
         </Link>
         <p className="auth-brand-panel__tagline">{t('auth.leftPanel.tagline')}</p>
       </div>

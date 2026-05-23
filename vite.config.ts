@@ -133,6 +133,8 @@ export default defineConfig(({ mode }) => {
       hostname: 'https://faber.md',
       dynamicRoutes: [
         '/masters',
+        '/companii',
+        '/jobs',
         '/plans',
         '/faq',
         '/how-it-works',

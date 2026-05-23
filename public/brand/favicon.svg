@@ -1,44 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Faber">
   <defs>
     <linearGradient id="favBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0F766E"/>
-      <stop offset="100%" stop-color="#2DD4BF"/>
+      <stop offset="0%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#0F766E"/>
     </linearGradient>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="1.5" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
   </defs>
 
   <!-- Background -->
-  <rect width="64" height="64" rx="14" fill="url(#favBg)"/>
+  <rect width="64" height="64" rx="16" fill="url(#favBg)"/>
 
-  <!-- M-Network: connecting lines -->
-  <polyline points="12,50 12,26 24,12 32,26 40,12 52,26 52,50"
-            fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="4.5"
-            stroke-linecap="round" stroke-linejoin="round"/>
-
-  <!-- Base connector -->
-  <line x1="12" y1="50" x2="52" y2="50"
-        stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/>
-
-  <!-- Cross connectors (hub links) -->
-  <line x1="24" y1="12" x2="40" y2="12"
-        stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="12" y1="26" x2="32" y2="26"
-        stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
-  <line x1="32" y1="26" x2="52" y2="26"
-        stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
-
-  <!-- Hub nodes -->
-  <circle cx="12" cy="50" r="3.5" fill="white"/>
-  <circle cx="52" cy="50" r="3.5" fill="white"/>
-  <circle cx="24" cy="12" r="3" fill="white"/>
-  <circle cx="40" cy="12" r="3" fill="white"/>
-  <circle cx="12" cy="26" r="2" fill="rgba(255,255,255,0.5)"/>
-  <circle cx="52" cy="26" r="2" fill="rgba(255,255,255,0.5)"/>
-
-  <!-- Center hub node — orange accent -->
-  <circle cx="32" cy="26" r="5" fill="#E97525" filter="url(#glow)"/>
-  <circle cx="32" cy="26" r="2.5" fill="white" opacity="0.6"/>
+  <!-- Stylized F and dot inside scaled for 64x64 -->
+  <path d="M 20 20 L 20 46 M 20 20 L 45 20 M 20 33 L 38 33" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="43" cy="46" r="3.5" fill="#FFFFFF"/>
 </svg>

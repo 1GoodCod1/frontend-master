@@ -2,6 +2,9 @@ User-agent: *
 Allow: /
 Allow: /masters
 Allow: /masters/*
+Allow: /companii
+Allow: /jobs
+Allow: /jobs/*
 Allow: /plans
 Allow: /faq
 Allow: /how-it-works

@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Briefcase, Clock, DollarSign, Users } from 'lucide-react';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { JointsBadge } from '@/components/joints';
 import { useJobByIdQuery } from '@/features/jobs/jobsApi';
 import { useAppSelector } from '@/app/hooks';
@@ -49,6 +50,10 @@ export default function PublicJobDetailPage() {
 
   return (
     <div className={cn(cabinetPageMediumClassName, 'px-4 py-8 sm:px-6 sm:py-10')}>
+      <SEOHead
+        title={displayJobTitle(job.title)}
+        description={job.description || ''}
+      />
       <Link
         to={paths.jobs.list}
         className={cn(

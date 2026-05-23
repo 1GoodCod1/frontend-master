@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Bookmark, Briefcase } from 'lucide-react';
+import { SEOHead } from '@/components/seo/SEOHead';
 import { useJobsListQuery, useMasterMyApplicationsQuery } from '@/features/jobs/jobsApi';
 import { useMastersMyProfileQuery } from '@/features/masters/mastersApi';
 import { useAppSelector } from '@/app/hooks';
@@ -156,6 +157,10 @@ export default function PublicJobsPage() {
 
   return (
     <div className="relative flex h-[calc(100vh-64px)] overflow-hidden bg-[hsl(var(--background))]">
+      <SEOHead
+        title={t('jobs.publicTitle')}
+        description={t('jobs.publicSubtitle')}
+      />
       <aside className="hidden lg:block w-[280px] shrink-0 overflow-y-auto px-5 py-4 border-r border-[#E9ECEF] dark:border-white/[0.08]">
         <JobsSidebar isAuthed={isAuthed} isMaster={isMaster} filters={filterProps} />
       </aside>

@@ -41,6 +41,7 @@ export function Footer() {
   const { t } = useTranslation();
   const isAuthed = useAppSelector(selectIsAuthed);
   const role = useAppSelector(selectRole);
+  const colorMode = useAppSelector((s) => s.ui.colorMode);
   const [prefsModalOpen, setPrefsModalOpen] = useState(false);
   const [prefsOpenKey, setPrefsOpenKey] = useState(0);
 
@@ -98,15 +99,10 @@ export function Footer() {
                 className="inline-flex items-center gap-2.5 group mb-4"
               >
                 <img
-                  src="/brand/favicon.svg"
-                  alt=""
-                  className="h-9 w-9 rounded-lg shadow-sm"
-                  width={36}
-                  height={36}
+                  src={colorMode === 'dark' ? '/brand/logo-dark.svg' : '/brand/logo-light.svg'}
+                  alt={t('appName')}
+                  className="h-9 w-auto transition-transform hover:scale-[1.02]"
                 />
-                <span className="text-lg font-bold tracking-tight text-[#212529] dark:text-white group-hover:text-[#E97525] transition-colors">
-                  {t('appName')}
-                </span>
               </RouterLink>
               <p className="text-[13px] leading-relaxed text-[#6C757D] dark:text-white/55 max-w-sm">
                 {t('footer.aboutDescription')}
