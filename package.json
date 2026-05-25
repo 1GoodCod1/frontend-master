@@ -55,7 +55,7 @@
     "axios": "^1.14.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.3.0",
     "emoji-picker-react": "^4.18.0",
     "formik": "^2.4.9",
     "framer-motion": "^12.38.0",
